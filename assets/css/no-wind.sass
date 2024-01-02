@@ -1,0 +1,263 @@
+// God I hate tailwindcss
+// So I made an inferior version
+// This will definitely not be tech debt in the future
+    
+.flex
+    display: flex
+
+    &.inline
+        display: inline-flex
+
+    &.horizontal
+        flex-direction: row
+
+    &.vertical
+        flex-direction: column
+
+    &.wrap
+        flex-wrap: wrap
+
+    &.v-start
+        align-items: flex-start
+
+    &.v-center
+        align-items: center
+
+    &.v-end
+        align-items: flex-end
+    
+    &.v-stretch
+        align-items: stretch
+
+    &.h-start
+        justify-content: flex-start
+
+    &.h-center
+        justify-content: center
+
+    &.h-end
+        justify-content: flex-end
+
+    &.h-stretch
+        justify-content: stretch
+
+
+
+@for $i from 0 through 100
+    .flex-#{$i}
+        flex: #{$i}
+
+    .gap-#{$i}
+        gap: #{$i}rem
+
+    .gap-#{$i}-5
+        gap: #{$i+.5}rem
+
+.spacer
+    flex: 1
+
+.flex-none
+    flex: none
+
+
+
+@each $prop in ['padding', 'margin']
+    @each $modifier in ['', '-inline', '-block', '-top', '-right', '-bottom', '-left']
+        @for $i from 0 through 100
+            .#{$prop}#{$modifier}-#{$i}
+                #{$prop}#{$modifier}: #{$i}rem
+
+            .#{$prop}#{$modifier}-#{$i}-5
+                #{$prop}#{$modifier}: #{$i+.5}rem
+
+        .#{$prop}#{$modifier}-auto
+            #{$prop}#{$modifier}: auto
+
+
+
+@for $i from 0 through 100
+    .h-#{$i}
+        height: #{$i}rem
+
+    .h-#{$i}p
+        height: percentage(calc($i/100))
+
+    .h-#{$i}-5
+        height: #{$i+.5}rem
+
+    .min-h-#{$i}
+        min-height: #{$i}rem
+
+    .min-h-#{$i}-5
+        min-height: #{$i+.5}rem
+
+    .max-h-#{$i}
+        max-height: #{$i}rem
+
+    .max-h-#{$i}-5
+        max-height: #{$i+.5}rem
+
+    .w-#{$i}
+        width: #{$i}rem
+
+    .w-#{$i}p
+        width: percentage(calc($i/100))
+
+    .w-#{$i}-5
+        width: #{$i+.5}rem
+
+    .min-w-#{$i}
+        min-width: #{$i}rem
+
+    .min-w-#{$i}-5
+        min-width: #{$i+.5}rem
+
+    .max-w-#{$i}
+        max-width: #{$i}rem
+
+    .max-w-#{$i}-5
+        max-width: #{$i+.5}rem
+
+.h-auto
+    height: auto
+
+.w-auto
+    width: auto
+
+
+
+.text-align-center
+    text-align: center
+
+.text-align-right
+    text-align: right
+
+.text-align-left
+    text-align: left
+
+.text-align-justify
+    text-align: justify
+
+
+
+.user-select-none,
+.no-select
+    user-select: none
+
+
+
+.pointer-events-none,
+.no-hitbox
+    pointer-events: none
+
+
+
+.cursor-pointer
+    cursor: pointer
+
+
+
+.font-heading
+    font-family: var(--font-heading)
+
+.font-text
+    font-family: var(--font-text)
+
+.font-mono
+    font-family: var(--font-mono)
+
+.font-icon
+    font-family: var(--font-icon)
+    text-transform: lowercase
+    font-style: normal
+    font-weight: normal
+
+
+
+.color-primary
+    color: var(--color-primary)
+
+.color-accent
+    color: var(--color-accent)
+
+.color-heading
+    color: var(--color-text)
+
+.color-text
+    color: var(--color-text-soft)
+
+.color-red
+    color: var(--color-red)
+
+.color-green
+    color: var(--color-green)
+
+.color-blue
+    color: var(--color-blue)
+
+.color-yellow
+    color: var(--color-yellow)
+
+
+
+.background
+    background: var(--color-background)
+
+.background-soft
+    background: var(--color-background-soft)
+
+
+
+@each $modifier in ['', '-inline', '-block', '-top', '-right', '-bottom', '-left']
+    .border#{$modifier}
+        border#{$modifier}: 1px solid var(--color-border)
+
+    .border#{$modifier}-soft
+        border#{$modifier}: 1px solid var(--color-background-soft)
+
+    .border#{$modifier}-primary
+        border#{$modifier}: 1px solid var(--color-primary)
+
+
+
+@each $size in ['s', 'm', 'l', 'xl']
+    .radius-#{$size}
+        border-radius: var(--radius-#{$size})
+        
+    .radius-top-#{$size}
+        border-top-left-radius: var(--radius-#{$size})
+        border-top-right-radius: var(--radius-#{$size})
+
+    .radius-right-#{$size}
+        border-top-right-radius: var(--radius-#{$size})
+        border-bottom-right-radius: var(--radius-#{$size})
+
+    .radius-bottom-#{$size}
+        border-bottom-right-radius: var(--radius-#{$size})
+        border-bottom-left-radius: var(--radius-#{$size})
+
+    .radius-left-#{$size}
+        border-bottom-left-radius: var(--radius-#{$size})
+        border-top-left-radius: var(--radius-#{$size})
+
+.radius-circle
+    border-radius: 50%
+
+
+
+.object-fit-cover
+    object-fit: cover
+
+.object-fit-contain
+    object-fit: contain
+
+
+
+.shadow-low
+    box-shadow: var(--shadow-elevation-low)
+
+.shadow-medium
+    box-shadow: var(--shadow-elevation-medium)
+
+.shadow-high
+    box-shadow: var(--shadow-elevation-high)

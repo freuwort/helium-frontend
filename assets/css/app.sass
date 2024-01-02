@@ -1,0 +1,226 @@
+@import './reset.sass'
+@import './no-wind.sass'
+@import './tiptap-content.sass'
+@import url(https://fonts.bunny.net/css?family=inter:400,500,600|jetbrains-mono:400|poppins:400,500,600)
+@import url(https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,1,0)
+    
+*
+    box-sizing: border-box
+
+html
+    margin: 0
+    padding: 0
+    height: 100%
+    scroll-behavior: smooth
+
+    --radius-xs: 2px
+    --radius-s: 4px
+    --radius-m: 8px
+    --radius-l: 12px
+    --radius-xl: 16px
+    --radius-xxl: 24px
+
+    --font-heading: 'Poppins', sans-serif
+    --font-text: 'Inter', sans-serif
+    --font-mono: 'JetBrains Mono', monospace
+    --font-icon: 'Material Symbols Rounded', monospace
+    
+    --shadow-color: 0deg 0% 0%
+    --shadow-elevation-low: 0px 1px 1.5px hsl(var(--shadow-color) / 0), 0px 1.6px 2.4px hsl(var(--shadow-color) / 0.03), 0px 3px 4.5px hsl(var(--shadow-color) / 0.07)
+    --shadow-elevation-medium: 0px 1px 1.5px hsl(var(--shadow-color) / 0), 0px 3.9px 5.9px hsl(var(--shadow-color) / 0.03), 0px 7.5px 11.3px hsl(var(--shadow-color) / 0.05), 0px 15px 22.5px hsl(var(--shadow-color) / 0.08)
+    --shadow-elevation-high: 0px 1px 1.5px hsl(var(--shadow-color) / 0), 0px 5.6px 8.4px hsl(var(--shadow-color) / 0.01), 0px 9.6px 14.4px hsl(var(--shadow-color) / 0.02), 0px 13.9px 20.9px hsl(var(--shadow-color) / 0.04), 0px 19.1px 28.7px hsl(var(--shadow-color) / 0.05), 0px 26.4px 39.6px hsl(var(--shadow-color) / 0.06), 0px 36.4px 54.6px hsl(var(--shadow-color) / 0.07), 0px 50px 75px hsl(var(--shadow-color) / 0.09)
+
+    --color-primary: #3737FA
+    --color-on-primary: #ffffff
+
+    --color-accent: #f8176d
+    --color-on-accent: #ffffff
+
+    --color-text: #363E40
+    --color-text-soft: #686D6F
+    --color-text-soft-disabled: #919697
+
+    --color-background: #ffffff
+    --color-background-soft: #EFF0F0
+    --color-background-disabled: #F7F7F7
+
+    --color-border: #CACDCE
+    --color-border-focused: #B2B6B8
+    --color-border-disabled: #DFE1E2
+
+    --color-blue: #00a0e9
+    --color-on-blue: #ffffff
+    --color-green: #09b959
+    --color-on-green: #ffffff
+    --color-yellow: #ffa807
+    --color-on-yellow: #ffffff
+    --color-red: #ff1a3f
+    --color-on-red: #ffffff
+
+    --color-info: var(--color-blue)
+    --color-on-info: var(--color-on-blue)
+    --color-success: var(--color-green)
+    --color-on-success: var(--color-on-green)
+    --color-warning: var(--color-yellow)
+    --color-on-warning: var(--color-on-yellow)
+    --color-error: var(--color-red)
+    --color-on-error: var(--color-on-red)
+
+    --color-app-pages-on-light: #376bfa
+    --color-app-pages-on-dark: #3c9fff
+    --color-app-blog-on-light: #8854d0
+    --color-app-blog-on-dark: #c07fff
+    --color-app-forms-on-light: #e84393
+    --color-app-forms-on-dark: #f368e0
+    --color-app-ecommerce-on-light: #ff4757
+    --color-app-ecommerce-on-dark: #ff6b81
+    --color-app-jobs-on-light: #ff6348
+    --color-app-jobs-on-dark: #ff8d64
+    --color-app-intranet-on-light: #ffa502
+    --color-app-intranet-on-dark: #fed330
+    --color-app-wiki-on-light: #20bf6b
+    --color-app-wiki-on-dark: #26de81
+    --color-app-marketing-on-light: #079992
+    --color-app-marketing-on-dark: #4cceca
+
+
+
+body
+    margin: 0
+    padding: 0
+    height: 100%
+    font-family: var(--font-text)
+    font-weight: 400
+    line-height: 1.5
+    color: var(--color-text-soft)
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6
+    font-family: var(--font-heading)
+    color: var(--color-text)
+    letter-spacing: -1%
+    font-weight: 400
+    line-height: 1.25
+    margin-block: .75em
+
+h1
+    font-size: 2.488rem
+
+h2
+    font-size: 2.074rem
+
+h3
+    font-size: 1.728rem
+
+h4
+    font-size: 1.44rem
+
+h5
+    font-size: 1.2rem
+
+small
+    font-size: 0.833rem
+
+
+
+code
+    background: var(--color-background-soft)
+    border-radius: .175em
+    color: var(--color-text)
+    padding: .25em
+    font-size: inherit
+
+a
+    color: var(--color-primary)
+    text-decoration: none
+
+
+
+fieldset
+    border: 1px solid var(--color-border)
+    border-radius: var(--radius-m)
+    margin: 0
+    padding: 1rem
+
+    legend
+        padding: 0 .5rem
+
+
+
+hr,
+.divider
+    border: none
+    border-top: 1px solid var(--color-border)
+    width: 100%
+
+    &.vertical
+        border: none
+        border-left: 1px solid var(--color-border)
+        width: unset
+
+
+
+.limiter
+    width: 100%
+    max-width: 1200px
+    display: block
+    margin: 0 auto
+    padding: 0 1rem
+
+.text-limiter
+    width: 100%
+    max-width: 650px
+    display: block
+    margin: 0 auto
+    padding: 0 1rem
+
+.form-limiter
+    width: 100%
+    max-width: 550px
+    display: block
+    margin: 0 auto
+    padding: 0 1rem
+
+
+
+.scrollbar
+    &::-webkit-scrollbar
+        width: 12px
+        height: 12px
+
+    &::-webkit-scrollbar-track
+        background: var(--color-background-soft)
+
+    &::-webkit-scrollbar-thumb
+        background: var(--color-text-soft)
+        border-radius: 3px
+        background-clip: content-box
+        border: 2px solid transparent
+
+        &:hover
+            background: var(--color-primary)
+            border: 0px solid transparent
+            border-radius: 1px
+
+.small-scrollbar
+    &::-webkit-scrollbar
+        width: 6px
+        height: 6px
+
+    &::-webkit-scrollbar-track
+        background: var(--color-background)
+
+    &::-webkit-scrollbar-thumb
+        background: #00000050
+        border-radius: 3px
+        background-clip: content-box
+        border: 2px solid transparent
+
+        &:hover
+            background: var(--color-text-soft)
+            border: 0px solid transparent
+            border-radius: 1px
