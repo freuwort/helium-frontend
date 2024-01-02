@@ -22,7 +22,7 @@
 <style scoped lang="sass">
 header
     background-color: var(--color-text)
-    background-image: url('/public/images/app/banner_pattern_light.png')
+    background-image: url('/images/app/banner_pattern_light.png')
     background-size: auto 100%
     color: var(--color-background)
     min-height: 400px
@@ -39,7 +39,6 @@ header
         height: 128px
         border-radius: 50%
         object-fit: cover
-        border: 5px solid var(--color-background)
         box-shadow: var(--shadow-elevation-low)
         background-color: var(--color-background)
 
