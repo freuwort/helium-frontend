@@ -9,24 +9,13 @@
 
 <template>
     <div class="page-layout">
-        <header>
+        <AppHeader />
+        <div class="hero">
             <h2>Unternehmen GmbH</h2>
-        </header>
+        </div>
         <main>
             <slot />
         </main>
-        <footer>
-            <div class="form-limiter">
-                <Layout horizontal :gap="1">
-                    <span>© {{ $dayjs().year() }} {{ useDomainStore().companyMeta?.legalName }}</span>
-                    <Spacer />
-                    <a href="/legal" target="_blank">Impressum</a>
-                    <a href="/privacy" target="_blank">Datenschutz</a>
-                    <a href="/terms" target="_blank">AGB</a>
-                    <a href="#">Cookies</a>
-                </Layout>
-            </div>
-        </footer>
     </div>
 </template>
 
@@ -37,6 +26,11 @@
         min-height: 100%
 
     header
+        position: sticky
+        top: 0
+        z-index: 1000
+
+    .hero
         background-color: var(--color-primary)
         background-image: url('/images/app/banner_pattern_light.png')
         background-size: auto 150%
@@ -60,14 +54,4 @@
 
     main
         flex: 1
-
-    footer
-        min-height: 4rem
-        display: flex
-        align-items: center
-        justify-content: center
-        font-size: .875rem
-
-        a
-            color: var(--color-text-soft)
 </style>
