@@ -1,7 +1,11 @@
 <script lang="ts" setup>
     definePageMeta({
         layout: 'guest-form',
-    });
+    })
+
+    useHead({
+        title: 'Anmelden',
+    })
 </script>
 
 <template>

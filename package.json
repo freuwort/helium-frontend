@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "dayjs-nuxt": "^2.1.9",
     "nuxt": "^3.9.0",
     "sass": "^1.69.6",
     "vue": "^3.4.3",
@@ -17,7 +18,7 @@
   },
   "dependencies": {
     "@freuwort/iodine-ui": "^1.0.0-alpha.1",
-    "dayjs": "^1.11.10",
+    "@pinia/nuxt": "^0.5.1",
     "floating-vue": "^2.0.0-beta.24",
     "pinia": "^2.1.7",
     "zxcvbn": "^4.4.2"

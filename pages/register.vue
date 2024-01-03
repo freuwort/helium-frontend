@@ -4,6 +4,10 @@
     definePageMeta({
         layout: 'guest-form',
     })
+
+    useHead({
+        title: 'Registrieren',
+    })
 </script>
 
 <template>
@@ -21,7 +25,7 @@
                 <Layout :gap="1">
                     <IodToggle type="checkbox">
                         <template #label>
-                            Ich habe die <a target="_blank" href="/privacy">Datenschutzerklärung</a> und die <a target="_blank" href="/privacy">AGB</a> gelesen und akzeptiere diese
+                            Ich habe die <a target="_blank" href="/privacy">Datenschutzerklärung</a> und die <a target="_blank" href="/terms">AGB</a> gelesen und akzeptiere diese
                         </template>
                     </IodToggle>
                     <IodButton label="Neues Konto registrieren" size="large"/>

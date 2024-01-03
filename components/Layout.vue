@@ -1,5 +1,5 @@
 <template>
-    <component :is="is" class="flex" :class="[direction, {'wrap': wrap}]" :style="{gap, padding}">
+    <component :is="is" class="flex" :class="[direction, {'wrap': wrap}]" :style="{gap, padding, alignItems: vAlign, justifyContent: hAlign}">
         <slot />
     </component>
 </template>
@@ -22,13 +22,21 @@
             type: Boolean,
             default: false,
         },
+        yAlign: {
+            type: String,
+            default: 'center',
+        },
+        xAlign: {
+            type: String,
+            default: 'unset',
+        },
         padding: {
             type: [String, Number],
-            default: '0',
+            default: 0,
         },
         gap: {
             type: [String, Number],
-            default: '0',
+            default: 0,
         },
     })
 
@@ -36,6 +44,16 @@
         if (props.horizontal) return 'horizontal'
         if (props.vertical) return 'vertical'
         return 'vertical'
+    })
+
+    const vAlign = computed(() => {
+        if (direction.value === 'vertical') return props.xAlign
+        return props.yAlign
+    })
+
+    const hAlign = computed(() => {
+        if (direction.value === 'vertical') return props.yAlign
+        return props.xAlign
     })
 
     const padding = computed(() => {

@@ -2,6 +2,10 @@
     definePageMeta({
         layout: 'guest-form',
     })
+
+    useHead({
+        title: 'Passwort wiederherstellen',
+    })
 </script>
 
 <template>
