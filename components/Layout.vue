@@ -7,7 +7,6 @@
 <script lang="ts" setup>
     const props = defineProps({
         is: {
-            type: String,
             default: 'div',
         },
         vertical: {

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     useHead({
-        titleTemplate: '%s – ' + useDomainStore().companyMeta?.name,
+        titleTemplate: '%s – ' + useDomainStore().companyMeta?.name + ' Verwaltung',
         bodyAttrs: {
             class: 'background-soft'
         }
