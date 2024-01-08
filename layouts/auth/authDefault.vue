@@ -1,12 +1,3 @@
-<script lang="ts" setup>
-    useHead({
-        titleTemplate: '%s – ' + useDomainStore().companyMeta?.name + ' Verwaltung',
-        bodyAttrs: {
-            class: 'background-soft'
-        }
-    });
-</script>
-
 <template>
     <div class="page-layout">
         <AppHeader />
@@ -18,6 +9,15 @@
         </main>
     </div>
 </template>
+
+<script lang="ts" setup>
+    useHead({
+        titleTemplate: '%s – ' + useDomainStore().companyMeta?.name + ' Verwaltung',
+        bodyAttrs: {
+            class: 'background-soft'
+        }
+    })
+</script>
 
 <style scoped lang="sass">
     .page-layout

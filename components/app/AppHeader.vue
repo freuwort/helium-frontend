@@ -107,7 +107,7 @@
                         <ContextMenuItem show-chevron icon="settings">Einstellungen</ContextMenuItem>
                         <ContextMenuItem show-chevron icon="shield">Sicherheit</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem show-chevron color="var(--color-red)" icon="logout">Abmelden</ContextMenuItem>
+                        <ContextMenuItem show-chevron color="var(--color-red)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -116,6 +116,7 @@
 </template>
 
 <script lang="ts" setup>
+    const auth = useAuthStore()
 </script>
 
 <style lang="sass" scoped>

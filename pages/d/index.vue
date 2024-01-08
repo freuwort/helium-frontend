@@ -1,13 +1,3 @@
-<script lang="ts" setup>
-    useHead({
-        title: 'Startseite',
-    })
-
-    definePageMeta({
-        layout: 'auth-default',
-    })
-</script>
-
 <template>
     <div class="limiter">
         <Card @submit.prevent>
@@ -22,5 +12,16 @@
         </Card>
     </div>
 </template>
+
+<script lang="ts" setup>
+    definePageMeta({
+        layout: 'auth-default',
+        middleware: 'auth',
+    })
+    
+    useHead({
+        title: 'Startseite',
+    })
+</script>
 
 <style scoped></style>

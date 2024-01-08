@@ -1,15 +1,18 @@
 <template>
-    <Layout :is="is" type="button" class="chip" horizontal gap="1rem" padding="0 1rem">
-        <img class="image" :style="{'order': imageOrder}" :src="useAuthStore().user.image">
+    <Layout :is="is" type="button" class="chip" horizontal gap="1rem" padding="0 1rem" v-if="auth.user">
+        <img class="image" :style="{'order': imageOrder}" :src="auth.user.image">
 
         <Layout :x-align="horizontalAlign">
-            <span class="name">{{ useAuthStore().user.name }}</span>
-            <span class="company" v-show="showCompany">{{ useDomainStore().companyMeta.name }}</span>
+            <span class="name">{{ auth.user.name }}</span>
+            <span class="company" v-show="showCompany" v-if="domain.companyMeta">{{ domain.companyMeta.name }}</span>
         </Layout>
     </Layout>
 </template>
 
 <script lang="ts" setup>
+    const auth = useAuthStore()
+    const domain = useDomainStore()
+
     const props = defineProps({
         is: {
             default: 'button',
