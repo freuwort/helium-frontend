@@ -1,11 +1,11 @@
 <template>
-    <Layout is="button" type="button" horizontal class="context-menu-item" :style="{ color }">
+    <Flex :is="NuxtLink" type="button" horizontal class="context-menu-item" :style="{ color }">
         <Icon class="main-icon"><slot name="icon">{{ icon }}</slot></Icon>
-        <Layout class="flex-1">
+        <Flex class="flex-1">
             <span class="label"><slot>{{ label }}</slot></span>
-        </Layout>
+        </Flex>
         <Icon class="chevron-icon" v-if="showChevron">chevron_right</Icon>
-    </Layout>
+    </Flex>
 </template>
 
 <script lang="ts" setup>
@@ -18,6 +18,8 @@
             default: false,
         },
     })
+    
+    const NuxtLink = defineNuxtLink({})
 </script>
 
 <style lang="sass" scoped>
@@ -29,6 +31,7 @@
         color: var(--color-text-soft)
         position: relative
         overflow-x: hidden
+        text-decoration: none
 
         &:after
             content: ''
@@ -63,7 +66,6 @@
 
     .label
         color: var(--color-text-soft)
-        font-size: .875rem
         position: relative
         z-index: 1
         display: flex

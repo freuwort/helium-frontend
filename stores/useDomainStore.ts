@@ -7,13 +7,14 @@ type CompanyMeta = {
 }
 
 export const useDomainStore = defineStore('domain', () => {
-    const companyMeta = ref<CompanyMeta | null>({
-        name: 'Unternehmen',
-        legalName: 'Unternehmen GmbH',
-        slogan: '',
-        logo: 'https://fdbs.de/storage/media/branding/logos/logo_no_spacing.png',
-        favicon: '',
-    })
+    const companyMeta = ref<CompanyMeta | null>(null)
 
-    return { companyMeta }
+    async function fetchCompanyMeta()
+    {
+        const { data } = await useApiFetch('/api/domain/company-meta')
+
+        companyMeta.value = data.value as CompanyMeta
+    }
+
+    return { companyMeta, fetchCompanyMeta }
 })

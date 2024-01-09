@@ -93,6 +93,7 @@ body
     font-weight: 400
     line-height: 1.75
     color: var(--color-text-soft)
+    font-size: .875rem
 
 #__nuxt
     display: contents
@@ -169,17 +170,18 @@ fieldset
 
 
 
-hr,
-.divider
+hr:not(.vertical),
+.divider:not(.vertical)
     border: none
     border-top: 1px solid var(--color-border)
     width: 100%
-    margin: 0
 
-    &.vertical
-        border: none
-        border-left: 1px solid var(--color-border)
-        width: unset
+hr.vertical,
+.divider.vertical
+    border: none
+    border-left: 1px solid var(--color-border)
+    width: unset
+    margin: 0
 
 
 

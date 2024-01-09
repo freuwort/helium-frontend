@@ -2,7 +2,7 @@
     <div class="page-layout">
         <AppHeader />
         <div class="hero">
-            <h2>Unternehmen GmbH</h2>
+            <h2 v-text="props.title"></h2>
         </div>
         <main>
             <slot />
@@ -11,8 +11,12 @@
 </template>
 
 <script lang="ts" setup>
+    const props = useAttrs()
+    const domain = useDomainStore()
+    
     useHead({
-        titleTemplate: '%s – ' + useDomainStore().companyMeta?.name + ' Verwaltung',
+        title: props.title as string,
+        titleTemplate: `%s – ${domain?.companyMeta?.name} Verwaltung`,
         bodyAttrs: {
             class: 'background-soft'
         }
@@ -47,8 +51,8 @@
 
         h2
             margin: 0
-            font-size: 1.5rem
-            font-weight: 500
+            font-size: clamp(1.5rem, 5vw, 2.5rem)
+            font-weight: 400
             text-align: center
             color: inherit
 

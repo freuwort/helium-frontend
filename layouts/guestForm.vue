@@ -1,35 +1,42 @@
-<script lang="ts" setup>
-    useHead({
-        titleTemplate: '%s – ' + useDomainStore().companyMeta?.name + ' Verwaltung',
-        bodyAttrs: {
-            class: 'background-soft'
-        }
-    });
-</script>
-
 <template>
     <div class="page-layout">
         <header>
-            <img src="https://avatar.iran.liara.run/public/53" alt="">
-            <h2>Unternehmen GmbH</h2>
+            <div class="company-logo" v-if="domain?.companyMeta">
+                <img :src="domain?.companyMeta?.logo" :alt="domain?.companyMeta?.name" />
+            </div>
+            <h2>{{ domain?.companyMeta?.name }}</h2>
         </header>
         <main>
             <slot />
         </main>
         <footer>
             <div class="form-limiter">
-                <Layout horizontal :gap="1">
-                    <span>© {{ $dayjs().year() }} {{ useDomainStore().companyMeta?.legalName }}</span>
+                <Flex horizontal :gap="1">
+                    <span>© {{ $dayjs().year() }} {{ domain?.companyMeta?.legalName }}</span>
                     <Spacer />
                     <a href="/legal" target="_blank">Impressum</a>
                     <a href="/privacy" target="_blank">Datenschutz</a>
                     <a href="/terms" target="_blank">AGB</a>
                     <a href="#">Cookies</a>
-                </Layout>
+                </Flex>
             </div>
         </footer>
     </div>
 </template>
+
+<script lang="ts" setup>
+    const props = useAttrs()
+    const domain = useDomainStore()
+    
+    useHead({
+        title: props.title as string,
+        titleTemplate: `%s – ${domain?.companyMeta?.name} Verwaltung`,
+        bodyAttrs: {
+            class: 'background-soft'
+        }
+    })
+
+</script>
 
 <style scoped lang="sass">
     .page-layout
@@ -51,14 +58,23 @@
         align-items: center
         gap: 1rem
 
-        img
+        .company-logo
             width: 128px
             height: 128px
+            padding: 16px
+            display: flex
+            justify-content: center
+            align-items: center
+            overflow: hidden
             border-radius: 50%
-            object-fit: contain
             box-shadow: var(--shadow-elevation-low)
             background-color: var(--color-background)
             user-select: none
+
+        img
+            width: 100%
+            height: 100%
+            object-fit: contain
 
         h2
             margin: 0
@@ -75,7 +91,6 @@
         display: flex
         align-items: center
         justify-content: center
-        font-size: .875rem
 
         a
             color: var(--color-text-soft)

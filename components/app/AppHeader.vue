@@ -1,7 +1,7 @@
 <template>
     <header>
-        <Layout horizontal class="main-bar">
-            <AppHeaderItem is="a" href="/d">
+        <Flex horizontal class="main-bar">
+            <AppHeaderItem :is="NuxtLink" to="/d">
                 <img class="h-2" src="/images/app/logo.svg" alt="logo" />
             </AppHeaderItem>
 
@@ -13,7 +13,7 @@
                         <ContextMenuItem show-chevron color="var(--color-primary)" icon="dashboard">Startseite</ContextMenuItem>
                         <ContextMenuItem show-chevron color="var(--color-primary)" icon="folder">Dateien</ContextMenuItem>
                         <ContextMenuItem show-chevron color="var(--color-primary)" icon="group">Nutzer</ContextMenuItem>
-                        <ContextMenuItem show-chevron color="var(--color-primary)" icon="settings">Einstellungen</ContextMenuItem>
+                        <ContextMenuItem to="/d/settings/" show-chevron color="var(--color-primary)" icon="settings">Einstellungen</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="#9747FF" icon="package_2">Produkte</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem>
@@ -103,20 +103,20 @@
                 <ProfileChip show-company align="right" class="min-h-4"/>
                 <template #popper>
                     <ContextMenu class="min-w-20">
-                        <ContextMenuItem show-chevron icon="person">Profil</ContextMenuItem>
-                        <ContextMenuItem show-chevron icon="settings">Einstellungen</ContextMenuItem>
-                        <ContextMenuItem show-chevron icon="shield">Sicherheit</ContextMenuItem>
+                        <ContextMenuItem to="/d/settings/profile" show-chevron icon="person">Profil</ContextMenuItem>
+                        <ContextMenuItem to="/d/settings/personal" show-chevron icon="settings">Einstellungen</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem show-chevron color="var(--color-red)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
+                        <ContextMenuItem is="button" show-chevron color="var(--color-red)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
-        </Layout>
+        </Flex>
     </header>
 </template>
 
 <script lang="ts" setup>
     const auth = useAuthStore()
+    const NuxtLink = defineNuxtLink({})
 </script>
 
 <style lang="sass" scoped>

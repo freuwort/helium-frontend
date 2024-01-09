@@ -19,8 +19,10 @@
   "dependencies": {
     "@freuwort/iodine-ui": "^1.0.0-alpha.1",
     "@pinia/nuxt": "^0.5.1",
+    "@zxcvbn-ts/core": "^3.0.4",
+    "@zxcvbn-ts/language-common": "^3.0.4",
+    "@zxcvbn-ts/language-en": "^3.0.2",
     "floating-vue": "^2.0.0-beta.24",
-    "pinia": "^2.1.7",
-    "zxcvbn": "^4.4.2"
+    "pinia": "^2.1.7"
   }
 }

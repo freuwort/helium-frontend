@@ -1,12 +1,12 @@
 <template>
-    <Layout :is="is" type="button" class="chip" horizontal gap="1rem" padding="0 1rem" v-if="auth.user">
+    <Flex :is="is" type="button" class="chip" horizontal gap="1rem" padding="0 1rem" v-if="auth.user">
         <img class="image" :style="{'order': imageOrder}" :src="auth.user.image">
 
-        <Layout :x-align="horizontalAlign">
+        <Flex :x-align="horizontalAlign">
             <span class="name">{{ auth.user.name }}</span>
             <span class="company" v-show="showCompany" v-if="domain.companyMeta">{{ domain.companyMeta.name }}</span>
-        </Layout>
-    </Layout>
+        </Flex>
+    </Flex>
 </template>
 
 <script lang="ts" setup>
@@ -39,9 +39,13 @@
     .chip
         height: 100%
         user-select: none
+        border-radius: .5rem
+        transition: all 80ms ease-in-out
+
+        &:hover
+            background-color: var(--color-background-soft)
 
     .name
-        font-size: .875rem
         font-weight: 600
         color: var(--color-text)
         line-height: 1.25rem

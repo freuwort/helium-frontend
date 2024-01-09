@@ -1,38 +1,35 @@
 <template>
-    <div class="form-limiter">
-        <Card is="form" @submit.prevent="handleLogin">
-            <Layout :gap="2" :padding="2">
-                <h1 class="weight-medium align-center margin-0">Anmelden</h1>
-
-                <Layout :gap="1">
-                    <IodInput type="text" label="Email oder Nutzername" v-model="form.email"/>
-                    <IodInput type="password" label="Passwort" v-model="form.password"/>
-                </Layout>
-                <Layout :gap="1">
-                    <IodToggle type="checkbox" label="Angemeldet bleiben" v-model="form.remember"/>
-                    <IodButton label="Anmelden" size="large"/>
-                </Layout>
-
-                <hr>
-
-                <Layout :gap="1" horizontal>
-                    <NuxtLink to="/forgot-password">Passwort vergessen?</NuxtLink>
-                    <Spacer />
-                    <NuxtLink to="/register">Neues Konto erstellen</NuxtLink>
-                </Layout>
-            </Layout>
-        </Card>
-    </div>
+    <NuxtLayout name="guest-form" title="Anmelden">
+        <div class="form-limiter">
+            <Card is="form" @submit.prevent="handleLogin">
+                <Flex :gap="2" :padding="2">
+                    <h1 class="weight-medium align-center margin-0">Anmelden</h1>
+    
+                    <Flex :gap="1">
+                        <IodInput type="text" label="Email oder Nutzername" v-model="form.email"/>
+                        <IodInput type="password" label="Passwort" v-model="form.password"/>
+                    </Flex>
+                    <Flex :gap="1">
+                        <IodToggle type="checkbox" label="Angemeldet bleiben" v-model="form.remember"/>
+                        <IodButton label="Anmelden" size="large"/>
+                    </Flex>
+    
+                    <hr>
+    
+                    <Flex :gap="1" horizontal>
+                        <NuxtLink to="/forgot-password">Passwort vergessen?</NuxtLink>
+                        <Spacer />
+                        <NuxtLink to="/register">Neues Konto erstellen</NuxtLink>
+                    </Flex>
+                </Flex>
+            </Card>
+        </div>
+    </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
     definePageMeta({
-        layout: 'guest-form',
         middleware: 'guest',
-    })
-
-    useHead({
-        title: 'Anmelden',
     })
 
 
@@ -57,5 +54,3 @@
         if (!error.value) navigateTo('/d')
     }
 </script>
-
-<style scoped lang="sass"></style>

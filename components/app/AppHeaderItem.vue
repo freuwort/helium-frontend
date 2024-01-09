@@ -8,6 +8,7 @@
 <script lang="ts" setup>
     defineProps({
         is: {
+            type: [String, Object, Function, Symbol, Array, Promise, Boolean, Number],
             default: 'button',
         },
         icon: String,
