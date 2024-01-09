@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" title="Startseite">
+    <NuxtLayout name="auth-default" title="Startseite" color="var(--color-primary)">
         <div class="limiter">
             <Card>
                 <Flex :gap="1" :padding="1">

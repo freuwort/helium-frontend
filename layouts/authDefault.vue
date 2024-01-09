@@ -1,7 +1,7 @@
 <template>
     <div class="page-layout">
         <AppHeader />
-        <div class="hero">
+        <div class="hero" :style="{backgroundColor: props.color as string}">
             <h2 v-text="props.title"></h2>
         </div>
         <main>
@@ -35,7 +35,7 @@
         z-index: 1000
 
     .hero
-        background-color: var(--color-primary)
+        background-color: var(--color-text)
         background-image: url('/images/app/banner_pattern_light.png')
         background-size: auto 150%
         color: var(--color-background)
@@ -58,4 +58,5 @@
 
     main
         flex: 1
+        padding-bottom: 4rem
 </style>

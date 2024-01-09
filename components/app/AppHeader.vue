@@ -10,15 +10,16 @@
 
                 <template #popper>
                     <ContextMenu class="min-w-20">
-                        <ContextMenuItem show-chevron color="var(--color-primary)" icon="dashboard">Startseite</ContextMenuItem>
+                        <ContextMenuItem to="/d/" show-chevron color="var(--color-primary)" icon="dashboard">Startseite</ContextMenuItem>
                         <ContextMenuItem show-chevron color="var(--color-primary)" icon="folder">Dateien</ContextMenuItem>
                         <ContextMenuItem show-chevron color="var(--color-primary)" icon="group">Nutzer</ContextMenuItem>
-                        <ContextMenuItem to="/d/settings/" show-chevron color="var(--color-primary)" icon="settings">Einstellungen</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="#9747FF" icon="package_2">Produkte</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF6348" icon="warehouse">Lagerverwaltung</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FFA502" icon="local_mall">Onlineshop</ContextMenuItem>
+                        <ContextMenuDivider />
+                        <ContextMenuItem to="/d/settings/" show-chevron icon="settings">Einstellungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -104,7 +105,7 @@
                 <template #popper>
                     <ContextMenu class="min-w-20">
                         <ContextMenuItem to="/d/settings/profile" show-chevron icon="person">Profil</ContextMenuItem>
-                        <ContextMenuItem to="/d/settings/personal" show-chevron icon="settings">Einstellungen</ContextMenuItem>
+                        <ContextMenuItem to="/d/settings/personal" show-chevron icon="settings">Konto</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem is="button" show-chevron color="var(--color-red)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
                     </ContextMenu>

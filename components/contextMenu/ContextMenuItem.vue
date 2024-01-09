@@ -1,5 +1,5 @@
 <template>
-    <Flex :is="NuxtLink" type="button" horizontal class="context-menu-item" :style="{ color }">
+    <Flex :is="NuxtLink" type="button" horizontal class="context-menu-item" :class="{'active': active}" :style="{ color }">
         <Icon class="main-icon"><slot name="icon">{{ icon }}</slot></Icon>
         <Flex class="flex-1">
             <span class="label"><slot>{{ label }}</slot></span>
@@ -14,6 +14,10 @@
         icon: String,
         color: String,
         showChevron: {
+            type: Boolean,
+            default: false,
+        },
+        active: {
             type: Boolean,
             default: false,
         },
@@ -46,7 +50,8 @@
             pointer-events: none
             transition: all 80ms ease-in-out
 
-        &:hover
+        &:hover,
+        &.active
             &:after
                 opacity: .1
 
