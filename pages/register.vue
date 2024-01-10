@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="guest-form" title="Registrieren">
+    <NuxtLayout name="guest-form" pageTitle="Registrieren">
         <div class="form-limiter">
             <Card is="form" @submit.prevent="handleRegister">
                 <Flex :gap="2" :padding="2">

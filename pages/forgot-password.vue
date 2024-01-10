@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="guest-form" title="Passwort wiederherstellen">
+    <NuxtLayout name="guest-form" pageTitle="Passwort wiederherstellen">
         <div class="form-limiter">
             <Card is="form" @submit.prevent>
                 <Flex :gap="2" :padding="2">
