@@ -16,7 +16,21 @@
             <small>Wählen Sie Ihre Zeitzone</small>
         </Flex>
         <select class="w-18" v-model="form.timezone">
-            <option value="Europe/Berlin">Europe/Berlin</option>
+            <option value="pst">PST (UTC-8)</option>
+            <option value="mst">MST (UTC-7)</option>
+            <option value="cst">CST (UTC-6)</option>
+            <option value="est">EST (UTC-5)</option>
+            <option value="ast">AST (UTC-4)</option>
+            <option value="brt">BRT (UTC-3)</option>
+            <option value="gmt">GMT (UTC+0)</option>
+            <option value="cet">CET (UTC+1)</option>
+            <option value="eet">EET (UTC+2)</option>
+            <option value="msk">MSK (UTC+3)</option>
+            <option value="ist">IST (UTC+5:30)</option>
+            <option value="sgt">SGT (UTC+8)</option>
+            <option value="jst">JST (UTC+9)</option>
+            <option value="aest">AEDT (UTC+11)</option>
+            <option value="nzst">NZDT (UTC+13)</option>
         </select>
     </Flex>
     <Flex horizontal>
@@ -64,7 +78,7 @@
 <script lang="ts" setup>
     const form = ref({
         language: 'de',
-        timezone: 'Europe/Berlin',
+        timezone: 'cet',
         theme: 'light',
     })
 </script>

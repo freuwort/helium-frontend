@@ -5,7 +5,7 @@
             <span class="font-heading color-text weight-medium">Profilbild</span>
             <small>Laden Sie ein Profilbild hoch, um Ihr Profil zu personalisieren</small>
         </Flex>
-        <IodButton label="Bild Hochladen" size="small"/>
+        <IodButton label="Bild Hochladen" size="large"/>
     </Flex>
 </template>
 
