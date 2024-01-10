@@ -2,7 +2,7 @@
     <div class="page-layout">
         <AppHeader />
         <div class="hero" :style="{backgroundColor: props.color as string}">
-            <h2 v-text="props.title"></h2>
+            <h2><slot name="title">{{ props.pageTitle }}</slot></h2>
         </div>
         <main>
             <slot />
@@ -15,7 +15,7 @@
     const domain = useDomainStore()
     
     useHead({
-        title: props.title as string,
+        title: props.pageTitle as string,
         titleTemplate: `%s – ${domain?.companyMeta?.name} Verwaltung`,
         bodyAttrs: {
             class: 'background-soft'

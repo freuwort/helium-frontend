@@ -29,7 +29,7 @@
     const domain = useDomainStore()
     
     useHead({
-        title: props.title as string,
+        title: props.pageTitle as string,
         titleTemplate: `%s – ${domain?.companyMeta?.name} Verwaltung`,
         bodyAttrs: {
             class: 'background-soft'
