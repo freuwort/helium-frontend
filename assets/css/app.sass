@@ -228,9 +228,6 @@ hr.vertical,
         width: 12px
         height: 12px
 
-    &::-webkit-scrollbar-track
-        background: var(--color-background-soft)
-
     &::-webkit-scrollbar-thumb
         background: var(--color-text-soft)
         border-radius: 3px
@@ -238,7 +235,7 @@ hr.vertical,
         border: 2px solid transparent
 
         &:hover
-            background: var(--color-primary)
+            background: var(--color-text)
             border: 0px solid transparent
             border-radius: 1px
 
@@ -247,16 +244,13 @@ hr.vertical,
         width: 6px
         height: 6px
 
-    &::-webkit-scrollbar-track
-        background: var(--color-background)
-
     &::-webkit-scrollbar-thumb
-        background: #00000050
+        background: var(--color-text-soft)
         border-radius: 3px
         background-clip: content-box
         border: 2px solid transparent
 
         &:hover
-            background: var(--color-text-soft)
+            background: var(--color-text)
             border: 0px solid transparent
             border-radius: 1px

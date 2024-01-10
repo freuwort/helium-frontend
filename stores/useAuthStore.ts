@@ -1,6 +1,6 @@
 type User = {
     id: number
-    image: string
+    profile_image: string
     name: string | null
     email: string | null
     username: string | null
@@ -10,6 +10,13 @@ type User = {
     deleted_at: string | null
     created_at: string | null
     updated_at: string | null
+    roles: string[]
+    permissions: string[]
+    settings: {
+        language?: string
+        timezone?: string
+        theme?: string
+    }
 }
 
 type RegistrationInfo = {

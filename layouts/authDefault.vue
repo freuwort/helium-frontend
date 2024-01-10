@@ -18,7 +18,7 @@
         title: props.pageTitle as string,
         titleTemplate: `%s – ${domain?.companyMeta?.name} Verwaltung`,
         bodyAttrs: {
-            class: 'background-soft'
+            class: 'background-soft small-scrollbar'
         }
     })
 </script>

@@ -5,7 +5,7 @@
             <span class="font-heading color-text weight-medium">Firmenlogo</span>
             <small>Das Logo der Firma, welches in Helium angezeigt wird</small>
         </Flex>
-        <IodButton label="Bild Hochladen" size="large"/>
+        <IodButton class="w-18" label="Bild Hochladen"/>
     </Flex>
     <Flex horizontal>
         <Flex class="flex-1">

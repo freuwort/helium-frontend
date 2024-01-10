@@ -1,6 +1,6 @@
 <template>
     <Flex :is="is" type="button" class="chip" horizontal gap="1rem" padding="0 1rem" v-if="auth.user">
-        <img class="image" :style="{'order': imageOrder}" :src="auth.user.image">
+        <img class="image" :style="{'order': imageOrder}" :src="auth.user.profile_image">
 
         <Flex :x-align="horizontalAlign">
             <span class="name">{{ auth.user.name }}</span>
