@@ -1,5 +1,9 @@
-export default defineNuxtPlugin(async (nuxtApp) => {
-    const domain = useDomainStore()
-    
-    await domain.fetchCompanyMeta()
+export default defineNuxtPlugin({
+    name: 'load-domain',
+    dependsOn: ['load-csrf'],
+    async setup()
+    {
+        const domain = useDomainStore()
+        await domain.fetchCompanyMeta()
+    }
 })

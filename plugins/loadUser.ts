@@ -1,8 +1,9 @@
-export default defineNuxtPlugin(async (nuxtApp) => {
-    const auth = useAuthStore()
-
-    if (!auth.isLoggedIn)
+export default defineNuxtPlugin({
+    name: 'load-user',
+    dependsOn: ['load-csrf'],
+    async setup()
     {
-        await auth.fetchUser()
+        const auth = useAuthStore()
+        if (!auth.isLoggedIn) await auth.fetchUser()
     }
 })
