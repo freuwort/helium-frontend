@@ -1,22 +1,39 @@
 type User = {
     id: number
+
     profile_image: string
-    name: string | null
     email: string | null
     username: string | null
     ident_number: string | null
+
+    name: string | null
+    prefix: string | null
+    firstname: string | null
+    middlename: string | null
+    lastname: string | null
+    suffix: string | null
+    nickname: string | null
+    legalname: string | null
+
+    company: string | null
+    department: string | null
+    title: string | null
+
     email_verified_at: string | null
     enabled_at: string | null
     deleted_at: string | null
     created_at: string | null
     updated_at: string | null
-    roles: string[]
-    permissions: string[]
+
     settings: {
         language?: string
         timezone?: string
         theme?: string
+        two_factor_auth_enabled?: boolean
     }
+
+    roles: string[]
+    permissions: string[]
 }
 
 type RegistrationInfo = {

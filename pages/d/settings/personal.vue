@@ -49,7 +49,7 @@
             <span class="font-heading color-text weight-medium">Zwei-Faktor-Authentifizierung</span>
             <small>Aktivieren Sie die Zwei-Faktor-Authentifizierung, um Ihr Konto zusätzlich zu schützen</small>
         </Flex>
-        <IodButton class="w-18" label="Aktivieren"/>
+        <IodToggle type="switch" v-model="form.two_factor_auth_enabled" disabled/>
     </Flex>
 
     <div class="h-1"></div>
@@ -71,12 +71,12 @@
         language: auth.user?.settings?.language ?? 'de',
         timezone: auth.user?.settings?.timezone ?? 'Europe/Berlin',
         theme: auth.user?.settings?.theme ?? 'light',
+        two_factor_auth_enabled: auth.user?.settings?.two_factor_auth_enabled ?? false
     })
 
     watch(() => form.value.language, (value) => updateSetting('language', value))
     watch(() => form.value.timezone, (value) => updateSetting('timezone', value))
     watch(() => form.value.theme, (value) => updateSetting('theme', value))
-
 
     async function updateSetting(key: string, value: any)
     {
@@ -87,6 +87,15 @@
 
         await auth.fetchUser()
     }
+
+
+
+    // START: Change password
+    const changePasswordForm = ref({
+        current_password: '',
+        new_password: ''
+    })
+    // END: Change password
 </script>
 
 <style lang="sass" scoped></style>

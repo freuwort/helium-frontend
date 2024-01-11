@@ -1,7 +1,11 @@
 <template>
     <div class="page-layout">
         <AppHeader />
-        <div class="hero" :style="{backgroundColor: props.color as string}">
+        <div class="hero" ref="hero" :style="{
+            backgroundColor: props.color as string,
+            backgroundImage: `url(/images/app/banner_pattern_${bestContrast}.png)`,
+            color: bestContrast === 'light' ? 'white' : '#363E40',
+        }">
             <h2><slot name="title">{{ props.pageTitle }}</slot></h2>
         </div>
         <main>
@@ -13,7 +17,7 @@
 <script lang="ts" setup>
     const props = useAttrs()
     const domain = useDomainStore()
-    const auth = useAuthStore()
+    const hero = ref<HTMLElement>()
     
     useHead({
         title: props.pageTitle as string,
@@ -21,6 +25,24 @@
         htmlAttrs: {
             'class': 'background-soft small-scrollbar',
         },
+    })
+
+    const bestContrast = computed((): string => {
+
+        // Return default color if no hero is set
+        if (!hero.value) return 'light'
+        
+        // Get background color
+        const color = getComputedStyle(hero.value as Element).backgroundColor
+        .replace('rgb(', '')
+        .replace(')', '')
+        .split(',')
+        .map((color) => parseInt(color))
+
+        console.log(Math.round((color[0] * 299 + color[1] * 587 + color[2] * 114) / 1000))
+
+        // Calculate contrast
+        return Math.round((color[0] * 299 + color[1] * 587 + color[2] * 114) / 1000) <= 128 ? 'light' : 'dark'
     })
 </script>
 

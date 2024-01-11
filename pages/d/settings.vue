@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" pageTitle="Einstellungen">
+    <NuxtLayout name="auth-default" pageTitle="Einstellungen" color="#363E40">
         <div class="limiter">
             <Card>
                 <Flex horizontal y-align="stretch">
