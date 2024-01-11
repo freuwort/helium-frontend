@@ -84,6 +84,8 @@
             method: 'PATCH',
             body: {[key]: value}
         })
+
+        await auth.fetchUser()
     }
 </script>
 

@@ -13,13 +13,14 @@
 <script lang="ts" setup>
     const props = useAttrs()
     const domain = useDomainStore()
+    const auth = useAuthStore()
     
     useHead({
         title: props.pageTitle as string,
         titleTemplate: `%s – ${domain?.companyMeta?.name} Verwaltung`,
-        bodyAttrs: {
-            class: 'background-soft small-scrollbar'
-        }
+        htmlAttrs: {
+            'class': 'background-soft small-scrollbar',
+        },
     })
 </script>
 
