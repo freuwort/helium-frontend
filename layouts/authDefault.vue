@@ -39,8 +39,6 @@
         .split(',')
         .map((color) => parseInt(color))
 
-        console.log(Math.round((color[0] * 299 + color[1] * 587 + color[2] * 114) / 1000))
-
         // Calculate contrast
         return Math.round((color[0] * 299 + color[1] * 587 + color[2] * 114) / 1000) <= 128 ? 'light' : 'dark'
     })

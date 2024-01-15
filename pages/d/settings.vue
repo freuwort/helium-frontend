@@ -10,6 +10,7 @@
 
                         <ContextMenuLabel label="Domain" class="margin-top-1"/>
                         <ContextMenuItem to="/d/settings/" icon="store" label="System" :active="useIsRoute('d-settings')" />
+                        <ContextMenuItem to="/d/settings/debug" icon="bug_report" label="Debug" :active="useIsRoute('d-settings-debug')" />
                     </Flex>
                     <Flex :padding="2" :gap="1" y-align="flex-start" class="flex-1">
                         <NuxtPage />

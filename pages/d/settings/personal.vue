@@ -78,14 +78,11 @@
     watch(() => form.value.timezone, (value) => updateSetting('timezone', value))
     watch(() => form.value.theme, (value) => updateSetting('theme', value))
 
-    async function updateSetting(key: string, value: any)
+    function updateSetting(key: string, value: any)
     {
-        await useApiFetch('/api/user/settings', {
-            method: 'PATCH',
-            body: {[key]: value}
+        useForm({[key]: value}).patch('/api/user/settings', {
+            onSuccess: () => auth.fetchUser(),
         })
-
-        await auth.fetchUser()
     }
 
 
