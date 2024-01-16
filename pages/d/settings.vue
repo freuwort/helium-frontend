@@ -13,6 +13,7 @@
                         <ContextMenuItem to="/d/settings/debug" icon="bug_report" label="Debug" :active="useIsRoute('d-settings-debug')" />
                     </Flex>
                     <Flex :padding="2" :gap="1" y-align="flex-start" class="flex-1">
+                        <Errors/>
                         <NuxtPage />
                     </Flex>
                 </Flex>

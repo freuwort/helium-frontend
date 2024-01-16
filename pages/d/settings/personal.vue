@@ -42,15 +42,15 @@
             <span class="font-heading color-text weight-medium">Passwort</span>
             <small>Ändern Sie Ihr Passwort</small>
         </Flex>
-        <IodButton class="w-18" label="Passwort ändern"/>
+        <IodButton class="w-18" label="Passwort ändern" @click="changePasswordPopup?.open()"/>
     </Flex>
-    <Flex horizontal>
+    <!-- <Flex horizontal>
         <Flex class="flex-1">
             <span class="font-heading color-text weight-medium">Zwei-Faktor-Authentifizierung</span>
             <small>Aktivieren Sie die Zwei-Faktor-Authentifizierung, um Ihr Konto zusätzlich zu schützen</small>
         </Flex>
-        <IodToggle type="switch" v-model="form.two_factor_auth_enabled" disabled/>
-    </Flex>
+        <IodToggle type="switch" v-model="form.two_factor_auth_enabled"/>
+    </Flex> -->
 
     <div class="h-1"></div>
 
@@ -62,9 +62,21 @@
         </Flex>
         <IodButton class="w-18" label="Konto löschen" color-preset="error"/>
     </Flex>
+
+
+
+    <IodPopup ref="changePasswordPopup" title="Passwort ändern" max-width="500px">
+        <Flex is="form" :gap="1" :padding="2" @submit.prevent="changePassword">
+            <IodInput v-model="changePasswordForm.current_password" label="Aktuelles Passwort" type="password"/>
+            <IodInput v-model="changePasswordForm.new_password" show-score :score-function="useZxcvbn()" label="Neues Passwort" type="password"/>
+            <IodButton label="Passwort ändern" color-preset="primary"/>
+        </Flex>
+    </IodPopup>
 </template>
 
 <script lang="ts" setup>
+    import { toast } from 'vue3-toastify'
+
     const auth = useAuthStore()
 
     const form = ref({
@@ -88,10 +100,22 @@
 
 
     // START: Change password
-    const changePasswordForm = ref({
+    const changePasswordPopup = ref()
+    const changePasswordForm = useForm({
         current_password: '',
         new_password: ''
     })
+
+    function changePassword()
+    {
+        changePasswordForm.patch('/api/user/password', {
+            onSuccess() {
+                changePasswordPopup.value?.close()
+                changePasswordForm.reset()
+                toast.success('Passwort geändert')
+            },
+        })
+    }
     // END: Change password
 </script>
 

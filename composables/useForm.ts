@@ -1,3 +1,5 @@
+import type { NuxtError } from "nuxt/app"
+
 type SubmitOptions = {
     method?: 'get' | 'head' | 'post' | 'put' | 'patch' | 'delete',
     forceFormData?: boolean,
@@ -7,7 +9,7 @@ type SubmitOptions = {
 
 type Form = {
     [key: string]: any,
-    validationErrors: Object,
+    errors: NuxtError[],
     processing: boolean,
     submit: Function,
     get: Function,
@@ -15,130 +17,120 @@ type Form = {
     put: Function,
     patch: Function,
     delete: Function,
+    reset: Function,
+    data: Function,
 }
 
 
 
 export function useForm(fields: Object): Form
 {
-    // Create the form
-    const form = reactive({
+    return reactive({
         ...fields,
-        validationErrors: {},
-        processing: false,
-        submit,
-        get,
-        post,
-        put,
-        patch,
-        delete: destroy,
-    })
+        errors: [] as NuxtError[],
+        processing: false as boolean,
 
-    // Return the form
-    return form
-
-
-
-    async function submit(path: string, options: SubmitOptions = {})
-    {
-        // Set the form as processing
-        form.processing = true
-
-        // Build the form request
-        const request = {
-            method: options.method || 'get',
-            body: null as any,
-        }
-
-        // Build the form data
-        if (!['get', 'head'].includes(request.method))
+        async submit(path: string, options: SubmitOptions = {})
         {
-            request.body = form
-
-            // Force form data
-            if (options.forceFormData)
-            {
-                const formData = new FormData()
-
-                for (const key in form)
-                {
-                    // formData.append(key, form[key])
-                }
-
-                request.body = formData
-            }
-        }
-
-        // Send the request
-        const { data, error } = await useApiFetch(path, request)
-
-        // Reset the validation errors
-        clearValidationErrors()
-
-        // Handle errors
-        if (error.value)
-        {
-            // Handle validation errors
-            if (error.value.statusCode == 422)
-            {
-                // Set the form errors
-                form.validationErrors = error.value.data.errors
-            }
-
-            // Put error in store
-            useErrorStore().addError({
-                message: error.value.message,
-                data: error.value.data,
-            })
-
-            // Call the error callback
-            if (options.onError) options.onError(error.value)
-        }
-        // Handle success
-        else
-        {
-            // Call the success callback
-            if (options.onSuccess) options.onSuccess(data)
-        }
+            // Set the form as processing
+            this.processing = true
     
-        // Set the form as not processing
-        form.processing = false
+            // Build the form request
+            const request = {
+                method: options.method || 'get',
+                body: null as any,
+            }
+    
+            // Build the form data
+            if (!['get', 'head'].includes(request.method))
+            {
+                request.body = this
+    
+                // Force form data
+                if (options.forceFormData)
+                {
+                    const formData = new FormData()
+    
+                    for (const key in this)
+                    {
+                        // formData.append(key, form[key])
+                    }
+    
+                    request.body = formData
+                }
+            }
+    
+            // Send the request
+            const { data, error } = await useApiFetch(path, request)
+    
+            // Reset the errors
+            this.clearErrors()
+    
+            // Handle errors
+            if (error.value)
+            {
+                let nuxtError = createError(error.value)
+                // Set the form errors
+                this.errors = [nuxtError]
+    
+                // Put error in session store
+                useSessionErrorStore().addError(nuxtError)
+    
+                // Call the error callback
+                if (options.onError) options.onError(nuxtError)
+            }
+            // Handle success
+            else
+            {
+                // Call the success callback
+                if (options.onSuccess) options.onSuccess(data)
+            }
+        
+            // Set the form as not processing
+            this.processing = false
+    
+            // Return form
+            return this
+        },
 
-        // Return form
-        return form
-    }
+        get(path: string, options: SubmitOptions = {})
+        {
+            return this.submit(path, { ...options, method: 'get' })
+        },
+    
+        post(path: string, options: SubmitOptions = {})
+        {
+            return this.submit(path, { ...options, method: 'post' })
+        },
+    
+        put(path: string, options: SubmitOptions = {})
+        {
+            return this.submit(path, { ...options, method: 'put' })
+        },
+    
+        patch(path: string, options: SubmitOptions = {})
+        {
+            return this.submit(path, { ...options, method: 'patch' })
+        },
+    
+        delete(path: string, options: SubmitOptions = {})
+        {
+            return this.submit(path, { ...options, method: 'delete' })
+        },
 
+        reset()
+        {
+            return this
+        },
 
-
-    function get(path: string, options: SubmitOptions = {})
-    {
-        return submit(path, { ...options, method: 'get' })
-    }
-
-    function post(path: string, options: SubmitOptions = {})
-    {
-        return submit(path, { ...options, method: 'post' })
-    }
-
-    function put(path: string, options: SubmitOptions = {})
-    {
-        return submit(path, { ...options, method: 'put' })
-    }
-
-    function patch(path: string, options: SubmitOptions = {})
-    {
-        return submit(path, { ...options, method: 'patch' })
-    }
-
-    function destroy(path: string, options: SubmitOptions = {})
-    {
-        return submit(path, { ...options, method: 'delete' })
-    }
-
-
-
-    function clearValidationErrors()
-    {
-        form.validationErrors = {}
-    }
+        data()
+        {
+            return this
+        },
+        
+        clearErrors()
+        {
+            this.errors = []
+        }
+    })
 }

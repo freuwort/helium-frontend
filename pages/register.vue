@@ -9,7 +9,7 @@
                         <IodInput type="text" label="Vorname" v-model="form.firstname"/>
                         <IodInput type="text" label="Nachname" v-model="form.lastname"/>
                         <IodInput type="email" label="Email" v-model="form.email"/>
-                        <IodInput type="password" label="Passwort" show-password-score :password-score-function="useZxcvbn()" v-model="form.password"/>
+                        <IodInput type="password" label="Passwort" show-score :score-function="useZxcvbn()" v-model="form.password"/>
                     </Flex>
                     <Flex :gap="1">
                         <IodToggle type="checkbox" v-model="form.terms">
