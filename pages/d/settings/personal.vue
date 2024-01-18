@@ -58,7 +58,7 @@
     <Flex horizontal>
         <Flex class="flex-1">
             <span class="font-heading color-text weight-medium">Konto löschen</span>
-            <small>Wenn Sie Ihr Konto löschen, werden alle Ihre Daten gelöscht</small>
+            <small>Wenn Sie Ihr Konto löschen, werden all Ihre Daten gelöscht</small>
         </Flex>
         <IodButton class="w-18" label="Konto löschen" color-preset="error" @click="deleteAccountPopup?.open()"/>
     </Flex>
@@ -133,7 +133,6 @@
         changePasswordForm.patch('/api/user/password', {
             onSuccess() {
                 changePasswordPopup.value?.close()
-                changePasswordForm.reset()
                 toast.success('Passwort geändert')
             },
         })

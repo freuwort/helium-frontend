@@ -1,4 +1,7 @@
+import _ from 'lodash'
 import type { NuxtError } from "nuxt/app"
+
+
 
 type SubmitOptions = {
     method?: 'get' | 'head' | 'post' | 'put' | 'patch' | 'delete',
@@ -7,90 +10,135 @@ type SubmitOptions = {
     onError?: Function,
 }
 
-type Form = {
+type FormDataType = object
+
+interface Form extends FormDataType
+{
     [key: string]: any,
     errors: NuxtError[],
     processing: boolean,
-    submit: Function,
-    get: Function,
-    post: Function,
-    put: Function,
-    patch: Function,
-    delete: Function,
-    reset: Function,
-    data: Function,
+    data(): Partial<Object>,
+    defaults(data: Object): void,
+    transform(callback: (data: any) => any): Form,
+    reset(): void,
+    submit(path: string, options: SubmitOptions | Object): Promise<void>,
+    get(path: string, options: SubmitOptions | Object): Promise<void>,
+    post(path: string, options: SubmitOptions | Object): Promise<void>,
+    put(path: string, options: SubmitOptions | Object): Promise<void>,
+    patch(path: string, options: SubmitOptions | Object): Promise<void>,
+    delete(path: string, options: SubmitOptions | Object): Promise<void>,
 }
 
 
 
 export function useForm(fields: Object): Form
 {
-    return reactive({
-        ...fields,
+    const $reserved = [
+        'errors',
+        'processing',
+        'data',
+        'defaults',
+        'reset',
+        'transform',
+        'clearErrors',
+        'submit',
+        'get',
+        'post',
+        'put',
+        'patch',
+        'delete',
+    ]
+
+    let $withoutReserved = (data: any = null): Partial<Object> => {
+        return _.omit(data, $reserved)
+    }
+
+    let $transform = (data: any) => data
+    let $defaults = $withoutReserved(fields)
+
+
+
+    const form = reactive({
+        // Data
+        ...$withoutReserved(fields),
+
+        // Read-only data
         errors: [] as NuxtError[],
         processing: false as boolean,
-
-        async submit(path: string, options: SubmitOptions = {})
+        
+        // Methods
+        data()
         {
-            // Set the form as processing
+            return $withoutReserved(this)
+        },
+
+        defaults(data: Object)
+        {
+            $defaults = Object.assign($defaults, $withoutReserved(data))
+        },
+
+        reset() {
+            Object.assign(form, $defaults)
+        },
+
+        transform(callback: (data: any) => any)
+        {
+            $transform = callback
+
+            return this
+        },
+
+        clearErrors() {
+            this.errors = []
+        },
+
+        async submit(path: string, options: SubmitOptions = {}): Promise<void>
+        {
             this.processing = true
-    
-            // Build the form request
+            this.clearErrors()
+
+            const transformedData = $transform(this.data())
+
             const request = {
                 method: options.method || 'get',
-                body: null as any,
+                body: transformedData,
             }
-    
-            // Build the form data
-            if (!['get', 'head'].includes(request.method))
+        
+            // Convert the body to FormData if needed
+            if (options.forceFormData)
             {
-                request.body = this
-    
-                // Force form data
-                if (options.forceFormData)
+                const formData = new FormData()
+
+                for (const key in transformedData)
                 {
-                    const formData = new FormData()
-    
-                    for (const key in this)
-                    {
-                        // formData.append(key, form[key])
-                    }
-    
-                    request.body = formData
+                    formData.append(key, transformedData[key])
                 }
+
+                request.body = formData
             }
+
+            // Remove the body if not needed
+            if (['get', 'head'].includes(request.method)) request.body = null
     
-            // Send the request
             const { data, error } = await useApiFetch(path, request)
-    
-            // Reset the errors
-            this.clearErrors()
     
             // Handle errors
             if (error.value)
             {
                 let nuxtError = createError(error.value)
-                // Set the form errors
+
                 this.errors = [nuxtError]
     
-                // Put error in session store
-                useSessionErrorStore().addError(nuxtError)
-    
-                // Call the error callback
                 if (options.onError) options.onError(nuxtError)
             }
             // Handle success
             else
             {
-                // Call the success callback
                 if (options.onSuccess) options.onSuccess(data)
             }
         
             // Set the form as not processing
             this.processing = false
-    
-            // Return form
-            return this
         },
 
         get(path: string, options: SubmitOptions = {})
@@ -117,20 +165,7 @@ export function useForm(fields: Object): Form
         {
             return this.submit(path, { ...options, method: 'delete' })
         },
-
-        reset()
-        {
-            return this
-        },
-
-        data()
-        {
-            return this
-        },
-        
-        clearErrors()
-        {
-            this.errors = []
-        }
     })
+
+    return form
 }
