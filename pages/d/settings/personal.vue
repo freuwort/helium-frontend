@@ -60,16 +60,34 @@
             <span class="font-heading color-text weight-medium">Konto löschen</span>
             <small>Wenn Sie Ihr Konto löschen, werden alle Ihre Daten gelöscht</small>
         </Flex>
-        <IodButton class="w-18" label="Konto löschen" color-preset="error"/>
+        <IodButton class="w-18" label="Konto löschen" color-preset="error" @click="deleteAccountPopup?.open()"/>
     </Flex>
 
 
 
-    <IodPopup ref="changePasswordPopup" title="Passwort ändern" max-width="500px">
-        <Flex is="form" :gap="1" :padding="2" @submit.prevent="changePassword">
-            <IodInput v-model="changePasswordForm.current_password" label="Aktuelles Passwort" type="password"/>
-            <IodInput v-model="changePasswordForm.new_password" show-score :score-function="useZxcvbn()" label="Neues Passwort" type="password"/>
-            <IodButton label="Passwort ändern" color-preset="primary"/>
+    <IodPopup ref="changePasswordPopup" title="Passwort ändern" max-width="500px" @open="changePasswordForm.reset">
+        <Flex is="form" :gap="2" :padding="2" @submit.prevent="changePassword">
+            <ErrorAlert :errors="changePasswordForm.errors"/>
+            <Flex :gap="1">
+                <IodInput v-model="changePasswordForm.password" label="Aktuelles Passwort" type="password"/>
+                <IodInput v-model="changePasswordForm.new_password" show-score :score-function="useZxcvbn()" label="Neues Passwort" type="password"/>
+            </Flex>
+            <IodButton label="Passwort ändern" size="large" :loading="changePasswordForm.processing"/>
+        </Flex>
+    </IodPopup>
+
+    <IodPopup ref="deleteAccountPopup" title="Konto löschen" max-width="500px" @open="deleteAccountForm.reset">
+        <Flex is="form" :gap="2" :padding="2" @submit.prevent="deleteAccount">
+            <Flex :gap="1">
+                <ErrorAlert :errors="deleteAccountForm.errors"/>
+                <IodAlert>
+                    <span>Sie sind dabei Ihr Konto zu löschen. Wenn Sie Ihr Konto löschen, werden ebenfalls all Ihre Daten gelöscht.</span>
+                    <b class="margin-bottom-1">Dies kann nicht rückgängig gemacht werden!</b>
+                    <span>Bestätigen Sie die Kontolöschung, indem Sie Ihr aktuelles Passwort eingeben.</span>
+                </IodAlert>
+            </Flex>
+            <IodInput v-model="deleteAccountForm.password" label="Passwort" type="password"/>
+            <IodButton label="Konto entgültig löschen" size="large" color-preset="error" :loading="deleteAccountForm.processing"/>
         </Flex>
     </IodPopup>
 </template>
@@ -93,7 +111,11 @@
     function updateSetting(key: string, value: any)
     {
         useForm({[key]: value}).patch('/api/user/settings', {
-            onSuccess: () => auth.fetchUser(),
+            onSuccess()
+            {
+                toast.success('Einstellung gespeichert')
+                auth.fetchUser()
+            },
         })
     }
 
@@ -102,7 +124,7 @@
     // START: Change password
     const changePasswordPopup = ref()
     const changePasswordForm = useForm({
-        current_password: '',
+        password: '',
         new_password: ''
     })
 
@@ -117,6 +139,26 @@
         })
     }
     // END: Change password
+
+
+
+    // START: Delete account
+    const deleteAccountPopup = ref()
+    const deleteAccountForm = useForm({
+        password: ''
+    })
+
+    function deleteAccount()
+    {
+        deleteAccountForm.delete('/api/user', {
+            onSuccess() {
+                deleteAccountPopup.value?.close()
+                toast.success('Ihr Konto wird nun gelöscht')
+                auth.logout()
+            },
+        })
+    }
+    // END: Delete account
 </script>
 
 <style lang="sass" scoped></style>

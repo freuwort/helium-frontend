@@ -1,6 +1,6 @@
 <template>
     <Teleport to="body">
-        <FocusTrap :active="isOpen" @deactivate="close(true)">
+        <FocusTrap :active="isOpen" @deactivate="close()">
             <div
                 class="iod-container iod-popup popup-outer-wrapper"
                 :class="{'open': isOpen}"
@@ -13,8 +13,8 @@
                     </div>
     
                     <div class="popup-header" v-if="!noHeader">
-                        <h3>{{title}}</h3>
-                        <button class="close" @click="close(true)">
+                        <h3>{{ title }}</h3>
+                        <button class="close" @click="close()">
                             <code>esc</code>
                             <CloseIcon class="icon" />
                         </button>
@@ -33,6 +33,7 @@
 
 
     const emits = defineEmits([
+        'open',
         'close',
     ])
 
@@ -71,23 +72,28 @@
 
 
 
-    const open = () => {
+    function open()
+    {
         isOpen.value = true
+        emits('open')
     }
 
-    const close = (shouldEmit = false) => {
+    function close()
+    {
         isOpen.value = false
-
-        if (shouldEmit) emits('close')
+        emits('close')
     }
 
-    const closeOnBackdropClick = () => {
-        if (props.shouldCloseOnBackdropClick) close(true)
+    function closeOnBackdropClick()
+    {
+        if (!props.shouldCloseOnBackdropClick) return
+
+        close()
     }
 
 
 
-    // Expose open function
+    // Expose functions
     defineExpose({
         open,
         close,
@@ -121,7 +127,7 @@
             pointer-events: all
             overflow-y: auto
             background: var(--local-color-backdrop)
-            // backdrop-filter: blur(var(--local-blur))
+            backdrop-filter: blur(var(--local-blur))
                 
             .popup-inner-wrapper
                 transform: rotateX(0deg)
