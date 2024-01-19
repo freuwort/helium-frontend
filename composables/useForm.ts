@@ -79,6 +79,8 @@ export function useForm(fields: Object): Form
 
         reset() {
             Object.assign(form, $defaults)
+
+            form.clearErrors()
         },
 
         transform(callback: (data: any) => any)
