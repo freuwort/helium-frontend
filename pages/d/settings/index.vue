@@ -2,13 +2,6 @@
     <h5 class="margin-0 weight-medium">Firmen Einstellungen</h5>
     <Flex horizontal>
         <Flex class="flex-1">
-            <span class="font-heading color-text weight-medium">Firmenlogo</span>
-            <small>Das Logo der Firma, welches in Helium angezeigt wird</small>
-        </Flex>
-        <IodButton class="w-18" label="Bild Hochladen"/>
-    </Flex>
-    <Flex horizontal>
-        <Flex class="flex-1">
             <span class="font-heading color-text weight-medium">Firmen Anzeigename</span>
             <small>Der Name der Firma, welcher in Helium angezeigt wird</small>
         </Flex>

@@ -1,15 +1,10 @@
 <template>
     <h5 class="margin-0 weight-medium">Mein Profil</h5>
-    <Flex horizontal>
-        <Flex class="flex-1">
-            <span class="font-heading color-text weight-medium">Profilbild</span>
-            <small>Laden Sie ein Profilbild hoch, um Ihr Profil zu personalisieren</small>
-        </Flex>
-        <IodButton class="w-18" label="Bild Hochladen"/>
-    </Flex>
+    <IodAlert as="placeholder" class="h-16">
+        <small>keine Einstellungen verfügbar</small>
+    </IodAlert>
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
 <style lang="sass" scoped></style>

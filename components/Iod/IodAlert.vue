@@ -2,9 +2,9 @@
     <div class="iod-container iod-alert" :class="classes">
         <h3 v-show="title">{{ title }}</h3>
 
-        <Flex class="content">
+        <div class="content">
             <slot></slot>
-        </Flex>
+        </div>
     </div>
 </template>
 
@@ -17,11 +17,16 @@
         colorPreset: {
             type: String,
         },
+        as: {
+            type: String,
+            default: 'alert',
+        },
     })
 
     const classes = computed((): object => {
         return [
             `alert-color-preset-${props.colorPreset}`,
+            `alert-type-${props.as}`
         ]
     })
 </script>
@@ -48,6 +53,17 @@
         &.alert-color-preset-error
             color: var(--color-error)
 
+        &.alert-type-alert
+            height: auto
+
+        &.alert-type-placeholder
+            user-select: none
+            color: var(--color-text-disabled)
+
+            .content
+                align-items: center
+                justify-content: center
+
         &::before
             content: ''
             position: absolute
@@ -70,9 +86,13 @@
             color: inherit
 
         .content
+            flex: 1
             position: relative
             z-index: 1
             margin: 0
             color: inherit
+            display: flex
+            flex-direction: column
+            align-items: flex-start
 
 </style>
