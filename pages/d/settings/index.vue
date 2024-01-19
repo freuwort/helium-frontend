@@ -42,6 +42,20 @@
         </Flex>
         <Flex horizontal>
             <Flex class="flex-1">
+                <span class="font-heading color-text weight-medium">Gewicht</span>
+                <small>Wählen Sie Ihre standard Gewichtseinheit</small>
+            </Flex>
+            <IodSelect class="w-18" label="Gewicht" v-model="form.default_unit_weight" :options="options_unit_weight"/>
+        </Flex>
+        <Flex horizontal>
+            <Flex class="flex-1">
+                <span class="font-heading color-text weight-medium">Volumen</span>
+                <small>Wählen Sie Ihre standard Volumeneinheit</small>
+            </Flex>
+            <IodSelect class="w-18" label="Volumen" v-model="form.default_unit_volume" :options="options_unit_volume"/>
+        </Flex>
+        <Flex horizontal>
+            <Flex class="flex-1">
                 <span class="font-heading color-text weight-medium">Temperatur</span>
                 <small>Wählen Sie Ihre standard Temperatureinheit</small>
             </Flex>
@@ -70,6 +84,8 @@
         company_slogan: '',
         default_currency: 'EUR',
         default_unit_length: 'm',
+        default_unit_weight: 'kg',
+        default_unit_volume: 'l',
         default_unit_temperature: 'c',
         default_unit_speed: 'kmh',
     })
@@ -78,12 +94,21 @@
         { value: 'EUR', text: 'EUR', },
         { value: 'USD', text: 'USD', },
         { value: 'GBP', text: 'GBP', },
-        { value: 'CHF', text: 'CHF', },
     ])
 
     const options_unit_length = ref([
         { value: 'm', text: 'Meter', },
         { value: 'ft', text: 'Fuß', },
+    ])
+
+    const options_unit_weight = ref([
+        { value: 'kg', text: 'Kilogramm', },
+        { value: 'lb', text: 'Pfund', },
+    ])
+
+    const options_unit_volume = ref([
+        { value: 'l', text: 'Liter', },
+        { value: 'gal', text: 'Gallone', },
     ])
 
     const options_unit_temperature = ref([
@@ -101,9 +126,7 @@
     function save() 
     {
         form.patch('/api/settings', {
-            onSuccess() {
-                toast.success('Einstellungen gespeichert')
-            }
+            onSuccess() { toast.success('Einstellungen gespeichert') }
         })
     }
 </script>
