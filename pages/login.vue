@@ -3,6 +3,7 @@
         <div class="form-limiter">
             <Card is="form" @submit.prevent="handleLogin">
                 <Flex :gap="2" :padding="2">
+                    <ErrorAlert :errors="form.errors"/>
                     <h1 class="weight-medium align-center margin-0">Anmelden</h1>
     
                     <Flex :gap="1">
@@ -11,7 +12,7 @@
                     </Flex>
                     <Flex :gap="1">
                         <IodToggle type="checkbox" label="Angemeldet bleiben" v-model="form.remember"/>
-                        <IodButton label="Anmelden" size="large"/>
+                        <IodButton label="Anmelden" size="large" :loading="form.processing"/>
                     </Flex>
     
                     <hr>
@@ -28,29 +29,41 @@
 </template>
 
 <script lang="ts" setup>
+    const auth = useAuthStore()
+    
+
+
     definePageMeta({
         middleware: 'guest',
     })
 
 
 
-    const form = ref({
+    const splashscreen = useSplashscreenStore()
+    const form = useForm({
         email: 'admin@example.com',
         password: 'password',
         remember: false,
     })
 
-    const auth = useAuthStore()
-
-    async function handleLogin()
+    function handleLogin()
     {
         // Prevent login if already logged in
         if (auth.isLoggedIn) return
 
         // Attempt login
-        const { error } = await auth.login(form.value)
+        form.post('/login', {
+            async onSuccess()
+            {
+                // Show splashscreen
+                splashscreen.start()
 
-        // Navigate to dashboard if successful
-        if (!error.value) navigateTo('/d')
+                // Fetch user data
+                await auth.fetchUser()
+
+                // Navigate to dashboard if successful
+                navigateTo('/d')
+            },
+        })
     }
 </script>

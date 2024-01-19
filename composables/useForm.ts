@@ -21,12 +21,12 @@ interface Form extends FormDataType
     defaults(data: Object): void,
     transform(callback: (data: any) => any): Form,
     reset(): void,
-    submit(path: string, options: SubmitOptions | Object): Promise<void>,
-    get(path: string, options: SubmitOptions | Object): Promise<void>,
-    post(path: string, options: SubmitOptions | Object): Promise<void>,
-    put(path: string, options: SubmitOptions | Object): Promise<void>,
-    patch(path: string, options: SubmitOptions | Object): Promise<void>,
-    delete(path: string, options: SubmitOptions | Object): Promise<void>,
+    submit(path: string, options?: SubmitOptions | Object): Promise<void>,
+    get(path: string, options?: SubmitOptions | Object): Promise<void>,
+    post(path: string, options?: SubmitOptions | Object): Promise<void>,
+    put(path: string, options?: SubmitOptions | Object): Promise<void>,
+    patch(path: string, options?: SubmitOptions | Object): Promise<void>,
+    delete(path: string, options?: SubmitOptions | Object): Promise<void>,
 }
 
 

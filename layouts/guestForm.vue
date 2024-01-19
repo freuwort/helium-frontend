@@ -27,6 +27,7 @@
 <script lang="ts" setup>
     const props = useAttrs()
     const domain = useDomainStore()
+    const splashscreen = useSplashscreenStore()
     
     useHead({
         title: props.pageTitle as string,
@@ -36,6 +37,10 @@
         }
     })
 
+    onMounted(() => {
+        // Hide splashscreen if it is still idle
+        if (!splashscreen.isIdle) splashscreen.finish()
+    })
 </script>
 
 <style scoped lang="sass">

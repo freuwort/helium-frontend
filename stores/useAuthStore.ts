@@ -53,38 +53,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     const user = ref<User | null>(null)
     const isLoggedIn = computed(() => user.value !== null)
-
-
-
-    async function register(info: RegistrationInfo)
-    {
-        await useApiFetch('/sanctum/csrf-cookie')
-
-        const request = await useApiFetch('/register', {
-            method: 'POST',
-            body: info,
-        })
-
-        await fetchUser()
-
-        return request
-    }
-
-
-
-    async function login(credentials: Credentials)
-    {
-        await useApiFetch('/sanctum/csrf-cookie')
-
-        const request = await useApiFetch('/login', {
-            method: 'POST',
-            body: credentials,
-        })
-
-        await fetchUser()
-
-        return request
-    }
+    const splashscreen = useSplashscreenStore()
 
 
 
@@ -99,6 +68,8 @@ export const useAuthStore = defineStore('auth', () => {
 
     async function logout()
     {
+        splashscreen.start()
+
         await useApiFetch('/logout', { method: 'POST' })
 
         user.value = null
@@ -108,5 +79,5 @@ export const useAuthStore = defineStore('auth', () => {
 
 
 
-    return { user, isLoggedIn, register, login, fetchUser, logout }
+    return { user, isLoggedIn, fetchUser, logout }
 })

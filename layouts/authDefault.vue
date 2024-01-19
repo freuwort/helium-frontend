@@ -17,6 +17,7 @@
 <script lang="ts" setup>
     const props = useAttrs()
     const domain = useDomainStore()
+    const splashscreen = useSplashscreenStore()
     const hero = ref<HTMLElement>()
     
     useHead({
@@ -41,6 +42,16 @@
 
         // Calculate contrast
         return Math.round((color[0] * 299 + color[1] * 587 + color[2] * 114) / 1000) <= 128 ? 'light' : 'dark'
+    })
+
+
+
+    onMounted(() => {
+        // If this is the first page after a reload, show splashscreen
+        if (!splashscreen.touched) splashscreen.start()
+
+        // Hide splashscreen if it is still idle
+        if (!splashscreen.isIdle) splashscreen.finish()
     })
 </script>
 
