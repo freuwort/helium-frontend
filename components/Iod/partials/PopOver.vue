@@ -12,12 +12,12 @@
 </template>
 
 <script lang="ts"> 
-
+    import type { refDOMBounds } from '../helpers/refDOMBounds'
 </script>
 
 <script setup lang="ts">
-import { PropType, StyleValue, computed, onMounted, ref } from 'vue';
-import {refDOMBounds, getEmptyRefDOMBounds, useElementBounding} from '../helpers/refDOMBounds';
+import { computed, onMounted, ref } from 'vue'
+import { getEmptyRefDOMBounds, useElementBounding } from '../helpers/refDOMBounds'
 
 
 
@@ -26,7 +26,7 @@ const props = defineProps({
     parentRect: {
         type: Object as PropType<refDOMBounds>,
         default: (): refDOMBounds => {
-            return getEmptyRefDOMBounds();
+            return getEmptyRefDOMBounds()
         }
     },
     placement: {
@@ -68,24 +68,26 @@ defineExpose({
 const positionCSS = computed(() => {
     if(props.parentRect == null) return {};
 
-    const bodyRect = document.body.getBoundingClientRect();
+    const bodyRect = document?.body.getBoundingClientRect();
 
     const offsetToBody = {
-        top: props.parentRect.top.value - bodyRect.top,
-        left: props.parentRect.left.value - bodyRect.left,
-        bottom: props.parentRect.bottom.value - bodyRect.top,
+        top: props.parentRect?.top.value - bodyRect?.top,
+        left: props.parentRect?.left.value - bodyRect?.left,
+        bottom: props.parentRect?.bottom.value - bodyRect?.top,
     }
 
-    const scrollBarWidth = (window.innerWidth - document.documentElement.clientWidth);
+    const scrollBarWidth = (window?.innerWidth - document?.documentElement?.clientWidth);
     const graceMargin = 10;
 
-    const css : StyleValue = {
+    const css = {
+        top: '',
+        transform: '',
         left: `${offsetToBody.left}px`,
         maxWidth: `calc(100vw - ${scrollBarWidth + graceMargin*2}px)`
     }
 
-    if(ourBounds.width.value + offsetToBody.left > bodyRect.width - scrollBarWidth) {
-        css.left = `${bodyRect.width - ourBounds.width.value - graceMargin}px`;
+    if(ourBounds.width.value + offsetToBody.left > bodyRect?.width - scrollBarWidth) {
+        css.left = `${bodyRect?.width - ourBounds.width.value - graceMargin}px`;
     }
 
     let actualPlacement = props.placement;
@@ -93,16 +95,17 @@ const positionCSS = computed(() => {
     {
         //check if the current placement (top / bottom) is possible without clipping the window
         let preferBottom = Math.abs(Math.min(props.parentRect.top.value - ourBounds.height.value, 0))
-        let preferTop = Math.max(props.parentRect.bottom.value + ourBounds.height.value - window.innerHeight, 0)
+        let preferTop = Math.max(props.parentRect.bottom.value + ourBounds.height.value - window?.innerHeight, 0)
 
         if(preferBottom > preferTop) actualPlacement = 'bottom'
         else if(preferTop > preferBottom) actualPlacement = 'top';
 
     }
 
-    switch (actualPlacement) {
+    switch (actualPlacement)
+    {
         case 'top':
-            css.top = `${offsetToBody.top}px`;
+            css.top = `${offsetToBody?.top}px`;
             css.transform = `translateY(-100%)`;
             break;
         case 'bottom':

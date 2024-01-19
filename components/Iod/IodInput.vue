@@ -285,7 +285,7 @@
 
     const helperText = computed((): string => {
         // Prefer error text over helper text over empty
-        return (!isValid.value ? props.errorText : null) || props.helper || ''
+        return props.errorText || props.helper || ''
     })
 
 
@@ -504,10 +504,10 @@
 
     // START: Validation
     const validateOnBlur = (): void => {
-        validate(['badInput', 'patternMismatch', 'rangeOverflow', 'rangeUnderflow', 'stepMismatch', 'tooLong', 'tooShort', 'typeMismatch', 'valueMissing'])
+        validate(['errorTextPresent', 'badInput', 'patternMismatch', 'rangeOverflow', 'rangeUnderflow', 'stepMismatch', 'tooLong', 'tooShort', 'typeMismatch', 'valueMissing'])
     }
 
-    const validateInstantly = (): void => validate(['badInput', 'patternMismatch', 'tooLong'])
+    const validateInstantly = (): void => validate(['errorTextPresent', 'badInput', 'patternMismatch', 'tooLong'])
     
     const validate = (watchForKey: string[]): void => {
         // Return if input is disabled or empty
@@ -528,6 +528,7 @@
             typeMismatch: !!validityState?.typeMismatch,
             valid: !!validityState?.valid,
             valueMissing: !!validityState?.valueMissing,
+            errorTextPresent: !!props.errorText,
         }
 
         // Select all keys of the validityStateObject that are in the watchForKey array and check if all of them are false meaning the input is valid
