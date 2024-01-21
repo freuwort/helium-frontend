@@ -1,10 +1,10 @@
 <template>
     <div class="page-layout">
         <header>
-            <div class="company-logo" v-if="domain?.companyMeta">
-                <img :src="domain?.companyMeta?.logo" :alt="domain?.companyMeta?.name" />
+            <div class="company-logo" v-if="domain?.settings">
+                <img :src="domain?.settings?.company_logo" :alt="domain?.settings?.company_name" />
             </div>
-            <h2>{{ domain?.companyMeta?.name }}</h2>
+            <h2>{{ domain?.settings?.company_name }}</h2>
         </header>
         <main>
             <slot />
@@ -12,7 +12,7 @@
         <footer>
             <div class="form-limiter">
                 <Flex horizontal :gap="1">
-                    <span>© {{ $dayjs().year() }} {{ domain?.companyMeta?.legalName }}</span>
+                    <span>© {{ $dayjs().year() }} {{ domain?.settings?.company_legalname }}</span>
                     <Spacer />
                     <a href="/legal" target="_blank">Impressum</a>
                     <a href="/privacy" target="_blank">Datenschutz</a>
@@ -31,7 +31,7 @@
     
     useHead({
         title: props.pageTitle as string,
-        titleTemplate: `%s – ${domain?.companyMeta?.name} Verwaltung`,
+        titleTemplate: `%s – ${domain?.settings?.company_name} Verwaltung`,
         bodyAttrs: {
             class: 'background-soft'
         }

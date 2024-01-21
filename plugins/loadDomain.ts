@@ -4,6 +4,6 @@ export default defineNuxtPlugin({
     async setup()
     {
         const domain = useDomainStore()
-        await domain.fetchCompanyMeta()
+        await domain.fetchSettings()
     }
 })

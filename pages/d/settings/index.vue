@@ -6,21 +6,35 @@
                 <span class="font-heading color-text weight-medium">Firmen Anzeigename</span>
                 <small>Der Name der Firma, welcher in Helium angezeigt wird</small>
             </Flex>
-            <IodInput label="Anzeigename" class="w-18"/>
+            <IodInput label="Anzeigename" v-model="form.company_name" class="w-18"/>
         </Flex>
         <Flex horizontal>
             <Flex class="flex-1">
                 <span class="font-heading color-text weight-medium">Eingetragener Firmenname</span>
                 <small>Der offizielle Name der Firma</small>
             </Flex>
-            <IodInput label="Name" class="w-18" placeholder="Unternehmen GmbH"/>
+            <IodInput label="Name" v-model="form.company_legalname" class="w-18" placeholder="Unternehmen GmbH"/>
         </Flex>
         <Flex horizontal>
             <Flex class="flex-1">
                 <span class="font-heading color-text weight-medium">Slogan</span>
                 <small>Ein kurzer Slogan, welcher in Helium angezeigt wird</small>
             </Flex>
-            <IodInput label="Slogan" class="w-18"/>
+            <IodInput label="Slogan" v-model="form.company_slogan" class="w-18"/>
+        </Flex>
+        <Flex horizontal>
+            <Flex class="flex-1">
+                <span class="font-heading color-text weight-medium">Logo</span>
+                <small>Das Firmen Logo, welches in Helium angezeigt wird</small>
+            </Flex>
+            <IodInput label="Logo" v-model="form.company_logo" class="w-18" placeholder="https://example.com/logo.png"/>
+        </Flex>
+        <Flex horizontal>
+            <Flex class="flex-1">
+                <span class="font-heading color-text weight-medium">Favicon</span>
+                <small>Das Favicon, welches in Helium angezeigt wird</small>
+            </Flex>
+            <IodInput label="Favicon" v-model="form.company_favicon" class="w-18" placeholder="https://example.com/favicon.ico"/>
         </Flex>
     
         <div class="h-1"></div>
@@ -78,16 +92,20 @@
 <script lang="ts" setup>
     import { toast } from 'vue3-toastify'
 
+    const domain = useDomainStore()
+
     const form = useForm({
-        company_name: '',
-        company_legalname: '',
-        company_slogan: '',
-        default_currency: 'EUR',
-        default_unit_length: 'm',
-        default_unit_weight: 'kg',
-        default_unit_volume: 'l',
-        default_unit_temperature: 'c',
-        default_unit_speed: 'kmh',
+        company_name: domain?.settings?.company_name ?? '',
+        company_legalname: domain?.settings?.company_legalname ?? '',
+        company_slogan: domain?.settings?.company_slogan ?? '',
+        company_logo: domain?.settings?.company_logo ?? '',
+        company_favicon: domain?.settings?.company_favicon ?? '',
+        default_currency: domain?.settings?.default_currency ?? 'EUR',
+        default_unit_length: domain?.settings?.default_unit_length ?? 'm',
+        default_unit_weight: domain?.settings?.default_unit_weight ?? 'kg',
+        default_unit_volume: domain?.settings?.default_unit_volume ?? 'l',
+        default_unit_temperature: domain?.settings?.default_unit_temperature ?? 'c',
+        default_unit_speed: domain?.settings?.default_unit_speed ?? 'kmh',
     })
 
     const options_currency = ref([

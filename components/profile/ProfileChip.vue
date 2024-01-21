@@ -4,7 +4,7 @@
 
         <Flex :x-align="horizontalAlign">
             <span class="name">{{ auth.user.name }}</span>
-            <span class="company" v-show="showCompany" v-if="domain.companyMeta">{{ domain.companyMeta.name }}</span>
+            <span class="company" v-show="showCompany" v-if="domain.settings">{{ domain.settings.company_name }}</span>
         </Flex>
     </Flex>
 </template>

@@ -22,7 +22,7 @@
     
     useHead({
         title: props.pageTitle as string,
-        titleTemplate: `%s – ${domain?.companyMeta?.name} Verwaltung`,
+        titleTemplate: `%s – ${domain?.settings?.company_name} Verwaltung`,
         htmlAttrs: {
             'class': 'background-soft small-scrollbar',
         },
