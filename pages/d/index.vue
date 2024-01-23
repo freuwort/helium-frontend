@@ -21,4 +21,4 @@
     })
 </script>
 
-<style scoped></style>
+<style lang="sass" scoped></style>

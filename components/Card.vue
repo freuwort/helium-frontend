@@ -1,5 +1,5 @@
 <template>
-    <component :is="is" class="background border-soft radius-l shadow-low">
+    <component :is="is" class="background border-soft radius-xl shadow-low">
         <slot />
     </component>
 </template>

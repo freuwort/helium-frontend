@@ -144,7 +144,10 @@
     function save() 
     {
         form.patch('/api/settings', {
-            onSuccess() { toast.success('Einstellungen gespeichert') }
+            onSuccess() {
+                toast.success('Einstellungen gespeichert')
+                domain.fetchSettings()
+            }
         })
     }
 </script>

@@ -5,12 +5,12 @@
                 <Flex horizontal y-align="stretch">
                     <Flex padding="2rem 0" y-align="flex-start" class="w-18 border-right-soft">
                         <ContextMenuLabel label="Konto"/>
-                        <ContextMenuItem to="/d/settings/profile" icon="person" label="Profil" :active="useIsRoute('d-settings-profile')"/>
-                        <ContextMenuItem to="/d/settings/personal" icon="settings" label="Konto" :active="useIsRoute('d-settings-personal')" />
+                        <ContextMenuItem to="/d/settings/profile" icon="person" label="Profil" :active="isRoute('d-settings-profile')"/>
+                        <ContextMenuItem to="/d/settings/personal" icon="settings" label="Konto" :active="isRoute('d-settings-personal')" />
 
                         <ContextMenuLabel label="Domain" class="margin-top-1"/>
-                        <ContextMenuItem to="/d/settings/" icon="store" label="System" :active="useIsRoute('d-settings')" />
-                        <ContextMenuItem to="/d/settings/debug" icon="bug_report" label="Debug" :active="useIsRoute('d-settings-debug')" />
+                        <ContextMenuItem to="/d/settings/" icon="store" label="System" :active="isRoute('d-settings')" />
+                        <ContextMenuItem to="/d/settings/debug" icon="bug_report" label="Debug" :active="isRoute('d-settings-debug')" />
                     </Flex>
                     <Flex :padding="2" :gap="1" y-align="flex-start" class="flex-1">
                         <NuxtPage />

@@ -6,33 +6,21 @@
                 <span class="font-heading color-text weight-medium">Sprache</span>
                 <small>Wählen Sie die Programm Sprache</small>
             </Flex>
-            <select class="w-18" v-model="form.language">
-                <option value="de">Deutsch</option>
-                <option value="en">Englisch</option>
-            </select>
+            <IodSelect class="w-18" label="Sprache" v-model="form.language" :options="options_language"/>
         </Flex>
         <Flex horizontal>
             <Flex class="flex-1">
                 <span class="font-heading color-text weight-medium">Zeitzone</span>
                 <small>Wählen Sie Ihre Zeitzone</small>
             </Flex>
-            <select class="w-18" v-model="form.timezone">
-                <option value="America/Los_Angeles">Los Angeles</option>
-                <option value="America/New_York">New York</option>
-                <option value="Europe/Berlin">Berlin</option>
-                <option value="Pacific/Auckland">New Zealand</option>
-            </select>
+            <IodSelect class="w-18" label="Zeitzone" v-model="form.timezone" :options="options_timezone"/>
         </Flex>
         <Flex horizontal>
             <Flex class="flex-1">
                 <span class="font-heading color-text weight-medium">Theme</span>
                 <small>Wählen Sie Ihr lieblings Theme</small>
             </Flex>
-            <select class="w-18" v-model="form.theme">
-                <option value="light">Hell</option>
-                <option value="dark">Dunkel</option>
-                <option value="system">System</option>
-            </select>
+            <IodSelect class="w-18" label="Theme" v-model="form.theme" :options="options_theme"/>
         </Flex>
 
         <IodButton class="w-18 margin-left-auto " label="Speichern" :loading="form.processing"/>
@@ -103,6 +91,23 @@
         theme: auth.user?.settings?.theme ?? 'light',
     })
 
+    const options_language = [
+        { value: 'de', text: 'Deutsch' },
+        { value: 'en', text: 'Englisch' },
+    ]
+
+    const options_timezone = [
+        { value: 'America/Los_Angeles', text: 'Los Angeles' },
+        { value: 'America/New_York', text: 'New York' },
+        { value: 'Europe/Berlin', text: 'Berlin' },
+        { value: 'Pacific/Auckland', text: 'New Zealand' },
+    ]
+
+    const options_theme = [
+        { value: 'light', text: 'Hell' },
+        { value: 'dark', text: 'Dunkel' },
+    ]
+
     function save()
     {
         form.patch('/api/user/settings', {
@@ -155,4 +160,7 @@
     // END: Delete account
 </script>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+    .w-18
+        width: 18rem !important
+</style>
