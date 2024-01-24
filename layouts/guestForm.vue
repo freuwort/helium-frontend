@@ -53,6 +53,7 @@
         background-color: var(--color-text)
         background-image: url('/images/app/banner_pattern_light.png')
         background-size: auto 100%
+        background-position: top center
         color: var(--color-background)
         min-height: 400px
         padding-bottom: 4rem
