@@ -42,8 +42,8 @@
                 </template>
                 
                 <div class="spacer"></div>
-                
-                <IodButton type="button" size="normal" icon-left="add" label="Neu" @click="$emit('request:create')" v-show="showCreate"/>
+
+                <slot name="header"/>
             </div>
 
             <div class="fixture-row">
@@ -83,7 +83,6 @@
                         <div class="column-sort-indicator">{{ sort.order === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</div>
                         <div class="column-resize-handle" @mousedown.stop="startResize($event, column)"></div>
                     </div>
-                    <!-- <div class="table-column actions"></div> -->
                 </div>
             </div>
 
@@ -92,12 +91,11 @@
                     <div class="table-column centered w-3">
                         <IodToggle :modelValue="getSelection.includes(item.id)" @click.stop @update:modelValue="setSelection(item, $event)"/>
                     </div>
+
                     <div class="table-column" v-for="column in columns.filter(e => e.show)" :style="`width: ${column.width}px;`">
-                        <!-- <TableColumn :type="column.type" :value="getValue(item, column)" /> -->
-                        <div class="column-text" v-tooltip="getValue(item, column)">
-                            {{ getValue(item, column) }}
-                        </div>
+                        <IodTableColumn :data="getData(item, column)"/>
                     </div>
+
                     <div class="table-column actions">
                         <div class="button-container">
                             <IodIconButton v-for="action in individualActions" :icon="action.icon" :style="'--local-color-background: '+action.color" v-tooltip="action.text" @click.stop="action.run([item.id])"/>
@@ -151,6 +149,7 @@
         sortable?: boolean,
         resizeable?: boolean,
         hideable?: boolean,
+        default?: string | undefined,
         // Private
         show?: boolean,
         resizing?: boolean,
@@ -230,10 +229,6 @@
             type: String,
             default: 'generic',
         },
-        showCreate: {
-            type: Boolean,
-            default: false,
-        },
         loading: {
             type: Boolean,
             default: false,
@@ -246,7 +241,6 @@
         'update:pagination',
         'update:sort',
         'request:refresh',
-        'request:create',
     ])
 
 
@@ -465,9 +459,16 @@
 
 
 
-    const getValue = (item: Item, column: Column) => {
+    const getData = (item: Item, column: Column) => {
         let path = column?.valuePath?.split('.') ?? []
         let value = item as any
+        let data = {
+            text: column.default ?? null,
+            tooltip: null,
+            color: null,
+            icon: null,
+            image: null,
+        }
 
         for (const part of path)
         {
@@ -482,10 +483,27 @@
         
         if (column.transform)
         {
-            value = column.transform(value, item)
-        }
+            let transformedValue = column.transform(value, item)
 
-        return value
+            if (typeof transformedValue === 'string')
+            {
+                data.text = transformedValue
+            }
+            else
+            {
+                data = {
+                    ...data,
+                    ...transformedValue,
+                }
+            }
+        }
+        else
+        {
+            data.text = value ?? column.default ?? null
+        }
+        
+
+        return data
     }
 </script>
 
@@ -575,7 +593,7 @@
                 align-items: center
                 min-height: 3rem
                 position: relative
-                border-bottom: 1px solid var(--color-border)
+                border-bottom: 1px solid var(--color-background-soft)
 
                 &:last-child
                     border-bottom: none
@@ -685,13 +703,6 @@
                     text-overflow: ellipsis
                     white-space: nowrap
                     color: var(--color-text)
-
-                .column-text
-                    white-space: nowrap
-                    overflow: hidden
-                    text-overflow: ellipsis
-                    padding-block: .25rem
-                    padding-inline: 1rem
 
             .table-head
                 .table-row
