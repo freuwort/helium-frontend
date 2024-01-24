@@ -16,7 +16,7 @@
                 @request:refresh="IPM.fetch()"
             >
                 <template #header>
-                    <IodButton label="Neuer Nutzer"/>
+                    <IodButton type="button" label="Neuer Nutzer" @click="IPM.open()"/>
                 </template>
             </IodTable>
         </Card>
@@ -36,9 +36,9 @@
         scope: 'admin.users.index',
         routes: {
             fetch: '/api/users/',
-            editor: '/api/users/:id',
             duplicate: '/api/users/:id/duplicate',
             delete: '/api/users/:id',
+            editor: '/d/users/editor/:id',
         },
     })
 
@@ -66,7 +66,7 @@
             multiple: false,
             triggerOnRowClick: true,
             isAvailable: () => true,
-            run: (items: (number | string)[]) => null,
+            run: (items: (number | string)[]) => IPM.open(items[0]),
         },
         {
             icon: 'content_copy',
@@ -76,7 +76,7 @@
             multiple: false,
             triggerOnRowClick: false,
             isAvailable: () => true,
-            run: (items: (number | string)[]) => null,
+            run: (items: (number | string)[]) => IPM.duplicate(items[0]),
         },
         {
             icon: 'delete',
@@ -86,7 +86,7 @@
             multiple: true,
             triggerOnRowClick: false,
             isAvailable: () => true,
-            run: (items: (number | string)[]) => null,
+            run: (items: (number | string)[]) => IPM.delete(items),
         },
     ]
 
