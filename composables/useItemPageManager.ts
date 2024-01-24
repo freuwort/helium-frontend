@@ -187,11 +187,9 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
 
 
 
-        open(id: Id | null = null)
+        open(id?: Id)
         {
-            if (!id) return navigateTo(this.options.routes?.editor)
-
-            navigateTo(this.options.routes?.editor + '/' + id)
+            navigateTo(apiRoute(this.options.routes?.editor as string, { id: id ?? '' }))
         },
 
         store(data: any[])
@@ -205,7 +203,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
 
         duplicate(id: Id)
         {
-            useForm({returnTo: 'current'}).post(this.options.routes?.duplicate + '/' + id, {
+            useForm({}).post(apiRoute(this.options.routes?.duplicate as string, { id }), {
                 onSuccess: () => {
                     $fetch()
                 },

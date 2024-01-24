@@ -18,7 +18,7 @@ interface Form extends FormDataType
     errors: NuxtError[],
     processing: boolean,
     data(): Partial<Object>,
-    defaults(data: Object): void,
+    defaults(data: Object): Form,
     transform(callback: (data: any) => any): Form,
     reset(): void,
     submit(path: string, options?: SubmitOptions | Object): Promise<void>,
@@ -75,6 +75,8 @@ export function useForm(fields: Object): Form
         defaults(data: Object)
         {
             $defaults = Object.assign($defaults, $withoutReserved(data))
+
+            return form
         },
 
         reset() {
