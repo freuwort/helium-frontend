@@ -16,4 +16,10 @@ export default defineNuxtConfig({
     pinia: {
         storesDirs: ['./stores/**'],
     },
+
+    dayjs: {
+        locales: ['de', 'en'],
+        defaultLocale: 'de',
+        plugins: ['relativeTime'],
+    },
 })
