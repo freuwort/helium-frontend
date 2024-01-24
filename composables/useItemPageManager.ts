@@ -146,6 +146,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
 
 
 
+        fetch: $fetch,
         throttledFetch: _.throttle($fetch, 300),
 
 
