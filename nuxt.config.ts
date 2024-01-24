@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     modules: [
         'dayjs-nuxt',
         '@pinia/nuxt',
+        '@nuxt/test-utils/module',
     ],
     
     devtools: {
