@@ -12,7 +12,7 @@
                     <ContextMenu class="min-w-20">
                         <ContextMenuItem to="/d/" show-chevron color="var(--color-primary)" icon="dashboard">Startseite</ContextMenuItem>
                         <ContextMenuItem show-chevron color="var(--color-primary)" icon="folder">Dateien</ContextMenuItem>
-                        <ContextMenuItem show-chevron color="var(--color-primary)" icon="group">Nutzer</ContextMenuItem>
+                        <ContextMenuItem to="/d/users" show-chevron color="var(--color-primary)" icon="group">Nutzer</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="#9747FF" icon="package_2">Produkte</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem>
