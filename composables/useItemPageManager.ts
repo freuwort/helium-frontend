@@ -268,15 +268,9 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
             ...IPM.pagination
         })
 
-        console.log(route)
-        
-        
-
         let { data, error } = await useApiFetch(route)
 
-        let fetchData = data?.value as FetchData
-        
-        
+        // let fetchData = data?.value as FetchData
 
         // IPM.items = fetchData.data ?? []
         // IPM.itemIds = fetchData.item_ids ?? IPM.items.map(i => i?.id).filter(id => id || id === 0 || id === '0') ?? []
