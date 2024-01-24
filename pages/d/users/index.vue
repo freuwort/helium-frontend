@@ -1,27 +1,25 @@
 <template>
     <NuxtLayout name="auth-default" :pageTitle="IPM.options.pageTitle" color="var(--color-primary)">
-        <div class="limiter">
-            <Card>
-                <IodTable
-                    show-create
-                    :columns="tableColumns"
-                    :actions="tableActions"
-                    :filter-settings="tableFilters"
-                    :items="IPM.items"
-                    :scope="IPM.options.scope"
-                    :loading="IPM.processing"
-                    v-model:selection="IPM.selection"
-                    v-model:filter="IPM.modelFilter"
-                    v-model:sort="IPM.modelSort"
-                    v-model:pagination="IPM.modelPagination"
-                    @request:refresh="IPM.fetch()"
-                >
-                    <template #header>
-                        <IodButton label="Neuer Nutzer"/>
-                    </template>
-                </IodTable>
-            </Card>
-        </div>
+        <Card>
+            <IodTable
+                show-create
+                :columns="tableColumns"
+                :actions="tableActions"
+                :filter-settings="tableFilters"
+                :items="IPM.items"
+                :scope="IPM.options.scope"
+                :loading="IPM.processing"
+                v-model:selection="IPM.selection"
+                v-model:filter="IPM.modelFilter"
+                v-model:sort="IPM.modelSort"
+                v-model:pagination="IPM.modelPagination"
+                @request:refresh="IPM.fetch()"
+            >
+                <template #header>
+                    <IodButton label="Neuer Nutzer"/>
+                </template>
+            </IodTable>
+        </Card>
     </NuxtLayout>
 </template>
 

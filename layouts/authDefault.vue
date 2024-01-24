@@ -9,7 +9,9 @@
             <h2><slot name="title">{{ props.pageTitle }}</slot></h2>
         </div>
         <main>
-            <slot />
+            <div :class="limiter">
+                <slot />
+            </div>
         </main>
     </div>
 </template>
@@ -28,8 +30,9 @@
         },
     })
 
-    const bestContrast = computed((): string => {
 
+
+    const bestContrast = computed((): string => {
         // Return default color if no hero is set
         if (!hero.value) return 'light'
         
@@ -42,6 +45,10 @@
 
         // Calculate contrast
         return Math.round((color[0] * 299 + color[1] * 587 + color[2] * 114) / 1000) <= 128 ? 'light' : 'dark'
+    })
+
+    const limiter = computed(() => {
+        return `${props.limiter || 'normal'}-limiter`
     })
 
 
