@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" pageTitle="Nutzer Verwaltung" color="var(--color-primary)">
+    <NuxtLayout name="auth-default" :pageTitle="IPM.options.pageTitle" color="var(--color-primary)">
         <div class="limiter">
             <Card>
                 <IodTable
@@ -7,9 +7,9 @@
                     :columns="tableColumns"
                     :actions="tableActions"
                     :filter-settings="tableFilters"
-                    :items="items"
-                    :scope="'Test'"
-                    :loading="false"
+                    :items="IPM.items"
+                    :scope="IPM.options.scope"
+                    :loading="IPM.processing"
                 />
             </Card>
         </div>
@@ -23,7 +23,16 @@
 
 
 
-    const items = ref([])
+    const IPM = useItemPageManager({
+        pageTitle: 'Nutzer Verwaltung',
+        scope: 'admin.users.index',
+        routes: {
+            fetch: '/api/users/',
+            editor: '/api/users/:id',
+            duplicate: '/api/users/:id/duplicate',
+            delete: '/api/users/:id',
+        },
+    })
 
     const tableColumns = [
         { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 300, resizeable: true, hideable: true},
@@ -66,14 +75,7 @@
         },
     ]
 
-    const tableFilters = []
-
-    useForm({}).get('/api/users', {
-        onSuccess(data: any)
-        {
-            items.value = data.value
-        }
-    })
+    const tableFilters = [] as any[]
 </script>
 
 <style lang="sass" scoped></style>
