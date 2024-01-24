@@ -41,7 +41,7 @@
                         <ContextMenuItem color="var(--color-primary)" icon="person_add">Nutzer erstellen</ContextMenuItem>
                         <ContextMenuItem color="var(--color-primary)" icon="add_business">Unternehmen erstellen</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem show-chevron color="var(--color-primary)" icon="group">Alle Nutzer</ContextMenuItem>
+                        <ContextMenuItem to="/d/users" show-chevron color="var(--color-primary)" icon="group">Alle Nutzer</ContextMenuItem>
                         <ContextMenuItem show-chevron color="var(--color-primary)" icon="store">Alle Unternehmen</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="var(--color-primary)" icon="badge">Berechtigungen</ContextMenuItem>
@@ -101,10 +101,10 @@
                 </template>
             </VDropdown>
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
-                <ProfileChip show-company align="right" class="min-h-4"/>
+                <ProfileChip :user="auth.user ?? {}" show-company align="right" class="min-h-4"/>
                 <template #popper>
                     <ContextMenu class="min-w-20">
-                        <ContextMenuItem to="/d/settings/profile" show-chevron icon="person">Profil</ContextMenuItem>
+                        <ContextMenuItem to="/d/profile" show-chevron icon="person">Profil</ContextMenuItem>
                         <ContextMenuItem to="/d/settings/personal" show-chevron icon="settings">Konto</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem is="button" show-chevron color="var(--color-red)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>

@@ -4,7 +4,6 @@
             <Flex horizontal y-align="stretch">
                 <Flex padding="2rem 0" y-align="flex-start" class="w-18 border-right-soft">
                     <ContextMenuLabel label="Konto"/>
-                    <ContextMenuItem to="/d/settings/profile" icon="person" label="Profil" :active="isRoute('d-settings-profile')"/>
                     <ContextMenuItem to="/d/settings/personal" icon="settings" label="Konto" :active="isRoute('d-settings-personal')" />
 
                     <ContextMenuLabel label="Domain" class="margin-top-1"/>

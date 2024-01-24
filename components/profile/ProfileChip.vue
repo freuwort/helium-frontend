@@ -1,9 +1,9 @@
 <template>
-    <Flex :is="is" type="button" class="chip" horizontal gap="1rem" padding="0 1rem" v-if="auth.user">
-        <img class="image" :style="{'order': imageOrder}" :src="auth.user.profile_image">
+    <Flex :is="is" type="button" class="chip" horizontal gap="1rem" padding="0 1rem" v-if="user">
+        <img class="image" :style="{'order': imageOrder}" :src="user.profile_image">
 
         <Flex :x-align="horizontalAlign">
-            <span class="name">{{ auth.user.name }}</span>
+            <span class="name">{{ user.name }}</span>
             <span class="company" v-show="showCompany" v-if="domain.settings">{{ domain.settings.company_name }}</span>
         </Flex>
     </Flex>
@@ -16,6 +16,10 @@
     const props = defineProps({
         is: {
             default: 'button',
+        },
+        user: {
+            type: Object,
+            default: null,
         },
         align: {
             type: String,

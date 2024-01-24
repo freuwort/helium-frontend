@@ -6,6 +6,8 @@ type User = {
     username: string | null
     ident_number: string | null
 
+    salutation: string | null
+    fullname: string | null
     name: string | null
     prefix: string | null
     firstname: string | null
