@@ -3,7 +3,7 @@
         <img class="image" :style="{'order': imageOrder}" :src="user.profile_image">
 
         <Flex :x-align="horizontalAlign">
-            <span class="name">{{ user.name }}</span>
+            <span class="name">{{ user.fullname }}</span>
             <span class="company" v-show="showCompany" v-if="domain.settings">{{ domain.settings.company_name }}</span>
         </Flex>
     </Flex>
