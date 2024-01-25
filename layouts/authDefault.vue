@@ -80,8 +80,8 @@
         background-position: top center
         color: var(--color-background)
         min-height: 300px
-        padding-bottom: 4rem
-        margin-bottom: -4rem
+        padding-bottom: 4.5rem
+        margin-bottom: -4.5rem
         display: flex
         flex-direction: column
         justify-content: center
@@ -98,5 +98,5 @@
 
     main
         flex: 1
-        padding-bottom: 4rem
+        padding-bottom: 4.5rem
 </style>
