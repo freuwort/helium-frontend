@@ -239,7 +239,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
             }
 
             // Delete the items
-            useForm(data).delete(this.options.routes?.delete as string, {
+            useForm(data).delete(apiRoute(this.options.routes?.delete as string), {
                 onSuccess: () => {
                     this.deselectAll()
                     $fetch()

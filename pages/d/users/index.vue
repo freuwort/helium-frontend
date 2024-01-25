@@ -37,7 +37,7 @@
         routes: {
             fetch: '/api/users/',
             duplicate: '/api/users/:id/duplicate',
-            delete: '/api/users/:id',
+            delete: '/api/users/',
             editor: '/d/users/editor/:id',
         },
     })
@@ -53,8 +53,8 @@
         }},
         { name: 'username', label: 'Nutzername', valuePath: 'username', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
         { name: 'email', label: 'Email', valuePath: 'email', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
-        { name: 'created_at', label: 'Registriert', valuePath: 'created_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  ({ text: dayjs(value).fromNow(), tooltip: dayjs(value).format('DD.MM.YYYY HH:mm') }) },
-        { name: 'email_verified_at', label: 'Verifikation', valuePath: 'email_verified_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) => ({ text: dayjs(value).fromNow(), tooltip: dayjs(value).format('DD.MM.YYYY HH:mm') }) },
+        { name: 'created_at', label: 'Registriert', valuePath: 'created_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: dayjs(value).format('DD.MM.YYYY HH:mm') }) : null },
+        { name: 'email_verified_at', label: 'Verifikation', valuePath: 'email_verified_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) => value ? ({ text: dayjs(value).fromNow(), tooltip: dayjs(value).format('DD.MM.YYYY HH:mm') }) : null },
     ]
 
     const tableActions = [
