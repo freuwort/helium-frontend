@@ -1,4 +1,4 @@
-export default function (route: string, parameters: Partial<object>): string
+export default function (route: string, parameters: Partial<object> = {}): string
 {
     // Flatten parameters
     parameters = flattenObject(parameters)
