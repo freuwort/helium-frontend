@@ -27,6 +27,36 @@
                 <IodInput label="Firma" v-model="form.user_company.company"/>
                 <IodInput label="Abteilung" v-model="form.user_company.department"/>
                 <IodInput label="Titel" v-model="form.user_company.title"/>
+
+                <hr>
+
+                <Flex :gap=".5">
+                    <Flex horizontal :gap=".5">
+                        <b class="flex-1 padding-left-0-5 color-heading user-select-none">Adressen</b>
+                        <IodButton type="button" class="margin-left-auto" label="Neue Adresse" size="small" variant="text" @click="addAddress()"/>
+                    </Flex>
+    
+                    <div class="entity-grid">
+                        <div class="flex vertical background-soft radius-m gap-0-5 padding-block-0-5" v-for="address, i in form.addresses">
+                            <IodIcon icon="location_on" class="margin-inline-auto" style="font-size: 4rem; height: 8rem; width: 4rem; color: var(--color-text)" />
+                            <hr class="margin-0">
+                            <IodSelect style="width: 100% !important" v-model="address.type" label="Adress-Typ" :options="[
+                                { value: 'main', text: 'Hauptadresse' },
+                                { value: 'home', text: 'Zuhause' },
+                                { value: 'work', text: 'Arbeit' },
+                                { value: 'billing', text: 'Rechnungsadresse' },
+                                { value: 'shipping', text: 'Lieferadresse' },
+                                { value: 'other', text: 'Anders' },
+                            ]"/>
+                            <IodInput v-model="address.address_line_1" label="Straße" />
+                            <IodInput v-model="address.postal_code" label="Postleitzahl" />
+                            <IodInput v-model="address.city" label="Stadt" />
+                            <IodInput v-model="address.country" label="Land" />
+                            <hr class="margin-0">
+                            <IodButton type="button" class="margin-inline-0-5" label="löschen" size="small" variant="text" color-preset="error" @click="removeAddress(i)"/>
+                        </div>
+                    </div>
+                </Flex>
             </Flex>
         </Card>
     </NuxtLayout>
@@ -39,10 +69,16 @@
         middleware: 'auth',
     })
 
+    // Item id
     const id = computed(() => useRoute().params.id)
 
+    // Save function
+    const save = id.value ? update : store
+
+
+
     const form = useForm({
-        id: useRoute().params.id ?? null,
+        id: id.value ?? null,
         password: '',
         model: {
             profile_image: '',
@@ -71,6 +107,7 @@
             department: '',
             title: '',
         },
+        addresses: [],
     })
 
     const salutation_options = [
@@ -79,19 +116,41 @@
         { value: 'Divers', text: 'Divers' },
     ]
 
-    if (id.value)
+
+
+    // START: Addresses
+    function addAddress()
     {
-        useForm({}).get(apiRoute('/api/users/:id', { id: id.value }), {
+        form.addresses.push({
+            id: null,
+            type: 'main',
+            address_line_1: '',
+            address_line_2: '',
+            postal_code: '',
+            city: '',
+            state: '',
+            country: '',
+            notes: '',
+        })
+    }
+
+    function removeAddress(index: number)
+    {
+        form.addresses.splice(index, 1)
+    }
+    // END: Addresses
+
+
+
+    function fetch()
+    {
+        form.get(apiRoute('/api/users/:id', { id: id.value }), {
             onSuccess(data: any)
             {
                 form.defaults(data.value).reset()
             },
         })
     }
-
-
-
-    const save = id.value ? update : store
 
     function store()
     {
@@ -115,6 +174,14 @@
             },
         })
     }
+
+    // Initial fetch
+    if (id.value) fetch()
 </script>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+    .entity-grid
+        display: grid
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))
+        grid-gap: 1rem
+</style>
