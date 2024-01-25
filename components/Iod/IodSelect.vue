@@ -428,7 +428,6 @@ function setFocus()
 .iod-container.iod-select
   display: flex
   height: 3rem
-  width: 200px
   border-radius: var(--radius-m)
 
   .iod-input

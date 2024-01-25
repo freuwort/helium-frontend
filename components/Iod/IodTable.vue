@@ -35,9 +35,9 @@
                             <b>{{ selection.length }} {{ selection.length === 1 ? 'Element' : 'Elemente' }}</b> ausgewählt
                         </span>
                     </div>
-                    <div class="flex v-center">
-                        <IodIconButton icon="deselect" style="color: var(--color-text-soft)" v-tooltip="'Alles abwählen'" @click="deselectAll()"/>
-                        <IodIconButton v-for="action in multipleActions" :icon="action.icon" :style="'color: ' + action.color" v-tooltip="action.text" @click.stop="action.run(selection)"/>
+                    <div class="flex v-center gap-0-5">
+                        <IodIconButton icon="deselect" style="--local-color-background: var(--color-text)" variant="contained" v-tooltip="'Alles abwählen'" @click="deselectAll()"/>
+                        <IodIconButton v-for="action in multipleActions" :icon="action.icon" :style="'--local-color-background: ' + action.color" variant="contained" v-tooltip="action.text" @click.stop="action.run(selection)"/>
                     </div>
                 </template>
                 

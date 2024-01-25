@@ -31,7 +31,7 @@
         align-items: center
         overflow: hidden
         padding-inline: 1rem
-        gap: .5rem
+        gap: .75rem
 
         > .text-wrapper
             flex: 1
@@ -42,7 +42,7 @@
             padding-block: .25rem
 
         > .image-wrapper
-            height: 2rem
+            height: 1.75rem
             aspect-ratio: 1
             border-radius: 50%
             background-color: var(--color-background-soft)
