@@ -1,61 +1,221 @@
 <template>
     <NuxtLayout name="auth-default" :pageTitle="id ? 'Nutzer bearbeiten' : 'Nutzer erstellen'" color="var(--color-primary)">
         <Card is="form" @submit.prevent="save">
-            <Flex class="border-bottom" horizontal :padding="1">
+            <ProfileCard class="radius-xl" :title="fullname" :image="form.model.profile_image" :subtitle="form.model.username"/>
+            
+            <Flex class="border-block" horizontal padding="1rem 2rem">
                 <IodButton type="button" label="Abbrechen" :loading="form.processing" variant="contained" @click="navigateTo('/d/users')"/>
                 <Spacer />
                 <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
             </Flex>
-            <Flex :padding="1" :gap="1">
+
+            <Flex :padding="2" :gap="3">
                 <ErrorAlert :errors="form.errors" />
-                <IodInput label="Profilbild" v-model="form.model.profile_image"/>
-                <IodInput label="Name" v-model="form.model.name"/>
-                <IodInput label="Benutzername" v-model="form.model.username"/>
-                <IodInput label="Identifikationsnummer" v-model="form.model.ident_number"/>
-                <IodInput label="Email" v-model="form.model.email"/>
-                <IodInput type="password" label="Passwort" show-score :score-function="useZxcvbn()" v-model="form.password"/>
-                <hr>
-                <IodSelect label="Anrede" v-model="form.user_name.salutation" :options="salutation_options"/>
-                <IodInput label="Präfix" v-model="form.user_name.prefix"/>
-                <IodInput label="Vorname" v-model="form.user_name.firstname"/>
-                <IodInput label="Zweiter Vorname" v-model="form.user_name.middlename"/>
-                <IodInput label="Nachname" v-model="form.user_name.lastname"/>
-                <IodInput label="Suffix" v-model="form.user_name.suffix"/>
-                <IodInput label="Rechtsname" v-model="form.user_name.legalname"/>
-                <IodInput label="Spitzname" v-model="form.user_name.nickname"/>
-                <hr>
-                <IodInput label="Firma" v-model="form.user_company.company"/>
-                <IodInput label="Abteilung" v-model="form.user_company.department"/>
-                <IodInput label="Titel" v-model="form.user_company.title"/>
 
-                <hr>
 
-                <Flex :gap=".5">
-                    <Flex horizontal :gap=".5">
-                        <b class="flex-1 padding-left-0-5 color-heading user-select-none">Adressen</b>
-                        <IodButton type="button" class="margin-left-auto" label="Neue Adresse" size="small" variant="text" @click="addAddress()"/>
+
+                <Flex :gap="1">
+                    <h5 class="margin-0 weight-medium">Konto</h5>
+                    <IodInput label="Name" v-model="form.model.name"/>
+                    <IodInput label="Benutzername" v-model="form.model.username"/>
+                    <IodInput label="Identifikationsnummer" v-model="form.model.ident_number"/>
+                    <IodInput label="Email" v-model="form.model.email"/>
+                    <IodInput type="password" label="Passwort" autocomplete="new-password" show-score :score-function="useZxcvbn()" v-model="form.password"/>
+                </Flex>
+
+
+
+                <Flex :gap="1">
+                    <h5 class="margin-0 weight-medium">Name</h5>
+                    <IodSelect label="Anrede" v-model="form.user_name.salutation" :options="salutation_options"/>
+                    <IodInput label="Präfix" v-model="form.user_name.prefix"/>
+                    <IodInput label="Vorname" v-model="form.user_name.firstname"/>
+                    <IodInput label="Zweiter Vorname" v-model="form.user_name.middlename"/>
+                    <IodInput label="Nachname" v-model="form.user_name.lastname"/>
+                    <IodInput label="Suffix" v-model="form.user_name.suffix"/>
+                    <IodInput label="Rechtsname" v-model="form.user_name.legalname"/>
+                    <IodInput label="Spitzname" v-model="form.user_name.nickname"/>
+                </Flex>
+
+
+
+                <Flex :gap="1">
+                    <h5 class="margin-0 weight-medium">Arbeit</h5>
+                    <IodInput label="Firma" v-model="form.user_company.company"/>
+                    <IodInput label="Abteilung" v-model="form.user_company.department"/>
+                    <IodInput label="Titel" v-model="form.user_company.title"/>
+                </Flex>
+
+
+
+                <Flex :gap="1">
+                    <Flex horizontal>
+                        <h5 class="margin-0 weight-medium">Adressen</h5>
+                        <Spacer />
+                        <IodButton type="button" label="Neue Adresse" size="small" variant="contained" @click="addAddress()"/>
                     </Flex>
     
-                    <div class="entity-grid">
-                        <div class="flex vertical background-soft radius-m gap-0-5 padding-block-0-5" v-for="address, i in form.addresses">
-                            <IodIcon icon="location_on" class="margin-inline-auto" style="font-size: 4rem; height: 8rem; width: 4rem; color: var(--color-text)" />
-                            <hr class="margin-0">
-                            <IodSelect style="width: 100% !important" v-model="address.type" label="Adress-Typ" :options="[
-                                { value: 'main', text: 'Hauptadresse' },
-                                { value: 'home', text: 'Zuhause' },
-                                { value: 'work', text: 'Arbeit' },
-                                { value: 'billing', text: 'Rechnungsadresse' },
-                                { value: 'shipping', text: 'Lieferadresse' },
-                                { value: 'other', text: 'Anders' },
-                            ]"/>
-                            <IodInput v-model="address.address_line_1" label="Straße" />
-                            <IodInput v-model="address.postal_code" label="Postleitzahl" />
-                            <IodInput v-model="address.city" label="Stadt" />
-                            <IodInput v-model="address.country" label="Land" />
-                            <hr class="margin-0">
-                            <IodButton type="button" class="margin-inline-0-5" label="löschen" size="small" variant="text" color-preset="error" @click="removeAddress(i)"/>
-                        </div>
+                    <div class="entity-grid" v-if="form.addresses.length">
+                        <Card class="entity-card" v-for="address, i in form.addresses">
+                            <Flex class="entity-card-head" padding="1rem">
+                                <IodIcon icon="location_on" />
+                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removeAddress(i)"/>
+                            </Flex>
+                            <Flex padding="1rem" gap="1rem">
+                                <IodSelect v-model="address.type" label="Adress-Typ" :options="address_types"/>
+                                <IodInput v-model="address.address_line_1" label="Straße" />
+                                <IodInput v-model="address.postal_code" label="Postleitzahl" />
+                                <IodInput v-model="address.city" label="Stadt" />
+                                <IodInput v-model="address.country" label="Land" />
+                            </Flex>
+                        </Card>
                     </div>
+
+                    <IodAlert as="placeholder" class="h-10" v-else>
+                        <span>Es wurden noch keine Adressen angelegt</span>
+                    </IodAlert>
+                </Flex>
+
+
+
+                <Flex :gap="1">
+                    <Flex horizontal>
+                        <h5 class="margin-0 weight-medium">Bankverbindungen</h5>
+                        <Spacer />
+                        <IodButton type="button" label="Neue Bankverbindung" size="small" variant="contained" @click="addBankConnection()"/>
+                    </Flex>
+
+                    <div class="entity-grid" v-if="form.bank_connections.length">
+                        <Card class="entity-card" v-for="bank, i in form.bank_connections">
+                            <Flex class="entity-card-head" padding="1rem">
+                                <IodIcon icon="account_balance" />
+                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removeBankConnection(i)"/>
+                            </Flex>
+                            <Flex padding="1rem" gap="1rem">
+                                <IodSelect v-model="bank.type" label="Verbindungs-Typ" :options="bank_connection_types"/>
+                                <IodInput v-model="bank.bank_name" label="Bankname" />
+                                <IodInput v-model="bank.branch" label="Filiale" />
+                                <IodInput v-model="bank.account_name" label="Kontoinhaber" />
+                                <IodInput v-model="bank.account_number" label="Kontonummer" />
+                                <IodInput v-model="bank.iban" label="IBAN" />
+                                <IodInput v-model="bank.swift_code" label="SWIFT / BIC" />
+                            </Flex>
+                        </Card>
+                    </div>
+
+                    <IodAlert as="placeholder" class="h-10" v-else>
+                        <span>Es wurden noch keine Bankverbindungen angelegt</span>
+                    </IodAlert>
+                </Flex>
+
+
+
+                <Flex :gap="1">
+                    <Flex horizontal>
+                        <h5 class="margin-0 weight-medium">Emails</h5>
+                        <Spacer />
+                        <IodButton type="button" label="Neue Email" size="small" variant="contained" @click="addEmail()"/>
+                    </Flex>
+
+                    <div class="entity-grid" v-if="form.emails.length">
+                        <Card class="entity-card" v-for="email, i in form.emails">
+                            <Flex class="entity-card-head" padding="1rem">
+                                <IodIcon icon="email" />
+                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removeEmail(i)"/>
+                            </Flex>
+                            <Flex padding="1rem" gap="1rem">
+                                <IodSelect v-model="email.type" label="Email-Typ" :options="email_types"/>
+                                <IodInput v-model="email.email" label="Email" />
+                            </Flex>
+                        </Card>
+                    </div>
+
+                    <IodAlert as="placeholder" class="h-10" v-else>
+                        <span>Es wurden noch keine Emails angelegt</span>
+                    </IodAlert>
+                </Flex>
+
+
+
+                <Flex :gap="1">
+                    <Flex horizontal>
+                        <h5 class="margin-0 weight-medium">Telefonnummern</h5>
+                        <Spacer />
+                        <IodButton type="button" label="Neue Telefonnummer" size="small" variant="contained" @click="addPhonenumber()"/>
+                    </Flex>
+
+                    <div class="entity-grid" v-if="form.phonenumbers.length">
+                        <Card class="entity-card" v-for="number, i in form.phonenumbers">
+                            <Flex class="entity-card-head" padding="1rem">
+                                <IodIcon icon="phone" />
+                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removePhonenumber(i)"/>
+                            </Flex>
+                            <Flex padding="1rem" gap="1rem">
+                                <IodSelect v-model="number.type" label="Nummer-Typ" :options="phonenumbers_types"/>
+                                <IodInput v-model="number.number" label="Nummer" />
+                            </Flex>
+                        </Card>
+                    </div>
+
+                    <IodAlert as="placeholder" class="h-10" v-else>
+                        <span>Es wurden noch keine Telefonnummern angelegt</span>
+                    </IodAlert>
+                </Flex>
+
+
+
+                <Flex :gap="1">
+                    <Flex horizontal>
+                        <h5 class="margin-0 weight-medium">Termine & Daten</h5>
+                        <Spacer />
+                        <IodButton type="button" label="Neuer Termin" size="small" variant="contained" @click="addDate()"/>
+                    </Flex>
+
+                    <div class="entity-grid" v-if="form.dates.length">
+                        <Card class="entity-card" v-for="date, i in form.dates">
+                            <Flex class="entity-card-head" padding="1rem">
+                                <IodIcon icon="event" />
+                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removeDate(i)"/>
+                            </Flex>
+                            <Flex padding="1rem" gap="1rem">
+                                <IodSelect v-model="date.type" label="Datum-Typ" :options="date_types"/>
+                                <IodInput v-model="date.date" label="Datum" type="date" />
+                                <IodToggle v-model="date.ignore_year" label="Jahr ignorieren" />
+                                <IodToggle v-model="date.repeats_annually" label="Jährlich wiederholen" />
+                            </Flex>
+                        </Card>
+                    </div>
+
+                    <IodAlert as="placeholder" class="h-10" v-else>
+                        <span>Es wurden noch keine Termine angelegt</span>
+                    </IodAlert>
+                </Flex>
+
+
+
+                <Flex :gap="1">
+                    <Flex horizontal>
+                        <h5 class="margin-0 weight-medium">Links</h5>
+                        <Spacer />
+                        <IodButton type="button" label="Neuer Link" size="small" variant="contained" @click="addLink()"/>
+                    </Flex>
+
+                    <div class="entity-grid" v-if="form.links.length">
+                        <Card class="entity-card" v-for="link, i in form.links">
+                            <Flex class="entity-card-head" padding="1rem">
+                                <IodIcon icon="link" />
+                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removeLink(i)"/>
+                            </Flex>
+                            <Flex padding="1rem" gap="1rem">
+                                <IodInput v-model="link.name" label="Label" />
+                                <IodInput v-model="link.url" label="URL" />
+                            </Flex>
+                        </Card>
+                    </div>
+
+                    <IodAlert as="placeholder" class="h-10" v-else>
+                        <span>Es wurden noch keine Links angelegt</span>
+                    </IodAlert>
                 </Flex>
             </Flex>
         </Card>
@@ -64,6 +224,8 @@
 
 <script lang="ts" setup>
     import { toast } from 'vue3-toastify'
+    import Flex from '~/components/Flex.vue'
+    const auth = useAuthStore()
 
     definePageMeta({
         middleware: 'auth',
@@ -108,6 +270,16 @@
             title: '',
         },
         addresses: [],
+        bank_connections: [],
+        emails: [],
+        phonenumbers: [],
+        dates: [],
+        links: [],
+    })
+
+    const fullname = computed(() => {
+        const name = form.user_name
+        return [name.prefix, name.firstname, name.middlename, name.lastname, name.suffix].filter(Boolean).join(' ')
     })
 
     const salutation_options = [
@@ -116,11 +288,50 @@
         { value: 'Divers', text: 'Divers' },
     ]
 
+    const address_types = [
+        { value: 'main', text: 'Hauptadresse' },
+        { value: 'home', text: 'Zuhause' },
+        { value: 'work', text: 'Arbeit' },
+        { value: 'billing', text: 'Rechnungsadresse' },
+        { value: 'shipping', text: 'Lieferadresse' },
+        { value: 'other', text: 'Anders' },
+    ]
+
+    const bank_connection_types = [
+        { value: 'checking', text: 'Girokonto' },
+        { value: 'savings', text: 'Sparbuch' },
+        { value: 'business', text: 'Geschäftskonto' },
+        { value: 'loan', text: 'Kreditkonto' },
+        { value: 'investment', text: 'Investmentkonto' },
+        { value: 'other', text: 'Anders' },
+    ]
+
+    const email_types = [
+        { value: 'main', text: 'Hauptemail' },
+        { value: 'home', text: 'Zuhause' },
+        { value: 'work', text: 'Arbeit' },
+        { value: 'other', text: 'Anders' },
+    ]
+    
+    const phonenumbers_types = [
+        { value: 'main', text: 'Hauptnummer' },
+        { value: 'home', text: 'Zuhause' },
+        { value: 'work', text: 'Arbeit' },
+        { value: 'mobile', text: 'Mobil' },
+        { value: 'fax', text: 'Fax' },
+        { value: 'other', text: 'Anders' },
+    ]
+
+    const date_types = [
+        { value: 'birthday', text: 'Geburtstag' },
+        { value: 'anniversary', text: 'Jahrestag' },
+        { value: 'other', text: 'Anders' },
+    ]
+
 
 
     // START: Addresses
-    function addAddress()
-    {
+    function addAddress() {
         form.addresses.push({
             id: null,
             type: 'main',
@@ -134,14 +345,103 @@
         })
     }
 
-    function removeAddress(index: number)
-    {
+    function removeAddress(index: number) {
         form.addresses.splice(index, 1)
     }
     // END: Addresses
 
 
 
+    // START: Bank connections
+    function addBankConnection() {
+        form.bank_connections.push({
+            id: null,
+            type: 'checking',
+            bank_name: '',
+            branch: '',
+            account_name: '',
+            account_number: '',
+            swift_code: '',
+            iban: '',
+        })
+    }
+
+    function removeBankConnection(index: number) {
+        form.bank_connections.splice(index, 1)
+    }
+    // END: Bank connections
+
+
+
+    // START: Emails
+    function addEmail() {
+        form.emails.push({
+            id: null,
+            type: 'main',
+            email: '',
+            verified_at: null,
+        })
+    }
+
+    function removeEmail(index: number) {
+        form.emails.splice(index, 1)
+    }
+    // END: Emails
+
+
+
+    // START: Phonenumbers
+    function addPhonenumber() {
+        form.phonenumbers.push({
+            id: null,
+            type: 'main',
+            number: '',
+            verified_at: null,
+        })
+    }
+
+    function removePhonenumber(index: number) {
+        form.phonenumbers.splice(index, 1)
+    }
+    // END: Phonenumbers
+
+
+
+    // START: Dates
+    function addDate() {
+        form.dates.push({
+            id: null,
+            type: 'birthday',
+            date: null,
+            ignore_year: false,
+            repeats_annually: true,
+        })
+    }
+
+    function removeDate(index: number) {
+        form.dates.splice(index, 1)
+    }
+    // END: Dates
+
+
+
+    // START: Links
+    function addLink() {
+        form.links.push({
+            id: null,
+            name: 'Website',
+            url: '',
+        })
+    }
+
+    function removeLink(index: number) {
+        form.links.splice(index, 1)
+    }
+    // END: Links
+
+
+
+    // START: Server routes
     function fetch()
     {
         form.get(apiRoute('/api/users/:id', { id: id.value }), {
@@ -174,6 +474,7 @@
             },
         })
     }
+    // END: Server routes
 
     // Initial fetch
     if (id.value) fetch()
@@ -182,6 +483,26 @@
 <style lang="sass" scoped>
     .entity-grid
         display: grid
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))
-        grid-gap: 1rem
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))
+        gap: 2rem
+
+    .entity-card
+        display: flex
+        flex-direction: column
+        align-items: stretch
+        overflow: hidden
+        box-shadow: none
+
+        .entity-card-head
+            position: relative
+            height: 10rem
+            background: var(--color-background-soft)
+
+        .iod-button
+            position: absolute
+            top: 1rem
+            right: 1rem
+
+        .iod-icon
+            font-size: 4rem
 </style>
