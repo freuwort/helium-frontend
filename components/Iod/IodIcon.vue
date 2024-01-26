@@ -27,12 +27,9 @@
         display: inline-flex
         align-items: center
         justify-content: center
-        color: inherit
-        font-size: 24px
-        height: 24px
-        width: 24px
         font-weight: 400 !important
         font-family: var(--font-icon)
+        font-size: 1.5rem
         line-height: 1
         object-fit: contain
         user-select: none
