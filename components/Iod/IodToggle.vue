@@ -21,7 +21,7 @@
 
         <input class="input"
             readonly
-            :name="name"
+            :name="name || 'generic'"
             :value="value__"
             :checked="internalValue"
             :disabled="disabled"

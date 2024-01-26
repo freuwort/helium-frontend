@@ -34,7 +34,7 @@
                             :aria-required="required"
                             :readonly="readonly"
                             :tabindex="tabindex"
-                            :name="name"
+                            :name="name || 'generic'"
                             :title="title"
                             :type="computedInputType"
                             :min="min__"
