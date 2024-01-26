@@ -7,9 +7,8 @@ type Item = {
     [key: string]: any,
 }
 
-type FetchData = {
-    items?: Item[],
-    item_ids?: Id[],
+type PaginatedData = {
+    data?: Item[],
     total?: number,
 }
 
@@ -264,15 +263,15 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
         let route = apiRoute(IPM.options.routes?.fetch as string, {
             filter: IPM.filter,
             sort: IPM.sort,
-            pagination: IPM.pagination,
+            ...IPM.pagination,
         })
 
         let { data, error } = await useApiFetch(route)
 
-        let fetchData = data?.value as FetchData
+        let fetchData = data?.value as PaginatedData
 
-        IPM.items = fetchData.items ?? []
-        IPM.itemIds = fetchData.item_ids ?? IPM.items.map(i => i?.id).filter(id => id || id === 0 || id === '0') ?? []
+        IPM.items = fetchData.data ?? []
+        // IPM.itemIds = fetchData.item_ids ?? IPM.items.map(i => i?.id).filter(id => id || id === 0 || id === '0') ?? []
         IPM.pagination.total = fetchData.total ?? 0
 
         IPM.processing = false
