@@ -1,53 +1,34 @@
 <template>
     <div class="iod-container iod-pagination">
-        <IodIconButton type="button" size="small" variant="text" icon="first_page" :disabled="page === 1" @click="$emit('update:modelValue', 1)" />
-        <IodIconButton type="button" size="small" variant="text" icon="chevron_left" :disabled="page === 1" @click="$emit('update:modelValue', page - 1)" />
+        <IodIconButton type="button" size="small" variant="text" icon="first_page" :disabled="modelValue.page <= 1" @click="setPage(1)" />
+        <IodIconButton type="button" size="small" variant="text" icon="chevron_left" :disabled="modelValue.page <= 1" @click="setPage(modelValue.page - 1)" />
         
         <div class="range">
-            <span><b>{{ startRange }} - {{ endRange }}</b> / {{ total }}</span>
+            <span><b>{{ modelValue.from }} - {{ modelValue.to }}</b> / {{ modelValue.total }}</span>
         </div>
         
-        <IodIconButton type="button" size="small" variant="text" icon="chevron_right" :disabled="page === pages" @click="$emit('update:modelValue', page + 1)" />
-        <IodIconButton type="button" size="small" variant="text" icon="last_page" :disabled="page === pages" @click="$emit('update:modelValue', pages)" />
+        <IodIconButton type="button" size="small" variant="text" icon="chevron_right" :disabled="modelValue.page >= modelValue.lastPage" @click="setPage(modelValue.page + 1)" />
+        <IodIconButton type="button" size="small" variant="text" icon="last_page" :disabled="modelValue.page >= modelValue.lastPage" @click="setPage(modelValue.lastPage)" />
     </div>
 </template>
 
 <script lang="ts" setup>
     const props = defineProps({
         modelValue: {
-            type: Number,
-            default: 1,
+            type: Object,
+            default: () => ({
+                from: 0,
+                to: 0,
+                total: 0,
+                page: 1,
+                lastPage: 1,
+                size: 20,
+            }),
         },
-        size: {
-            type: Number,
-            default: 10,
-        },
-        total: {
-            type: Number,
-            default: 0,
-        },
     })
 
-    const emits = defineEmits([
-        'update:modelValue'
-    ])
-
-    const page = computed(() => {
-        // Clamp the page between 1 and the total pages
-        return Math.min(Math.max(props.modelValue, 1), pages.value)
-    })
-
-    const pages = computed(() => {
-        return Math.ceil(props.total / props.size)
-    })
-
-    const startRange = computed(() => {
-        return (page.value - 1) * props.size + 1
-    })
-
-    const endRange = computed(() => {
-        return Math.min(((page.value - 1) * props.size + props.size), props.total)
-    })
+    const emits = defineEmits(['update:modelValue'])
+    const setPage = (page: number) => emits('update:modelValue', { ...props.modelValue, page })
 </script>
 
 <style lang="sass" scoped>

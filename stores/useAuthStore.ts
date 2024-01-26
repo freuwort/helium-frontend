@@ -38,18 +38,7 @@ type User = {
     permissions: string[]
 }
 
-type RegistrationInfo = {
-    firstname: string
-    lastname: string
-    email: string
-    password: string
-}
 
-type Credentials = {
-    email: string
-    password: string
-    remember: boolean
-}
 
 export const useAuthStore = defineStore('auth', () => {
 
@@ -63,7 +52,7 @@ export const useAuthStore = defineStore('auth', () => {
     {
         const { data } = await useApiFetch('/api/user')
 
-        user.value = data.value as User
+        user.value = data.value.data as User
     }
 
 

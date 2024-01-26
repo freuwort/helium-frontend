@@ -8,8 +8,15 @@ type Item = {
 }
 
 type PaginatedData = {
-    data?: Item[],
-    total?: number,
+    data: Item[],
+    meta: {
+        total: number,
+        from: number,
+        to: number,
+        current_page: number,
+        last_page: number,
+        per_page: number,
+    },
 }
 
 type Sort = {
@@ -19,8 +26,11 @@ type Sort = {
 
 type Pagination = {
     page: number,
+    from: number,
+    to: number,
     size: number,
     total: number,
+    lastPage: number,
 }
 
 type IPMOptions = {
@@ -66,7 +76,10 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
         pagination: {
             page: 1,
             size: 20,
+            from: 0,
+            to: 0,
             total: 0,
+            lastPage: 1,
         } as Pagination,
         options: {
             pageTitle: options?.pageTitle ?? 'Items',
@@ -268,11 +281,16 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
 
         let { data, error } = await useApiFetch(route)
 
-        let fetchData = data?.value as PaginatedData
+        let paginatedData = data?.value as PaginatedData
 
-        IPM.items = fetchData.data ?? []
-        // IPM.itemIds = fetchData.item_ids ?? IPM.items.map(i => i?.id).filter(id => id || id === 0 || id === '0') ?? []
-        IPM.pagination.total = fetchData.total ?? 0
+        IPM.items = paginatedData?.data ?? []
+        // IPM.itemIds = paginatedData.item_ids ?? IPM.items.map(i => i?.id).filter(id => id || id === 0 || id === '0') ?? []
+        IPM.pagination.from = paginatedData?.meta?.from ?? 0
+        IPM.pagination.to = paginatedData?.meta?.to ?? 0
+        IPM.pagination.total = paginatedData?.meta?.total ?? 0
+        IPM.pagination.page = paginatedData?.meta?.current_page ?? 1
+        IPM.pagination.lastPage = paginatedData?.meta?.last_page ?? 1
+        IPM.pagination.size = paginatedData?.meta?.per_page ?? 20
 
         IPM.processing = false
     }

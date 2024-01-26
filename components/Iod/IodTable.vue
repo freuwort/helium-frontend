@@ -108,12 +108,12 @@
 
 
         <div class="table-pagination-wrapper" v-show="items.length">
-            <IodPagination :modelValue="getPagination.page" @update:modelValue="setPagination({ page: $event })" :size="getPagination.size" :total="getPagination.total"/>
+            <IodPagination :modelValue="pagination" @update:modelValue="setPagination($event)"/>
             
             <div class="spacer"></div>
 
             <div class="size-fixture">
-                <IodSelect class="table-page-size-select" v-tooltip="'Einträge pro Seite'" :modelValue="getPagination.size" @update:modelValue="setPagination({ size: parseInt($event) })" :options="[
+                <IodSelect class="table-page-size-select" v-tooltip="'Einträge pro Seite'" :modelValue="pagination.size" @update:modelValue="setPagination({ size: parseInt($event) })" :options="[
                     { value: 10, text: '10 pro Seite' },
                     { value: 20, text: '20 pro Seite' },
                     { value: 50, text: '50 pro Seite' },
@@ -172,9 +172,12 @@
     }
 
     type Pagination = {
-        page: number,
-        size: number,
+        from: number,
+        to: number,
         total: number,
+        page: number,
+        lastPage: number,
+        size: number,
     }
 
     type Sort = {
@@ -210,7 +213,7 @@
         },
         pagination: {
             type: Object as PropType<Pagination>,
-            default: () => ({ page: 1, size: 20, total: 0 }),
+            default: () => ({ from: 0, to: 0, total: 0, page: 1, lastPage: 1, size: 20, }),
         },
         sort: {
             type: Object as PropType<Sort>,
@@ -391,15 +394,9 @@
 
 
     // START: Pagination
-    const getPagination = computed(() => {
-        return props.pagination ?? { page: 1, size: 20, total: 0 }
-    })
-
-    const setPagination = (value: Partial<Pagination>) => {
-        emits('update:pagination', {
-            ...getPagination.value,
-            ...value,
-        })
+    function setPagination(value: Partial<Pagination>)
+    {
+        emits('update:pagination', { ...props.pagination, ...value })
     }
     // END: Pagination
 
