@@ -52,7 +52,7 @@ export const useAuthStore = defineStore('auth', () => {
     {
         const { data } = await useApiFetch('/api/user')
 
-        user.value = data.value.data as User
+        user.value = data.value?.data as User
     }
 
 
