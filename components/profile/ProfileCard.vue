@@ -1,21 +1,31 @@
 <template>
     <div class="profile-card">
-        <div class="profile-banner" :style="{ backgroundImage: `url(/images/app/default/user_banner.jpg)` }"></div>
+        <div class="profile-banner" :style="{ backgroundImage: `url(${banner})` }"></div>
         <div class="profile-image">
-            <img :src="user.profile_image" :alt="user.fullname">
+            <img :src="image" :alt="title">
         </div>
         <div class="profile-info">
-            <h2>{{ user.fullname ?? user.email }}</h2>
-            <p v-if="user.username">@{{ user.username }}</p>
+            <h2>{{ title }}</h2>
+            <p v-if="subtitle">{{ subtitle }}</p>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-    const props = defineProps({
-        user: {
-            type: Object,
-            default: null,
+    defineProps({
+        banner: {
+            type: String,
+            default: '/images/app/default/user_banner.jpg',
+        },
+        image: {
+            type: String,
+            default: '/images/app/default/user_image.jpg',
+        },
+        title: {
+            type: String,
+        },
+        subtitle: {
+            type: String,
         },
     })
 </script>
