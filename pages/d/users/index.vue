@@ -2,7 +2,6 @@
     <NuxtLayout name="auth-default" :pageTitle="IPM.options.pageTitle" color="var(--color-primary)">
         <Card>
             <IodTable
-                show-create
                 :columns="tableColumns"
                 :actions="tableActions"
                 :filter-settings="tableFilters"

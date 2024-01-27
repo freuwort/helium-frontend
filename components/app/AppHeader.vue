@@ -44,7 +44,7 @@
                         <ContextMenuItem to="/d/companies" show-chevron color="var(--color-primary)" icon="store">Alle Unternehmen</ContextMenuItem>
                         <ContextMenuItem to="/d/companies/editor" color="var(--color-primary)" icon="add_business">Unternehmen erstellen</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem show-chevron color="var(--color-primary)" icon="badge">Berechtigungen</ContextMenuItem>
+                        <ContextMenuItem to="/d/roles" show-chevron color="var(--color-primary)" icon="badge">Berechtigungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>

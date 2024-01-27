@@ -67,7 +67,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
         itemIds: [] as Id[],
         selection: [] as Id[],
         processing: false as boolean,
-        scope: '' as string,
+        scope: options?.scope ?? '' as string,
         filter: {},
         sort: {
             field: null,

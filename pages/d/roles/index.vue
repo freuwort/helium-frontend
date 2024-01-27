@@ -15,7 +15,7 @@
                 @request:refresh="IPM.fetch()"
             >
                 <template #header>
-                    <IodButton type="button" label="Neues Unternehmen" @click="IPM.open()"/>
+                    <IodButton type="button" label="Neue Rolle" @click="IPM.open()"/>
                 </template>
             </IodTable>
         </Card>
@@ -23,21 +23,22 @@
 </template>
 
 <script lang="ts" setup>
-    const dayjs = useDayjs()
     definePageMeta({
         middleware: 'auth',
     })
 
 
 
+    const dayjs = useDayjs()
+
     const IPM = useItemPageManager({
-        pageTitle: 'Unternehmen Verwaltung',
-        scope: 'admin.companies.index',
+        pageTitle: 'Rollen Verwaltung',
+        scope: 'admin.roles.index',
         routes: {
-            fetch: '/api/companies/',
-            duplicate: '/api/companies/:id/duplicate',
-            delete: '/api/companies/',
-            editor: '/d/companies/editor/:id',
+            fetch: '/api/roles/',
+            duplicate: '/api/roles/:id/duplicate',
+            delete: '/api/roles/',
+            editor: '/d/roles/editor/:id',
         },
     })
 
@@ -46,10 +47,16 @@
             return {
                 text: item.name || '-',
                 tooltip: item.name,
-                image: item.profile_image,
+                icon: item.icon || 'category',
+                color: item.color || 'var(--color-primary)',
             }
         }},
-        { name: 'legal_form', label: 'Rechtsform', valuePath: 'legal_form', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
+        { name: 'permissions', label: 'Berechtigungen', valuePath: 'permissions', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string[] | null) => {
+            return {
+                text: value ? value.join(', ') || '-' : '-',
+                tooltip: value?.join(', '),
+            }
+        }},
         { name: 'created_at', label: 'Erstellt', valuePath: 'created_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: dayjs(value).format('DD.MM.YYYY HH:mm') }) : null },
         { name: 'updated_at', label: 'Aktualisiert', valuePath: 'updated_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: dayjs(value).format('DD.MM.YYYY HH:mm') }) : null },
     ]

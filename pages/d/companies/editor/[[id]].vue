@@ -4,7 +4,7 @@
             <ProfileCard class="radius-xl" :title="form.model.name" :image="form.model.profile_image" :subtitle="form.model.description"/>
             
             <Flex class="border-block" horizontal padding="1rem 2rem">
-                <IodButton type="button" label="Abbrechen" :loading="form.processing" variant="contained" @click="navigateTo('/d/companies')"/>
+                <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/companies')"/>
                 <Spacer />
                 <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
             </Flex>
@@ -227,14 +227,15 @@
 
 <script lang="ts" setup>
     import { toast } from 'vue3-toastify'
-    const auth = useAuthStore()
 
     definePageMeta({
         middleware: 'auth',
     })
 
+    
+
     // Item id
-    const id = computed(() => useRoute().params.id)
+    const id = computed(() => useRoute().params.id ?? null)
 
     // Save function
     const save = id.value ? update : store
@@ -242,7 +243,7 @@
 
 
     const form = useForm({
-        id: id.value ?? null,
+        id: id.value,
         model: {
             profile_image: '',
             name: '',
@@ -459,9 +460,9 @@
     {
         
         form.get(apiRoute('/api/companies/:id', { id: id.value }), {
-            onSuccess(data: any)
+            onSuccess(response: any)
             {
-                form.defaults(data.value?.data).reset()
+                form.defaults(response.value?.data).reset()
             },
         })
     }
@@ -469,11 +470,11 @@
     function store()
     {
         form.post(apiRoute('/api/companies'), {
-            onSuccess(data: any)
+            onSuccess(response: any)
             {
-                form.defaults(data.value?.data).reset()
+                form.defaults(response.value?.data).reset()
                 toast.success('Unternehmen wurde erstellt')
-                navigateTo(apiRoute('/d/companies/editor/:id', { id: data.value.id }))
+                navigateTo(apiRoute('/d/companies/editor/:id', { id: response.value?.data?.id }))
             },
         })
     }
@@ -481,9 +482,9 @@
     function update()
     {
         form.patch(apiRoute('/api/companies/:id', { id: id.value }), {
-            onSuccess(data: any)
+            onSuccess(response: any)
             {
-                form.defaults(data.value?.data).reset()
+                form.defaults(response.value?.data).reset()
                 toast.success('Unternehmen wurde aktualisiert')
             },
         })

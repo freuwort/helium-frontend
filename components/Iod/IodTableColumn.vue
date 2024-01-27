@@ -1,6 +1,6 @@
 <template>
     <div class="iod-container iod-table-column" v-tooltip="data.tooltip">
-        <div class="image-wrapper" v-show="hasImage">
+        <div class="image-wrapper" v-show="hasImage" :style="{color: data.color}">
             <img v-if="data.image" :src="data.image" alt="Image"/>
             <IodIcon v-else-if="data.icon" :icon="data.icon" />
         </div>
@@ -45,7 +45,6 @@
             height: 1.75rem
             aspect-ratio: 1
             border-radius: 50%
-            background-color: var(--color-background-soft)
             overflow: hidden
             flex-shrink: 0
             position: relative
@@ -55,8 +54,22 @@
                 height: 100%
                 object-fit: cover
                 display: block
+                background-color: var(--color-background-soft)
 
             > .iod-icon
                 height: 100%
                 width: 100%
+                font-size: 1.125rem
+                position: relative !important
+
+                &::after
+                    content: ''
+                    position: absolute
+                    top: 0
+                    left: 0
+                    bottom: 0
+                    right: 0
+                    background-color: currentColor
+                    pointer-events: none
+                    opacity: .2
 </style>

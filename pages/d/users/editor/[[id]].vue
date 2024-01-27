@@ -4,7 +4,7 @@
             <ProfileCard class="radius-xl" :title="fullname" :image="form.model.profile_image" :subtitle="form.model.username"/>
             
             <Flex class="border-block" horizontal padding="1rem 2rem">
-                <IodButton type="button" label="Abbrechen" :loading="form.processing" variant="contained" @click="navigateTo('/d/users')"/>
+                <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/users')"/>
                 <Spacer />
                 <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
             </Flex>
@@ -224,15 +224,15 @@
 
 <script lang="ts" setup>
     import { toast } from 'vue3-toastify'
-    import Flex from '~/components/Flex.vue'
-    const auth = useAuthStore()
 
     definePageMeta({
         middleware: 'auth',
     })
 
+    
+
     // Item id
-    const id = computed(() => useRoute().params.id)
+    const id = computed(() => useRoute().params.id ?? null)
 
     // Save function
     const save = id.value ? update : store
@@ -240,7 +240,7 @@
 
 
     const form = useForm({
-        id: id.value ?? null,
+        id: id.value,
         password: '',
         model: {
             profile_image: '',
@@ -445,9 +445,9 @@
     function fetch()
     {
         form.get(apiRoute('/api/users/:id', { id: id.value }), {
-            onSuccess(data: any)
+            onSuccess(response: any)
             {
-                form.defaults(data.value).reset()
+                form.defaults(response.value?.data).reset()
             },
         })
     }
@@ -455,11 +455,11 @@
     function store()
     {
         form.post(apiRoute('/api/users'), {
-            onSuccess(data: any)
+            onSuccess(response: any)
             {
-                form.defaults(data.value).reset()
+                form.defaults(response.value?.data).reset()
                 toast.success('Nutzer wurde erstellt')
-                navigateTo(apiRoute('/d/users/editor/:id', { id: data.value.id }))
+                navigateTo(apiRoute('/d/users/editor/:id', { id: response.value?.data?.id }))
             },
         })
     }
@@ -467,9 +467,9 @@
     function update()
     {
         form.patch(apiRoute('/api/users/:id', { id: id.value }), {
-            onSuccess(data: any)
+            onSuccess(response: any)
             {
-                form.defaults(data.value).reset()
+                form.defaults(response.value?.data).reset()
                 toast.success('Nutzer wurde aktualisiert')
             },
         })
