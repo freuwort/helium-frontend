@@ -41,8 +41,8 @@
                         <ContextMenuItem to="/d/users" show-chevron color="var(--color-primary)" icon="group">Alle Nutzer</ContextMenuItem>
                         <ContextMenuItem to="/d/users/editor" color="var(--color-primary)" icon="person_add">Nutzer erstellen</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem show-chevron color="var(--color-primary)" icon="store">Alle Unternehmen</ContextMenuItem>
-                        <ContextMenuItem color="var(--color-primary)" icon="add_business">Unternehmen erstellen</ContextMenuItem>
+                        <ContextMenuItem to="/d/companies" show-chevron color="var(--color-primary)" icon="store">Alle Unternehmen</ContextMenuItem>
+                        <ContextMenuItem to="/d/companies/editor" color="var(--color-primary)" icon="add_business">Unternehmen erstellen</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="var(--color-primary)" icon="badge">Berechtigungen</ContextMenuItem>
                     </ContextMenu>

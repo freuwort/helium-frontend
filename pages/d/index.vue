@@ -3,9 +3,9 @@
         <Card>
             <Flex :gap="1" :padding="1">
                 <ContextMenu>
-                    <ContextMenuItem show-chevron color="var(--color-primary)" icon="dashboard">Startseite</ContextMenuItem>
+                    <ContextMenuItem to="/d" show-chevron color="var(--color-primary)" icon="dashboard">Startseite</ContextMenuItem>
                     <ContextMenuItem show-chevron color="var(--color-primary)" icon="drive_folder_upload">Dateien</ContextMenuItem>
-                    <ContextMenuItem show-chevron color="var(--color-primary)" icon="group">Nutzer</ContextMenuItem>
+                    <ContextMenuItem to="/d/users" show-chevron color="var(--color-primary)" icon="group">Nutzer</ContextMenuItem>
                     <ContextMenuItem to="/d/settings" show-chevron color="var(--color-primary)" icon="settings">Einstellungen</ContextMenuItem>
                 </ContextMenu>
             </Flex>
