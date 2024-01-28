@@ -10,8 +10,8 @@
 
                 <template #popper>
                     <ContextMenu class="min-w-20">
-                        <ContextMenuItem to="/d/" show-chevron color="var(--color-primary)" icon="dashboard">Startseite</ContextMenuItem>
-                        <ContextMenuItem show-chevron color="var(--color-primary)" icon="folder">Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/d" show-chevron color="var(--color-primary)" icon="dashboard">Startseite</ContextMenuItem>
+                        <ContextMenuItem to="/d/files" show-chevron color="var(--color-primary)" icon="folder">Dateien</ContextMenuItem>
                         <ContextMenuItem to="/d/users" show-chevron color="var(--color-primary)" icon="group">Nutzer</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="#9747FF" icon="package_2">Produkte</ContextMenuItem>
@@ -28,9 +28,8 @@
                 <AppHeaderItem show-chevron color="var(--color-primary)" icon="folder"/>
                 <template #popper>
                     <ContextMenu class="min-w-20">
-                        <ContextMenuItem color="var(--color-primary)" icon="drive_folder_upload">Dateien hochladen</ContextMenuItem>
-                        <ContextMenuDivider />
-                        <ContextMenuItem show-chevron color="var(--color-primary)" icon="folder">Alle Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/d/files" show-chevron color="var(--color-primary)" icon="folder">Alle Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/d/files" color="var(--color-primary)" icon="drive_folder_upload">Dateien hochladen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -52,9 +51,8 @@
                 <AppHeaderItem show-chevron color="#9747FF" icon="package_2"/>
                 <template #popper>
                     <ContextMenu class="min-w-20">
-                        <ContextMenuItem color="#9747FF" icon="add_circle">Produkt erstellen</ContextMenuItem>
-                        <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="#9747FF" icon="package_2">Alle Produkte</ContextMenuItem>
+                        <ContextMenuItem color="#9747FF" icon="add_circle">Produkt erstellen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -62,11 +60,11 @@
                 <AppHeaderItem show-chevron color="#FF4757" icon="receipt"/>
                 <template #popper>
                     <ContextMenu class="min-w-20">
-                        <ContextMenuItem color="#FF4757" icon="add_circle">Rechnung erstellen</ContextMenuItem>
+                        <ContextMenuItem show-chevron color="#FF4757" icon="article">Alle Angebote</ContextMenuItem>
                         <ContextMenuItem color="#FF4757" icon="post_add">Angebot erstellen</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Alle Rechnungen</ContextMenuItem>
-                        <ContextMenuItem show-chevron color="#FF4757" icon="article">Alle Angebote</ContextMenuItem>
+                        <ContextMenuItem color="#FF4757" icon="add_circle">Rechnung erstellen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -74,9 +72,8 @@
                 <AppHeaderItem show-chevron color="#FF6348" icon="warehouse"/>
                 <template #popper>
                     <ContextMenu class="min-w-20">
-                        <ContextMenuItem color="#FF6348" icon="add_circle">Lager erstellen</ContextMenuItem>
-                        <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="#FF6348" icon="warehouse">Alle Lager</ContextMenuItem>
+                        <ContextMenuItem color="#FF6348" icon="add_circle">Lager erstellen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
