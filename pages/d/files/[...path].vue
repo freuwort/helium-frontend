@@ -3,7 +3,7 @@
         <Card>
             <Flex :padding="2" :gap="1">
                 <Flex horizontal>
-                    <span>{{ path }}</span>
+                    <MediaBreadcrumbs :path="path" root-path="/d/files" />
                     <Spacer />
                     <IodButton type="button" size="small" label="Hochladen" icon-right="upload" @click="uploadInput?.click()" />
                     <input class="display-none" type="file" ref="uploadInput" multiple @change="upload(($event.target as HTMLInputElement)?.files || [])">
@@ -19,10 +19,29 @@
                     </IodInput>
                 </Flex>
 
+                <!-- rename -->
                 <Flex is="form" @submit.prevent="rename">
                     <IodInput label="Name" v-model="renameForm.name" :helper="renameForm.path">
                         <template #right>
                             <IodButton type="submit" size="small" label="Umbenennen" :loading="renameForm.processing" />
+                        </template>
+                    </IodInput>
+                </Flex>
+
+                <!-- move -->
+                <Flex is="form" @submit.prevent="move">
+                    <IodInput label="Pfad" v-model="moveForm.destination" :helper="moveForm.path">
+                        <template #right>
+                            <IodButton type="submit" size="small" label="Verschieben" :loading="moveForm.processing" />
+                        </template>
+                    </IodInput>
+                </Flex>
+
+                <!-- copy -->
+                <Flex is="form" @submit.prevent="copy">
+                    <IodInput label="Pfad" v-model="copyForm.destination" :helper="copyForm.path">
+                        <template #right>
+                            <IodButton type="submit" size="small" label="Kopieren" :loading="copyForm.processing" />
                         </template>
                     </IodInput>
                 </Flex>
@@ -36,6 +55,7 @@
                             <hr>
                             <Flex padding="0 .5rem">
                                 <NuxtLink :to="`/d/files/${item.src_path}`">{{ item.name }}</NuxtLink>
+                                <a :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">Öffnen</a>
                                 <Flex horizontal>
                                     <small>{{ humanFileSize(item.meta.size || 0) }}</small>
                                     <Spacer />
@@ -44,8 +64,9 @@
                             </Flex>
                             <hr>
                             <Flex horizontal :gap=".5">
-                                <IodIconButton type="button" icon="drive_file_move" variant="text " size="small" color-preset="primary" />
                                 <IodIconButton type="button" icon="edit" variant="text " size="small" color-preset="primary" @click="renameForm.path = item.src_path"/>
+                                <IodIconButton type="button" icon="drive_file_move" variant="text " size="small" color-preset="primary" @click="moveForm.path = item.src_path"/>
+                                <IodIconButton type="button" icon="file_copy" variant="text " size="small" color-preset="primary" @click="copyForm.path = item.src_path"/>
                                 <Spacer />
                                 <IodIconButton type="button" icon="delete" variant="text " size="small" color-preset="error" @click="deleteItem(item.src_path)"/>
                             </Flex>
@@ -60,13 +81,18 @@
 <script lang="ts" setup>
     type Item = {
         id: number
+        parent_id: number | null
+        drive: string | null
+        src_path: string
+        thumbnail_path: string | null
+        cdn_path: string | null
+        mime_type: string | null
         name: string
-        mime_type: string
+        access: string | null
         meta: {
             size: number
             extension: string
         }
-        src_path: string
     }
 
 
@@ -76,6 +102,7 @@
     })
 
     const route = useRoute()
+    const uploadManager = useUploadStore()
 
 
 
@@ -85,7 +112,7 @@
     async function fetchItems()
     {
         const { data } = await useAxios().get(`/api/media/${path.value}`)
-        items.value = data
+        items.value = data.data
     }
 
     watch(path, fetchItems, { immediate: true })
@@ -99,34 +126,12 @@
         // Check if files are available
         if (!files.length) return
 
-        // Create form data
-        const form = new FormData()
-
-        // Add files to form data
-        for (let i = 0; i < files.length; i++)
-        {
-            form.append('files[]', files[i])
-        }
-
-        // Add directory to form data
-        form.append('path', path.value)
-
         // Reset input
         if (uploadInput.value) uploadInput.value.value = ''
+
+        await uploadManager.uploadFiles(path.value, files)
         
-        const { data, status } = await useAxios().post('/api/upload', form, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            },
-            onUploadProgress: (progressEvent) => {
-                console.log(Math.round(progressEvent.loaded / (progressEvent.total || 1) * 100))
-            }
-        })
-        
-        if (status === 200)
-        {
-            fetchItems()
-        }
+        fetchItems()
     }
 
 
@@ -159,6 +164,40 @@
         renameForm.patch('/api/media/rename', {
             onSuccess() {
                 renameForm.reset()
+                fetchItems()
+            }
+        })
+    }
+
+
+
+    const moveForm = useForm({
+        path: '',
+        destination: '',
+    })
+
+    async function move()
+    {
+        moveForm.patch('/api/media/move', {
+            onSuccess() {
+                moveForm.reset()
+                fetchItems()
+            }
+        })
+    }
+
+
+
+    const copyForm = useForm({
+        path: '',
+        destination: '',
+    })
+
+    async function copy()
+    {
+        copyForm.post('/api/media/copy', {
+            onSuccess() {
+                copyForm.reset()
                 fetchItems()
             }
         })
