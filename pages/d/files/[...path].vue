@@ -49,32 +49,38 @@
                 <hr>
 
                 <div class="entity-grid">
-                    <Card is="button" type="button" class="flex vertical" v-for="item in items" :key="item.id">
-                        <Flex :padding=".5">
-                            <IodIcon class="aspect-ratio-1-1" style="font-size: 5rem" :icon="item.mime_type === 'folder' ? 'folder' : 'note'" />
-                            <hr>
-                            <Flex padding="0 .5rem">
-                                <NuxtLink :to="`/d/files/${item.src_path}`">{{ item.name }}</NuxtLink>
-                                <a :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">Öffnen</a>
-                                <Flex horizontal>
-                                    <small>{{ humanFileSize(item.meta.size || 0) }}</small>
+                    <TransitionGroup>
+                        <Card is="button" type="button" class="flex vertical" v-for="item in items" :key="item.id">
+                            <Flex :padding=".5">
+                                <Flex class="aspect-ratio-1-1" x-align="center" y-align="center">
+                                    <MediaIcon :mime="(item.mime_type as string)" />
+                                </Flex>
+                                <hr>
+                                <Flex padding="0 .5rem">
+                                    <NuxtLink :to="`/d/files/${item.src_path}`">{{ item.name }}</NuxtLink>
+                                    <a :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">Öffnen</a>
+                                    <Flex horizontal>
+                                        <small>{{ humanFileSize(item.meta.size || 0) }}</small>
+                                        <Spacer />
+                                        <small>{{ item.meta.extension }}</small>
+                                    </Flex>
+                                </Flex>
+                                <hr>
+                                <Flex horizontal :gap=".5">
+                                    <IodIconButton type="button" icon="edit" variant="text " size="small" color-preset="primary" @click="renameForm.path = item.src_path"/>
+                                    <IodIconButton type="button" icon="drive_file_move" variant="text " size="small" color-preset="primary" @click="moveForm.path = item.src_path"/>
+                                    <IodIconButton type="button" icon="file_copy" variant="text " size="small" color-preset="primary" @click="copyForm.path = item.src_path"/>
                                     <Spacer />
-                                    <small>{{ item.meta.extension }}</small>
+                                    <IodIconButton type="button" icon="delete" variant="text " size="small" color-preset="error" @click="deleteItem(item.src_path)"/>
                                 </Flex>
                             </Flex>
-                            <hr>
-                            <Flex horizontal :gap=".5">
-                                <IodIconButton type="button" icon="edit" variant="text " size="small" color-preset="primary" @click="renameForm.path = item.src_path"/>
-                                <IodIconButton type="button" icon="drive_file_move" variant="text " size="small" color-preset="primary" @click="moveForm.path = item.src_path"/>
-                                <IodIconButton type="button" icon="file_copy" variant="text " size="small" color-preset="primary" @click="copyForm.path = item.src_path"/>
-                                <Spacer />
-                                <IodIconButton type="button" icon="delete" variant="text " size="small" color-preset="error" @click="deleteItem(item.src_path)"/>
-                            </Flex>
-                        </Flex>
-                    </Card>
+                        </Card>
+                    </TransitionGroup>
                 </div>
             </Flex>
         </Card>
+
+        <MediaUploadCard />
     </NuxtLayout>
 </template>
 
@@ -126,11 +132,13 @@
         // Check if files are available
         if (!files.length) return
 
+        // Upload files
+        await uploadManager.upload(path.value, files)
+
         // Reset input
         if (uploadInput.value) uploadInput.value.value = ''
-
-        await uploadManager.uploadFiles(path.value, files)
         
+        // Fetch items
         fetchItems()
     }
 
