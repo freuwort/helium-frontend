@@ -2,9 +2,10 @@
     <NuxtLayout name="auth-default" pageTitle="Dateien" color="var(--color-primary)">
         <Card>
             <Flex :padding="2" :gap="1">
-                <Flex horizontal>
+                <Flex horizontal :gap="1">
                     <MediaBreadcrumbs :path="path" root-path="/d/files" />
                     <Spacer />
+                    <IodButton type="button" size="small" label="Discover" @click="discover" />
                     <IodButton type="button" size="small" label="Hochladen" icon-right="upload" @click="uploadInput?.click()" />
                     <input class="display-none" type="file" ref="uploadInput" multiple @change="upload(($event.target as HTMLInputElement)?.files || [])">
                 </Flex>
@@ -220,6 +221,13 @@
         })
 
         fetchItems()
+    }
+
+
+
+    function discover()
+    {
+        useAxios().patch('/api/media/discovery', { path: path.value })
     }
 </script>
 
