@@ -1,87 +1,81 @@
 <template>
-    <NuxtLayout name="auth-default" pageTitle="Dateien" color="var(--color-primary)">
-        <Card>
-            <Flex :padding="2" :gap="1">
-                <Flex horizontal :gap="1">
-                    <MediaBreadcrumbs :path="path" root-path="/d/files" />
-                    <Spacer />
-                    <IodButton type="button" size="small" label="Discover" @click="discover" />
-                    <IodButton type="button" size="small" label="Hochladen" icon-right="upload" @click="uploadInput?.click()" />
-                    <input class="display-none" type="file" ref="uploadInput" multiple @change="upload(($event.target as HTMLInputElement)?.files || [])">
-                </Flex>
-                
-                <hr>
-                
-                <Flex is="form" @submit.prevent="createFolder">
-                    <IodInput label="Ordner" v-model="createFolderForm.name">
-                        <template #right>
-                            <IodButton type="submit" size="small" label="Erstellen" :loading="createFolderForm.processing" />
-                        </template>
-                    </IodInput>
-                </Flex>
-
-                <!-- rename -->
-                <Flex is="form" @submit.prevent="rename">
-                    <IodInput label="Name" v-model="renameForm.name" :helper="renameForm.path">
-                        <template #right>
-                            <IodButton type="submit" size="small" label="Umbenennen" :loading="renameForm.processing" />
-                        </template>
-                    </IodInput>
-                </Flex>
-
-                <!-- move -->
-                <Flex is="form" @submit.prevent="move">
-                    <IodInput label="Pfad" v-model="moveForm.destination" :helper="moveForm.path">
-                        <template #right>
-                            <IodButton type="submit" size="small" label="Verschieben" :loading="moveForm.processing" />
-                        </template>
-                    </IodInput>
-                </Flex>
-
-                <!-- copy -->
-                <Flex is="form" @submit.prevent="copy">
-                    <IodInput label="Pfad" v-model="copyForm.destination" :helper="copyForm.path">
-                        <template #right>
-                            <IodButton type="submit" size="small" label="Kopieren" :loading="copyForm.processing" />
-                        </template>
-                    </IodInput>
-                </Flex>
-
-                <hr>
-
-                <div class="entity-grid">
-                    <TransitionGroup>
-                        <Card is="button" type="button" class="flex vertical" v-for="item in items" :key="item.id">
-                            <Flex :padding=".5">
-                                <Flex class="aspect-ratio-1-1" x-align="center" y-align="center">
-                                    <MediaIcon :mime="(item.mime_type as string)" />
-                                </Flex>
-                                <hr>
-                                <Flex padding="0 .5rem">
-                                    <NuxtLink :to="`/d/files/${item.src_path}`">{{ item.name }}</NuxtLink>
-                                    <a :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">Öffnen</a>
-                                    <Flex horizontal>
-                                        <small>{{ humanFileSize(item.meta.size || 0) }}</small>
-                                        <Spacer />
-                                        <small>{{ item.meta.extension }}</small>
-                                    </Flex>
-                                </Flex>
-                                <hr>
-                                <Flex horizontal :gap=".5">
-                                    <IodIconButton type="button" icon="edit" variant="text " size="small" color-preset="primary" @click="renameForm.path = item.src_path"/>
-                                    <IodIconButton type="button" icon="drive_file_move" variant="text " size="small" color-preset="primary" @click="moveForm.path = item.src_path"/>
-                                    <IodIconButton type="button" icon="file_copy" variant="text " size="small" color-preset="primary" @click="copyForm.path = item.src_path"/>
-                                    <Spacer />
-                                    <IodIconButton type="button" icon="delete" variant="text " size="small" color-preset="error" @click="deleteItem(item.src_path)"/>
-                                </Flex>
-                            </Flex>
-                        </Card>
-                    </TransitionGroup>
-                </div>
+    <NuxtLayout limiter="full" name="auth-default" pageTitle="Dateien" color="var(--color-text)">
+        <Flex :padding="2" :gap="1">
+            <Flex horizontal :gap="1">
+                <VDropdown placement="bottom-start">
+                    <IodButton type="button" shape="pill" label="Neu" icon-left="add" size="large" />
+                    <template #popper>
+                        <ContextMenu class="min-w-15">
+                            <ContextMenuItem is="button" icon="upload" @click="uploadInput?.click()">Hochladen</ContextMenuItem>
+                            <ContextMenuItem is="button" icon="create_new_folder" @click="createFolderForm.name = ''">Ordner erstellen</ContextMenuItem>
+                        </ContextMenu>
+                    </template>
+                </VDropdown>
+                <VDropdown >
+                    <IodIconButton type="button" shape="pill" icon="more_vert" />
+                    <template #popper>
+                        <ContextMenu class="min-w-15">
+                            <ContextMenuItem is="button" icon="scan" @click="discover">Verzeichnisse scannen</ContextMenuItem>
+                        </ContextMenu>
+                    </template>
+                </VDropdown>
+                <MediaBreadcrumbs :path="path" root-path="/d/files" />
+                <Spacer />
             </Flex>
-        </Card>
-
+            
+            <div class="entity-grid">
+                <TransitionGroup>
+                    <MediaItem
+                        v-for="item in items"
+                        :key="item.id"
+                        :item="item"
+                        @view="console.log"
+                        @delete="deleteItem"
+                        @rename="renameForm.path = item.src_path"
+                        @move="moveForm.path = item.src_path"
+                        @copy="copyForm.path = item.src_path"
+                    />
+                </TransitionGroup>
+            </div>
+            
+            <Flex is="form" @submit.prevent="createFolder">
+                <IodInput label="Ordner" v-model="createFolderForm.name">
+                    <template #right>
+                        <IodButton type="submit" size="small" label="Erstellen" :loading="createFolderForm.processing" />
+                    </template>
+                </IodInput>
+            </Flex>
+            
+            <!-- rename -->
+            <Flex is="form" @submit.prevent="rename">
+                <IodInput label="Name" v-model="renameForm.name" :helper="renameForm.path">
+                    <template #right>
+                        <IodButton type="submit" size="small" label="Umbenennen" :loading="renameForm.processing" />
+                    </template>
+                </IodInput>
+            </Flex>
+            
+            <!-- move -->
+            <Flex is="form" @submit.prevent="move">
+                <IodInput label="Pfad" v-model="moveForm.destination" :helper="moveForm.path">
+                    <template #right>
+                        <IodButton type="submit" size="small" label="Verschieben" :loading="moveForm.processing" />
+                    </template>
+                </IodInput>
+            </Flex>
+            
+            <!-- copy -->
+            <Flex is="form" @submit.prevent="copy">
+                <IodInput label="Pfad" v-model="copyForm.destination" :helper="copyForm.path">
+                    <template #right>
+                        <IodButton type="submit" size="small" label="Kopieren" :loading="copyForm.processing" />
+                    </template>
+                </IodInput>
+            </Flex>
+        </Flex>
+        
         <MediaUploadCard />
+        <input class="display-none" type="file" ref="uploadInput" multiple @change="upload(($event.target as HTMLInputElement)?.files || [])">
     </NuxtLayout>
 </template>
 
@@ -236,9 +230,4 @@
         display: grid
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
         gap: 1rem
-
-        > button
-            border-radius: var(--radius-l)
-            box-shadow: none
-            border-color: var(--color-border)
 </style>

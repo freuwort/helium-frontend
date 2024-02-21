@@ -1,5 +1,5 @@
 <template>
-    <Flex :is="NuxtLink" type="button" horizontal class="context-menu-item" :class="{'active': active}" :style="{ color }">
+    <Flex :is="is ?? NuxtLink" type="button" horizontal class="context-menu-item" :class="{'active': active}" :style="{ color }">
         <Icon class="main-icon"><slot name="icon">{{ icon }}</slot></Icon>
         <Flex class="flex-1">
             <span class="label"><slot>{{ label }}</slot></span>
@@ -10,6 +10,9 @@
 
 <script lang="ts" setup>
     defineProps({
+        is: {
+            type: [String, Object, Function, Array],
+        },
         label: String,
         icon: String,
         color: String,
@@ -22,7 +25,7 @@
             default: false,
         },
     })
-    
+
     const NuxtLink = defineNuxtLink({})
 </script>
 
