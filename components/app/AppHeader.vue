@@ -124,5 +124,5 @@
     .main-bar
         background-color: var(--color-background)
         border-bottom: 1px solid var(--color-background-soft)
-        box-shadow: var(--shadow-elevation-medium)
+        box-shadow: var(--shadow-elevation-low)
 </style>
