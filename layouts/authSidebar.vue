@@ -58,7 +58,7 @@
         grid-area: sidebar
         margin-block: 1rem
         background: var(--color-background)
-        box-shadow: var(--shadow-elevation-medium)
+        box-shadow: var(--shadow-elevation-low)
         border-radius: 0 var(--radius-l) var(--radius-l) 0
 
     main

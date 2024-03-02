@@ -10,27 +10,6 @@
                 <ContextMenuItem :is="NuxtLink" to="/d/files/private" icon="lock">Geschützte Ablage</ContextMenuItem>
                 <ContextMenuItem :is="NuxtLink" to="/d/files/profile_pictures" icon="account_circle">Profilbilder</ContextMenuItem>
                 <ContextMenuItem :is="NuxtLink" to="/d/files/profile_banners" icon="landscape">Profilbanner</ContextMenuItem>
-                <div class="display-none">
-                    <Flex padding="0 1rem" :gap=".5">
-                        <!-- move -->
-                        <Flex is="form" @submit.prevent="move">
-                            <IodInput label="Pfad" v-model="moveForm.destination" :helper="moveForm.path">
-                                <template #right>
-                                    <IodButton type="submit" size="small" label="Verschieben" :loading="moveForm.processing" />
-                                </template>
-                            </IodInput>
-                        </Flex>
-                        
-                        <!-- copy -->
-                        <Flex is="form" @submit.prevent="copy">
-                            <IodInput label="Pfad" v-model="copyForm.destination" :helper="copyForm.path">
-                                <template #right>
-                                    <IodButton type="submit" size="small" label="Kopieren" :loading="copyForm.processing" />
-                                </template>
-                            </IodInput>
-                        </Flex>
-                    </Flex>
-                </div>
                 <Spacer />
                 <Flex class="sidebar-icons border-top" :padding="1" :gap=".5" horizontal>
                     <VDropdown placement="top-end">
@@ -49,13 +28,11 @@
             </Flex>
         </template>
 
-        <Flex padding="0 1rem" :gap="1" class="position-relative">
+        <Flex :gap="1">
             <div class="selection-bar">
                 <MediaBreadcrumbs :path="path" root-path="/d/files" @drop="onDrop($event.event, $event.path)"/>
                 <Spacer />
-                <IodIconButton type="button" shape="pill" variant="text" size="small" icon="drive_file_move" v-tooltip="'Verschieben'" :disabled="!selection.length" @click="moveForm.path = path"/>
-                <IodIconButton type="button" shape="pill" variant="text" size="small" icon="file_copy" v-tooltip="'Kopieren'" :disabled="!selection.length" @click="copyForm.path = path"/>
-                <IodIconButton type="button" shape="pill" variant="text" size="small" icon="delete" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItem"/>
+                <IodIconButton type="button" shape="pill" variant="text" size="small" icon="delete" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
             </div>
             
             <div class="entity-grid" v-if="items.length">
@@ -72,7 +49,7 @@
                     @dblclick="navigateTo(`/d/files/${item.src_path}`)"
                     @edit="console.log"
                     @rename="openRenamePopup"
-                    @delete="deleteItem"
+                    @delete="deleteItems([item.src_path])"
                 />
             </div>
 
@@ -278,35 +255,29 @@
 
 
 
-    const moveForm = useForm({
-        path: '',
-        destination: '',
-    })
-
-    async function move()
+    function move(paths: string[], destination: string)
     {
-        moveForm.patch('/api/media/move', {
-            onSuccess() {
-                moveForm.reset()
-                fetchItems()
-            }
+        useForm({
+            paths,
+            destination,
+        })
+        .patch('/api/media/move', {
+            onSuccess() { fetchItems() },
+            onError(errors: any) { console.log(errors.data) }
         })
     }
 
 
 
-    const copyForm = useForm({
-        path: '',
-        destination: '',
-    })
-
-    async function copy()
+    function copy(paths: string[], destination: string)
     {
-        copyForm.post('/api/media/copy', {
-            onSuccess() {
-                copyForm.reset()
-                fetchItems()
-            }
+        useForm({
+            paths,
+            destination,
+        })
+        .post('/api/media/copy', {
+            onSuccess() { fetchItems() },
+            onError(errors: any) { console.log(errors.data) }
         })
     }
 
@@ -331,21 +302,10 @@
 
     function onDrop(event: DragEvent, path: string)
     {
-        console.log(selection.value[0], path)
+        // console.log(selection.value[0], path)
         dragging.value = false
 
-        if (event.ctrlKey)
-        {
-            copyForm.destination = path
-            copyForm.path = selection.value[0]
-            copy()
-        }
-        else
-        {
-            moveForm.destination = path
-            moveForm.path = selection.value[0]
-            move()
-        }
+        event.ctrlKey ? copy(selection.value, path) : move(selection.value, path)
     }
 
     onMounted(() => {
@@ -358,11 +318,9 @@
 
 
 
-    async function deleteItem(item: MediaItem)
+    async function deleteItems(paths: string[])
     {
-        const { data } = await useAxios().delete(`/api/media/`, {
-            data: { path: item.src_path },
-        })
+        const { data } = await useAxios().delete(`/api/media/`, { data: { paths } })
 
         fetchItems()
     }
