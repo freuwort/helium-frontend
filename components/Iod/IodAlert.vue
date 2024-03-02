@@ -74,10 +74,8 @@
             z-index: 0
             pointer-events: none
             border-radius: inherit
-
-        &::before
             background: currentColor
-            mask: linear-gradient(to bottom right, #00000020, #00000010)
+            opacity: .07
 
         h3
             position: relative

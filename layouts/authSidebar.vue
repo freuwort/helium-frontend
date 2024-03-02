@@ -56,10 +56,10 @@
 
     .sidebar
         grid-area: sidebar
-        margin: 1rem
+        margin-block: 1rem
         background: var(--color-background)
-        box-shadow: var(--shadow-elevation-low)
-        border-radius: var(--radius-l)
+        box-shadow: var(--shadow-elevation-medium)
+        border-radius: 0 var(--radius-l) var(--radius-l) 0
 
     main
         grid-area: main

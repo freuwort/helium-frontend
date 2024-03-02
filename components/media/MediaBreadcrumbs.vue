@@ -1,6 +1,13 @@
 <template>
     <div class="iod-container iod-breadcrumbs">
-        <NuxtLink :to="item.value" class="breadcrumb" v-for="item in items" :key="item.value">
+        <NuxtLink
+            class="breadcrumb"
+            v-for="item in items"
+            :key="item.navigate_path"
+            :to="item.navigate_path"
+            @dragover.prevent
+            @drop.prevent="onDrop($event, item.src_path)"
+        >
             <div class="label">{{ item.text }}</div>
         </NuxtLink>
     </div>
@@ -23,20 +30,31 @@
 
         const parts = props.path.split('/').filter(e => e)
 
-        let path = props.rootPath
+        let path = []
 
         for (const part of parts)
         {
-            path += `/${part}`
+            path.push(part)
 
             items.push({
                 text: part,
-                value: path,
+                navigate_path: [props.rootPath, ...path].join('/'),
+                src_path: path.join('/'),
             })
         }
 
         return items
     })
+
+    function onDrop(event: DragEvent, path: string)
+    {
+        emits('drop', {
+            event: event as DragEvent,
+            path: path as string
+        })
+    }
+
+    const emits = defineEmits(['drop'])
 </script>
 
 <style lang="sass" scoped>

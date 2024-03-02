@@ -1,10 +1,12 @@
 <template>
     <Card
-        is="button"
-        type="button"
-        class="media-item"
-        :class="{ selected, ghost }"
-        @dblclick="navigateTo(`/d/files/${item.src_path}`)"
+        is="div"
+        :class="['media-item', { selected, ghost, disabled, dragging, dragover: dragOver }]"
+        @dragover.prevent="onDraggingOver"
+        @dragstart="onStartDraggingOver"
+        @dragend="onStopDraggingOver"
+        @dragleave="onStopDraggingOver"
+        @drop.prevent="onDrop"
     >
         <div class="media-preview">
             <div class="media-icon-wrapper">
@@ -16,10 +18,6 @@
                 <NuxtLink class="row title" :to="`/d/files/${item.src_path}`">
                     <span v-tooltip="item.name">{{ item.name }}</span>
                 </NuxtLink>
-                <small class="row meta">
-                    <span>{{ humanFileSize(item.meta.size || 0) }}</span>
-                    <span v-if="item.meta.extension">{{ item.meta.extension }}</span>
-                </small>
             </div>
             <div class="more-button-wrapper">
                 <VDropdown placement="bottom-end">
@@ -27,10 +25,9 @@
                     <template #popper>
                         <ContextMenu class="min-w-15">
                             <ContextMenuItem is="a" icon="open_in_new" :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">In neuem Tab öffnen</ContextMenuItem>
+                            <ContextMenuItem is="button" v-close-popper icon="download">Herunterladen</ContextMenuItem>
                             <ContextMenuItem is="button" v-close-popper icon="info" @click="emits('edit', item)">Eigenschaften</ContextMenuItem>
                             <ContextMenuItem is="button" v-close-popper icon="edit" @click="emits('rename', item)">Umbenennen</ContextMenuItem>
-                            <ContextMenuItem is="button" v-close-popper icon="drive_file_move" @click="emits('move', item)">Verschieben</ContextMenuItem>
-                            <ContextMenuItem is="button" v-close-popper icon="file_copy" @click="emits('copy', item)">Kopieren</ContextMenuItem>
                             <ContextMenuItem is="button" v-close-popper color="var(--color-error)" icon="delete" @click="emits('delete', item)">Löschen</ContextMenuItem>
                         </ContextMenu>
                     </template>
@@ -59,7 +56,7 @@
 
 
 
-    defineProps({
+    const props = defineProps({
         item: {
             type: Object as PropType<Item>,
             required: true
@@ -68,15 +65,67 @@
             type: Boolean,
             default: false
         },
-        ghost: {
+        disabled: {
             type: Boolean,
             default: false
-        }
+        },
+        dragging: {
+            type: Boolean,
+            default: false
+        },
     })
 
-    const emits = defineEmits(['select', 'edit', 'rename', 'move', 'copy', 'delete'])
+    const dragOver = ref(false)
+    const isFolder = computed(() => props.item.mime_type === 'folder')
 
-    const NuxtLink = defineNuxtLink({})
+    // Ghost items are items that are not selectable, draggable or dropable
+    const ghost = computed(() => {
+        // @case: disabled
+        if (props.disabled) return true
+
+        // @case: selected and dragging
+        if (props.selected && props.dragging) return true
+
+        // @case: dragging and not a folder
+        if (props.dragging && !isFolder.value) return true
+
+        // @case: not ghost
+        return false
+    })
+
+
+
+    function onStartDraggingOver()
+    {
+        dragOver.value = false
+    }
+
+    function onDraggingOver()
+    {
+        dragOver.value = true
+    }
+
+    function onStopDraggingOver()
+    {
+        dragOver.value = false
+    }
+
+    function onDrop(event: DragEvent)
+    {
+        dragOver.value = false
+
+        if (ghost.value)
+        {
+            event.stopPropagation()
+            return
+        }
+
+        emits('drop', event)
+    }
+
+
+
+    const emits = defineEmits(['select', 'edit', 'rename', 'drop', 'delete'])
 </script>
 
 <style lang="sass" scoped>
@@ -87,7 +136,7 @@
         display: flex
         flex-direction: column
         border-radius: var(--radius-xl)
-        transition: box-shadow 100ms ease
+        transition: all 50ms ease
         overflow: hidden
         border-color: var(--local-border-color)
 
@@ -103,14 +152,19 @@
             border-radius: inherit
             z-index: 0
             opacity: 0
+            transition: opacity 50ms ease
 
-        &.selected
+        &.ghost
+            opacity: .5
+
+        &.selected:not(.ghost),
+        &.dragover:not(.ghost)
             --local-border-color: var(--color-info)
 
             &::after
                 opacity: .1
 
-        &:hover
+        &:hover:not(.ghost)
             box-shadow: var(--shadow-elevation-medium)
 
             .media-info
@@ -138,8 +192,9 @@
             z-index: 1
             display: flex
             flex-direction: column
-            padding: .5rem 1rem
+            padding: 1rem
             border-top: 1px solid var(--local-border-color)
+            transition: all 50ms ease
 
             .inner
                 display: flex
@@ -157,6 +212,7 @@
                 font-weight: 500
                 color: var(--color-text)
                 display: block
+                text-align: center
 
             .more-button-wrapper
                 position: absolute

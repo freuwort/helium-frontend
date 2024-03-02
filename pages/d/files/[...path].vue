@@ -1,72 +1,82 @@
 <template>
     <NuxtLayout limiter="normal" name="auth-sidebar" pageTitle="Dateien">
         <template #sidebar>
-            <Flex padding="1rem 0" class="w-20 h-100p">
-                <Flex padding="0 1rem" horizontal>
-                    <IodButton class="upload-button" type="button" shape="pill" icon-left="upload" label="Hochladen" size="large" @click="uploadInput?.click()"/>
-                    <Spacer />
+            <Flex class="w-21 h-100p">
+                <Flex horizontal :padding="1">
+                    <IodButton class="upload-button" type="button" shape="pill" label="Hochladen" size="large" @click="uploadInput?.click()"/>
                     <IodIconButton class="new-folder-button" type="button" shape="pill" icon="create_new_folder" size="large" v-tooltip="'Ordner erstellen'" @click="openCreateFolderPopup"/>
                 </Flex>
-                <ContextMenuDivider />
                 <ContextMenuItem :is="NuxtLink" to="/d/files/public" icon="public">Öffentliche Ablage</ContextMenuItem>
                 <ContextMenuItem :is="NuxtLink" to="/d/files/private" icon="lock">Geschützte Ablage</ContextMenuItem>
                 <ContextMenuItem :is="NuxtLink" to="/d/files/profile_pictures" icon="account_circle">Profilbilder</ContextMenuItem>
                 <ContextMenuItem :is="NuxtLink" to="/d/files/profile_banners" icon="landscape">Profilbanner</ContextMenuItem>
-                <!-- <ContextMenuItem :is="NuxtLink" to="/d/files/trash" icon="delete">Papierkorb</ContextMenuItem> -->
-                <ContextMenuDivider />
-                <Flex padding="0 1rem" :gap=".5">
-                    <!-- move -->
-                    <Flex is="form" @submit.prevent="move">
-                        <IodInput label="Pfad" v-model="moveForm.destination" :helper="moveForm.path">
-                            <template #right>
-                                <IodButton type="submit" size="small" label="Verschieben" :loading="moveForm.processing" />
-                            </template>
-                        </IodInput>
+                <div class="display-none">
+                    <Flex padding="0 1rem" :gap=".5">
+                        <!-- move -->
+                        <Flex is="form" @submit.prevent="move">
+                            <IodInput label="Pfad" v-model="moveForm.destination" :helper="moveForm.path">
+                                <template #right>
+                                    <IodButton type="submit" size="small" label="Verschieben" :loading="moveForm.processing" />
+                                </template>
+                            </IodInput>
+                        </Flex>
+                        
+                        <!-- copy -->
+                        <Flex is="form" @submit.prevent="copy">
+                            <IodInput label="Pfad" v-model="copyForm.destination" :helper="copyForm.path">
+                                <template #right>
+                                    <IodButton type="submit" size="small" label="Kopieren" :loading="copyForm.processing" />
+                                </template>
+                            </IodInput>
+                        </Flex>
                     </Flex>
-                    
-                    <!-- copy -->
-                    <Flex is="form" @submit.prevent="copy">
-                        <IodInput label="Pfad" v-model="copyForm.destination" :helper="copyForm.path">
-                            <template #right>
-                                <IodButton type="submit" size="small" label="Kopieren" :loading="copyForm.processing" />
-                            </template>
-                        </IodInput>
-                    </Flex>
-                </Flex>
+                </div>
                 <Spacer />
-                <ContextMenuDivider />
-                <Flex class="sidebar-icons" padding="0 1rem" :gap=".5" horizontal>
-                    <IodIconButton type="button" variant="text" shape="pill" icon="scan" v-tooltip="'Verzeichnisse scannen'" @click="discover"/>
-                    <IodIconButton type="button" variant="text" shape="pill" icon="refresh" v-tooltip="'Aktualisieren'" @click="fetchItems"/>
+                <Flex class="sidebar-icons border-top" :padding="1" :gap=".5" horizontal>
+                    <VDropdown placement="top-end">
+                        <IodIconButton type="button" variant="text" shape="pill" icon="settings" v-tooltip="'Einstellungen'"/>
+                        <template #popper>
+                            <ContextMenu class="min-w-19">
+                                <ContextMenuItem icon="scan" @click="discover">Verzeichnisse scannen</ContextMenuItem>
+                                <ContextMenuItem icon="refresh" @click="fetchItems">Aktualisieren</ContextMenuItem>
+                                <ContextMenuDivider />
+                                <ContextMenuItem icon="settings">Einstellungen</ContextMenuItem>
+                            </ContextMenu>
+                        </template>
+                    </VDropdown>
                     <Spacer />
-                    <IodIconButton type="button" variant="text" shape="pill" icon="settings" v-tooltip="'Einstellungen'"/>
                 </Flex>
             </Flex>
         </template>
 
-        <Flex padding="0 1rem" :gap="1">
-            <Flex class="h-6" padding="1rem 0 0 0">
-                <MediaBreadcrumbs :path="path" root-path="/d/files" />
-            </Flex>
+        <Flex padding="0 1rem" :gap="1" class="position-relative">
+            <div class="selection-bar">
+                <MediaBreadcrumbs :path="path" root-path="/d/files" @drop="onDrop($event.event, $event.path)"/>
+                <Spacer />
+                <IodIconButton type="button" shape="pill" variant="text" size="small" icon="drive_file_move" v-tooltip="'Verschieben'" :disabled="!selection.length" @click="moveForm.path = path"/>
+                <IodIconButton type="button" shape="pill" variant="text" size="small" icon="file_copy" v-tooltip="'Kopieren'" :disabled="!selection.length" @click="copyForm.path = path"/>
+                <IodIconButton type="button" shape="pill" variant="text" size="small" icon="delete" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItem"/>
+            </div>
             
-            <div class="entity-grid">
-                <TransitionGroup>
-                    <MediaItem
-                        v-for="item in items"
-                        :key="item.id"
-                        :item="item"
-                        :selected="selection.includes(item.src_path)"
-                        @click="select($event, item.src_path)"
-                        @edit="console.log"
-                        @rename="openRenamePopup"
-                        @move="moveForm.path = item.src_path"
-                        @copy="copyForm.path = item.src_path"
-                        @delete="deleteItem"
-                    />
-                </TransitionGroup>
+            <div class="entity-grid" v-if="items.length">
+                <MediaItem
+                    v-for="item in items"
+                    :key="item.id"
+                    :item="item"
+                    :selected="selection.includes(item.src_path)"
+                    :dragging="dragging"
+                    :draggable="true"
+                    @dragstart="onDragStart($event, item)"
+                    @drop="onDrop($event, item.src_path)"
+                    @click="select($event, item.src_path)"
+                    @dblclick="navigateTo(`/d/files/${item.src_path}`)"
+                    @edit="console.log"
+                    @rename="openRenamePopup"
+                    @delete="deleteItem"
+                />
             </div>
 
-            <IodAlert v-if="!items.length" class="h-20" as="placeholder">Keine Dateien vorhanden</IodAlert>
+            <IodAlert v-else class="h-20" as="placeholder">Keine Dateien vorhanden</IodAlert>
         </Flex>
         
 
@@ -302,6 +312,52 @@
 
 
 
+    const dragging = ref(false)
+
+    function onDragStart(event: DragEvent, item: MediaItem)
+    {
+        if (!selection.value.includes(item.src_path))
+        {
+            selection.value = [item.src_path]
+        }
+        
+        dragging.value = true
+    }
+
+    function onDragEnd(event: DragEvent)
+    {
+        dragging.value = false
+    }
+
+    function onDrop(event: DragEvent, path: string)
+    {
+        console.log(selection.value[0], path)
+        dragging.value = false
+
+        if (event.ctrlKey)
+        {
+            copyForm.destination = path
+            copyForm.path = selection.value[0]
+            copy()
+        }
+        else
+        {
+            moveForm.destination = path
+            moveForm.path = selection.value[0]
+            move()
+        }
+    }
+
+    onMounted(() => {
+        window.addEventListener('dragend', onDragEnd)
+    })
+
+    onBeforeUnmount(() => {
+        window.removeEventListener('dragend', onDragEnd)
+    })
+
+
+
     async function deleteItem(item: MediaItem)
     {
         const { data } = await useAxios().delete(`/api/media/`, {
@@ -317,12 +373,22 @@
     {
         useAxios().patch('/api/media/discovery', { path: path.value })
     }
+
+
+
+    // 
 </script>
 
 <style lang="sass" scoped>
-    .upload-button,
+    .upload-button
+        flex: 1
+        border-radius: 50rem 0 0 50rem !important
+
     .new-folder-button
-        box-shadow: var(--shadow-elevation-medium)
+        border-radius: 0 50rem 50rem 0 !important
+        width: 4rem !important
+        border-left: 1px solid var(--color-on-primary) !important
+        padding-right: .1rem !important
 
     .sidebar-icons
         .iod-button
@@ -332,4 +398,20 @@
         display: grid
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr))
         gap: 1rem
+
+
+
+    .selection-bar
+        position: sticky
+        top: 1rem
+        margin-top: 1rem
+        z-index: 100
+        display: flex
+        align-items: center
+        height: 4rem
+        padding-inline: 1rem
+        gap: .5rem
+        background-color: var(--color-background)
+        box-shadow: var(--shadow-elevation-low)
+        border-radius: var(--radius-l)
 </style>
