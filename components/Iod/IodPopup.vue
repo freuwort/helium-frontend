@@ -60,7 +60,7 @@
         },
         backdropColor: {
             type: String,
-            default: 'rgb(61 65 69 / 80%)',
+            default: 'rgb(33 34 36 / 80%)',
         },
         modalColor: {
             type: String,

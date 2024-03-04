@@ -61,26 +61,26 @@
         <MediaUploadCard />
         <input class="display-none" type="file" ref="uploadInput" multiple @change="upload(($event.target as HTMLInputElement)?.files || [])">
         
-        <IodPopup ref="createFolderPopup" title="Ordner erstellen" max-width="400px">
+        <IodPopup ref="createFolderPopup" title="Ordner erstellen" max-width="450px">
             <Flex is="form" :padding="1" :gap="1" @submit.prevent="createFolder">
                 <ErrorAlert :errors="createFolderForm.errors" />
 
                 <IodInput label="Name" ref="createFolderInput" v-model="createFolderForm.name" />
                 <Flex horizontal>
-                    <IodButton type="button" size="small" label="Abbrechen" variant="text" @click="closeCreateFolderPopup" :loading="createFolderForm.processing" />
+                    <IodButton type="button" variant="contained" label="Abbrechen" @click="closeCreateFolderPopup" :loading="createFolderForm.processing" />
                     <Spacer />
-                    <IodButton type="submit" size="small" label="Ordner Erstellen" :loading="createFolderForm.processing" />
+                    <IodButton type="submit" variant="filled" label="Ordner Erstellen" :loading="createFolderForm.processing" />
                 </Flex>
             </Flex>
         </IodPopup>
 
-        <IodPopup ref="renamePopup" title="Umbenennen" max-width="400px">
+        <IodPopup ref="renamePopup" title="Umbenennen" max-width="450px">
             <Flex is="form" :padding="1" :gap="1" @submit.prevent="rename">
                 <IodInput label="Name" ref="renameInput" v-model="renameForm.name" />
                 <Flex horizontal>
-                    <IodButton type="button" size="small" label="Abbrechen" variant="text" @click="closeRenamePopup" :loading="renameForm.processing" />
+                    <IodButton type="button" variant="contained" label="Abbrechen" @click="closeRenamePopup" :loading="renameForm.processing" />
                     <Spacer />
-                    <IodButton type="submit" size="small" label="Umbenennen" :loading="renameForm.processing" />
+                    <IodButton type="submit" variant="filled" label="Umbenennen" :loading="renameForm.processing" />
                 </Flex>
             </Flex>
         </IodPopup>
@@ -163,6 +163,11 @@
         {
             selection.value = [path]
         }
+    }
+
+    function deselectAll()
+    {
+        selection.value = []
     }
 
 
@@ -249,6 +254,7 @@
                 renameForm.reset()
                 renamePopup.value?.close()
                 fetchItems()
+                deselectAll()
             }
         })
     }
@@ -262,7 +268,7 @@
             destination,
         })
         .patch('/api/media/move', {
-            onSuccess() { fetchItems() },
+            onSuccess() { fetchItems(); deselectAll() },
             onError(errors: any) { console.log(errors.data) }
         })
     }
@@ -276,7 +282,7 @@
             destination,
         })
         .post('/api/media/copy', {
-            onSuccess() { fetchItems() },
+            onSuccess() { fetchItems(); deselectAll() },
             onError(errors: any) { console.log(errors.data) }
         })
     }
@@ -323,6 +329,7 @@
         const { data } = await useAxios().delete(`/api/media/`, { data: { paths } })
 
         fetchItems()
+        deselectAll()
     }
 
 
