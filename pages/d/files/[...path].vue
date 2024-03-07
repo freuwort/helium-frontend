@@ -338,10 +338,6 @@
     {
         useAxios().patch('/api/media/discovery', { path: path.value })
     }
-
-
-
-    // 
 </script>
 
 <style lang="sass" scoped>

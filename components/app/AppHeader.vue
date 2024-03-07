@@ -85,6 +85,29 @@
                     </ContextMenu>
                 </template>
             </VDropdown>
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+                <AppHeaderItem show-chevron color="#20bf6b" icon="edit_square"/>
+                <template #popper>
+                    <ContextMenu class="min-w-20">
+                        <ContextMenuItem show-chevron color="#20bf6b" icon="category">Alle Kategorien</ContextMenuItem>
+                        <ContextMenuItem color="#20bf6b" icon="add_circle">Kategorie erstellen</ContextMenuItem>
+                        <ContextMenuDivider />
+                        <ContextMenuItem show-chevron color="#20bf6b" icon="label">Alle Tags</ContextMenuItem>
+                        <ContextMenuItem color="#20bf6b" icon="add_circle">Tag erstellen</ContextMenuItem>
+                        <ContextMenuDivider />
+                        <ContextMenuItem show-chevron color="#20bf6b" icon="notes">Alle Inhalte</ContextMenuItem>
+                        <ContextMenuItem color="#20bf6b" icon="add_circle">Inhalt erstellen</ContextMenuItem>
+                    </ContextMenu>
+                </template>
+            </VDropdown>
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+                <AppHeaderItem show-chevron color="#0fb9b1" icon="local_library"/>
+                <template #popper>
+                    <ContextMenu class="min-w-20">
+                        <ContextMenuItem show-chevron color="#0fb9b1" icon="local_library">Wiki Einrichten</ContextMenuItem>
+                    </ContextMenu>
+                </template>
+            </VDropdown>
             
             <Spacer />
 
