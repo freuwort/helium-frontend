@@ -38,21 +38,74 @@ type User = {
     permissions: string[]
 }
 
+type UserApiResponse = {
+    data: {
+        value?: {
+            data: User
+        }
+    }
+    error: {
+        value?: {
+            message: string
+        }
+    }
+}
+
 
 
 export const useAuthStore = defineStore('auth', () => {
 
-    const user = ref<User | null>(null)
-    const isLoggedIn = computed(() => user.value !== null)
     const splashscreen = useSplashscreenStore()
+
+    const user = ref<User | null>(null)
+    const options = ref({
+        routes: {
+            authHome: '/d',
+            guestHome: '/login',
+            register: '/register',
+            login: '/login',
+            forgotPassword: '/forgot-password',
+            verify2FA: '/verify-2fa',
+        },
+        apiRoutes: {
+            user: '/api/user',
+            register: '/register',
+            login: '/login',
+            forgotPassword: '/forgot-password',
+            verify2FA: '/verify-2fa',
+            logout: '/logout',
+        }
+    })
+
+    const authenticated = computed(() => {
+        if (user.value === undefined) return false
+        if (user.value === null) return false
+        return true
+    })
+
+    const status = computed(() => {
+        return {
+            authenticated: authenticated.value,
+            user: user.value,
+        }
+    })
+
+    const routes = computed(() => options.value.routes)
+    const apiRoutes = computed(() => options.value.apiRoutes)
 
 
 
     async function fetchUser()
     {
-        const { data } = await useApiFetch('/api/user')
+        const response = await useApiFetch(apiRoutes.value.user) as UserApiResponse
 
-        user.value = data.value?.data as User
+        if (response.error.value)
+        {
+            user.value = null
+            return
+        }
+
+        user.value = response.data.value?.data || null
     }
 
 
@@ -61,14 +114,21 @@ export const useAuthStore = defineStore('auth', () => {
     {
         splashscreen.start()
 
-        await useApiFetch('/logout', { method: 'POST' })
+        await useApiFetch(apiRoutes.value.logout, { method: 'POST' })
 
         user.value = null
 
-        navigateTo('/login')
+        navigateTo(routes.value.guestHome)
     }
 
 
 
-    return { user, isLoggedIn, fetchUser, logout }
+    return {
+        user,
+        authenticated,
+        routes,
+        apiRoutes,
+        fetchUser,
+        logout,
+    }
 })

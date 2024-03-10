@@ -4,6 +4,6 @@ export default defineNuxtPlugin({
     async setup()
     {
         const auth = useAuthStore()
-        if (!auth.isLoggedIn) await auth.fetchUser()
+        if (!auth.authenticated) await auth.fetchUser()
     }
 })

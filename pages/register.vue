@@ -52,12 +52,12 @@
     async function handleRegister()
     {
         // Prevent register if already logged in
-        if (auth.isLoggedIn) return
+        if (auth.authenticated) return
 
         // Attempt register
         const { error } = await auth.register(form.value)
 
         // Navigate to dashboard if successful
-        if (!error.value) navigateTo('/d')
+        if (!error.value) navigateTo(auth.routes.value.authHome)
     }
 </script>

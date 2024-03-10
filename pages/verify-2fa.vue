@@ -1,26 +1,27 @@
 <template>
-    <NuxtLayout name="guest-form" pageTitle="Anmelden">
+    <NuxtLayout name="guest-form" pageTitle="Anmeldung bestätigen">
         <div class="form-limiter">
             <Card is="form" @submit.prevent="handleLogin">
                 <Flex :gap="2" :padding="2">
                     <ErrorAlert :errors="form.errors"/>
-                    <h1 class="weight-medium align-center margin-0">Anmelden</h1>
-    
+                    <h1 class="weight-medium align-center margin-0">Anmeldung bestätigen</h1>
                     <Flex :gap="1">
-                        <IodInput type="text" label="Email oder Nutzername" v-model="form.email"/>
-                        <IodInput type="password" label="Passwort" v-model="form.password"/>
+                        <p class="margin-0">
+                            Bitte geben Sie den 6-stelligen Code aus Ihrer Authenticator-App ein.
+                            <i>Lorem ipsum dolor sit amet consectetur adipisicing elit.</i>
+                        </p>
+                        <IodOtpInput :length="6" :dividers="[3]" v-model="form.otp" autofocus/>
                     </Flex>
                     <Flex :gap="1">
-                        <IodToggle type="checkbox" label="Angemeldet bleiben" v-model="form.remember"/>
-                        <IodButton label="Anmelden" size="large" :loading="form.processing"/>
+                        <IodButton label="Anmeldung bestätigen" size="large" :loading="form.processing"/>
                     </Flex>
     
                     <hr>
     
                     <Flex :gap="1" horizontal>
-                        <NuxtLink to="/forgot-password">Passwort vergessen?</NuxtLink>
+                        <NuxtLink to="/">Andere Methode wählen</NuxtLink>
                         <Spacer />
-                        <NuxtLink to="/register">Neues Konto erstellen</NuxtLink>
+                        <NuxtLink to="/" class="color-red">Anmeldung abbrechen</NuxtLink>
                     </Flex>
                 </Flex>
             </Card>
@@ -41,9 +42,7 @@
 
     const splashscreen = useSplashscreenStore()
     const form = useForm({
-        email: 'admin@example.com',
-        password: 'password',
-        remember: false,
+        otp: '',
     })
 
     function handleLogin()
@@ -52,7 +51,7 @@
         if (auth.authenticated) return
 
         // Attempt login
-        form.post(auth.apiRoutes.login, {
+        form.post(auth.apiRoutes.verify2FA, {
             async onSuccess()
             {
                 // Show splashscreen
