@@ -39,6 +39,37 @@
 
     <div class="h-1"></div>
 
+    <h5 class="margin-0 weight-medium">Zwei Faktor Authentifizierung</h5>
+    <Flex horizontal>
+        <Flex class="flex-1">
+            <span class="font-heading color-text weight-medium">Authenticator App (empfohlen)</span>
+            <small>Zweiten Faktor via App einrichten</small>
+        </Flex>
+        <Flex horizontal :gap="1" class="w-18">
+            <IodButton class="flex-1" variant="contained" label="App einrichten" @click="setup2faAppPopup?.open()"/>
+            <IodIconButton variant="contained" icon="star" v-tooltip="'Als Standard-Methode festlegen'"/>
+        </Flex>
+    </Flex>
+    <Flex horizontal>
+        <Flex class="flex-1">
+            <span class="font-heading color-text weight-medium">SMS Code</span>
+            <small>Zweiten Faktor via SMS Code einrichten</small>
+        </Flex>
+        <Flex horizontal :gap="1" class="w-18">
+            <IodButton class="flex-1" variant="contained" label="SMS Code einrichten" @click="setup2faSmsPopup?.open()"/>
+            <IodIconButton variant="contained" icon="star" v-tooltip="'Als Standard-Methode festlegen'"/>
+        </Flex>
+    </Flex>
+    <Flex horizontal>
+        <Flex class="flex-1">
+            <span class="font-heading color-text weight-medium">Backup Codes</span>
+            <small>Alternative Backup Codes zum Einloggen</small>
+        </Flex>
+        <IodButton class="w-18" variant="contained" label="Backup Codes Anzeigen" @click="backupCodesPopup?.open()"/>
+    </Flex>
+
+    <div class="h-1"></div>
+
     <h5 class="margin-0 weight-medium">Konto</h5>
     <Flex horizontal>
         <Flex class="flex-1">
@@ -48,6 +79,70 @@
         <IodButton class="w-18" label="Konto löschen" color-preset="error" @click="deleteAccountPopup?.open()"/>
     </Flex>
 
+
+
+    <IodPopup ref="setup2faAppPopup" title="Auth-App einrichten" max-width="500px" @open="setup2faAppForm.reset">
+        <form class="flex vertical gap-1 padding-2" @submit.prevent="enable2faApp">
+            <Flex class="background-soft radius-m">
+                <img class="h-12 aspect-ratio-1-1 margin-inline-auto margin-block-0-5 radius-s background" :src="setup2faAppForm.qr" alt="QR-Code"/>
+                <hr class="margin-0">
+                <IodInput type="text" label="Geheimnis" readonly :modelValue="setup2faAppForm.secret">
+                    <template #right>
+                        <IodIconButton type="button" icon="content_copy" variant="text" size="small" v-tooltip="'Geheimnis kopieren'"/>
+                    </template>
+                </IodInput>
+            </Flex>
+            
+            <Flex :gap=".5" padding="1.75rem 0 1.5rem">
+                <p class="margin-0"><code>[1]</code> Scannen Sie den <b>QR-Code</b> mit Ihrer <b>Authenticator-App</b></p>
+                <p class="margin-0"><code>[2]</code> Geben Sie den <b>6-stelligen Code</b> aus Ihrer App ein.</p>
+                <p class="margin-0"><code>[3]</code> Klicken Sie auf <b>"Code Bestätigen"</b></p>
+            </Flex>
+            
+            <Flex :gap="1">
+                <ErrorAlert :errors="setup2faAppForm.errors"/>
+                <IodOtpInput :length="6" :dividers="[3]" v-model="setup2faAppForm.code" @complete="enable2faApp"/>
+                <IodButton label="Code Bestätigen" size="large"/>
+            </Flex>
+        </form>
+    </IodPopup>
+
+    <IodPopup ref="setup2faSmsPopup" title="SMS-Code einrichten" max-width="500px" @open="setup2faSmsForm.reset">
+        <Flex :gap="1" :padding="2">
+            <IodInput type="text" label="Handynummer" :modelValue="setup2faSmsForm.secret"/>
+            <IodButton type="button" label="SMS-Code senden" variant="contained"/>
+            
+            <Flex :gap=".5" padding="1.75rem 0 1.5rem">
+                <p class="margin-0"><code>[1]</code> Geben Sie Ihre <b>Handynummer</b> ein.</p>
+                <p class="margin-0"><code>[2]</code> Geben Sie den <b>6-stelligen Code</b> aus der SMS ein.</p>
+                <p class="margin-0"><code>[3]</code> Klicken Sie auf <b>"Code Bestätigen"</b></p>
+            </Flex>
+
+            <Flex is="form" :gap="1" @submit.prevent="enable2faSms">
+                <ErrorAlert :errors="setup2faSmsForm.errors"/>
+                <IodOtpInput :length="6" :dividers="[3]" v-model="setup2faSmsForm.code" @complete="enable2faSms"/>
+                <IodButton label="Code Bestätigen" size="large"/>
+            </Flex>
+        </Flex>
+    </IodPopup>
+
+    <IodPopup ref="backupCodesPopup" title="Backup Codes" max-width="500px">
+        <Flex :gap="1" :padding="2">
+            <ErrorAlert :errors="backupCodesForm.errors"/>
+            <p class="margin-0">
+                Mit diesen Backup-Codes können Sie sich in Ihren Account einloggen, wenn andere 2FA-Methoden nicht funktionieren.<br>
+                <b>Bitte speichern Sie diese an einem sicheren Ort ab.</b>
+            </p>
+            <Flex class="background-soft radius-m">
+                <code class="background-soft padding-1 radius-m">
+                    <pre class="margin-0">{{ backupCodesForm.codes.join('\n') }}</pre>
+                </code>
+                <Flex horizontal :padding=".5" class="border-top">
+                    <IodButton label="Neue Backup-Codes generieren" size="small" variant="contained" @click="backupCodesPopup.close()"/>
+                </Flex>
+            </Flex>
+        </Flex>
+    </IodPopup>
 
 
     <IodPopup ref="changePasswordPopup" title="Passwort ändern" max-width="500px" @open="changePasswordForm.reset">
@@ -121,11 +216,61 @@
 
 
 
+    // START: Setup 2FA App
+    const setup2faAppPopup = ref()
+    const setup2faAppForm = useForm({
+        qr: '',
+        secret: '',
+        code: '',
+    })
+
+    function enable2faApp()
+    {
+        setup2faAppForm.post('/api/user/2fa/app', {
+            onSuccess() {
+                setup2faAppPopup.value?.close()
+                toast.success('2FA-App aktiviert')
+            }
+        })
+    }
+    // END: Setup 2FA App
+
+    // START: Setup 2FA Sms
+    const setup2faSmsPopup = ref()
+    const setup2faSmsForm = useForm({
+        phone: '',
+        code: '',
+    })
+
+    function enable2faSms()
+    {
+        setup2faSmsForm.post('/api/user/2fa/sms', {
+            onSuccess() {
+                setup2faSmsPopup.value?.close()
+                toast.success('2FA-SMS aktiviert')
+            }
+        })
+    }
+    // END: Setup 2FA Sms
+
+    // START: 2FA Backup Codes
+    const backupCodesPopup = ref()
+    const backupCodesForm = useForm({
+        codes: [
+            '12345678',
+            '87654321',
+            'abcdefgh',
+            'zyxwvuts',
+        ],
+    })
+    // END: 2FA Backup Codes
+
+
     // START: Change password
     const changePasswordPopup = ref()
     const changePasswordForm = useForm({
         password: '',
-        new_password: ''
+        new_password: '',
     })
 
     function changePassword()
@@ -144,7 +289,7 @@
     // START: Delete account
     const deleteAccountPopup = ref()
     const deleteAccountForm = useForm({
-        password: ''
+        password: '',
     })
 
     function deleteAccount()
