@@ -45,20 +45,22 @@
             <span class="font-heading color-text weight-medium">Authenticator App (empfohlen)</span>
             <small>Zweiten Faktor via App einrichten</small>
         </Flex>
-        <Flex horizontal :gap="1" class="w-18">
-            <IodButton class="flex-1" variant="contained" label="App einrichten" @click="setup2faAppPopup?.open()"/>
+        <Flex horizontal :gap="1" class="w-18" v-if="auth.user.has_tfa_totp_enabled">
+            <IodButton class="flex-1" variant="contained" color-preset="error" label="Einrichtung löschen" @click="destroyTwoFactorMethod('totp')"/>
             <IodIconButton variant="contained" icon="star" v-tooltip="'Als Standard-Methode festlegen'"/>
         </Flex>
+        <IodButton v-else class="w-18" variant="contained" label="App einrichten" @click="setup2faAppPopup?.open()"/>
     </Flex>
     <Flex horizontal>
         <Flex class="flex-1">
             <span class="font-heading color-text weight-medium">SMS Code</span>
             <small>Zweiten Faktor via SMS Code einrichten</small>
         </Flex>
-        <Flex horizontal :gap="1" class="w-18">
-            <IodButton class="flex-1" variant="contained" label="SMS Code einrichten" @click="setup2faSmsPopup?.open()"/>
+        <Flex horizontal :gap="1" class="w-18" v-if="auth.user.has_tfa_sms_enabled">
+            <IodButton class="flex-1" variant="contained" color-preset="error" label="Einrichtung löschen" @click="destroyTwoFactorMethod('sms')"/>
             <IodIconButton variant="contained" icon="star" v-tooltip="'Als Standard-Methode festlegen'"/>
         </Flex>
+        <IodButton v-else class="w-18" variant="contained" label="SMS Code einrichten" @click="setup2faSmsPopup?.open()"/>
     </Flex>
     <Flex horizontal>
         <Flex class="flex-1">
@@ -81,7 +83,7 @@
 
 
 
-    <IodPopup ref="setup2faAppPopup" title="Auth-App einrichten" max-width="500px" @open="setup2faAppForm.reset">
+    <IodPopup ref="setup2faAppPopup" title="Auth-App einrichten" max-width="500px" @open="setup2faApp">
         <form class="flex vertical gap-1 padding-2" @submit.prevent="enable2faApp">
             <Flex class="background-soft radius-m">
                 <img class="h-12 aspect-ratio-1-1 margin-inline-auto margin-block-0-5 radius-s background" :src="setup2faAppForm.qr" alt="QR-Code"/>
@@ -216,6 +218,18 @@
 
 
 
+    // START: 2FA
+    function destroyTwoFactorMethod(method: string)
+    {
+        useForm({}).delete(`/two-factor/destroy/${method}`, {
+            onSuccess() {
+                auth.fetchUser()
+                toast.success('2FA-Methode gelöscht')
+            }
+        })
+    }
+    // END: 2FA
+
     // START: Setup 2FA App
     const setup2faAppPopup = ref()
     const setup2faAppForm = useForm({
@@ -224,12 +238,26 @@
         code: '',
     })
 
+    function setup2faApp()
+    {
+        if (setup2faAppForm.processing) return
+
+        setup2faAppForm.put('/two-factor/totp/setup', {
+            onSuccess(data: any) {
+                setup2faAppForm.defaults(data.value).reset()
+            }
+        })
+    }
+
     function enable2faApp()
     {
-        setup2faAppForm.post('/api/user/2fa/app', {
+        if (setup2faAppForm.processing) return
+
+        setup2faAppForm.put('/two-factor/totp/enable', {
             onSuccess() {
+                auth.fetchUser()
                 setup2faAppPopup.value?.close()
-                toast.success('2FA-App aktiviert')
+                toast.success('Auth-App aktiviert')
             }
         })
     }
@@ -244,26 +272,17 @@
 
     function enable2faSms()
     {
-        setup2faSmsForm.post('/api/user/2fa/sms', {
-            onSuccess() {
-                setup2faSmsPopup.value?.close()
-                toast.success('2FA-SMS aktiviert')
-            }
-        })
+        if (setup2faSmsForm.processing) return
     }
     // END: Setup 2FA Sms
 
     // START: 2FA Backup Codes
     const backupCodesPopup = ref()
     const backupCodesForm = useForm({
-        codes: [
-            '12345678',
-            '87654321',
-            'abcdefgh',
-            'zyxwvuts',
-        ],
+        codes: [],
     })
     // END: 2FA Backup Codes
+
 
 
     // START: Change password
