@@ -6,10 +6,11 @@ type User = {
     username: string | null
     ident_number: string | null
 
-    has_two_factor_enabled: boolean
-    has_tfa_totp_enabled: boolean
-    has_tfa_sms_enabled: boolean
-    default_two_factor_method: string | null
+    has_tfa_enabled: boolean
+    has_tfa_totp_method_enabled: boolean
+    has_tfa_sms_method_enabled: boolean
+    has_tfa_email_method_enabled: boolean
+    default_tfa_method: string | null
 
     salutation: string | null
     fullname: string | null

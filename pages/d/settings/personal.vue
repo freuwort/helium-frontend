@@ -1,85 +1,68 @@
 <template>
     <form class="display-contents" @submit.prevent="save">
-        <h5 class="margin-0 weight-medium">Sprache, Zeitzone und Theme</h5>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Sprache</span>
-                <small>Wählen Sie die Programm Sprache</small>
-            </Flex>
-            <IodSelect class="w-18" label="Sprache" v-model="form.language" :options="options_language"/>
-        </Flex>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Zeitzone</span>
-                <small>Wählen Sie Ihre Zeitzone</small>
-            </Flex>
-            <IodSelect class="w-18" label="Zeitzone" v-model="form.timezone" :options="options_timezone"/>
-        </Flex>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Theme</span>
-                <small>Wählen Sie Ihr lieblings Theme</small>
-            </Flex>
-            <IodSelect class="w-18" label="Theme" v-model="form.theme" :options="options_theme"/>
-        </Flex>
-
-        <IodButton class="w-18 margin-left-auto " label="Speichern" :loading="form.processing"/>
+        <SettingsTitle>Sprache, Zeitzone und Theme</SettingsTitle>
+        <SettingsRow title="Sprache" description="Wählen Sie die Programm Sprache">
+            <IodSelect class="flex-1" label="Sprache" v-model="form.language" :options="options_language"/>
+        </SettingsRow>
+        <SettingsRow title="Zeitzone" description="Wählen Sie Ihre Zeitzone">
+            <IodSelect class="flex-1" label="Zeitzone" v-model="form.timezone" :options="options_timezone"/>
+        </SettingsRow>
+        <SettingsRow title="Theme" description="Wählen Sie Ihr lieblings Theme">
+            <IodSelect class="flex-1" label="Theme" v-model="form.theme" :options="options_theme"/>
+        </SettingsRow>
+        <SettingsRow>
+            <IodButton class="flex-1" label="Speichern" :loading="form.processing"/>
+        </SettingsRow>
     </form>
+    
+    
+    <SettingsSpacer />
+    <SettingsTitle>Sicherheit</SettingsTitle>
+    <SettingsRow title="Passwort ändern" description="Ändern Sie Ihr Passwort">
+        <IodButton class="flex-1" label="Passwort ändern" @click="changePasswordPopup?.open()"/>
+    </SettingsRow>
+    
+    
+    <SettingsSpacer />
+    <SettingsTitle>Zwei Faktor Authentifizierung</SettingsTitle>
 
-    <div class="h-1"></div>
+    <SettingsRow title="Authenticator App (empfohlen)" description="Zweiten Faktor via App einrichten">
+        <template v-if="auth.user.has_tfa_totp_method_enabled">
+            <IodButton v-if="auth.user.default_tfa_method === 'totp'" class="flex-1" label="Standard Methode" disabled v-tooltip="'Dies ist Ihre Standard-Methode'"/>
+            <IodButton v-else class="flex-1" variant="contained" label="Als Standard festlegen" v-tooltip="'Als Standard-Methode festlegen'" @click="setDefaultTwoFactorMethod('totp')"/>
+            <IodIconButton variant="contained" icon="close" v-tooltip="'Diese Zwei Faktor Methode löschen'" color-preset="error" @click="destroyTwoFactorMethod('totp')"/>
+        </template>
+        <IodButton v-else class="flex-1" variant="contained" icon-left="screen_lock_portrait" label="App einrichten" @click="setup2faAppPopup?.open()"/>
+    </SettingsRow>
 
-    <h5 class="margin-0 weight-medium">Sicherheit</h5>
-    <Flex horizontal>
-        <Flex class="flex-1">
-            <span class="font-heading color-text weight-medium">Passwort</span>
-            <small>Ändern Sie Ihr Passwort</small>
-        </Flex>
-        <IodButton class="w-18" label="Passwort ändern" @click="changePasswordPopup?.open()"/>
-    </Flex>
+    <SettingsRow title="SMS Code" description="Zweiten Faktor via SMS Code einrichten">
+        <template v-if="auth.user.has_tfa_sms_method_enabled">
+            <IodButton v-if="auth.user.default_tfa_method === 'sms'" class="flex-1" label="Standard Methode" disabled v-tooltip="'Dies ist Ihre Standard-Methode'"/>
+            <IodButton v-else class="flex-1" variant="contained" label="Als Standard festlegen" v-tooltip="'Als Standard-Methode festlegen'" @click="setDefaultTwoFactorMethod('sms')"/>
+            <IodIconButton variant="contained" icon="close" v-tooltip="'Diese Zwei Faktor Methode löschen'" color-preset="error" @click="destroyTwoFactorMethod('sms')"/>
+        </template>
+        <IodButton v-else class="flex-1" variant="contained" icon-left="sms" label="SMS-Code einrichten" @click="setup2faSmsPopup?.open()"/>
+    </SettingsRow>
 
-    <div class="h-1"></div>
+    <SettingsRow title="Email Code" description="Zweiten Faktor via Email einrichten">
+        <template v-if="auth.user.has_tfa_email_method_enabled">
+            <IodButton v-if="auth.user.default_tfa_method === 'email'" class="flex-1" label="Standard Methode" disabled v-tooltip="'Dies ist Ihre Standard-Methode'"/>
+            <IodButton v-else class="flex-1" variant="contained" label="Als Standard festlegen" v-tooltip="'Als Standard-Methode festlegen'" @click="setDefaultTwoFactorMethod('email')"/>
+            <IodIconButton variant="contained" icon="close" v-tooltip="'Diese Zwei Faktor Methode löschen'" color-preset="error" @click="destroyTwoFactorMethod('email')"/>
+        </template>
+        <IodButton v-else class="flex-1" variant="contained" icon-left="email" label="Email-Code einrichten" @click="setup2faEmailPopup?.open()"/>
+    </SettingsRow>
 
-    <h5 class="margin-0 weight-medium">Zwei Faktor Authentifizierung</h5>
-    <Flex horizontal>
-        <Flex class="flex-1">
-            <span class="font-heading color-text weight-medium">Authenticator App (empfohlen)</span>
-            <small>Zweiten Faktor via App einrichten</small>
-        </Flex>
-        <Flex horizontal :gap="1" class="w-18" v-if="auth.user.has_tfa_totp_enabled">
-            <IodButton class="flex-1" variant="contained" color-preset="error" label="Einrichtung löschen" @click="destroyTwoFactorMethod('totp')"/>
-            <IodIconButton variant="contained" icon="star" v-tooltip="'Als Standard-Methode festlegen'"/>
-        </Flex>
-        <IodButton v-else class="w-18" variant="contained" label="App einrichten" @click="setup2faAppPopup?.open()"/>
-    </Flex>
-    <Flex horizontal>
-        <Flex class="flex-1">
-            <span class="font-heading color-text weight-medium">SMS Code</span>
-            <small>Zweiten Faktor via SMS Code einrichten</small>
-        </Flex>
-        <Flex horizontal :gap="1" class="w-18" v-if="auth.user.has_tfa_sms_enabled">
-            <IodButton class="flex-1" variant="contained" color-preset="error" label="Einrichtung löschen" @click="destroyTwoFactorMethod('sms')"/>
-            <IodIconButton variant="contained" icon="star" v-tooltip="'Als Standard-Methode festlegen'"/>
-        </Flex>
-        <IodButton v-else class="w-18" variant="contained" label="SMS Code einrichten" @click="setup2faSmsPopup?.open()"/>
-    </Flex>
-    <Flex horizontal>
-        <Flex class="flex-1">
-            <span class="font-heading color-text weight-medium">Backup Codes</span>
-            <small>Alternative Backup Codes zum Einloggen</small>
-        </Flex>
-        <IodButton class="w-18" variant="contained" label="Backup Codes Anzeigen" @click="backupCodesPopup?.open()"/>
-    </Flex>
+    <SettingsRow title="Backup Codes" description="Alternative Backup Codes zum Einloggen">
+        <IodButton class="flex-1" variant="contained" icon-left="key" label="Backup-Codes Anzeigen" @click="backupCodesPopup?.open()"/>
+    </SettingsRow>
 
-    <div class="h-1"></div>
-
-    <h5 class="margin-0 weight-medium">Konto</h5>
-    <Flex horizontal>
-        <Flex class="flex-1">
-            <span class="font-heading color-text weight-medium">Konto löschen</span>
-            <small>Wenn Sie Ihr Konto löschen, werden all Ihre Daten gelöscht</small>
-        </Flex>
-        <IodButton class="w-18" label="Konto löschen" color-preset="error" @click="deleteAccountPopup?.open()"/>
-    </Flex>
+    
+    <SettingsSpacer />
+    <SettingsTitle>Konto</SettingsTitle>
+    <SettingsRow title="Konto löschen" description="Wenn Sie Ihr Konto löschen, werden all Ihre Daten gelöscht">
+        <IodButton class="flex-1" label="Konto löschen" color-preset="error" @click="deleteAccountPopup?.open()"/>
+    </SettingsRow>
 
 
 
@@ -128,7 +111,7 @@
         </Flex>
     </IodPopup>
 
-    <IodPopup ref="backupCodesPopup" title="Backup Codes" max-width="500px">
+    <IodPopup ref="backupCodesPopup" title="Ihre Backup Codes" max-width="500px" @open="fetchBackupCodes">
         <Flex :gap="1" :padding="2">
             <ErrorAlert :errors="backupCodesForm.errors"/>
             <p class="margin-0">
@@ -136,11 +119,11 @@
                 <b>Bitte speichern Sie diese an einem sicheren Ort ab.</b>
             </p>
             <Flex class="background-soft radius-m">
-                <code class="background-soft padding-1 radius-m">
-                    <pre class="margin-0">{{ backupCodesForm.codes.join('\n') }}</pre>
+                <code class="flex h-center wrap gap-1 background-soft padding-1 padding-block-2 radius-m">
+                    <span v-for="code in backupCodesForm.codes" :key="code">{{ code }}<br></span>
                 </code>
-                <Flex horizontal :padding=".5" class="border-top">
-                    <IodButton label="Neue Backup-Codes generieren" size="small" variant="contained" @click="backupCodesPopup.close()"/>
+                <Flex :padding="1" class="border-top">
+                    <IodButton label="Neue Codes generieren" variant="contained" :loading="backupCodesForm.processing" @click="regenerateBackupCodes"/>
                 </Flex>
             </Flex>
         </Flex>
@@ -219,6 +202,13 @@
 
 
     // START: 2FA
+    function setDefaultTwoFactorMethod(method: string)
+    {
+        useForm({}).put('/two-factor/set-default', {
+            
+        })
+    }
+
     function destroyTwoFactorMethod(method: string)
     {
         useForm({}).delete(`/two-factor/destroy/${method}`, {
@@ -281,6 +271,24 @@
     const backupCodesForm = useForm({
         codes: [],
     })
+
+    function fetchBackupCodes()
+    {
+        backupCodesForm.get('/two-factor/backup/show', {
+            onSuccess(data: any) {
+                backupCodesForm.codes = data.value.codes || []
+            }
+        })
+    }
+
+    function regenerateBackupCodes()
+    {
+        backupCodesForm.post('/two-factor/backup/generate', {
+            onSuccess(data: any) {
+                backupCodesForm.codes = data.value.codes || []
+            }
+        })
+    }
     // END: 2FA Backup Codes
 
 
