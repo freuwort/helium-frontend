@@ -49,7 +49,7 @@
     function handleLogin()
     {
         // Prevent login if already logged in
-        if (auth.authenticated) return
+        if (auth.session.authenticated) return
 
         // Attempt login
         form.post(auth.apiRoutes.login, {
@@ -59,7 +59,7 @@
                 splashscreen.start()
 
                 // Fetch user data
-                await auth.fetchUser()
+                await auth.fetchSession()
 
                 // Navigate to dashboard if successful
                 navigateTo(auth.routes.authHome)

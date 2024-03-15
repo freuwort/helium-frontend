@@ -193,7 +193,7 @@
         form.patch('/api/user/settings', {
             onSuccess() {
                 toast.success('Einstellung gespeichert')
-                auth.fetchUser()
+                auth.fetchSession()
             },
         })
     }
@@ -204,16 +204,18 @@
     // START: 2FA
     function setDefaultTwoFactorMethod(method: string)
     {
-        useForm({}).put('/two-factor/set-default', {
-            
+        useForm({}).put(`/api/user/two-factor/set-default/${method}`, {
+            onSuccess() {
+                auth.fetchSession()
+            }
         })
     }
 
     function destroyTwoFactorMethod(method: string)
     {
-        useForm({}).delete(`/two-factor/destroy/${method}`, {
+        useForm({}).delete(`/api/user/two-factor/destroy/${method}`, {
             onSuccess() {
-                auth.fetchUser()
+                auth.fetchSession()
                 toast.success('2FA-Methode gelöscht')
             }
         })
@@ -232,7 +234,7 @@
     {
         if (setup2faAppForm.processing) return
 
-        setup2faAppForm.put('/two-factor/totp/setup', {
+        setup2faAppForm.put('/api/user/two-factor/totp/setup', {
             onSuccess(data: any) {
                 setup2faAppForm.defaults(data.value).reset()
             }
@@ -243,9 +245,9 @@
     {
         if (setup2faAppForm.processing) return
 
-        setup2faAppForm.put('/two-factor/totp/enable', {
+        setup2faAppForm.put('/api/user/two-factor/totp/enable', {
             onSuccess() {
-                auth.fetchUser()
+                auth.fetchSession()
                 setup2faAppPopup.value?.close()
                 toast.success('Auth-App aktiviert')
             }
@@ -274,7 +276,7 @@
 
     function fetchBackupCodes()
     {
-        backupCodesForm.get('/two-factor/backup/show', {
+        backupCodesForm.get('/api/user/two-factor/backup/show', {
             onSuccess(data: any) {
                 backupCodesForm.codes = data.value.codes || []
             }
@@ -283,7 +285,7 @@
 
     function regenerateBackupCodes()
     {
-        backupCodesForm.post('/two-factor/backup/generate', {
+        backupCodesForm.post('/api/user/two-factor/backup/generate', {
             onSuccess(data: any) {
                 backupCodesForm.codes = data.value.codes || []
             }

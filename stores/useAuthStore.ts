@@ -37,7 +37,6 @@ type User = {
         language?: string
         timezone?: string
         theme?: string
-        two_factor_auth_enabled?: boolean
     }
 
     roles: string[]
@@ -63,6 +62,10 @@ export const useAuthStore = defineStore('auth', () => {
 
     const splashscreen = useSplashscreenStore()
 
+    const session = ref({
+        authenticated: false,
+        twoFactorVerified: false,
+    })
     const user = ref<User | null>(null)
     const options = ref({
         routes: {
@@ -75,6 +78,7 @@ export const useAuthStore = defineStore('auth', () => {
         },
         apiRoutes: {
             user: '/api/user',
+            session: '/api/session',
             register: '/register',
             login: '/login',
             forgotPassword: '/forgot-password',
@@ -83,35 +87,29 @@ export const useAuthStore = defineStore('auth', () => {
         }
     })
 
-    const authenticated = computed(() => {
-        if (user.value === undefined) return false
-        if (user.value === null) return false
-        return true
-    })
-
-    const status = computed(() => {
-        return {
-            authenticated: authenticated.value,
-            user: user.value,
-        }
-    })
-
     const routes = computed(() => options.value.routes)
     const apiRoutes = computed(() => options.value.apiRoutes)
 
 
 
-    async function fetchUser()
+    async function fetchSession()
     {
-        const response = await useApiFetch(apiRoutes.value.user) as UserApiResponse
+        const sessionResponse = await useApiFetch(apiRoutes.value.session)
+        // const userResponse = await useApiFetch(apiRoutes.value.user) as UserApiResponse
+        
+        // if (userResponse.error.value || sessionResponse.error.value)
+        // {
+        //     user.value = null
+        //     session.value.authenticated = false
+        //     session.value.twoFactorVerified = false
+        //     return
+        // }
+    
+        // user.value = userResponse.data.value?.data || null
+        session.value.authenticated = sessionResponse.data.value?.authenticated || false
+        session.value.twoFactorVerified = sessionResponse.data.value?.two_factor_verified || false
 
-        if (response.error.value)
-        {
-            user.value = null
-            return
-        }
-
-        user.value = response.data.value?.data || null
+        console.log(sessionResponse.data.value)
     }
 
 
@@ -131,10 +129,10 @@ export const useAuthStore = defineStore('auth', () => {
 
     return {
         user,
-        authenticated,
+        session,
         routes,
         apiRoutes,
-        fetchUser,
+        fetchSession,
         logout,
     }
 })

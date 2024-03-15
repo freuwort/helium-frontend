@@ -52,7 +52,7 @@
     async function handleRegister()
     {
         // Prevent register if already logged in
-        if (auth.authenticated) return
+        if (auth.session.authenticated) return
 
         // Attempt register
         const { error } = await auth.register(form.value)
