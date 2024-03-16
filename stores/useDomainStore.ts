@@ -22,5 +22,8 @@ export const useDomainStore = defineStore('domain', () => {
         settings.value = data.value as Settings
     }
 
-    return { settings, fetchSettings }
+    return {
+        settings: settings as unknown as Settings,
+        fetchSettings,
+    }
 })

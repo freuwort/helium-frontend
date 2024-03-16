@@ -93,7 +93,10 @@ export const useAuthStore = defineStore('auth', () => {
             register: '/register',
             login: '/login',
             forgotPassword: '/forgot-password',
-            verify2FA: '/verify-2fa',
+            verifyTfaTotp: '/verify-tfa-totp',
+            verifyTfaSms: '/verify-tfa-sms',
+            verifyTfaEmail: '/verify-tfa-email',
+            verifyTfaBackup: '/verify-tfa-backup',
             logout: '/logout',
         }
     })

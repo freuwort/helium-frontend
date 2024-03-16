@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout name="guest-form" pageTitle="Anmelden">
         <div class="form-limiter">
-            <Card is="form" @submit.prevent="handleLogin">
+            <Card is="form" @submit.prevent="submit">
                 <Flex :gap="2" :padding="2">
                     <ErrorAlert :errors="form.errors"/>
                     <h1 class="weight-medium align-center margin-0">Anmelden</h1>
@@ -15,7 +15,7 @@
                         <IodButton label="Anmelden" size="large" :loading="form.processing"/>
                     </Flex>
     
-                    <hr>
+                    <hr class="margin-0">
     
                     <Flex :gap="1" horizontal>
                         <NuxtLink to="/forgot-password">Passwort vergessen?</NuxtLink>
@@ -46,22 +46,21 @@
         remember: false,
     })
 
-    function handleLogin()
+    function submit()
     {
-        // Prevent login if already logged in
+        // Prevent submit if form is processing
+        if (form.processing) return
+
+        // Prevent submit if already logged in
         if (auth.session.authenticated) return
 
-        // Attempt login
         form.post(auth.apiRoutes.login, {
             async onSuccess()
             {
-                // Show splashscreen
                 splashscreen.start()
 
-                // Fetch user data
                 await auth.fetchSession()
 
-                // Navigate to dashboard if successful
                 navigateTo(auth.routes.authHome)
             },
         })

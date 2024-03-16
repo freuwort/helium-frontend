@@ -27,8 +27,8 @@
     <SettingsTitle>Zwei Faktor Authentifizierung</SettingsTitle>
 
     <SettingsRow title="Authenticator App (empfohlen)" description="Zweiten Faktor via App einrichten">
-        <template v-if="auth.user.has_tfa_totp_method_enabled">
-            <IodButton v-if="auth.user.default_tfa_method === 'totp'" class="flex-1" label="Standard Methode" disabled v-tooltip="'Dies ist Ihre Standard-Methode'"/>
+        <template v-if="auth.user?.has_tfa_totp_method_enabled">
+            <IodButton v-if="auth.user?.default_tfa_method === 'totp'" class="flex-1" label="Standard Methode" disabled v-tooltip="'Dies ist Ihre Standard-Methode'"/>
             <IodButton v-else class="flex-1" variant="contained" label="Als Standard festlegen" v-tooltip="'Als Standard-Methode festlegen'" @click="setDefaultTwoFactorMethod('totp')"/>
             <IodIconButton variant="contained" icon="close" v-tooltip="'Diese Zwei Faktor Methode löschen'" color-preset="error" @click="destroyTwoFactorMethod('totp')"/>
         </template>
@@ -36,8 +36,8 @@
     </SettingsRow>
 
     <SettingsRow title="SMS Code" description="Zweiten Faktor via SMS Code einrichten">
-        <template v-if="auth.user.has_tfa_sms_method_enabled">
-            <IodButton v-if="auth.user.default_tfa_method === 'sms'" class="flex-1" label="Standard Methode" disabled v-tooltip="'Dies ist Ihre Standard-Methode'"/>
+        <template v-if="auth.user?.has_tfa_sms_method_enabled">
+            <IodButton v-if="auth.user?.default_tfa_method === 'sms'" class="flex-1" label="Standard Methode" disabled v-tooltip="'Dies ist Ihre Standard-Methode'"/>
             <IodButton v-else class="flex-1" variant="contained" label="Als Standard festlegen" v-tooltip="'Als Standard-Methode festlegen'" @click="setDefaultTwoFactorMethod('sms')"/>
             <IodIconButton variant="contained" icon="close" v-tooltip="'Diese Zwei Faktor Methode löschen'" color-preset="error" @click="destroyTwoFactorMethod('sms')"/>
         </template>
@@ -45,12 +45,12 @@
     </SettingsRow>
 
     <SettingsRow title="Email Code" description="Zweiten Faktor via Email einrichten">
-        <template v-if="auth.user.has_tfa_email_method_enabled">
-            <IodButton v-if="auth.user.default_tfa_method === 'email'" class="flex-1" label="Standard Methode" disabled v-tooltip="'Dies ist Ihre Standard-Methode'"/>
+        <template v-if="auth.user?.has_tfa_email_method_enabled">
+            <IodButton v-if="auth.user?.default_tfa_method === 'email'" class="flex-1" label="Standard Methode" disabled v-tooltip="'Dies ist Ihre Standard-Methode'"/>
             <IodButton v-else class="flex-1" variant="contained" label="Als Standard festlegen" v-tooltip="'Als Standard-Methode festlegen'" @click="setDefaultTwoFactorMethod('email')"/>
             <IodIconButton variant="contained" icon="close" v-tooltip="'Diese Zwei Faktor Methode löschen'" color-preset="error" @click="destroyTwoFactorMethod('email')"/>
         </template>
-        <IodButton v-else class="flex-1" variant="contained" icon-left="email" label="Email-Code einrichten" @click="setup2faEmailPopup?.open()"/>
+        <IodButton v-else class="flex-1" variant="contained" icon-left="email" label="Email-Code einrichten"/>
     </SettingsRow>
 
     <SettingsRow title="Backup Codes" description="Alternative Backup Codes zum Einloggen">

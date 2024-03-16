@@ -8,7 +8,7 @@
                     <IodInput type="email" label="Email"/>
                     <IodButton label="Passwort wiederherstellen" size="large"/>
     
-                    <hr>
+                    <hr class="margin-0">
     
                     <Flex :gap="1" horizontal>
                         <NuxtLink to="/login">Zurück zur Anmeldung</NuxtLink>

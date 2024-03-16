@@ -200,7 +200,7 @@
             border: none
             text-align: center
             font-size: 1.25rem
-            font-family: var(--font-text)
+            font-family: var(--font-mono)
             color: var(--color-text)
 
             &:not(:disabled):focus

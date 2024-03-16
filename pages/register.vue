@@ -20,7 +20,7 @@
                         <IodButton label="Neues Konto registrieren" size="large"/>
                     </Flex>
     
-                    <hr>
+                    <hr class="margin-0">
     
                     <Flex :gap="1" horizontal>
                         <NuxtLink to="/login">Zurück zur Anmeldung</NuxtLink>
@@ -54,10 +54,10 @@
         // Prevent register if already logged in
         if (auth.session.authenticated) return
 
-        // Attempt register
-        const { error } = await auth.register(form.value)
+        // // Attempt register
+        // const { error } = await auth.register(form.value)
 
-        // Navigate to dashboard if successful
-        if (!error.value) navigateTo(auth.routes.value.authHome)
+        // // Navigate to dashboard if successful
+        // if (!error.value) navigateTo(auth.routes.authHome)
     }
 </script>
