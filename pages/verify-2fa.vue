@@ -21,7 +21,7 @@
                     <Flex :gap="1" horizontal>
                         <NuxtLink to="/">Andere Methode wählen</NuxtLink>
                         <Spacer />
-                        <NuxtLink to="/" class="color-red">Anmeldung abbrechen</NuxtLink>
+                        <a href="#" class="color-red" @click="auth.logout">Anmeldung abbrechen</a>
                     </Flex>
                 </Flex>
             </Card>
@@ -35,7 +35,7 @@
 
 
     definePageMeta({
-        middleware: 'guest',
+        middleware: ['auth', '2fa-needed'],
     })
 
 

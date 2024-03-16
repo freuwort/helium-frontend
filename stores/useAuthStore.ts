@@ -43,30 +43,41 @@ type User = {
     permissions: string[]
 }
 
+type SessionInfo = {
+    authenticated: boolean
+    tfa_enabled: boolean
+    tfa_verified: boolean
+}
+
+type ApiError = {
+    value?: {
+        message: string
+    }
+}
+
 type UserApiResponse = {
     data: {
-        value?: {
+        value: {
             data: User
         }
     }
-    error: {
-        value?: {
-            message: string
+    error: ApiError
+}
+
+type SessionApiResponse = {
+    data: {
+        value: {
+            user: User
+            session: SessionInfo
         }
     }
+    error: ApiError
 }
 
 
 
 export const useAuthStore = defineStore('auth', () => {
 
-    const splashscreen = useSplashscreenStore()
-
-    const session = ref({
-        authenticated: false,
-        twoFactorVerified: false,
-    })
-    const user = ref<User | null>(null)
     const options = ref({
         routes: {
             authHome: '/d',
@@ -86,30 +97,37 @@ export const useAuthStore = defineStore('auth', () => {
             logout: '/logout',
         }
     })
-
     const routes = computed(() => options.value.routes)
     const apiRoutes = computed(() => options.value.apiRoutes)
+    const splashscreen = useSplashscreenStore()
 
 
+    const user = ref<User | null>(null)
+    const session = ref({
+        authenticated: false,
+        tfa_enabled: false,
+        tfa_verified: false,
+    })
+
+
+
+    async function fetchUser()
+    {
+        const response = await useApiFetch(apiRoutes.value.user) as UserApiResponse
+
+        if (response.error.value) return
+
+        user.value = response.data.value.data
+    }
 
     async function fetchSession()
     {
-        const sessionResponse = await useApiFetch(apiRoutes.value.session)
-        // const userResponse = await useApiFetch(apiRoutes.value.user) as UserApiResponse
+        const response = await useApiFetch(apiRoutes.value.session) as SessionApiResponse
         
-        // if (userResponse.error.value || sessionResponse.error.value)
-        // {
-        //     user.value = null
-        //     session.value.authenticated = false
-        //     session.value.twoFactorVerified = false
-        //     return
-        // }
+        if (response.error.value) return
     
-        // user.value = userResponse.data.value?.data || null
-        session.value.authenticated = sessionResponse.data.value?.authenticated || false
-        session.value.twoFactorVerified = sessionResponse.data.value?.two_factor_verified || false
-
-        console.log(sessionResponse.data.value)
+        user.value = response.data.value.user
+        session.value = response.data.value.session
     }
 
 
@@ -121,6 +139,9 @@ export const useAuthStore = defineStore('auth', () => {
         await useApiFetch(apiRoutes.value.logout, { method: 'POST' })
 
         user.value = null
+        session.value.authenticated = false
+        session.value.tfa_enabled = false
+        session.value.tfa_verified = false
 
         navigateTo(routes.value.guestHome)
     }
@@ -128,10 +149,11 @@ export const useAuthStore = defineStore('auth', () => {
 
 
     return {
-        user,
-        session,
-        routes,
-        apiRoutes,
+        user: user as unknown as User | null,
+        session: session as unknown as SessionInfo,
+        routes: routes as unknown as Record<string, string>,
+        apiRoutes: apiRoutes as unknown as Record<string, string>,
+        fetchUser,
         fetchSession,
         logout,
     }

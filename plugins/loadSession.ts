@@ -1,5 +1,5 @@
 export default defineNuxtPlugin({
-    name: 'load-user',
+    name: 'load-session',
     dependsOn: ['load-csrf'],
     async setup()
     {
