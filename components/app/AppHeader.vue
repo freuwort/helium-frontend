@@ -10,29 +10,22 @@
 
                 <template #popper>
                     <ContextMenu class="min-w-20">
-                        <ContextMenuItem to="/d" show-chevron color="var(--color-primary)" icon="dashboard">Startseite</ContextMenuItem>
-                        <ContextMenuItem to="/d/files" show-chevron color="var(--color-primary)" icon="folder">Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/d" show-chevron color="var(--color-primary)" icon="home">Startseite</ContextMenuItem>
                         <ContextMenuItem to="/d/users" show-chevron color="var(--color-primary)" icon="group">Nutzer</ContextMenuItem>
+                        <ContextMenuItem to="/d/files" show-chevron color="var(--color-primary)" icon="folder">Dateien</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="#9747FF" icon="package_2">Produkte</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF6348" icon="warehouse">Lagerverwaltung</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FFA502" icon="local_mall">Onlineshop</ContextMenuItem>
+                        <ContextMenuItem show-chevron color="#20bf6b" icon="edit_square">Inhalte</ContextMenuItem>
+                        <ContextMenuItem show-chevron color="#0fb9b1" icon="local_library">Wiki</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem to="/d/settings/" show-chevron icon="settings">Einstellungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="var(--color-primary)" icon="folder"/>
-                <template #popper>
-                    <ContextMenu class="min-w-20">
-                        <ContextMenuItem to="/d/files" show-chevron color="var(--color-primary)" icon="folder">Alle Dateien</ContextMenuItem>
-                        <ContextMenuItem to="/d/files" color="var(--color-primary)" icon="drive_folder_upload">Dateien hochladen</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown>
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron color="var(--color-primary)" icon="group"/>
                 <template #popper>
@@ -47,7 +40,18 @@
                     </ContextMenu>
                 </template>
             </VDropdown>
+
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+                <AppHeaderItem show-chevron color="var(--color-primary)" icon="folder"/>
+                <template #popper>
+                    <ContextMenu class="min-w-20">
+                        <ContextMenuItem to="/d/files" show-chevron color="var(--color-primary)" icon="folder">Alle Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/d/files" color="var(--color-primary)" icon="drive_folder_upload">Dateien hochladen</ContextMenuItem>
+                    </ContextMenu>
+                </template>
+            </VDropdown>
+            
+            <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron color="#9747FF" icon="package_2"/>
                 <template #popper>
                     <ContextMenu class="min-w-20">
@@ -107,7 +111,7 @@
                         <ContextMenuItem show-chevron color="#0fb9b1" icon="local_library">Wiki Einrichten</ContextMenuItem>
                     </ContextMenu>
                 </template>
-            </VDropdown>
+            </VDropdown> -->
             
             <Spacer />
 
