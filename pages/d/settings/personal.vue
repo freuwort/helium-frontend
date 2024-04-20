@@ -35,7 +35,7 @@
         <IodButton v-else class="flex-1" variant="contained" icon-left="screen_lock_portrait" label="App einrichten" @click="setup2faAppPopup?.open()"/>
     </SettingsRow>
 
-    <SettingsRow title="SMS Code" description="Zweiten Faktor via SMS Code einrichten">
+    <!-- <SettingsRow title="SMS Code" description="Zweiten Faktor via SMS Code einrichten">
         <template v-if="auth.user?.has_tfa_sms_method_enabled">
             <IodButton v-if="auth.user?.default_tfa_method === 'sms'" class="flex-1" label="Standard Methode" disabled v-tooltip="'Dies ist Ihre Standard-Methode'"/>
             <IodButton v-else class="flex-1" variant="contained" label="Als Standard festlegen" v-tooltip="'Als Standard-Methode festlegen'" @click="setDefaultTwoFactorMethod('sms')"/>
@@ -51,7 +51,7 @@
             <IodIconButton variant="contained" icon="close" v-tooltip="'Diese Zwei Faktor Methode löschen'" color-preset="error" @click="destroyTwoFactorMethod('email')"/>
         </template>
         <IodButton v-else class="flex-1" variant="contained" icon-left="email" label="Email-Code einrichten"/>
-    </SettingsRow>
+    </SettingsRow> -->
 
     <SettingsRow title="Backup Codes" description="Alternative Backup Codes zum Einloggen">
         <IodButton class="flex-1" variant="contained" icon-left="key" label="Backup-Codes Anzeigen" @click="backupCodesPopup?.open()"/>
@@ -116,7 +116,7 @@
             <ErrorAlert :errors="backupCodesForm.errors"/>
             <p class="margin-0">
                 Mit diesen Backup-Codes können Sie sich in Ihren Account einloggen, wenn andere 2FA-Methoden nicht funktionieren.<br>
-                <b>Bitte speichern Sie diese an einem sicheren Ort ab.</b>
+                <b>Bitte legen Sie diese an einem sicheren Ort ab.</b>
             </p>
             <Flex class="background-soft radius-m">
                 <code class="flex h-center wrap gap-1 background-soft padding-1 padding-block-2 radius-m">
@@ -125,6 +125,19 @@
                 <Flex :padding="1" class="border-top">
                     <IodButton label="Neue Codes generieren" variant="contained" :loading="backupCodesForm.processing" @click="regenerateBackupCodes"/>
                 </Flex>
+            </Flex>
+        </Flex>
+    </IodPopup>
+
+    <IodPopup ref="tfaSuccessPopup" title="Einrichtung erfolgreich!" max-width="500px">
+        <Flex :gap="1" :padding="2">
+            <p class="margin-0">
+                Die Einrichtung der Zwei Faktor Authentifizierung war erfolgreich!<br>
+                <b>Sie sollten nun Ihre Backup-Codes speichern und sicher aufbewahren.</b>
+            </p>
+            <Flex horizontal :gap="1">
+                <IodButton class="flex-1" variant="contained" label="Schließen" @click="tfaSuccessPopup?.close()"/>
+                <IodButton class="flex-1" variant="filled" label="Backup-Codes Anzeigen" @click="tfaSuccessPopup?.close(); backupCodesPopup?.open()"/>
             </Flex>
         </Flex>
     </IodPopup>
@@ -249,6 +262,7 @@
             onSuccess() {
                 auth.fetchSession()
                 setup2faAppPopup.value?.close()
+                tfaSuccessPopup.value?.open()
                 toast.success('Auth-App aktiviert')
             }
         })
@@ -292,6 +306,10 @@
         })
     }
     // END: 2FA Backup Codes
+
+    // START: TFA Success Popup
+    const tfaSuccessPopup = ref()
+    // END: TFA Success Popup
 
 
 
