@@ -17,7 +17,7 @@
                                 Ich habe die <a target="_blank" href="/privacy">Datenschutzerklärung</a> und die <a target="_blank" href="/terms">AGB</a> gelesen und akzeptiere diese
                             </template>
                         </IodToggle>
-                        <IodButton label="Neues Konto registrieren" size="large"/>
+                        <IodButton label="Neues Konto registrieren" size="l"/>
                     </Flex>
     
                     <hr class="margin-0">

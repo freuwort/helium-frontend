@@ -1,14 +1,15 @@
 <template>
-    <component class="iod-container iod-button"
+    <component class="iod-container iod-button iod-icon-button"
         :is="is"
         :role="role"
         :disabled="disabled || loading"
         :area-disabled="disabled || loading"
-        :class="classes">
+        :class="classes"
+        :style="style">
 
-        <IodineIcon class="content" :icon="icon"/>
+        <IodIcon class="content"><slot>{{ icon }}</slot></IodIcon>
 
-        <IodineLoader type="spinner" class="spinner"/>
+        <IodLoader type="spinner" class="spinner"/>
 
         <div class="border" v-if="border"></div>
         <div class="background"></div>
@@ -19,8 +20,8 @@
 <script setup lang="ts">
     import { computed } from 'vue'
 
-    import IodineLoader from './IodLoader.vue'
-    import IodineIcon from './IodIcon.vue'
+    import IodLoader from './IodLoader.vue'
+    import IodIcon from './IodIcon.vue'
 
 
 
@@ -36,23 +37,33 @@
         colorPreset: {
             type: String,
         },
+        color: {
+            type: String,
+            default: '',
+        },
+        background: {
+            type: String,
+            default: '',
+        },
         icon: {
             type: String,
             default: '',
         },
-        iconLeft: {
+        iconFont: {
             type: String,
-        },
-        iconRight: {
-            type: String,
+            default: '',
         },
         size: {
             type: String,
-            default: 'normal',
+            default: 'm',
         },
-        shape: {
+        corner: {
             type: String,
-            default: 'radius-m',
+            default: 'm',
+        },
+        shadow: {
+            type: String,
+            default: 'none',
         },
         border: {
             type: Boolean,
@@ -77,7 +88,8 @@
     const classes = computed((): object => {
         return [
             `button-size-${props.size}`,
-            `button-shape-${props.shape}`,
+            `button-corner-${props.corner}`,
+            `button-shadow-${props.shadow}`,
             `button-variant-${props.variant}`,
             `button-color-preset-${props.colorPreset}`,
             {
@@ -86,14 +98,23 @@
             }
         ]
     })
+
+    const style = computed((): object => {
+        const styles: Record<string, string> = {}
+        if (props.background) styles['--local-color-background'] = props.background
+        if (props.color) styles['--local-color-text'] = props.color
+        if (props.iconFont) styles['--local-font'] = props.iconFont
+        return styles
+    })
 </script>
 
 <style lang="sass" scoped>
     .iod-container.iod-button
         font-size: 1rem
 
-        --local-color-background: var(--color-primary)
-        --local-color-text: var(--color-on-primary)
+        --local-color-background: var(--color-text)
+        --local-color-text: var(--color-background)
+        --local-font: var(--font-icon)
 
         display: inline-flex
         align-items: center
@@ -125,7 +146,7 @@
                 opacity: 0.1
 
         &:focus
-            outline: none
+            outline: 2px solid #000000cc
 
             .overlay
                 opacity: 0.17
@@ -148,6 +169,18 @@
             --local-color-background: var(--color-error)
             --local-color-text: var(--color-on-error)
 
+        &.button-color-preset-primary
+            --local-color-background: var(--color-primary)
+            --local-color-text: var(--color-on-primary)
+
+        &.button-color-preset-secondary
+            --local-color-background: var(--color-secondary)
+            --local-color-text: var(--color-on-secondary)
+
+        &.button-color-preset-tertiary
+            --local-color-background: var(--color-tertiary)
+            --local-color-text: var(--color-on-tertiary)
+
 
 
         &.button-variant-filled
@@ -168,46 +201,67 @@
 
 
 
-        &.button-size-small
+        &.button-size-s
             height: 2em
             width: 2em
 
             .content
                 font-size: 1.2rem
 
-        &.button-size-normal
+        &.button-size-m
             height: 2.5em
             width: 2.5em
 
             .content
                 font-size: 1.4rem
 
-        &.button-size-large
+        &.button-size-l
             height: 3em
             width: 3em
 
             .content
                 font-size: 1.6rem
 
+        &.button-size-xl
+            height: 3.5em
+            width: 3.5em
+
+            .content
+                font-size: 1.8rem
 
 
-        &.button-shape-rect
+
+        &.button-corner-none
             border-radius: 0px
 
-        &.button-shape-radius-s
+        &.button-corner-s
             border-radius: var(--radius-s)
 
-        &.button-shape-radius-m
+        &.button-corner-m
             border-radius: var(--radius-m)
 
-        &.button-shape-radius-l
+        &.button-corner-l
             border-radius: var(--radius-l)
 
-        &.button-shape-radius-xl
+        &.button-corner-xl
             border-radius: var(--radius-xl)
 
-        &.button-shape-pill
+        &.button-corner-pill
             border-radius: 1000px
+
+
+
+        &.button-shadow-none
+            box-shadow: none
+
+        &.button-shadow-s
+            box-shadow: var(--shadow-s)
+
+        &.button-shadow-m
+            box-shadow: var(--shadow-m)
+
+        &.button-shadow-l
+            box-shadow: var(--shadow-l)
 
 
 
@@ -257,8 +311,9 @@
 
         .content
             font-size: 1.4rem
-            line-height: 1
             font-weight: inherit
+            font-family: var(--local-font) !important
+            line-height: 0
             letter-spacing: inherit
             position: relative
             z-index: 1
@@ -282,5 +337,7 @@
             z-index: 2
             border-radius: inherit
             border: 1px solid var(--local-color-text)
+            box-shadow: inset 0 0 1px var(--local-color-text)
+            opacity: .75
             pointer-events: none
 </style>

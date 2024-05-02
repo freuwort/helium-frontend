@@ -29,7 +29,7 @@
                         <IodOtpInput :length="8" :charset="backupCodeCharset" v-model="form.code" @complete="submit" autofocus/>
                     </Flex>
                     
-                    <IodButton label="Anmeldung bestätigen" size="large" v-if="form.method" :loading="form.processing"/>
+                    <IodButton label="Anmeldung bestätigen" size="l" v-if="form.method" :loading="form.processing"/>
 
                     <Flex v-if="!form.method">
                         <ContextMenuItem is="button" class="radius-m" v-if="auth.user?.has_tfa_totp_method_enabled" icon="screen_lock_portrait" @click="form.method = 'totp'">Authenticator App</ContextMenuItem>

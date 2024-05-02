@@ -28,14 +28,14 @@
                     <Flex horizontal>
                         <h5 class="margin-0 weight-medium">Rechtliche Details</h5>
                         <Spacer />
-                        <IodButton type="button" label="Neues Detail" size="small" variant="contained" @click="addLegalDetail()"/>
+                        <IodButton type="button" label="Neues Detail" size="s" variant="contained" @click="addLegalDetail()"/>
                     </Flex>
 
                     <div class="entity-grid" v-if="form.legal_details?.length">
                         <Card class="entity-card" v-for="detail, i in form.legal_details">
                             <Flex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="gavel" />
-                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removeLegalDetail(i)"/>
+                                <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removeLegalDetail(i)"/>
                             </Flex>
                             <Flex padding="1rem" gap="1rem">
                                 <IodSelect v-model="detail.type" label="Rechtsinfo" :options="legal_details_types"/>
@@ -55,14 +55,14 @@
                     <Flex horizontal>
                         <h5 class="margin-0 weight-medium">Adressen</h5>
                         <Spacer />
-                        <IodButton type="button" label="Neue Adresse" size="small" variant="contained" @click="addAddress()"/>
+                        <IodButton type="button" label="Neue Adresse" size="s" variant="contained" @click="addAddress()"/>
                     </Flex>
     
                     <div class="entity-grid" v-if="form.addresses?.length">
                         <Card class="entity-card" v-for="address, i in form.addresses">
                             <Flex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="location_on" />
-                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removeAddress(i)"/>
+                                <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removeAddress(i)"/>
                             </Flex>
                             <Flex padding="1rem" gap="1rem">
                                 <IodSelect v-model="address.type" label="Adress-Typ" :options="address_types"/>
@@ -85,14 +85,14 @@
                     <Flex horizontal>
                         <h5 class="margin-0 weight-medium">Bankverbindungen</h5>
                         <Spacer />
-                        <IodButton type="button" label="Neue Bankverbindung" size="small" variant="contained" @click="addBankConnection()"/>
+                        <IodButton type="button" label="Neue Bankverbindung" size="s" variant="contained" @click="addBankConnection()"/>
                     </Flex>
 
                     <div class="entity-grid" v-if="form.bank_connections?.length">
                         <Card class="entity-card" v-for="bank, i in form.bank_connections">
                             <Flex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="account_balance" />
-                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removeBankConnection(i)"/>
+                                <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removeBankConnection(i)"/>
                             </Flex>
                             <Flex padding="1rem" gap="1rem">
                                 <IodSelect v-model="bank.type" label="Verbindungs-Typ" :options="bank_connection_types"/>
@@ -117,14 +117,14 @@
                     <Flex horizontal>
                         <h5 class="margin-0 weight-medium">Emails</h5>
                         <Spacer />
-                        <IodButton type="button" label="Neue Email" size="small" variant="contained" @click="addEmail()"/>
+                        <IodButton type="button" label="Neue Email" size="s" variant="contained" @click="addEmail()"/>
                     </Flex>
 
                     <div class="entity-grid" v-if="form.emails?.length">
                         <Card class="entity-card" v-for="email, i in form.emails">
                             <Flex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="email" />
-                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removeEmail(i)"/>
+                                <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removeEmail(i)"/>
                             </Flex>
                             <Flex padding="1rem" gap="1rem">
                                 <IodSelect v-model="email.type" label="Email-Typ" :options="email_types"/>
@@ -144,14 +144,14 @@
                     <Flex horizontal>
                         <h5 class="margin-0 weight-medium">Telefonnummern</h5>
                         <Spacer />
-                        <IodButton type="button" label="Neue Telefonnummer" size="small" variant="contained" @click="addPhonenumber()"/>
+                        <IodButton type="button" label="Neue Telefonnummer" size="s" variant="contained" @click="addPhonenumber()"/>
                     </Flex>
 
                     <div class="entity-grid" v-if="form.phonenumbers?.length">
                         <Card class="entity-card" v-for="number, i in form.phonenumbers">
                             <Flex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="phone" />
-                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removePhonenumber(i)"/>
+                                <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removePhonenumber(i)"/>
                             </Flex>
                             <Flex padding="1rem" gap="1rem">
                                 <IodSelect v-model="number.type" label="Nummer-Typ" :options="phonenumbers_types"/>
@@ -171,14 +171,14 @@
                     <Flex horizontal>
                         <h5 class="margin-0 weight-medium">Termine & Daten</h5>
                         <Spacer />
-                        <IodButton type="button" label="Neuer Termin" size="small" variant="contained" @click="addDate()"/>
+                        <IodButton type="button" label="Neuer Termin" size="s" variant="contained" @click="addDate()"/>
                     </Flex>
 
                     <div class="entity-grid" v-if="form.dates?.length">
                         <Card class="entity-card" v-for="date, i in form.dates">
                             <Flex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="event" />
-                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removeDate(i)"/>
+                                <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removeDate(i)"/>
                             </Flex>
                             <Flex padding="1rem" gap="1rem">
                                 <IodSelect v-model="date.type" label="Datum-Typ" :options="date_types"/>
@@ -200,14 +200,14 @@
                     <Flex horizontal>
                         <h5 class="margin-0 weight-medium">Links</h5>
                         <Spacer />
-                        <IodButton type="button" label="Neuer Link" size="small" variant="contained" @click="addLink()"/>
+                        <IodButton type="button" label="Neuer Link" size="s" variant="contained" @click="addLink()"/>
                     </Flex>
 
                     <div class="entity-grid" v-if="form.links?.length">
                         <Card class="entity-card" v-for="link, i in form.links">
                             <Flex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="link" />
-                                <IodButton type="button" label="Löschen" size="small" variant="contained" color-preset="error" @click="removeLink(i)"/>
+                                <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removeLink(i)"/>
                             </Flex>
                             <Flex padding="1rem" gap="1rem">
                                 <IodInput v-model="link.name" label="Label" />

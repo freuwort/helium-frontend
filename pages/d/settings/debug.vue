@@ -8,7 +8,7 @@
         <form @submit.prevent="triggerStatus()">
             <IodInput type="number" v-model="form.status">
                 <template #right>
-                    <IodIconButton icon="send" variant="contained" size="small" :loading="form.processing"/>
+                    <IodIconButton icon="send" variant="contained" size="s" :loading="form.processing"/>
                 </template>
             </IodInput>
         </form>

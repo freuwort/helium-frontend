@@ -3,8 +3,8 @@
         <template #sidebar>
             <Flex class="w-21 h-100p">
                 <Flex horizontal :padding="1">
-                    <IodButton class="upload-button" type="button" shape="pill" label="Hochladen" size="large" @click="uploadInput?.click()"/>
-                    <IodIconButton class="new-folder-button" type="button" shape="pill" icon="create_new_folder" size="large" v-tooltip="'Ordner erstellen'" @click="openCreateFolderPopup"/>
+                    <IodButton class="upload-button" type="button" corner="pill" label="Hochladen" size="l" @click="uploadInput?.click()"/>
+                    <IodIconButton class="new-folder-button" type="button" corner="pill" icon="create_new_folder" size="l" v-tooltip="'Ordner erstellen'" @click="openCreateFolderPopup"/>
                 </Flex>
                 <ContextMenuItem :is="NuxtLink" to="/d/files/public" icon="public">Öffentliche Ablage</ContextMenuItem>
                 <ContextMenuItem :is="NuxtLink" to="/d/files/private" icon="lock">Geschützte Ablage</ContextMenuItem>
@@ -13,7 +13,7 @@
                 <Spacer />
                 <Flex class="sidebar-icons border-top" :padding="1" :gap=".5" horizontal>
                     <VDropdown placement="top-end">
-                        <IodIconButton type="button" variant="text" shape="pill" icon="settings" v-tooltip="'Einstellungen'"/>
+                        <IodIconButton type="button" variant="text" corner="pill" icon="settings" v-tooltip="'Einstellungen'"/>
                         <template #popper>
                             <ContextMenu class="min-w-19">
                                 <ContextMenuItem icon="scan" @click="discover">Verzeichnisse scannen</ContextMenuItem>
@@ -32,7 +32,7 @@
             <div class="selection-bar">
                 <MediaBreadcrumbs :path="path" root-path="/d/files" @drop="onDrop($event.event, $event.path)"/>
                 <Spacer />
-                <IodIconButton type="button" shape="pill" variant="text" size="small" icon="delete" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
+                <IodIconButton type="button" corner="pill" variant="text" size="s" icon="delete" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
             </div>
             
             <div class="entity-grid" v-if="items.length">

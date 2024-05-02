@@ -13,7 +13,7 @@
     defineProps({
         icon: {
             type: String,
-            required: true
+            default: '',
         },
         imageIcon: {
             type: Boolean,

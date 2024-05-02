@@ -20,11 +20,11 @@
                                 <Flex :padding="1">
                                     <ContextMenuLabel label="Farben" style="padding: 0;"/>
                                     <Flex horizontal wrap class="w-20">
-                                        <IodIconButton type="button" v-for="color in color_options" shape="pill" icon="radio_button_unchecked" :style="'--local-color-background:' + color" :variant="form.color == color ? 'contained' : 'text'" @click="form.color = color"/>
+                                        <IodIconButton type="button" v-for="color in color_options" corner="pill" icon="radio_button_unchecked" :style="'--local-color-background:' + color" :variant="form.color == color ? 'contained' : 'text'" @click="form.color = color"/>
                                     </Flex>
                                     <ContextMenuLabel label="Icons" style="padding: 0; padding-top: 1rem"/>
                                     <Flex horizontal wrap class="w-20">
-                                        <IodIconButton type="button" v-for="icon in icon_options" shape="pill" :icon="icon" :style="'--local-color-background:' + form.color" :variant="form.icon == icon ? 'contained' : 'text'" @click="form.icon = icon"/>
+                                        <IodIconButton type="button" v-for="icon in icon_options" corner="pill" :icon="icon" :style="'--local-color-background:' + form.color" :variant="form.icon == icon ? 'contained' : 'text'" @click="form.icon = icon"/>
                                     </Flex>
                                 </Flex>
                             </template>

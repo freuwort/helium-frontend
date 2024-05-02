@@ -77,7 +77,7 @@
             display: block
             height: 100%
             width: 100%
-            color: var(--color-primary)
+            color: var(--color-text)
             background: var(--color-background)
             overflow: hidden
 

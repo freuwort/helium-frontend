@@ -21,7 +21,7 @@
             </div>
             <div class="more-button-wrapper">
                 <VDropdown placement="bottom-end">
-                    <IodIconButton type="button" variant="text" shape="pill" icon="more_vert" size="small"/>
+                    <IodIconButton type="button" variant="text" corner="pill" icon="more_vert" size="s"/>
                     <template #popper>
                         <ContextMenu class="min-w-15">
                             <ContextMenuItem is="a" icon="open_in_new" :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">In neuem Tab öffnen</ContextMenuItem>

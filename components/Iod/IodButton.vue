@@ -5,15 +5,16 @@
         :disabled="disabled || loading"
         :area-disabled="disabled || loading"
         :aria-label="label"
-        :class="classes">
+        :class="classes"
+        :style="style">
 
-        <div class="icon" v-if="iconLeft">{{iconLeft}}</div>
+        <div class="icon icon-left" v-if="iconLeft || $slots.iconLeft"><slot name="iconLeft">{{iconLeft}}</slot></div>
         <span class="content">
-            <slot><span>{{label}}</span></slot>
+            <slot>{{ label }}</slot>
         </span>
-        <div class="icon" v-if="iconRight">{{iconRight}}</div>
+        <div class="icon icon-right" v-if="iconRight || $slots.iconRight"><slot name="iconRight">{{iconRight}}</slot></div>
 
-        <IodineLoader type="spinner" class="spinner"/>
+        <IodLoader type="spinner" class="spinner"/>
 
         <div class="border" v-if="border"></div>
         <div class="background"></div>
@@ -24,13 +25,13 @@
 <script setup lang="ts">
     import { computed } from 'vue'
 
-    import IodineLoader from './IodLoader.vue'
+    import IodLoader from './IodLoader.vue'
 
 
 
     const props = defineProps({
         is: {
-            type: String,
+            type: [String, Object, Function, Symbol, Array, Promise, Boolean, Number],
             default: 'button'
         },
         variant: {
@@ -39,6 +40,14 @@
         },
         colorPreset: {
             type: String,
+        },
+        color: {
+            type: String,
+            default: '',
+        },
+        background: {
+            type: String,
+            default: '',
         },
         label: {
             type: String,
@@ -52,11 +61,15 @@
         },
         size: {
             type: String,
-            default: 'normal',
+            default: 'm',
         },
-        shape: {
+        corner: {
             type: String,
-            default: 'radius-m',
+            default: 'm',
+        },
+        shadow: {
+            type: String,
+            default: 'none',
         },
         border: {
             type: Boolean,
@@ -75,13 +88,14 @@
 
 
     const role = computed((): string => {
-        return ['a', 'Link'].includes(props.is) ? 'link' : 'button'
+        return ['a', 'Link'].includes(props.is as string) ? 'link' : 'button'
     })
 
     const classes = computed((): object => {
         return [
             `button-size-${props.size}`,
-            `button-shape-${props.shape}`,
+            `button-corner-${props.corner}`,
+            `button-shadow-${props.shadow}`,
             `button-variant-${props.variant}`,
             `button-color-preset-${props.colorPreset}`,
             {
@@ -90,20 +104,28 @@
             }
         ]
     })
+
+    const style = computed((): object => {
+        const styles: Record<string, string> = {}
+        if (props.background) styles['--local-color-background'] = props.background
+        if (props.color) styles['--local-color-text'] = props.color
+        return styles
+    })
 </script>
 
 <style lang="sass" scoped>
     .iod-container.iod-button
         font-size: 1rem
 
-        --local-color-background: var(--color-primary)
-        --local-color-text: var(--color-on-primary)
+        --local-color-background: var(--color-text)
+        --local-color-text: var(--color-background)
+        --local-font-size: .8rem
 
         display: inline-flex
         align-items: center
         justify-content: center
-        gap: .8em
-        padding: 0 1em
+        gap: 1.25em
+        padding: 0 1.5em
         height: 2.5em
         text-align: center
         text-decoration: none
@@ -129,7 +151,7 @@
                 opacity: 0.1
 
         &:focus
-            outline: none
+            outline: 2px solid #000000cc
 
             .overlay
                 opacity: 0.17
@@ -152,6 +174,18 @@
             --local-color-background: var(--color-error)
             --local-color-text: var(--color-on-error)
 
+        &.button-color-preset-primary
+            --local-color-background: var(--color-primary)
+            --local-color-text: var(--color-on-primary)
+
+        &.button-color-preset-secondary
+            --local-color-background: var(--color-secondary)
+            --local-color-text: var(--color-on-secondary)
+
+        &.button-color-preset-tertiary
+            --local-color-background: var(--color-tertiary)
+            --local-color-text: var(--color-on-tertiary)
+
 
 
         &.button-variant-filled
@@ -172,40 +206,59 @@
 
 
 
-        &.button-size-small
+        &.button-size-s
             height: 2em
-            padding: 0 .9em
-            gap: .7em
+            padding: 0 1.25em
+            gap: 1em
 
-        &.button-size-normal
+        &.button-size-m
             height: 2.5em
-            padding: 0 1em
-            gap: .8em
+            padding: 0 1.5em
+            gap: 1.25em
 
-        &.button-size-large
+        &.button-size-l
             height: 3em
             padding: 0 1.75em
-            gap: 1.55em
+            gap: 1.5em
+
+        &.button-size-xl
+            height: 3.5em
+            padding: 0 2em
+            gap: 1.75em
 
 
 
-        &.button-shape-rect
-            border-radius: 0px
+        &.button-corner-none
+            border-radius: 0
 
-        &.button-shape-radius-s
+        &.button-corner-s
             border-radius: var(--radius-s)
 
-        &.button-shape-radius-m
+        &.button-corner-m
             border-radius: var(--radius-m)
 
-        &.button-shape-radius-l
+        &.button-corner-l
             border-radius: var(--radius-l)
 
-        &.button-shape-radius-xl
+        &.button-corner-xl
             border-radius: var(--radius-xl)
 
-        &.button-shape-pill
+        &.button-corner-pill
             border-radius: 1000px
+
+        
+
+        &.button-shadow-none
+            box-shadow: none
+
+        &.button-shadow-s
+            box-shadow: var(--shadow-s)
+
+        &.button-shadow-m
+            box-shadow: var(--shadow-m)
+
+        &.button-shadow-l
+            box-shadow: var(--shadow-l)
 
 
 
@@ -254,15 +307,16 @@
                 opacity: 1
 
         .content
-            font-size: .75rem
+            font-size: var(--local-font-size)
             font-weight: inherit
+            line-height: 1.4
             letter-spacing: inherit
             position: relative
             z-index: 1
 
         .icon
             color: inherit
-            font-size: 1em
+            font-size: 1.2em
             letter-spacing: 0
             font-weight: normal
             pointer-events: none
@@ -271,6 +325,12 @@
             font-family: var(--font-icon)
             position: relative
             z-index: 1
+
+            &.icon-left
+                margin-left: -.15em
+
+            &.icon-right
+                margin-right: -.15em
 
         .spinner
             position: absolute
@@ -291,5 +351,7 @@
             z-index: 2
             border-radius: inherit
             border: 1px solid var(--local-color-text)
+            box-shadow: inset 0 0 1px var(--local-color-text)
+            opacity: .75
             pointer-events: none
 </style>

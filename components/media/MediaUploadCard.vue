@@ -4,15 +4,15 @@
             <TransitionGroup name="fade">
                 <div class="header" key="header">
                     <span class="flex-1">{{ uploadManager.statusText || 'Keine Uploads' }} </span>
-                    <IodIconButton type="button" variant="text" size="small" icon="expand_less"/>
-                    <IodIconButton type="button" variant="text" size="small" icon="close" @click="uploadManager.clearAll()" />
+                    <IodIconButton type="button" variant="text" size="s" icon="expand_less"/>
+                    <IodIconButton type="button" variant="text" size="s" icon="close" @click="uploadManager.clearAll()" />
                 </div>
                 <div class="content small-scrollbar" key="content">
                     <TransitionGroup name="fade">
                         <div class="upload" v-for="upload in uploadManager.uploads" :key="upload.id" :data-status="upload.status">
                             <div class="progress" :style="`transform: scaleX(${upload.progress / 100})`"></div>
                             <span class="flex-1">{{ upload.name }}</span>
-                            <IodIconButton type="button" variant="text" size="small" icon="close" @click="uploadManager.cancel(upload.id)" />
+                            <IodIconButton type="button" variant="text" size="s" icon="close" @click="uploadManager.cancel(upload.id)" />
                         </div>
                     </TransitionGroup>
                 </div>

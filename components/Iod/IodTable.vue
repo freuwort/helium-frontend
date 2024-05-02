@@ -10,7 +10,7 @@
                 >
                     <template #right>
                         <VDropdown placement="bottom" v-if="filterSettings && filterSettings.length">
-                            <IodIconButton type="button" variant="text" size="small" icon="filter_list" v-tooltip="'Filter'"/>
+                            <IodIconButton type="button" variant="text" size="s" icon="filter_list" v-tooltip="'Filter'"/>
                             <template #popper>
                                 <div class="flex vertical gap-1 padding-1">
                                     <div class="flex gap-0-5 vertical" v-for="row in filterSettings">
@@ -25,7 +25,7 @@
                                 </div>
                             </template>
                         </VDropdown>
-                        <IodIconButton type="button" variant="text" size="small" icon="search" @click="$emit('request:refresh')" v-tooltip="'Suchen'"/>
+                        <IodIconButton type="button" variant="text" size="s" icon="search" @click="$emit('request:refresh')" v-tooltip="'Suchen'"/>
                     </template>
                 </IodInput>
     
@@ -48,9 +48,9 @@
 
             <div class="fixture-row">
                 <IodIcon icon="filter_list" style="color: var(--color-text-soft)" v-tooltip="'Aktive Filter'"/>
-                <IodButton class="filter-tag" size="small" shape="pill" variant="contained" :label='`Suche: "${filter.search}"`' v-show="filter.search" @click="filter.search = ''"/>
-                <IodButton class="filter-tag" size="small" shape="pill" variant="contained" :label="`${item.label}: ${item.value}`" @click="delete filter[item.key]" v-for="item in displayFilter"/>
-                <IodButton class="filter-tag" size="small" shape="pill" variant="contained" :label='`Seite: ${pagination.page}`' v-if="pagination" v-show="pagination.page > 1" @click="setPagination({ page: 0 })"/>
+                <IodButton class="filter-tag" size="s" corner="pill" variant="contained" :label='`Suche: "${filter.search}"`' v-show="filter.search" @click="filter.search = ''"/>
+                <IodButton class="filter-tag" size="s" corner="pill" variant="contained" :label="`${item.label}: ${item.value}`" @click="delete filter[item.key]" v-for="item in displayFilter"/>
+                <IodButton class="filter-tag" size="s" corner="pill" variant="contained" :label='`Seite: ${pagination.page}`' v-if="pagination" v-show="pagination.page > 1" @click="setPagination({ page: 0 })"/>
             </div>
 
             <IodLoader type="bar" v-show="loading" />
@@ -123,7 +123,7 @@
                 ]"/>
 
                 <VDropdown placement="top-end">
-                    <IodIconButton type="button" size="small" variant="text" icon="grid_view" v-tooltip="'Ansicht anpassen'"/>
+                    <IodIconButton type="button" size="s" variant="text" icon="grid_view" v-tooltip="'Ansicht anpassen'"/>
                     <template #popper>
                         <div class="flex vertical padding-1">
                             <IodToggle

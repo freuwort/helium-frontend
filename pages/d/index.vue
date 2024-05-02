@@ -3,13 +3,37 @@
         <Card>
             <Flex :gap="1" :padding="1">
                 <ContextMenu>
-                    <ContextMenuItem to="/d" show-chevron color="var(--color-primary)" icon="dashboard">Startseite</ContextMenuItem>
-                    <ContextMenuItem to="/d/files" show-chevron color="var(--color-primary)" icon="drive_folder_upload">Dateien</ContextMenuItem>
-                    <ContextMenuItem to="/d/users" show-chevron color="var(--color-primary)" icon="group">Nutzer</ContextMenuItem>
-                    <ContextMenuItem to="/d/settings" show-chevron color="var(--color-primary)" icon="settings">Einstellungen</ContextMenuItem>
+                    <ContextMenuItem to="/d" show-chevron icon="dashboard">Startseite</ContextMenuItem>
+                    <ContextMenuItem to="/d/files" show-chevron icon="drive_folder_upload">Dateien</ContextMenuItem>
+                    <ContextMenuItem to="/d/users" show-chevron icon="group">Nutzer</ContextMenuItem>
+                    <ContextMenuItem to="/d/settings" show-chevron icon="settings">Einstellungen</ContextMenuItem>
                 </ContextMenu>
+
+                <Flex horizontal gap="1rem">
+                    <IodButton class="flex-1" @click="popup_1.open()" variant="contained" size="l" icon-left="dock_to_right">Left Popup</IodButton>
+                    <IodButton class="flex-1" @click="popup_2.open()" variant="contained" size="l" icon-left="picture_in_picture_center">Center Popup</IodButton>
+                    <IodButton class="flex-1" @click="popup_3.open()" variant="contained" size="l" icon-left="dock_to_left">Right Popup</IodButton>
+                </Flex>
             </Flex>
         </Card>
+
+        <IodPopup ref="popup_1" title="Left Popup" placement="left">
+            <Flex gap="1rem" padding="1rem">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur
+            </Flex>
+        </IodPopup>
+
+        <IodPopup ref="popup_2" title="Center Popup" placement="center">
+            <Flex gap="1rem" padding="1rem">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur
+            </Flex>
+        </IodPopup>
+
+        <IodPopup ref="popup_3" title="Right Popup" placement="right">
+            <Flex gap="1rem" padding="1rem">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur
+            </Flex>
+        </IodPopup>
     </NuxtLayout>
 </template>
 
@@ -17,6 +41,10 @@
     definePageMeta({
         middleware: ['auth', '2fa-verified'],
     })
+
+    const popup_1 = ref()
+    const popup_2 = ref()
+    const popup_3 = ref()
 </script>
 
 <style lang="sass" scoped></style>

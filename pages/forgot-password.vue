@@ -6,7 +6,7 @@
                     <h1 class="weight-medium align-center margin-0">Passwort wiederherstellen</h1>
     
                     <IodInput type="email" label="Email"/>
-                    <IodButton label="Passwort wiederherstellen" size="large"/>
+                    <IodButton label="Passwort wiederherstellen" size="l"/>
     
                     <hr class="margin-0">
     

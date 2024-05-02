@@ -73,7 +73,7 @@
                 <hr class="margin-0">
                 <IodInput type="text" label="Geheimnis" readonly :modelValue="setup2faAppForm.secret">
                     <template #right>
-                        <IodIconButton type="button" icon="content_copy" variant="text" size="small" v-tooltip="'Geheimnis kopieren'"/>
+                        <IodIconButton type="button" icon="content_copy" variant="text" size="s" v-tooltip="'Geheimnis kopieren'"/>
                     </template>
                 </IodInput>
             </Flex>
@@ -87,7 +87,7 @@
             <Flex :gap="1">
                 <ErrorAlert :errors="setup2faAppForm.errors"/>
                 <IodOtpInput :length="6" :dividers="[3]" v-model="setup2faAppForm.code" @complete="enable2faApp"/>
-                <IodButton label="Code Bestätigen" size="large"/>
+                <IodButton label="Code Bestätigen" size="l"/>
             </Flex>
         </form>
     </IodPopup>
@@ -106,7 +106,7 @@
             <Flex is="form" :gap="1" @submit.prevent="enable2faSms">
                 <ErrorAlert :errors="setup2faSmsForm.errors"/>
                 <IodOtpInput :length="6" :dividers="[3]" v-model="setup2faSmsForm.code" @complete="enable2faSms"/>
-                <IodButton label="Code Bestätigen" size="large"/>
+                <IodButton label="Code Bestätigen" size="l"/>
             </Flex>
         </Flex>
     </IodPopup>
@@ -150,7 +150,7 @@
                 <IodInput v-model="changePasswordForm.password" label="Aktuelles Passwort" type="password"/>
                 <IodInput v-model="changePasswordForm.new_password" show-score :score-function="useZxcvbn()" label="Neues Passwort" type="password"/>
             </Flex>
-            <IodButton label="Passwort ändern" size="large" :loading="changePasswordForm.processing"/>
+            <IodButton label="Passwort ändern" size="l" :loading="changePasswordForm.processing"/>
         </Flex>
     </IodPopup>
 
@@ -165,7 +165,7 @@
                 </IodAlert>
             </Flex>
             <IodInput v-model="deleteAccountForm.password" label="Passwort" type="password"/>
-            <IodButton label="Konto entgültig löschen" size="large" color-preset="error" :loading="deleteAccountForm.processing"/>
+            <IodButton label="Konto entgültig löschen" size="l" color-preset="error" :loading="deleteAccountForm.processing"/>
         </Flex>
     </IodPopup>
 </template>

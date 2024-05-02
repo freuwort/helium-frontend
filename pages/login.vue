@@ -12,7 +12,7 @@
                     </Flex>
                     <Flex :gap="1">
                         <IodToggle type="checkbox" label="Angemeldet bleiben" v-model="form.remember"/>
-                        <IodButton label="Anmelden" size="large" :loading="form.processing"/>
+                        <IodButton label="Anmelden" size="l" :loading="form.processing"/>
                     </Flex>
     
                     <hr class="margin-0">
