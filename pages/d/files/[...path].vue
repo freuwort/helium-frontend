@@ -2,14 +2,23 @@
     <NuxtLayout limiter="normal" name="auth-sidebar" pageTitle="Dateien">
         <template #sidebar>
             <Flex class="w-21 h-100p">
-                <Flex horizontal :padding="1">
-                    <IodButton class="upload-button" type="button" corner="pill" label="Hochladen" size="l" @click="uploadInput?.click()"/>
-                    <IodIconButton class="new-folder-button" type="button" corner="pill" icon="create_new_folder" size="l" v-tooltip="'Ordner erstellen'" @click="openCreateFolderPopup"/>
+                <Flex class="border-bottom" :padding="1" :gap=".5" x-align="flex-start">
+                    <VDropdown placement="bottom-end">
+                        <IodButton type="button" icon-left="add" label="Neu" corner="pill" size="m"/>
+                        <template #popper>
+                            <ContextMenu class="min-w-19">
+                                <ContextMenuItem icon="upload" v-close-popper @click="uploadInput?.click()">Hochladen</ContextMenuItem>
+                                <ContextMenuItem icon="create_new_folder" v-close-popper @click="openCreateFolderPopup">Ordner erstellen</ContextMenuItem>
+                            </ContextMenu>
+                        </template>
+                    </VDropdown>
                 </Flex>
-                <ContextMenuItem :is="NuxtLink" to="/d/files/public" icon="public">Öffentliche Ablage</ContextMenuItem>
-                <ContextMenuItem :is="NuxtLink" to="/d/files/private" icon="lock">Geschützte Ablage</ContextMenuItem>
-                <ContextMenuItem :is="NuxtLink" to="/d/files/profile_pictures" icon="account_circle">Profilbilder</ContextMenuItem>
-                <ContextMenuItem :is="NuxtLink" to="/d/files/profile_banners" icon="landscape">Profilbanner</ContextMenuItem>
+                <ContextMenu>
+                    <ContextMenuItem :is="NuxtLink" to="/d/files/public" icon="public">Öffentliche Ablage</ContextMenuItem>
+                    <ContextMenuItem :is="NuxtLink" to="/d/files/private" icon="lock">Geschützte Ablage</ContextMenuItem>
+                    <ContextMenuItem :is="NuxtLink" to="/d/files/profile_pictures" icon="account_circle">Profilbilder</ContextMenuItem>
+                    <ContextMenuItem :is="NuxtLink" to="/d/files/profile_banners" icon="landscape">Profilbanner</ContextMenuItem>
+                </ContextMenu>
                 <Spacer />
                 <Flex class="sidebar-icons border-top" :padding="1" :gap=".5" horizontal>
                     <VDropdown placement="top-end">
@@ -46,8 +55,8 @@
                     @dragstart="onDragStart($event, item)"
                     @drop="onDrop($event, item.src_path)"
                     @click="select($event, item.src_path)"
-                    @dblclick="navigateTo(`/d/files/${item.src_path}`)"
-                    @edit="console.log"
+                    @dblclick="item.mime_type === 'folder' ? navigateTo(`/d/files/${item.src_path}`) : openPropertyPopup(item)"
+                    @edit="openPropertyPopup"
                     @rename="openRenamePopup"
                     @delete="deleteItems([item.src_path])"
                 />
@@ -75,7 +84,7 @@
         </IodPopup>
 
         <IodPopup ref="renamePopup" title="Umbenennen" max-width="450px">
-            <Flex is="form" :padding="1" :gap="1" @submit.prevent="rename">
+            <Flex is="form" :padding="2" :gap="2" @submit.prevent="rename">
                 <IodInput label="Name" ref="renameInput" v-model="renameForm.name" />
                 <Flex horizontal>
                     <IodButton type="button" variant="contained" label="Abbrechen" @click="closeRenamePopup" :loading="renameForm.processing" />
@@ -83,6 +92,18 @@
                     <IodButton type="submit" variant="filled" label="Umbenennen" :loading="renameForm.processing" />
                 </Flex>
             </Flex>
+        </IodPopup>
+
+        <IodPopup ref="propertyPopup" title="Eigenschaften" placement="right" max-width="500px" blur="0" should-close-on-backdrop-click>
+            <template v-if="propertyForm.id">
+                <Flex class="background-soft aspect-ratio-16-9" x-align="center">
+                    <MediaIcon :mime="(propertyForm.mime_type as string)" />
+                </Flex>
+                <Flex :padding="1" :gap=".5">
+                    <h3 class="margin-0">{{ propertyForm.name }}</h3>
+                    <span>{{ humanFileSize(propertyForm.meta.size) }}</span>
+                </Flex>
+            </template>
         </IodPopup>
     </NuxtLayout>
 </template>
@@ -261,6 +282,17 @@
 
 
 
+    const propertyPopup = ref<typeof IodPopup|null>(null)
+    const propertyForm = useForm({} as MediaItem)
+
+    function openPropertyPopup(item: MediaItem)
+    {
+        propertyForm.defaults(item).reset()
+        propertyPopup.value?.open()
+    }
+
+
+
     function move(paths: string[], destination: string)
     {
         useForm({
@@ -341,16 +373,6 @@
 </script>
 
 <style lang="sass" scoped>
-    .upload-button
-        flex: 1
-        border-radius: 50rem 0 0 50rem !important
-
-    .new-folder-button
-        border-radius: 0 50rem 50rem 0 !important
-        width: 4rem !important
-        border-left: 1px solid var(--color-on-primary) !important
-        padding-right: .1rem !important
-
     .sidebar-icons
         .iod-button
             --local-color-background: var(--color-text-soft)
