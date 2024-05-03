@@ -15,17 +15,23 @@
         </div>
         <div class="media-info">
             <div class="inner">
-                <NuxtLink class="row title" :to="`/d/files/${item.src_path}`">
+                <NuxtLink v-if="isFolder" class="row title" :to="`/d/files/${item.src_path}`">
                     <span v-tooltip="item.name">{{ item.name }}</span>
+                    <IodProfileArray class="profiles" :data="profiles" />
                 </NuxtLink>
+                <a v-else class="row title" href="#" @click.prevent="emits('edit', item)">
+                    <span v-tooltip="item.name">{{ item.name }}</span>
+                    <IodProfileArray class="profiles" :data="profiles" />
+                </a>
             </div>
             <div class="more-button-wrapper">
                 <VDropdown placement="bottom-end">
                     <IodIconButton type="button" variant="text" corner="pill" icon="more_vert" size="s"/>
                     <template #popper>
                         <ContextMenu class="min-w-15">
+                            <ContextMenuItem is="a" icon="download" :href="(item.cdn_path as string)" target="_blank" download rel="noopener noreferrer">Herunterladen</ContextMenuItem>
                             <ContextMenuItem is="a" icon="open_in_new" :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">In neuem Tab öffnen</ContextMenuItem>
-                            <ContextMenuItem is="button" v-close-popper icon="download">Herunterladen</ContextMenuItem>
+                            <ContextMenuDivider />
                             <ContextMenuItem is="button" v-close-popper icon="info" @click="emits('edit', item)">Eigenschaften</ContextMenuItem>
                             <ContextMenuItem is="button" v-close-popper icon="edit" @click="emits('rename', item)">Umbenennen</ContextMenuItem>
                             <ContextMenuItem is="button" v-close-popper color="var(--color-error)" icon="delete" @click="emits('delete', item)">Löschen</ContextMenuItem>
@@ -47,6 +53,11 @@
         cdn_path: string | null
         mime_type: string | null
         name: string
+        users: {
+            id: number
+            name: string
+            profile_image: string
+        }[]
         access: string | null
         meta: {
             size: number
@@ -93,6 +104,8 @@
         return false
     })
 
+    const profiles = computed(() => props.item.users.map((user) => ({ label: user.name, image: user.profile_image })))
+
 
 
     function onStartDraggingOver()
@@ -125,7 +138,7 @@
 
 
 
-    const emits = defineEmits(['select', 'edit', 'rename', 'drop', 'delete'])
+    const emits = defineEmits(['select', 'download', 'edit', 'rename', 'drop', 'delete'])
 </script>
 
 <style lang="sass" scoped>
@@ -208,11 +221,16 @@
                 text-overflow: ellipsis
                 white-space: nowrap
 
+            .profiles
+                height: 2rem
+                padding: .25rem 0
+
             .title
                 font-weight: 500
                 color: var(--color-text)
-                display: block
-                text-align: center
+
+                span
+                    flex: 1
 
             .more-button-wrapper
                 position: absolute

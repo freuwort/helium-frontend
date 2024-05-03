@@ -20,18 +20,10 @@
                     <ContextMenuItem :is="NuxtLink" to="/d/files/profile_banners" icon="landscape">Profilbanner</ContextMenuItem>
                 </ContextMenu>
                 <Spacer />
-                <Flex class="sidebar-icons border-top" :padding="1" :gap=".5" horizontal>
-                    <VDropdown placement="top-end">
-                        <IodIconButton type="button" variant="text" corner="pill" icon="settings" v-tooltip="'Einstellungen'"/>
-                        <template #popper>
-                            <ContextMenu class="min-w-19">
-                                <ContextMenuItem icon="scan" @click="discover">Verzeichnisse scannen</ContextMenuItem>
-                                <ContextMenuItem icon="refresh" @click="fetchItems">Aktualisieren</ContextMenuItem>
-                                <ContextMenuDivider />
-                                <ContextMenuItem icon="settings">Einstellungen</ContextMenuItem>
-                            </ContextMenu>
-                        </template>
-                    </VDropdown>
+                <Flex class="border-top" :padding="1" :gap=".5" horizontal>
+                    <IodIconButton type="button" variant="text" corner="pill" icon="settings" background="var(--color-text-soft)" v-tooltip="'Einstellungen'"/>
+                    <IodIconButton type="button" variant="text" corner="pill" icon="scan" @click="discover" background="var(--color-text-soft)" v-tooltip="'Verzeichnisse scannen'"/>
+                    <IodIconButton type="button" variant="text" corner="pill" icon="refresh" @click="fetchItems" background="var(--color-text-soft)" v-tooltip="'Aktualisieren'"/>
                     <Spacer />
                 </Flex>
             </Flex>
@@ -94,14 +86,14 @@
             </Flex>
         </IodPopup>
 
-        <IodPopup ref="propertyPopup" title="Eigenschaften" placement="right" max-width="500px" blur="0" should-close-on-backdrop-click>
+        <IodPopup ref="propertyPopup" :title="propertyForm?.name || 'Eigenschaften'" placement="right" max-width="500px" blur="0" should-close-on-backdrop-click>
             <template v-if="propertyForm.id">
-                <Flex class="background-soft aspect-ratio-16-9" x-align="center">
-                    <MediaIcon :mime="(propertyForm.mime_type as string)" />
+                <Flex class="background-soft aspect-ratio-16-9 flex-none" x-align="center">
+                    <MediaIcon :style="{scale: '1.25'}" :mime="(propertyForm.mime_type as string)" />
                 </Flex>
                 <Flex :padding="1" :gap=".5">
-                    <h3 class="margin-0">{{ propertyForm.name }}</h3>
-                    <span>{{ humanFileSize(propertyForm.meta.size) }}</span>
+                    <!-- <span>{{ humanFileSize(propertyForm.meta.size) }}</span> -->
+                    <pre>{{JSON.stringify(propertyForm, null, 2)}}</pre>
                 </Flex>
             </template>
         </IodPopup>
@@ -122,6 +114,11 @@
         mime_type: string | null
         name: string
         access: string | null
+        users: {
+            id: number
+            name: string
+            profile_image: string
+        }[]
         meta: {
             size: number
             extension: string
@@ -373,10 +370,6 @@
 </script>
 
 <style lang="sass" scoped>
-    .sidebar-icons
-        .iod-button
-            --local-color-background: var(--color-text-soft)
-
     .entity-grid
         display: grid
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr))

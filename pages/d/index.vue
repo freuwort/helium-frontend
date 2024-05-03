@@ -14,6 +14,8 @@
                     <IodButton class="flex-1" @click="popup_2.open()" variant="contained" size="l" icon-left="picture_in_picture_center">Center Popup</IodButton>
                     <IodButton class="flex-1" @click="popup_3.open()" variant="contained" size="l" icon-left="dock_to_left">Right Popup</IodButton>
                 </Flex>
+
+                <IodProfileArray :data="profiles" :limit="6"/>
             </Flex>
         </Card>
 
@@ -45,6 +47,14 @@
     const popup_1 = ref()
     const popup_2 = ref()
     const popup_3 = ref()
+
+    const profiles = ref([
+        { label: 'Salem', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=Salem' },
+        { label: 'Mike', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=Mike' },
+        { label: 'Hugo', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=Hugo' },
+        { label: 'Johannes', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=Johannes' },
+        { label: 'Amber', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=Amber' },
+    ])
 </script>
 
 <style lang="sass" scoped></style>

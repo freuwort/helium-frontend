@@ -1,9 +1,9 @@
 <template>
     <Teleport to="body">
         <FocusTrap :active="isOpen" @deactivate="close()">
-            <div class="iod-container iod-popup popup-outer-wrapper" :class="classes" :style="styles" @click.self.exact="closeOnBackdropClick()">
+            <div class="iod-container iod-popup popup-outer-wrapper scrollbar" :class="classes" :style="styles" @click.self.exact="closeOnBackdropClick()">
                 <div class="popup-inner-wrapper">
-                    <div class="popup-content">
+                    <div class="popup-content small-scrollbar">
                         <slot></slot>
                     </div>
     
@@ -144,6 +144,7 @@
             transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1)
 
             .popup-header
+                flex: none
                 display: flex
                 align-items: center
                 padding: 1rem
@@ -177,6 +178,10 @@
                 .popup-header
                     color: var(--color-text)
                     border-bottom: 1px solid var(--color-border)
+
+                .popup-content
+                    overflow: auto
+                    flex: 1
 
         &.popup-placement-left
             .popup-inner-wrapper
