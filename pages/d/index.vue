@@ -15,7 +15,9 @@
                     <IodButton class="flex-1" @click="popup_3.open()" variant="contained" size="l" icon-left="dock_to_left">Right Popup</IodButton>
                 </Flex>
 
-                <IodProfileArray :data="profiles" :limit="6"/>
+                <IodProfileArray :data="profiles" :limit="6" class="margin-right-auto"/>
+
+                <UserSearch placeholder="Nutzer suchen"/>
             </Flex>
         </Card>
 

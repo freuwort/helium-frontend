@@ -4,15 +4,15 @@
             <TransitionGroup name="fade">
                 <div class="header" key="header">
                     <span class="flex-1">{{ uploadManager.statusText || 'Keine Uploads' }} </span>
-                    <IodIconButton type="button" variant="text" size="s" icon="expand_less"/>
-                    <IodIconButton type="button" variant="text" size="s" icon="close" @click="uploadManager.clearAll()" />
+                    <IodIconButton type="button" variant="text" corner="pill" size="s" icon="expand_less" :class="{expanded}" @click="expanded = !expanded"/>
+                    <IodIconButton type="button" variant="text" corner="pill" size="s" icon="cancel" @click="uploadManager.clearAll()" />
                 </div>
-                <div class="content small-scrollbar" key="content">
+                <div class="content small-scrollbar" key="content" v-show="expanded">
                     <TransitionGroup name="fade">
                         <div class="upload" v-for="upload in uploadManager.uploads" :key="upload.id" :data-status="upload.status">
                             <div class="progress" :style="`transform: scaleX(${upload.progress / 100})`"></div>
                             <span class="flex-1">{{ upload.name }}</span>
-                            <IodIconButton type="button" variant="text" size="s" icon="close" @click="uploadManager.cancel(upload.id)" />
+                            <IodIconButton type="button" variant="text" corner="pill" size="s" icon="close" @click="uploadManager.cancel(upload.id)" />
                         </div>
                     </TransitionGroup>
                 </div>
@@ -23,6 +23,7 @@
 
 <script lang="ts" setup>
     const uploadManager = useUploadStore()
+    const expanded = ref(false)
 </script>
 
 <style lang="sass" scoped>
@@ -59,11 +60,13 @@
         flex-direction: column
         border: none
         border-radius: var(--radius-l) var(--radius-l) 0 0
-        box-shadow: var(--shadow-elevation-high)
+        box-shadow: var(--shadow-elevation-medium)
         position: fixed
         z-index: 100
         bottom: 0
         right: 1rem
+        padding: .25rem
+        gap: .25rem
         width: calc(100% - 2rem)
         max-width: 22rem
         user-select: none
@@ -71,16 +74,18 @@
 
         .header
             display: flex
+            font-weight: 500
             align-items: center
-            background: var(--color-text)
-            color: var(--color-background)
-            border-top-left-radius: inherit
-            border-top-right-radius: inherit
-            height: 3.5rem
+            color: var(--color-text)
+            border-radius: var(--radius-m)
+            height: 3rem
+            background: var(--color-background-soft)
             padding-inline: 1rem .5rem !important
 
             .iod-button
-                --local-color-background: var(--color-background)
+                transition: transform 200ms ease-in-out
+                &.expanded
+                    transform: rotate(180deg)
 
         .content
             display: flex
@@ -93,10 +98,12 @@
             display: flex
             align-items: center
             padding-inline: 1rem .5rem !important
-            height: 3.5rem
+            height: 3rem
+            border-radius: var(--radius-m)
             width: 100%
             color: var(--color-text)
             position: relative
+            overflow: hidden
 
             &:hover
                 background: var(--color-background-soft)

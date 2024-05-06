@@ -125,7 +125,7 @@
                 </template>
             </VDropdown>
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
-                <ProfileChip :user="auth.user ?? {}" show-company align="right" class="min-h-4"/>
+                <ProfileChip :user="auth.user ?? {}" show-subtitle align="right" class="min-h-4"/>
                 <template #popper>
                     <ContextMenu class="min-w-20">
                         <ContextMenuItem to="/d/profile" show-chevron icon="person">Profil</ContextMenuItem>

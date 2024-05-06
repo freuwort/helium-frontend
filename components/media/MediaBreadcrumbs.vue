@@ -62,7 +62,6 @@
         display: flex
         align-items: center
         gap: 2rem
-        padding-inline: .5rem
         user-select: none
 
         .breadcrumb
@@ -78,12 +77,14 @@
             color: var(--color-text-soft)
             font-family: inherit
             position: relative
-            padding: 0
+            padding: 0 .5rem
             border: none
+            border-radius: var(--radius-s)
             outline: none
 
             &:hover
-                color: var(--color-primary)
+                color: var(--color-text)
+                background: #00000010
 
             &:not(.breadcrumb:first-child)::after
                 content: 'chevron_right'
@@ -105,4 +106,5 @@
                     pointer-events: none
                     font-family: var(--font-icon)
                     font-size: 1.5rem
+                    line-height: 1
 </style>

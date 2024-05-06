@@ -34,7 +34,9 @@
                 <MediaBreadcrumbs :path="path" root-path="/d/files" @drop="onDrop($event.event, $event.path)"/>
                 <Spacer />
                 <IodIconButton type="button" corner="pill" variant="text" size="s" icon="delete" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
+                <IodLoader type="bar" v-show="loading"/>
             </div>
+
             
             <div class="entity-grid" v-if="items.length">
                 <MediaItem
@@ -54,13 +56,35 @@
                 />
             </div>
 
-            <IodAlert v-else class="h-20" as="placeholder">Keine Dateien vorhanden</IodAlert>
+            <IodAlert v-if="!items.length && !loading" class="h-20" as="placeholder">Keine Dateien vorhanden</IodAlert>
         </Flex>
         
 
 
         <MediaUploadCard />
         <input class="display-none" type="file" ref="uploadInput" multiple @change="upload(($event.target as HTMLInputElement)?.files || [])">
+
+        <IodPopup ref="propertyPopup" :title="propertyForm?.name || 'Eigenschaften'" placement="right" max-width="500px" blur="0" should-close-on-backdrop-click>
+            <template v-if="propertyForm.id">
+                <Flex class="background-soft aspect-ratio-16-9 flex-none border-bottom" x-align="center">
+                    <MediaIcon :style="{scale: '1.25'}" :mime="(propertyForm.mime_type as string)" />
+                </Flex>
+                <Flex horizontal padding=".5rem 1rem" gap=".5rem" class="border-bottom">
+                    <IodButton class="flex-1" size="l" label="Info" icon-left="info" :variant="propertyPopupState.tab === 'info' ? 'contained' : 'text'" @click="propertyPopupState.tab = 'info'"/>
+                    <IodButton class="flex-1" size="l" label="Freigeben" icon-left="smb_share" :variant="propertyPopupState.tab === 'share' ? 'contained' : 'text'" @click="propertyPopupState.tab = 'share'"/>
+                </Flex>
+
+                <Flex padding="1rem" v-show="propertyPopupState.tab === 'info'">
+                    <pre>{{JSON.stringify(propertyForm, null, 2)}}</pre>
+                </Flex>
+
+                <Flex padding="1rem" v-show="propertyPopupState.tab === 'share'">
+                    <UserSearch placeholder="Nutzer suchen" @select="addUser($event)" />
+
+                    <ProfileChip v-for="user in propertyShareForm.users" :user="user" show-subtitle/>
+                </Flex>
+            </template>
+        </IodPopup>
         
         <IodPopup ref="createFolderPopup" title="Ordner erstellen" max-width="450px">
             <Flex is="form" :padding="1" :gap="1" @submit.prevent="createFolder">
@@ -85,18 +109,6 @@
                 </Flex>
             </Flex>
         </IodPopup>
-
-        <IodPopup ref="propertyPopup" :title="propertyForm?.name || 'Eigenschaften'" placement="right" max-width="500px" blur="0" should-close-on-backdrop-click>
-            <template v-if="propertyForm.id">
-                <Flex class="background-soft aspect-ratio-16-9 flex-none" x-align="center">
-                    <MediaIcon :style="{scale: '1.25'}" :mime="(propertyForm.mime_type as string)" />
-                </Flex>
-                <Flex :padding="1" :gap=".5">
-                    <!-- <span>{{ humanFileSize(propertyForm.meta.size) }}</span> -->
-                    <pre>{{JSON.stringify(propertyForm, null, 2)}}</pre>
-                </Flex>
-            </template>
-        </IodPopup>
     </NuxtLayout>
 </template>
 
@@ -118,6 +130,14 @@
             id: number
             name: string
             profile_image: string
+            username: string
+            pivot?: {
+                role: string
+            }
+        }[]
+        roles: {
+            id: number
+            name: string
         }[]
         meta: {
             size: number
@@ -139,10 +159,13 @@
 
     const path = computed(() => (route.params.path as string[] || ['public']).filter(e => e).join('/'))
     const items = ref<MediaItem[]>([])
+    const loading = ref(false)
 
     async function fetchItems()
     {
+        loading.value = true
         const { data } = await useAxios().get(`/api/media/${path.value}`)
+        loading.value = false
         items.value = data.data
     }
 
@@ -192,8 +215,7 @@
 
     const uploadInput = ref<HTMLInputElement|null>(null)
 
-    async function upload(files: any)
-    {
+    async function upload(files: any) {
         // Check if files are available
         if (!files.length) return
 
@@ -213,21 +235,18 @@
     const createFolderInput = ref<typeof IodInput|null>(null)
     const createFolderForm = useForm({ name: 'Neuer Ordner' })
 
-    function openCreateFolderPopup()
-    {
+    function openCreateFolderPopup() {
         createFolderForm.reset()
         createFolderPopup.value?.open()
         createFolderInput.value?.focus()
         nextTick(() => createFolderInput.value?.input?.select())
     }
 
-    function closeCreateFolderPopup()
-    {
+    function closeCreateFolderPopup() {
         createFolderPopup.value?.close()
     }
 
-    async function createFolder()
-    {
+    async function createFolder() {
         createFolderForm
         .transform(data => ({...data, path: path.value}))
         .post('/api/folder', {
@@ -245,8 +264,7 @@
     const renameInput = ref<typeof IodInput|null>(null)
     const renameForm = useForm({ path: '', name: '' })
 
-    function openRenamePopup(item: MediaItem)
-    {
+    function openRenamePopup(item: MediaItem) {
         renameForm.path = item.src_path
         renameForm.name = item.name
         
@@ -260,13 +278,11 @@
         nextTick(() => renameInput.value?.input?.setSelectionRange(start, end))
     }
 
-    function closeRenamePopup()
-    {
+    function closeRenamePopup() {
         renamePopup.value?.close()
     }
 
-    async function rename()
-    {
+    async function rename() {
         renameForm.patch('/api/media/rename', {
             onSuccess() {
                 renameForm.reset()
@@ -280,18 +296,54 @@
 
 
     const propertyPopup = ref<typeof IodPopup|null>(null)
+    const propertyPopupState = ref({
+        tab: 'info',
+    })
     const propertyForm = useForm({} as MediaItem)
+    const propertyShareForm = useForm({
+        users: [],
+        roles: [],
+        access: null,
+    })
 
-    function openPropertyPopup(item: MediaItem)
-    {
+    function openPropertyPopup(item: MediaItem) {
+        propertyShareForm.users = item.users.map(user => ({
+            id: user.id,
+            profile_image: user.profile_image,
+            name: user.name,
+            username: user.username,
+            role: user.pivot?.role ?? null
+        }))
+
         propertyForm.defaults(item).reset()
         propertyPopup.value?.open()
     }
 
+    function addUser(user: any) {
+        propertyShareForm.users.push({
+            id: user.id,
+            profile_image: user.profile_image,
+            name: user.name,
+            username: user.username,
+            role: 'read'
+        })
+    }
+
+    function share() {
+        propertyShareForm
+        .transform(data => {
+            let users = data.users.map((user: any) => user.id)
+        })
+        .patch('/api/media/share', {
+            onSuccess() {
+                propertyPopup.value?.close()
+            }
+        })
+    }
 
 
-    function move(paths: string[], destination: string)
-    {
+
+    function move(paths: string[], destination: string) {
         useForm({
             paths,
             destination,
@@ -304,8 +356,7 @@
 
 
 
-    function copy(paths: string[], destination: string)
-    {
+    function copy(paths: string[], destination: string) {
         useForm({
             paths,
             destination,
@@ -320,8 +371,7 @@
 
     const dragging = ref(false)
 
-    function onDragStart(event: DragEvent, item: MediaItem)
-    {
+    function onDragStart(event: DragEvent, item: MediaItem) {
         if (!selection.value.includes(item.src_path))
         {
             selection.value = [item.src_path]
@@ -330,13 +380,11 @@
         dragging.value = true
     }
 
-    function onDragEnd(event: DragEvent)
-    {
+    function onDragEnd(event: DragEvent) {
         dragging.value = false
     }
 
-    function onDrop(event: DragEvent, path: string)
-    {
+    function onDrop(event: DragEvent, path: string) {
         // console.log(selection.value[0], path)
         dragging.value = false
 
@@ -353,8 +401,7 @@
 
 
 
-    async function deleteItems(paths: string[])
-    {
+    async function deleteItems(paths: string[]) {
         const { data } = await useAxios().delete(`/api/media/`, { data: { paths } })
 
         fetchItems()
@@ -363,8 +410,7 @@
 
 
 
-    function discover()
-    {
+    function discover() {
         useAxios().patch('/api/media/discovery', { path: path.value })
     }
 </script>
@@ -378,16 +424,19 @@
 
 
     .selection-bar
-        position: sticky
-        top: 1rem
+        position: relative
         margin-top: 1rem
+        padding-bottom: 1rem
         z-index: 100
         display: flex
         align-items: center
-        height: 4rem
-        padding-inline: 1rem
         gap: .5rem
-        background-color: var(--color-background)
-        box-shadow: var(--shadow-elevation-low)
-        border-radius: var(--radius-l)
+        border-bottom: 1px solid var(--color-border)
+
+        .iod-loader
+            position: absolute
+            left: 0
+            right: 0
+            bottom: -1px
+            height: 2px !important
 </style>

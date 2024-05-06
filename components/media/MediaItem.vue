@@ -1,7 +1,8 @@
 <template>
     <Card
         is="div"
-        :class="['media-item', { selected, ghost, disabled, dragging, dragover: dragOver }]"
+        class="media-item"
+        :class="classes"
         @dragover.prevent="onDraggingOver"
         @dragstart="onStartDraggingOver"
         @dragend="onStopDraggingOver"
@@ -14,32 +15,26 @@
             </div>
         </div>
         <div class="media-info">
-            <div class="inner">
-                <NuxtLink v-if="isFolder" class="row title" :to="`/d/files/${item.src_path}`">
-                    <span v-tooltip="item.name">{{ item.name }}</span>
-                    <IodProfileArray class="profiles" :data="profiles" />
-                </NuxtLink>
-                <a v-else class="row title" href="#" @click.prevent="emits('edit', item)">
-                    <span v-tooltip="item.name">{{ item.name }}</span>
-                    <IodProfileArray class="profiles" :data="profiles" />
-                </a>
-            </div>
-            <div class="more-button-wrapper">
-                <VDropdown placement="bottom-end">
-                    <IodIconButton type="button" variant="text" corner="pill" icon="more_vert" size="s"/>
-                    <template #popper>
-                        <ContextMenu class="min-w-15">
-                            <ContextMenuItem is="a" icon="download" :href="(item.cdn_path as string)" target="_blank" download rel="noopener noreferrer">Herunterladen</ContextMenuItem>
-                            <ContextMenuItem is="a" icon="open_in_new" :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">In neuem Tab öffnen</ContextMenuItem>
-                            <ContextMenuDivider />
-                            <ContextMenuItem is="button" v-close-popper icon="info" @click="emits('edit', item)">Eigenschaften</ContextMenuItem>
-                            <ContextMenuItem is="button" v-close-popper icon="edit" @click="emits('rename', item)">Umbenennen</ContextMenuItem>
-                            <ContextMenuItem is="button" v-close-popper color="var(--color-error)" icon="delete" @click="emits('delete', item)">Löschen</ContextMenuItem>
-                        </ContextMenu>
-                    </template>
-                </VDropdown>
-            </div>
+            <NuxtLink v-if="isDirectory" class="title" v-tooltip="item.name" :to="`/d/files/${item.src_path}`">{{ item.name }}</NuxtLink>
+            <a v-if="!isDirectory" class="title" v-tooltip="item.name" href="#" @click.prevent="emits('edit', item)">{{ item.name }}</a>
+            <span v-if="!isDirectory" class="size" v-tooltip="humanFileSize(item.meta.size)">{{ item.meta.size ? humanFileSize(item.meta.size) : ''}}</span>
+            <IodProfileArray class="profiles" :data="profiles" />
         </div>
+        <VDropdown placement="bottom">
+            <IodIconButton class="more-button" type="button" variant="contained" corner="pill" icon="more_vert" size="s"/>
+            <template #popper>
+                <ContextMenu class="min-w-15">
+                    <ContextMenuItem is="a" icon="open_in_new" :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">In neuem Tab öffnen</ContextMenuItem>
+                    <ContextMenuItem is="a" icon="download" :href="(item.cdn_path as string)" target="_blank" download rel="noopener noreferrer">Herunterladen</ContextMenuItem>
+                    <ContextMenuDivider />
+                    <ContextMenuItem is="button" v-close-popper icon="share" @click="emits('share', item)">Freigeben</ContextMenuItem>
+                    <ContextMenuItem is="button" v-close-popper icon="edit" @click="emits('rename', item)">Umbenennen</ContextMenuItem>
+                    <ContextMenuItem is="button" v-close-popper icon="settings" @click="emits('edit', item)">Eigenschaften</ContextMenuItem>
+                    <ContextMenuDivider />
+                    <ContextMenuItem is="button" v-close-popper color="var(--color-error)" icon="delete" @click="emits('delete', item)">Löschen</ContextMenuItem>
+                </ContextMenu>
+            </template>
+        </VDropdown>
     </Card>
 </template>
 
@@ -87,7 +82,20 @@
     })
 
     const dragOver = ref(false)
-    const isFolder = computed(() => props.item.mime_type === 'folder')
+    const isDirectory = computed(() => props.item.mime_type === 'folder')
+
+    const classes = computed(() => {
+        return [
+            isDirectory.value ? 'is-directory' : 'is-file',
+            {
+                'selected': props.selected,
+                'ghost': ghost.value,
+                'disabled': props.disabled,
+                'dragging': props.dragging,
+                'dragover': dragOver.value,
+            },
+        ]
+    })
 
     // Ghost items are items that are not selectable, draggable or dropable
     const ghost = computed(() => {
@@ -98,7 +106,7 @@
         if (props.selected && props.dragging) return true
 
         // @case: dragging and not a folder
-        if (props.dragging && !isFolder.value) return true
+        if (props.dragging && !isDirectory.value) return true
 
         // @case: not ghost
         return false
@@ -138,7 +146,7 @@
 
 
 
-    const emits = defineEmits(['select', 'download', 'edit', 'rename', 'drop', 'delete'])
+    const emits = defineEmits(['select', 'download', 'edit', 'share', 'rename', 'drop', 'delete'])
 </script>
 
 <style lang="sass" scoped>
@@ -148,7 +156,7 @@
         position: relative
         display: flex
         flex-direction: column
-        border-radius: var(--radius-xl)
+        border-radius: var(--radius-l)
         transition: all 50ms ease
         overflow: hidden
         border-color: var(--local-border-color)
@@ -180,12 +188,14 @@
         &:hover:not(.ghost)
             box-shadow: var(--shadow-elevation-medium)
 
-            .media-info
-                .inner
-                    mask-image: linear-gradient(to left, transparent 2rem, black 3rem)
+            .more-button
+                opacity: 1
 
-                .more-button-wrapper
-                    opacity: 1
+        &.is-directory .media-info
+            grid-template-areas: 'title profiles' 'title profiles'
+
+        &.is-file .media-info
+            grid-template-areas: 'title profiles' 'size profiles'
 
         .media-preview
             position: relative
@@ -203,46 +213,42 @@
         .media-info
             position: relative
             z-index: 1
-            display: flex
-            flex-direction: column
+            display: grid
+            grid-template-rows: 1.25rem 1.25rem
+            grid-template-columns: 1fr auto
+            align-items: center
+            gap: 0 .5rem
             padding: 1rem
             border-top: 1px solid var(--local-border-color)
             transition: all 50ms ease
 
-            .inner
-                display: flex
-                flex-direction: column
-
-            .row
-                display: flex
-                align-items: center
-                gap: .5rem
+            .title
+                grid-area: title
+                margin-right: auto
+                max-width: 100%
+                font-size: .875rem
+                font-weight: 500
+                color: var(--color-text)
                 overflow: hidden
                 text-overflow: ellipsis
                 white-space: nowrap
 
             .profiles
-                height: 2rem
-                padding: .25rem 0
+                grid-area: profiles
+                height: 1.5rem
 
-            .title
-                font-weight: 500
-                color: var(--color-text)
+            .size
+                grid-area: size
+                margin-right: auto
+                font-size: .75rem
+                overflow: hidden
+                text-overflow: ellipsis
+                white-space: nowrap
 
-                span
-                    flex: 1
-
-            .more-button-wrapper
-                position: absolute
-                top: 0
-                bottom: 0
-                right: 0
-                display: flex
-                align-items: center
-                padding-inline: .5rem
-                opacity: 0
-                transition: opacity 100ms ease
-
-                .iod-button
-                    --local-color-background: var(--color-text)
+        .more-button
+            position: absolute
+            top: .5rem
+            right: .5rem
+            z-index: 20
+            opacity: 0
 </style>

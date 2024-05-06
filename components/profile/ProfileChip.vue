@@ -3,16 +3,13 @@
         <img class="image" :style="{'order': imageOrder}" :src="user.profile_image">
 
         <Flex :x-align="horizontalAlign">
-            <span class="name">{{ user.fullname }}</span>
-            <span class="company" v-show="showCompany" v-if="domain.settings">{{ domain.settings.company_name }}</span>
+            <span class="name">{{ user.name ?? user.fullname }}</span>
+            <span class="company" v-show="showSubtitle" v-if="user.username">{{ user.username }}</span>
         </Flex>
     </Flex>
 </template>
 
 <script lang="ts" setup>
-    const auth = useAuthStore()
-    const domain = useDomainStore()
-
     const props = defineProps({
         is: {
             default: 'button',
@@ -25,7 +22,7 @@
             type: String,
             default: 'left',
         },
-        showCompany: {
+        showSubtitle: {
             type: Boolean,
             default: false,
         },
