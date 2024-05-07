@@ -2,15 +2,15 @@
     <div class="iod-container iod-profile-array" v-tooltip="tooltip">
         <span class="item" v-if="showAdditionalCount" :style="{zIndex: limit + 1}">+{{ data.length - limit }}</span>
         <template v-for="(item, i) in data.slice(0, limit)">
-            <img class="item" :src="item.image" :alt="item.label" :style="{zIndex: limit - i}">
+            <img class="item" :src="item?.image as string" :alt="item?.label as string" :style="{zIndex: limit - i}">
         </template>
     </div>
 </template>
 
 <script lang="ts" setup>
     type Profile = {
-        image: string,
-        label: string,
+        image?: string | null,
+        label?: string | null,
     }
 
     const props = defineProps({
@@ -26,7 +26,6 @@
 
     const showAdditionalCount = computed(() => props.data.length > props.limit)
     const limit = computed(() => showAdditionalCount.value ? props.limit - 1 : props.limit)
-
     const tooltip = computed(() => props.data.map(item => item.label).join(', '))
 </script>
 

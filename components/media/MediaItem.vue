@@ -17,54 +17,37 @@
         <div class="media-info">
             <NuxtLink v-if="isDirectory" class="title" v-tooltip="item.name" :to="`/d/files/${item.src_path}`">{{ item.name }}</NuxtLink>
             <a v-if="!isDirectory" class="title" v-tooltip="item.name" href="#" @click.prevent="emits('edit', item)">{{ item.name }}</a>
-            <span v-if="!isDirectory" class="size" v-tooltip="humanFileSize(item.meta.size)">{{ item.meta.size ? humanFileSize(item.meta.size) : ''}}</span>
-            <IodProfileArray class="profiles" :data="profiles" />
+            <span v-if="!isDirectory" class="size" v-tooltip="humanFileSize(item.meta.size as number)">{{ item.meta.size ? humanFileSize(item.meta.size) : ''}}</span>
+            <IodProfileArray class="profiles" :data="profiles" @dblclick.stop="emits('share', item)"/>
         </div>
-        <VDropdown placement="bottom">
-            <IodIconButton class="more-button" type="button" variant="contained" corner="pill" icon="more_vert" size="s"/>
-            <template #popper>
-                <ContextMenu class="min-w-15">
-                    <ContextMenuItem is="a" icon="open_in_new" :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">In neuem Tab öffnen</ContextMenuItem>
-                    <ContextMenuItem is="a" icon="download" :href="(item.cdn_path as string)" target="_blank" download rel="noopener noreferrer">Herunterladen</ContextMenuItem>
-                    <ContextMenuDivider />
-                    <ContextMenuItem is="button" v-close-popper icon="share" @click="emits('share', item)">Freigeben</ContextMenuItem>
-                    <ContextMenuItem is="button" v-close-popper icon="edit" @click="emits('rename', item)">Umbenennen</ContextMenuItem>
-                    <ContextMenuItem is="button" v-close-popper icon="settings" @click="emits('edit', item)">Eigenschaften</ContextMenuItem>
-                    <ContextMenuDivider />
-                    <ContextMenuItem is="button" v-close-popper color="var(--color-error)" icon="delete" @click="emits('delete', item)">Löschen</ContextMenuItem>
-                </ContextMenu>
-            </template>
-        </VDropdown>
+        <div class="overlay">
+            <VDropdown placement="bottom">
+                <IodIconButton class="more-button" type="button" variant="contained" corner="pill" icon="more_vert" size="s"/>
+                <template #popper>
+                    <ContextMenu class="min-w-15">
+                        <ContextMenuItem is="a" icon="open_in_new" :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">In neuem Tab öffnen</ContextMenuItem>
+                        <ContextMenuItem is="a" icon="download" :href="(item.cdn_path as string)" target="_blank" download rel="noopener noreferrer">Herunterladen</ContextMenuItem>
+                        <ContextMenuDivider />
+                        <ContextMenuItem is="button" v-close-popper icon="share" @click="emits('share', item)">Freigeben</ContextMenuItem>
+                        <ContextMenuItem is="button" v-close-popper icon="edit" @click="emits('rename', item)">Umbenennen</ContextMenuItem>
+                        <ContextMenuItem is="button" v-close-popper icon="settings" @click="emits('edit', item)">Eigenschaften</ContextMenuItem>
+                        <ContextMenuDivider />
+                        <ContextMenuItem is="button" v-close-popper color="var(--color-error)" icon="delete" @click="emits('delete', item)">Löschen</ContextMenuItem>
+                    </ContextMenu>
+                </template>
+            </VDropdown>
+        </div>
     </Card>
 </template>
 
 <script lang="ts" setup>
-    type Item = {
-        id: number
-        parent_id: number | null
-        drive: string | null
-        src_path: string
-        thumbnail_path: string | null
-        cdn_path: string | null
-        mime_type: string | null
-        name: string
-        users: {
-            id: number
-            name: string
-            profile_image: string
-        }[]
-        access: string | null
-        meta: {
-            size: number
-            extension: string
-        }
-    }
+    import type { MediaItem } from '~/types/media'
 
 
 
     const props = defineProps({
         item: {
-            type: Object as PropType<Item>,
+            type: Object as PropType<MediaItem>,
             required: true
         },
         selected: {
@@ -112,7 +95,10 @@
         return false
     })
 
-    const profiles = computed(() => props.item.users.map((user) => ({ label: user.name, image: user.profile_image })))
+    const profiles = computed(() => props.item.users.map((user) => ({
+        label: user?.name || null,
+        image: user?.profile_image || null,
+    })))
 
 
 
@@ -245,10 +231,15 @@
                 text-overflow: ellipsis
                 white-space: nowrap
 
-        .more-button
+        .overlay
             position: absolute
-            top: .5rem
-            right: .5rem
-            z-index: 20
+            top: 0
+            right: 0
+            padding: .5rem
+            z-index: 10
+            pointer-events: none
+            
+        .more-button
             opacity: 0
+            pointer-events: all
 </style>

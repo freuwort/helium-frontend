@@ -34,7 +34,7 @@
 <style lang="sass" scoped>
     .iod-container.iod-alert
         color: var(--color-text)
-        border-radius: var(--radius-l)
+        border-radius: var(--radius-m)
         padding: 1rem
         display: flex
         flex-direction: column

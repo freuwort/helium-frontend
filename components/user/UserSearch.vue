@@ -64,6 +64,7 @@
         left: 0
         right: 0
         top: 100%
+        z-index: 10
         display: flex
         flex-direction: column
         gap: .25rem

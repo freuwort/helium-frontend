@@ -125,7 +125,7 @@
                 </template>
             </VDropdown>
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
-                <ProfileChip :user="auth.user ?? {}" show-subtitle align="right" class="min-h-4"/>
+                <ProfileChip v-if="auth.user" :title="auth.user.name ?? auth.user.fullname ?? ''" :subtitle="auth.user.username ?? ''" :image="auth.user.profile_image" align="right"/>
                 <template #popper>
                     <ContextMenu class="min-w-20">
                         <ContextMenuItem to="/d/profile" show-chevron icon="person">Profil</ContextMenuItem>
@@ -152,4 +152,8 @@
         background-color: var(--color-background)
         border-bottom: 1px solid var(--color-background-soft)
         box-shadow: var(--shadow-elevation-low)
+
+        .profile-chip
+            height: 4rem
+            padding-block: .75rem
 </style>
