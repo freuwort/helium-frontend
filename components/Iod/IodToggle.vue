@@ -398,7 +398,7 @@
         .label
             line-height: 1.25
             user-select: none
-            flex: none
+            flex: unset
 
         .border
             height: 100%

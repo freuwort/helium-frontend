@@ -455,7 +455,7 @@ function setFocus()
   max-height: 100vh
   overflow-y: auto
   font-size: .9em
-  box-shadow: var(--shadow-elevation-medium)
+  box-shadow: var(--shadow-m)
 
   .select-dropdown-item
     position: relative

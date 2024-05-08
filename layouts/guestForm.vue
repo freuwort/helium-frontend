@@ -71,7 +71,7 @@
             align-items: center
             overflow: hidden
             border-radius: 50%
-            box-shadow: var(--shadow-elevation-low)
+            box-shadow: var(--shadow-s)
             background-color: var(--color-background)
             user-select: none
 

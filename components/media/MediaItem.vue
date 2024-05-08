@@ -172,7 +172,7 @@
                 opacity: .1
 
         &:hover:not(.ghost)
-            box-shadow: var(--shadow-elevation-medium)
+            box-shadow: var(--shadow-m)
 
             .more-button
                 opacity: 1

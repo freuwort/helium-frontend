@@ -60,7 +60,7 @@
         flex-direction: column
         border: none
         border-radius: var(--radius-l) var(--radius-l) 0 0
-        box-shadow: var(--shadow-elevation-medium)
+        box-shadow: var(--shadow-m)
         position: fixed
         z-index: 100
         bottom: 0

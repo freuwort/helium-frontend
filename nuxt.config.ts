@@ -7,6 +7,7 @@ export default defineNuxtConfig({
         'dayjs-nuxt',
         '@pinia/nuxt',
         '@nuxt/test-utils/module',
+        "@nuxtjs/tailwindcss",
     ],
     
     devtools: {
