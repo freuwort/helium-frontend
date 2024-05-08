@@ -1,65 +1,70 @@
 <template>
     <IodPopup ref="popup" title="Medien freigeben">
-        <Flex is="form" padding="1.5rem" gap="1.5rem" @submit.prevent="share">
+        <Flex is="form" padding="1.5rem" gap="2.5rem" @submit.prevent="share">
             <ErrorAlert :errors="form.errors" />
 
-            <Flex gap=".5rem">
-                <ContextMenuLabel label="Verfügbarkeit"/>
+            <Flex padding=".5rem" gap=".5rem" class="border radius-l">
                 <IodButtonGroup>
-                    <IodButton type="button" label="Vererbt" :variant="form.access === null ? 'filled' : 'contained'" @click="form.access = null"/>
-                    <IodButton type="button" label="Öffentlich" :variant="form.access === 'public' ? 'filled' : 'contained'" @click="form.access = 'public'"/>
-                    <IodButton type="button" label="Privat" :variant="form.access === 'private' ? 'filled' : 'contained'" @click="form.access = 'private'"/>
+                    <IodButton type="button" background="var(--color-text-soft)" label="Vererbt" :variant="form.access === null ? 'filled' : 'contained'" @click="form.access = null"/>
+                    <IodButton type="button" background="var(--color-text-soft)" label="Öffentlich" :variant="form.access === 'public' ? 'filled' : 'contained'" @click="form.access = 'public'"/>
+                    <IodButton type="button" background="var(--color-text-soft)" label="Privat" :variant="form.access === 'private' ? 'filled' : 'contained'" @click="form.access = 'private'"/>
                 </IodButtonGroup>
+                <IodAlert as="placeholder" class="min-h-3">
+                    <small v-show="form.access === null">Alle Freigaben des überliegenden Ordners werden übernommen</small>
+                    <small v-show="form.access === 'public'"><b>Alle Nutzer</b> mit dem Link können die Medien ansehen</small>
+                    <small v-show="form.access === 'private'">Nur <b>ausgewählte Nutzer</b> oder <b>Gruppen</b> können die Medien ansehen</small>
+                </IodAlert>
             </Flex>
             
-            <Flex gap=".5rem">
-                <ContextMenuLabel label="Nutzer"/>
+            <Flex padding=".5rem" gap=".5rem" class="border radius-l">
                 <VDropdown :shown="!!users.search.length && !!users.results.length" :triggers="[]" :auto-hide="false">
-                    <IodInput type="search" placeholder="Nutzer suchen" v-model="users.search" @update:modelValue="searchUsers()">
+                    <IodInput type="search" placeholder="Nutzer hinzufügen" v-model="users.search" @update:modelValue="searchUsers()">
                         <template #right>
                             <select v-model="userRole">
-                                <option value="read">Ansehen</option>
-                                <option value="write">Bearbeiten</option>
+                                <option value="read">{{ localizePermission('read') }}</option>
+                                <option value="write">{{ localizePermission('write') }}</option>
                             </select>
                         </template>
                     </IodInput>
 
                     <template #popper>
                         <Flex y-align="flex-start" padding="1rem 0" class="min-w-20 max-h-20 small-scrollbar">
-                            <ProfileChip class="h-3 padding-0-5" v-for="user in users.results" :title="user.name" :image="user.profile_image" @click="addUser(user)"/>
+                            <ProfileChip class="h-3 padding-0-5" corner="none" v-for="user in users.results" :title="user.name" :image="user.profile_image" @click="addUser(user)"/>
                         </Flex>
                     </template>
                 </VDropdown>
-                <Flex>
-                    <ProfileChip is="div" style="padding: .5rem; height: 3rem" v-for="user in form.users" :title="user.name" :image="user.profile_image">
-                        <IodButtonGroup>
-                            <IodIconButton type="button" size="s" icon="visibility" v-tooltip="'kann ansehen'" :variant="user.role === 'read' ? 'filled' : 'contained'" @click="user.role = 'read'"/>
-                            <IodIconButton type="button" size="s" icon="edit" v-tooltip="'kann bearbeiten'" :variant="user.role === 'write' ? 'filled' : 'contained'" @click="user.role = 'write'"/>
-                            <IodIconButton type="button" size="s" icon="verified_user" v-tooltip="'Besitzt'" :variant="user.role === 'owner' ? 'filled' : 'contained'" @click="user.role = 'owner'"/>
-                        </IodButtonGroup>
-                        <IodIconButton type="button" size="s" variant="text" icon="close" v-tooltip="'Entfernen'" @click.stop="removeUser(user)"/>
-                    </ProfileChip>
-                </Flex>
-                <IodAlert as="placeholder" class="h-4" v-if="!form.users.length">Keine Nutzer vorhanden</IodAlert>
+
+                <ProfileChip is="div" style="padding: .5rem; height: 3rem" v-for="user in form.users" :title="user.name" :subtitle="localizePermission(user.role)" :image="user.profile_image">
+                    <Flex horizontal gap=".5rem">
+                        <template v-if="user.role !== 'owner'">
+                            <IodButtonGroup>
+                                <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="visibility" v-tooltip="localizePermission('read')" :variant="user.role === 'read' ? 'filled' : 'contained'" @click="user.role = 'read'"/>
+                                <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="edit" v-tooltip="localizePermission('write')" :variant="user.role === 'write' ? 'filled' : 'contained'" @click="user.role = 'write'"/>
+                            </IodButtonGroup>
+                            <IodIconButton type="button" size="s" icon="close" v-tooltip="'Entfernen'" variant="contained" color-preset="error" @click.stop="removeUser(user)"/>
+                        </template>
+                    </Flex>
+                </ProfileChip>
+
+                <IodAlert as="placeholder" class="h-3" v-if="!form.users.length">Keine Nutzer vorhanden</IodAlert>
             </Flex>
             
-            <Flex gap=".5rem">
-                <ContextMenuLabel label="Rollen"/>
+            <Flex padding=".5rem" gap=".5rem" class="border radius-l">
                 <VDropdown :shown="!!roles.search.length && !!roles.results.length" :triggers="[]" :auto-hide="false">
-                    <IodInput type="search" placeholder="Rollen suchen" v-model="roles.search" @update:modelValue="searchRoles()" />
+                    <IodInput type="search" placeholder="Rollen hinzufügen" v-model="roles.search" @update:modelValue="searchRoles()" />
 
                     <template #popper>
                         <Flex y-align="flex-start" padding="1rem 0" class="min-w-20 max-h-20 small-scrollbar">
-                            <ProfileChip class="h-3 padding-0-5" v-for="role in roles.results" :title="role.name" :icon="role.icon" :color="role.color" @click="addRole(role)"/>
+                            <ProfileChip class="h-3 padding-0-5" corner="none" v-for="role in roles.results" :title="role.name" :icon="role.icon" :color="role.color" @click="addRole(role)"/>
                         </Flex>
                     </template>
                 </VDropdown>
-                <Flex>
-                    <ProfileChip is="div" style="padding: .5rem; height: 3rem" v-for="role in form.roles" :title="role.name" :icon="role.icon" :color="role.color">
-                        <IodIconButton type="button" size="s" variant="text" icon="close" v-tooltip="'Entfernen'" @click.stop="removeRole(role)"/>
-                    </ProfileChip>
-                </Flex>
-                <IodAlert as="placeholder" class="h-4" v-if="!form.roles.length">Keine Rollen vorhanden</IodAlert>
+
+                <ProfileChip is="div" style="padding: .5rem; height: 3rem" v-for="role in form.roles" :title="role.name" :subtitle="localizePermission('read')" :icon="role.icon" :color="role.color">
+                    <IodIconButton type="button" size="s" icon="close" v-tooltip="'Entfernen'" variant="contained" color-preset="error" @click.stop="removeRole(role)"/>
+                </ProfileChip>
+
+                <IodAlert as="placeholder" class="h-3" v-if="!form.roles.length">Keine Rollen vorhanden</IodAlert>
             </Flex>
             
             <IodButton type="submit" size="l" variant="filled" label="Freigabe übernehmen" :loading="form.processing" />
@@ -122,6 +127,15 @@
         results: [],
     })
     const userRole = ref('read')
+
+    function localizePermission(role: string) {
+        switch (role) {
+            case 'read': return 'Kann ansehen'
+            case 'write': return 'Kann bearbeiten'
+            case 'owner': return 'Eigentümer'
+            default: return role
+        }
+    }
 
     function searchUsers() {
         users.get(apiRoute('/api/users/basic', {

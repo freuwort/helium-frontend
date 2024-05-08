@@ -58,7 +58,11 @@
 
         &.alert-type-placeholder
             user-select: none
+            padding-block: 0
             color: var(--color-text-disabled)
+
+            &::before
+                display: none
 
             .content
                 align-items: center
