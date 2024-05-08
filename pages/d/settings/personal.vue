@@ -1,5 +1,5 @@
 <template>
-    <form class="display-contents" @submit.prevent="save">
+    <form class="contents" @submit.prevent="save">
         <SettingsTitle>Sprache, Zeitzone und Theme</SettingsTitle>
         <SettingsRow title="Sprache" description="Wählen Sie die Programm Sprache">
             <IodSelect class="flex-1" label="Sprache" v-model="form.language" :options="options_language"/>

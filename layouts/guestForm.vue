@@ -10,14 +10,14 @@
             <slot />
         </main>
         <footer>
-            <div class="form-limiter">
-                <Flex horizontal :gap="1">
+            <HeLimiter size="form">
+                <HeFlex horizontal gap="1rem">
                     <span>© {{ $dayjs().year() }} {{ domain.settings?.company_legalname }}</span>
-                    <Spacer />
+                    <HeSpacer />
                     <a href="/legal" target="_blank">Impressum</a>
                     <a href="/privacy" target="_blank">Datenschutz</a>
-                </Flex>
-            </div>
+                </HeFlex>
+            </HeLimiter>
         </footer>
     </div>
 </template>
@@ -31,7 +31,7 @@
         title: props.pageTitle as string,
         titleTemplate: `%s – ${domain.settings?.company_name} Verwaltung`,
         bodyAttrs: {
-            class: 'background-soft'
+            style: 'background: var(--color-background-soft)',
         }
     })
 

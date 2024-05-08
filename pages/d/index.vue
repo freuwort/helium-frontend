@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout name="auth-default" pageTitle="Startseite" color="var(--color-primary)">
         <Card>
-            <Flex :gap="1" :padding="1">
+            <HeFlex gap="1rem" padding="1rem">
                 <ContextMenu>
                     <ContextMenuItem to="/d" show-chevron icon="dashboard">Startseite</ContextMenuItem>
                     <ContextMenuItem to="/d/files" show-chevron icon="drive_folder_upload">Dateien</ContextMenuItem>
@@ -15,10 +15,10 @@
                     <IodButton class="flex-1" @click="popup_3.open()" variant="contained" size="l" icon-left="dock_to_left">Right Popup</IodButton>
                 </Flex>
 
-                <IodProfileArray :data="profiles" :limit="6" class="margin-right-auto"/>
+                <IodProfileArray :data="profiles" :limit="6" class="mr-auto"/>
 
                 <UserSearch placeholder="Nutzer suchen"/>
-            </Flex>
+            </HeFlex>
         </Card>
 
         <IodPopup ref="popup_1" title="Left Popup" placement="left">

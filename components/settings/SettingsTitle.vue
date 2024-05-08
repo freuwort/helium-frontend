@@ -1,5 +1,5 @@
 <template>
-    <component :is="is" class="margin-0 weight-medium">
+    <component :is="is" class="m-0 font-medium">
         <slot>{{ title }}</slot>
     </component>
 </template>

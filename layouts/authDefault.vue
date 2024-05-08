@@ -9,9 +9,9 @@
             <h2><slot name="title">{{ props.pageTitle }}</slot></h2>
         </div>
         <main>
-            <div :class="limiter">
+            <HeLimiter :size="limiter">
                 <slot />
-            </div>
+            </HeLimiter>
         </main>
     </div>
 </template>
@@ -26,7 +26,8 @@
         title: props.pageTitle as string,
         titleTemplate: `%s – ${domain?.settings?.company_name} Verwaltung`,
         htmlAttrs: {
-            'class': 'background-soft small-scrollbar',
+            'class': 'small-scrollbar',
+            'style': 'background: var(--color-background-soft)',
         },
     })
 
@@ -48,7 +49,7 @@
     })
 
     const limiter = computed(() => {
-        return `${props.limiter || 'normal'}-limiter`
+        return props.limiter as string || 'page'
     })
 
 

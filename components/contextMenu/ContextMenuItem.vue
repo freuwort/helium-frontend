@@ -1,10 +1,10 @@
 <template>
     <Flex :is="is ?? NuxtLink" type="button" horizontal class="context-menu-item" :class="{'active': active}" :style="{ color }">
-        <Icon class="main-icon"><slot name="icon">{{ icon }}</slot></Icon>
-        <Flex class="flex-1">
+        <IodIcon class="main-icon"><slot name="icon">{{ icon }}</slot></IodIcon>
+        <HeFlex class="flex-1">
             <span class="label"><slot>{{ label }}</slot></span>
-        </Flex>
-        <Icon class="chevron-icon" v-if="showChevron">chevron_right</Icon>
+        </HeFlex>
+        <IodIcon class="chevron-icon" v-if="showChevron">chevron_right</IodIcon>
     </Flex>
 </template>
 

@@ -6,7 +6,7 @@
                     <span class="flex-1">{{ error?.data?.message || error?.message }}</span>
                 </Flex>
                 
-                <ul v-if="error.statusCode === 422 && error?.data?.errors?.length > 1" class="margin-0 padding-left-1">
+                <ul v-if="error.statusCode === 422 && error?.data?.errors?.length > 1" class="m-0 pl-4">
                     <li v-for="hint in error?.data?.errors">
                         <small >{{ hint.join(' ') }}</small>
                     </li>

@@ -1,3 +1,3 @@
 <template>
-    <hr class="margin-block-1"/>
+    <hr class="my-4"/>
 </template>

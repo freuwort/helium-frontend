@@ -1,7 +1,7 @@
 <template>
     <component :is="is" type="button" class="header-item" :style="{ color }">
-        <Icon class="app-icon"><slot>{{ icon }}</slot></Icon>
-        <Icon class="chevron" v-if="showChevron">expand_more</Icon>
+        <IodIcon class="app-icon"><slot>{{ icon }}</slot></IodIcon>
+        <IodIcon class="chevron" v-if="showChevron">expand_more</IodIcon>
     </component>
 </template>
 

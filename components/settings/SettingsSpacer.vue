@@ -1,5 +1,5 @@
 <template>
-    <div class="w-100p" :style="{ height }"></div>
+    <div class="w-full" :style="{ height }"></div>
 </template>
 
 <script setup lang="ts">

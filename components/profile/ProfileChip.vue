@@ -3,10 +3,10 @@
         <img class="pictogram image" :style="{'order': imageOrder}" :src="image" v-if="image">
         <IodIcon class="pictogram icon" :icon="icon" v-show="icon" :style="{color}" v-else-if="icon"/>
 
-        <Flex class="content" :x-align="horizontalAlign">
+        <HeFlex class="content" :align-x="horizontalAlign">
             <span class="name">{{ title }}</span>
             <span class="subtitle" v-show="subtitle">{{ subtitle }}</span>
-        </Flex>
+        </HeFlex>
 
         <slot></slot>
     </component>

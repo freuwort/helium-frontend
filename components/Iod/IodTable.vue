@@ -66,7 +66,7 @@
         <div class="table-inner-wrapper" v-show="items.length">
             <div class="table-head">
                 <div class="table-row">
-                    <div class="table-column centered w-3">
+                    <div class="table-column centered w-12">
                         <IodToggle
                             :modelValue="items.length && items.every(item => selection.includes(item.id))"
                             @update:modelValue="$event ? selectAll() : deselectAll()"
@@ -88,7 +88,7 @@
 
             <div class="table-body">
                 <div class="table-row" v-for="item in items" @click="rowClick(item)">
-                    <div class="table-column centered w-3">
+                    <div class="table-column centered w-12">
                         <IodToggle :modelValue="getSelection.includes(item.id)" @click.stop @update:modelValue="setSelection(item, $event)"/>
                     </div>
 

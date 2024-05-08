@@ -1,34 +1,34 @@
 <template>
-    <NuxtLayout limiter="normal" name="auth-sidebar" pageTitle="Dateien">
+    <NuxtLayout name="auth-sidebar" pageTitle="Dateien">
         <template #sidebar>
-            <Flex class="w-21 h-100p">
-                <Flex class="border-bottom" :padding="1" :gap=".5" x-align="flex-start">
+            <HeFlex class="w-80 h-full">
+                <HeFlex class="border-b" :padding="1" :gap=".5" align-x="flex-start">
                     <VDropdown placement="bottom-end">
                         <IodButton type="button" icon-left="add" label="Neu" corner="pill" size="m"/>
                         <template #popper>
-                            <ContextMenu class="min-w-19">
+                            <ContextMenu class="min-w-80">
                                 <ContextMenuItem icon="upload" v-close-popper @click="uploadInput?.click()">Hochladen</ContextMenuItem>
                                 <ContextMenuItem icon="create_new_folder" v-close-popper @click="createFolderPopup.open(path)">Ordner erstellen</ContextMenuItem>
                             </ContextMenu>
                         </template>
                     </VDropdown>
-                </Flex>
+                </HeFlex>
                 <ContextMenu>
                     <ContextMenuItem :is="NuxtLink" to="/d/files/public" icon="public">Öffentliche Ablage</ContextMenuItem>
                     <ContextMenuItem :is="NuxtLink" to="/d/files/private" icon="lock">Geschützte Ablage</ContextMenuItem>
                     <ContextMenuItem :is="NuxtLink" to="/d/files/profile_pictures" icon="account_circle">Profilbilder</ContextMenuItem>
                     <ContextMenuItem :is="NuxtLink" to="/d/files/profile_banners" icon="landscape">Profilbanner</ContextMenuItem>
                 </ContextMenu>
-                <Spacer />
-                <Flex class="border-top" :padding="1" :gap=".5" horizontal>
+                <HeSpacer />
+                <HeFlex class="border-t" :padding="1" :gap=".5" horizontal>
                     <IodIconButton type="button" variant="text" corner="pill" icon="scan" @click="discover" background="var(--color-text-soft)" v-tooltip="'Verzeichnisse scannen'"/>
                     <IodIconButton type="button" variant="text" corner="pill" icon="refresh" @click="fetchItems" background="var(--color-text-soft)" v-tooltip="'Aktualisieren'"/>
                     <Spacer />
-                </Flex>
-            </Flex>
+                </HeFlex>
+            </HeFlex>
         </template>
 
-        <Flex :gap="1">
+        <HeFlex gap="1rem">
             <div class="selection-bar">
                 <MediaBreadcrumbs :path="path" root-path="/d/files" @drop="onDrop($event.event, $event.path)"/>
                 <Spacer />
@@ -56,12 +56,12 @@
                 />
             </div>
 
-            <IodAlert v-if="!items.length && !loading" class="h-20" as="placeholder">Keine Dateien vorhanden</IodAlert>
-        </Flex>
+            <IodAlert v-if="!items.length && !loading" class="h-80" as="placeholder">Keine Dateien vorhanden</IodAlert>
+        </HeFlex>
 
         
         
-        <input class="display-none" type="file" ref="uploadInput" multiple @change="upload(($event.target as HTMLInputElement)?.files || [])">
+        <input class="hidden" type="file" ref="uploadInput" multiple @change="upload(($event.target as HTMLInputElement)?.files || [])">
         
         <MediaUploadCard />
         <DialogMediaCreateFolder ref="createFolderPopup" placement="center" max-width="500px" blur="0" @saved="fetchItems()"/>

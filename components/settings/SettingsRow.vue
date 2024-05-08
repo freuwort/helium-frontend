@@ -1,15 +1,15 @@
 <template>
-    <Flex horizontal>
-        <Flex class="flex-1">
+    <HeFlex horizontal>
+        <HeFlex class="flex-1">
             <slot name="description">
-                <span v-if="title" class="font-heading color-text weight-medium">{{ title }}</span>
+                <span v-if="title" class="font-heading color-text font-medium">{{ title }}</span>
                 <small v-if="description">{{ description }}</small>
             </slot>
-        </Flex>
-        <Flex horizontal :gap="gap" :style="style">
+        </HeFlex>
+        <HeFlex horizontal :gap="gap" :style="style">
             <slot />
-        </Flex>
-    </Flex>
+        </HeFlex>
+    </HeFlex>
 </template>
 
 <script setup lang="ts">
