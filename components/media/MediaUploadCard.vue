@@ -59,7 +59,7 @@
         display: flex
         flex-direction: column
         border: none
-        border-radius: var(--radius-l) var(--radius-l) 0 0
+        border-radius: var(--radius-l) var(--radius-l) 0 0 !important
         box-shadow: var(--shadow-m)
         position: fixed
         z-index: 100

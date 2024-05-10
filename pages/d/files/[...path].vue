@@ -14,10 +14,8 @@
                     </VDropdown>
                 </HeFlex>
                 <ContextMenu>
-                    <ContextMenuItem :is="NuxtLink" to="/d/files/public" icon="public">Öffentliche Ablage</ContextMenuItem>
-                    <ContextMenuItem :is="NuxtLink" to="/d/files/private" icon="lock">Geschützte Ablage</ContextMenuItem>
-                    <ContextMenuItem :is="NuxtLink" to="/d/files/profile_pictures" icon="account_circle">Profilbilder</ContextMenuItem>
-                    <ContextMenuItem :is="NuxtLink" to="/d/files/profile_banners" icon="landscape">Profilbanner</ContextMenuItem>
+                    <ContextMenuItem :is="NuxtLink" to="/d/files/domain" icon="domain">Domain Speicher</ContextMenuItem>
+                    <ContextMenuItem :is="NuxtLink" to="/d/files/profiles" icon="groups">Profil-Medien</ContextMenuItem>
                 </ContextMenu>
                 <HeSpacer />
                 <HeFlex class="border-t" :padding="1" :gap=".5" horizontal>
