@@ -1,6 +1,6 @@
 <template>
     <NuxtLayout name="auth-default" pageTitle="Startseite" color="var(--color-primary)">
-        <Card>
+        <HeCard>
             <HeFlex gap="1rem" padding="1rem">
                 <ContextMenu>
                     <ContextMenuItem to="/d" show-chevron icon="dashboard">Startseite</ContextMenuItem>
@@ -9,34 +9,32 @@
                     <ContextMenuItem to="/d/settings" show-chevron icon="settings">Einstellungen</ContextMenuItem>
                 </ContextMenu>
 
-                <Flex horizontal gap="1rem">
+                <HeFlex horizontal gap="1rem">
                     <IodButton class="flex-1" @click="popup_1.open()" variant="contained" size="l" icon-left="dock_to_right">Left Popup</IodButton>
                     <IodButton class="flex-1" @click="popup_2.open()" variant="contained" size="l" icon-left="picture_in_picture_center">Center Popup</IodButton>
                     <IodButton class="flex-1" @click="popup_3.open()" variant="contained" size="l" icon-left="dock_to_left">Right Popup</IodButton>
-                </Flex>
+                </HeFlex>
 
                 <IodProfileArray :data="profiles" :limit="6" class="mr-auto"/>
-
-                <UserSearch placeholder="Nutzer suchen"/>
             </HeFlex>
-        </Card>
+        </HeCard>
 
         <IodPopup ref="popup_1" title="Left Popup" placement="left">
-            <Flex gap="1rem" padding="1rem">
+            <HeFlex gap="1rem" padding="1rem">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur
-            </Flex>
+            </HeFlex>
         </IodPopup>
 
         <IodPopup ref="popup_2" title="Center Popup" placement="center">
-            <Flex gap="1rem" padding="1rem">
+            <HeFlex gap="1rem" padding="1rem">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur
-            </Flex>
+            </HeFlex>
         </IodPopup>
 
         <IodPopup ref="popup_3" title="Right Popup" placement="right">
-            <Flex gap="1rem" padding="1rem">
+            <HeFlex gap="1rem" padding="1rem">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur
-            </Flex>
+            </HeFlex>
         </IodPopup>
     </NuxtLayout>
 </template>

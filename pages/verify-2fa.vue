@@ -1,53 +1,53 @@
 <template>
     <NuxtLayout name="guest-form" pageTitle="Anmeldung bestätigen">
-        <div class="form-limiter">
-            <Card is="form" @submit.prevent="submit">
-                <Flex :gap="2" :padding="2">
-                    <h1 class="weight-medium align-center margin-0">{{ form.method ? '2-Faktor bestätigen' : '2-Faktor Methode wählen' }}</h1>
+        <HeLimiter size="form">
+            <HeCard is="form" @submit.prevent="submit">
+                <HeFlex :gap="2" :padding="2">
+                    <h1 class="font-medium text-center m-0">{{ form.method ? '2-Faktor bestätigen' : '2-Faktor Methode wählen' }}</h1>
                     
-                    <hr class="margin-0">
+                    <HeDivider />
                     
                     <ErrorAlert :errors="form.errors"/>
-
-                    <Flex :gap="1" v-if="form.method === 'totp'">
+    
+                    <HeFlex :gap="1" v-if="form.method === 'totp'">
                         <span>Bitte geben Sie Ihren 6-stelligen App-Code ein</span>
                         <IodOtpInput :length="6" :dividers="[3]" v-model="form.code" @complete="submit" autofocus/>
-                    </Flex>
-
-                    <Flex :gap="1" v-else-if="form.method === 'sms'">
+                    </HeFlex>
+    
+                    <HeFlex :gap="1" v-else-if="form.method === 'sms'">
                         <span>Bitte geben Sie den 6-stelligen Code ein, den wir Ihnen per SMS gesendet haben</span>
                         <IodOtpInput :length="6" :dividers="[3]" v-model="form.code" @complete="submit" autofocus/>
-                    </Flex>
-
-                    <Flex :gap="1" v-else-if="form.method === 'email'">
+                    </HeFlex>
+    
+                    <HeFlex :gap="1" v-else-if="form.method === 'email'">
                         <span>Bitte geben Sie den 6-stelligen Code ein, den wir Ihnen per Email gesendet haben</span>
                         <IodOtpInput :length="6" :dividers="[3]" v-model="form.code" @complete="submit" autofocus/>
-                    </Flex>
-
-                    <Flex :gap="1" v-else-if="form.method === 'backup'">
+                    </HeFlex>
+    
+                    <HeFlex :gap="1" v-else-if="form.method === 'backup'">
                         <span>Bitte geben Sie einen Ihrer 8-stelligen Backup-Codes ein</span>
                         <IodOtpInput :length="8" :charset="backupCodeCharset" v-model="form.code" @complete="submit" autofocus/>
-                    </Flex>
+                    </HeFlex>
                     
                     <IodButton label="Anmeldung bestätigen" size="l" v-if="form.method" :loading="form.processing"/>
-
-                    <Flex v-if="!form.method">
+    
+                    <HeFlex v-if="!form.method">
                         <ContextMenuItem is="button" class="radius-m" v-if="auth.user?.has_tfa_totp_method_enabled" icon="screen_lock_portrait" @click="form.method = 'totp'">Authenticator App</ContextMenuItem>
                         <ContextMenuItem is="button" class="radius-m" v-if="auth.user?.has_tfa_sms_method_enabled" icon="sms" @click="form.method = 'sms'">SMS</ContextMenuItem>
                         <ContextMenuItem is="button" class="radius-m" v-if="auth.user?.has_tfa_email_method_enabled" icon="email" @click="form.method = 'email'">Email</ContextMenuItem>
                         <ContextMenuItem is="button" class="radius-m" icon="key" @click="form.method = 'backup'">Backup-Code</ContextMenuItem>
-                    </Flex>
+                    </HeFlex>
     
-                    <hr class="margin-0">
+                    <HeDivider />
     
-                    <Flex :gap="1" horizontal>
+                    <HeFlex :gap="1" horizontal>
                         <a href="#" v-if="form.method" @click="form.method = null">Andere Methode wählen</a>
-                        <Spacer />
+                        <HeSpacer />
                         <a href="#" class="color-red" @click="auth.logout">Anmeldung abbrechen</a>
-                    </Flex>
-                </Flex>
-            </Card>
-        </div>
+                    </HeFlex>
+                </HeFlex>
+            </HeCard>
+        </HeLimiter>
     </NuxtLayout>
 </template>
 

@@ -1,11 +1,11 @@
 <template>
-    <Flex :is="is ?? NuxtLink" type="button" horizontal class="context-menu-item" :class="{'active': active}" :style="{ color }">
+    <HeFlex :is="is ?? NuxtLink" type="button" horizontal class="context-menu-item" :class="{'active': active}" :style="{ color }">
         <IodIcon class="main-icon"><slot name="icon">{{ icon }}</slot></IodIcon>
         <HeFlex class="flex-1">
             <span class="label"><slot>{{ label }}</slot></span>
         </HeFlex>
         <IodIcon class="chevron-icon" v-if="showChevron">chevron_right</IodIcon>
-    </Flex>
+    </HeFlex>
 </template>
 
 <script lang="ts" setup>

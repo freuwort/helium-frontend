@@ -1,3 +1,3 @@
 <template>
-    <hr class="my-4"/>
+    <HeDivider class="my-4"/>
 </template>

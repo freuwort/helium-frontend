@@ -1,34 +1,34 @@
 <template>
     <NuxtLayout name="guest-form" pageTitle="Registrieren">
-        <div class="form-limiter">
-            <Card is="form" @submit.prevent="handleRegister">
-                <Flex :gap="2" :padding="2">
-                    <h1 class="weight-medium align-center margin-0">Registrieren</h1>
+        <HeLimiter size="form">
+            <HeCard is="form" @submit.prevent="handleRegister">
+                <HeFlex :gap="2" :padding="2">
+                    <h1 class="font-medium text-center m-0">Registrieren</h1>
     
-                    <Flex :gap="1">
+                    <HeFlex :gap="1">
                         <IodInput type="text" label="Vorname" v-model="form.firstname"/>
                         <IodInput type="text" label="Nachname" v-model="form.lastname"/>
                         <IodInput type="email" label="Email" v-model="form.email"/>
                         <IodInput type="password" label="Passwort" show-score :score-function="useZxcvbn()" v-model="form.password"/>
-                    </Flex>
-                    <Flex :gap="1">
+                    </HeFlex>
+                    <HeFlex :gap="1">
                         <IodToggle type="checkbox" v-model="form.terms">
                             <template #label>
                                 Ich habe die <a target="_blank" href="/privacy">Datenschutzerklärung</a> und die <a target="_blank" href="/terms">AGB</a> gelesen und akzeptiere diese
                             </template>
                         </IodToggle>
                         <IodButton label="Neues Konto registrieren" size="l"/>
-                    </Flex>
+                    </HeFlex>
     
-                    <hr class="margin-0">
+                    <HeDivider />
     
-                    <Flex :gap="1" horizontal>
+                    <HeFlex :gap="1" horizontal>
                         <NuxtLink to="/login">Zurück zur Anmeldung</NuxtLink>
-                        <Spacer />
-                    </Flex>
-                </Flex>
-            </Card>
-        </div>
+                        <HeSpacer />
+                    </HeFlex>
+                </HeFlex>
+            </HeCard>
+        </HeLimiter>
     </NuxtLayout>
 </template>
 

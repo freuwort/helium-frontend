@@ -1,19 +1,13 @@
 <template>
-    <h5 class="margin-0 weight-medium">Debug Options</h5>
-    <Flex horizontal>
-        <Flex class="flex-1">
-            <span class="font-heading color-text weight-medium">Trigger status</span>
-            <small>Trigger a status code</small>
-        </Flex>
-        <form @submit.prevent="triggerStatus()">
-            <IodInput type="number" v-model="form.status">
-                <template #right>
-                    <IodIconButton icon="send" variant="contained" size="s" :loading="form.processing"/>
-                </template>
-            </IodInput>
-        </form>
-    </Flex>
-    {{ form.validationErrors }}
+    <form class="contents" @submit.prevent="triggerStatus()">
+        <SettingsTitle>Debug Options</SettingsTitle>
+        <SettingsRow title="Trigger status" description="Trigger a status code">
+            <IodInput class="flex-1" type="number" v-model="form.status" />
+        </SettingsRow>
+        <SettingsRow>
+            <IodButton class="flex-1" label="Trigger" :loading="form.processing" />
+        </SettingsRow>
+    </form>
 </template>
 
 <script lang="ts" setup>

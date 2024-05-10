@@ -1,12 +1,12 @@
 <template>
     <IodPopup ref="popup" :title="form?.name || 'Eigenschaften'">
-        <Flex class="background-soft aspect-ratio-16-9 flex-none border-bottom" x-align="center">
+        <HeFlex class="bg-background-soft aspect-video flex-none border-b" align-x="center">
             <MediaIcon :style="{scale: '1.25'}" :mime="(form.mime_type as string)" />
-        </Flex>
+        </HeFlex>
 
-        <Flex padding="1.5rem">
+        <HeFlex padding="1.5rem">
             <pre>{{JSON.stringify(form, null, 2)}}</pre>
-        </Flex>
+        </HeFlex>
     </IodPopup>
 </template>
 

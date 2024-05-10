@@ -1,5 +1,5 @@
 <template>
-    <Card
+    <HeCard
         is="div"
         class="media-item"
         :class="classes"
@@ -37,7 +37,7 @@
                 </template>
             </VDropdown>
         </div>
-    </Card>
+    </HeCard>
 </template>
 
 <script lang="ts" setup>
@@ -145,7 +145,7 @@
         border-radius: var(--radius-l)
         transition: all 50ms ease
         overflow: hidden
-        border-color: var(--local-border-color)
+        border-color: var(--local-border-color) !important
 
         &::after
             content: ''

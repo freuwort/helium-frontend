@@ -1,6 +1,6 @@
 <template>
     <NuxtLayout name="auth-default" :pageTitle="IPM.options.pageTitle" color="var(--color-primary)">
-        <Card>
+        <HeCard>
             <IodTable
                 :columns="tableColumns"
                 :actions="tableActions"
@@ -18,7 +18,7 @@
                     <IodButton type="button" label="Neuer Nutzer" @click="IPM.open()"/>
                 </template>
             </IodTable>
-        </Card>
+        </HeCard>
     </NuxtLayout>
 </template>
 

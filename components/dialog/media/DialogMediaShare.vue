@@ -1,22 +1,22 @@
 <template>
     <IodPopup ref="popup" title="Medien freigeben">
-        <Flex is="form" padding="1.5rem" gap="2.5rem" @submit.prevent="share">
+        <HeFlex is="form" padding="1.5rem" gap="2.5rem" @submit.prevent="share">
             <ErrorAlert :errors="form.errors" />
 
-            <Flex padding=".5rem" gap=".5rem" class="border radius-l">
+            <HeFlex padding=".5rem" gap=".5rem" class="border rounded-xl">
                 <IodButtonGroup>
                     <IodButton type="button" background="var(--color-text-soft)" label="Vererbt" :variant="form.access === null ? 'filled' : 'contained'" @click="form.access = null"/>
                     <IodButton type="button" background="var(--color-text-soft)" label="Öffentlich" :variant="form.access === 'public' ? 'filled' : 'contained'" @click="form.access = 'public'"/>
                     <IodButton type="button" background="var(--color-text-soft)" label="Privat" :variant="form.access === 'private' ? 'filled' : 'contained'" @click="form.access = 'private'"/>
                 </IodButtonGroup>
-                <IodAlert as="placeholder" class="min-h-3">
+                <IodAlert as="placeholder" class="min-h-12">
                     <small v-show="form.access === null">Alle Freigaben des überliegenden Ordners werden übernommen</small>
                     <small v-show="form.access === 'public'"><b>Alle Nutzer</b> mit dem Link können die Medien ansehen</small>
                     <small v-show="form.access === 'private'">Nur <b>ausgewählte Nutzer</b> oder <b>Gruppen</b> können die Medien ansehen</small>
                 </IodAlert>
-            </Flex>
+            </HeFlex>
             
-            <Flex padding=".5rem" gap=".5rem" class="border radius-l">
+            <HeFlex padding=".5rem" gap=".5rem" class="border rounded-xl">
                 <VDropdown :shown="!!users.search.length && !!users.results.length" :triggers="[]" :auto-hide="false">
                     <IodInput type="search" placeholder="Nutzer hinzufügen" v-model="users.search" @update:modelValue="searchUsers()">
                         <template #right>
@@ -28,14 +28,14 @@
                     </IodInput>
 
                     <template #popper>
-                        <Flex y-align="flex-start" padding="1rem 0" class="min-w-20 max-h-20 small-scrollbar">
-                            <ProfileChip class="h-3 padding-0-5" corner="none" v-for="user in users.results" :title="user.name" :image="user.profile_image" @click="addUser(user)"/>
-                        </Flex>
+                        <HeFlex align-y="flex-start" padding="1rem 0" class="min-w-80 max-h-80 small-scrollbar">
+                            <ProfileChip class="h-12 p-2" corner="none" v-for="user in users.results" :title="user.name" :image="user.profile_image" @click="addUser(user)"/>
+                        </HeFlex>
                     </template>
                 </VDropdown>
 
                 <ProfileChip is="div" style="padding: .5rem; height: 3rem" v-for="user in form.users" :title="user.name" :subtitle="localizePermission(user.role)" :image="user.profile_image">
-                    <Flex horizontal gap=".5rem">
+                    <HeFlex horizontal gap=".5rem">
                         <template v-if="user.role !== 'owner'">
                             <IodButtonGroup>
                                 <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="visibility" v-tooltip="localizePermission('read')" :variant="user.role === 'read' ? 'filled' : 'contained'" @click="user.role = 'read'"/>
@@ -43,20 +43,20 @@
                             </IodButtonGroup>
                             <IodIconButton type="button" size="s" icon="close" v-tooltip="'Entfernen'" variant="contained" color-preset="error" @click.stop="removeUser(user)"/>
                         </template>
-                    </Flex>
+                    </HeFlex>
                 </ProfileChip>
 
-                <IodAlert as="placeholder" class="h-3" v-if="!form.users.length">Keine Nutzer vorhanden</IodAlert>
-            </Flex>
+                <IodAlert as="placeholder" class="h-12" v-if="!form.users.length">Keine Nutzer vorhanden</IodAlert>
+            </HeFlex>
             
-            <Flex padding=".5rem" gap=".5rem" class="border radius-l">
+            <HeFlex padding=".5rem" gap=".5rem" class="border rounded-xl">
                 <VDropdown :shown="!!roles.search.length && !!roles.results.length" :triggers="[]" :auto-hide="false">
                     <IodInput type="search" placeholder="Rollen hinzufügen" v-model="roles.search" @update:modelValue="searchRoles()" />
 
                     <template #popper>
-                        <Flex y-align="flex-start" padding="1rem 0" class="min-w-20 max-h-20 small-scrollbar">
-                            <ProfileChip class="h-3 padding-0-5" corner="none" v-for="role in roles.results" :title="role.name" :icon="role.icon" :color="role.color" @click="addRole(role)"/>
-                        </Flex>
+                        <HeFlex y-align="flex-start" padding="1rem 0" class="min-w-80 max-h-80 small-scrollbar">
+                            <ProfileChip class="h-12 p-2" corner="none" v-for="role in roles.results" :title="role.name" :icon="role.icon" :color="role.color" @click="addRole(role)"/>
+                        </HeFlex>
                     </template>
                 </VDropdown>
 
@@ -64,11 +64,11 @@
                     <IodIconButton type="button" size="s" icon="close" v-tooltip="'Entfernen'" variant="contained" color-preset="error" @click.stop="removeRole(role)"/>
                 </ProfileChip>
 
-                <IodAlert as="placeholder" class="h-3" v-if="!form.roles.length">Keine Rollen vorhanden</IodAlert>
-            </Flex>
+                <IodAlert as="placeholder" class="h-12" v-if="!form.roles.length">Keine Rollen vorhanden</IodAlert>
+            </HeFlex>
             
             <IodButton type="submit" size="l" variant="filled" label="Freigabe übernehmen" :loading="form.processing" />
-        </Flex>
+        </HeFlex>
     </IodPopup>
 </template>
 

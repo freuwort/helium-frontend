@@ -1,8 +1,8 @@
 <template>
     <NuxtLayout name="auth-default" pageTitle="Ihr Profil" color="#363E40">
-        <Card>
-            <ProfileCard class="radius-xl" :title="auth.user?.fullname" :image="auth.user?.profile_image" :subtitle="auth.user?.username"/>
-        </Card>
+        <HeCard>
+            <ProfileCard class="rounded-2xl" :title="auth.user?.fullname as string" :image="auth.user?.profile_image" :subtitle="auth.user?.username as string"/>
+        </HeCard>
     </NuxtLayout>
 </template>
 

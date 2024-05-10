@@ -1,16 +1,15 @@
 <template>
     <IodPopup ref="popup" title="Ordner erstellen">
-        <Flex is="form" :padding="1" :gap="1" @submit.prevent="createFolder">
+        <HeFlex is="form" padding="1.5rem" gap="2.5rem" @submit.prevent="createFolder">
             <ErrorAlert :errors="form.errors" />
 
             <IodInput label="Name" ref="input" v-model="form.name" />
 
-            <Flex horizontal>
-                <IodButton type="button" variant="contained" label="Abbrechen" @click="popup.close()" :loading="form.processing" />
-                <Spacer />
-                <IodButton type="submit" variant="filled" label="Ordner Erstellen" :loading="form.processing" />
-            </Flex>
-        </Flex>
+            <HeFlex horizontal gap="1rem">
+                <IodButton class="flex-1" type="button" variant="contained" label="Abbrechen" @click="popup.close()" :loading="form.processing" />
+                <IodButton class="flex-1" type="submit" variant="filled" label="Ordner Erstellen" :loading="form.processing" />
+            </HeFlex>
+        </HeFlex>
     </IodPopup>
 </template>
 

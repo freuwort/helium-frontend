@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout name="auth-default" :pageTitle="id ? 'Nutzer bearbeiten' : 'Nutzer erstellen'" color="var(--color-primary)">
-        <Card is="form" @submit.prevent="save">
-            <ProfileCard class="radius-xl" :title="fullname" :image="form.model.profile_image" :subtitle="form.model.username"/>
+        <HeCard is="form" @submit.prevent="save">
+            <ProfileCard class="rounded-2xl" :title="fullname" :image="form.model.profile_image" :subtitle="form.model.username"/>
             
             <HeFlex class="border-y" horizontal padding="1rem 2rem">
                 <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/users')"/>
@@ -49,14 +49,14 @@
 
 
                 <HeFlex :gap="1">
-                    <Flex horizontal>
+                    <HeFlex horizontal>
                         <h5 class="m-0 font-medium">Adressen</h5>
                         <HeSpacer />
                         <IodButton type="button" label="Neue Adresse" size="s" variant="contained" @click="addAddress()"/>
-                    </Flex>
+                    </HeFlex>
     
                     <div class="entity-grid" v-if="form.addresses.length">
-                        <Card class="entity-card" v-for="address, i in form.addresses">
+                        <HeCard class="entity-card" v-for="address, i in form.addresses">
                             <HeFlex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="location_on" />
                                 <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removeAddress(i)"/>
@@ -68,7 +68,7 @@
                                 <IodInput v-model="address.city" label="Stadt" />
                                 <IodInput v-model="address.country" label="Land" />
                             </HeFlex>
-                        </Card>
+                        </HeCard>
                     </div>
 
                     <IodAlert as="placeholder" class="h-40" v-else>
@@ -86,7 +86,7 @@
                     </HeFlex>
 
                     <div class="entity-grid" v-if="form.bank_connections.length">
-                        <Card class="entity-card" v-for="bank, i in form.bank_connections">
+                        <HeCard class="entity-card" v-for="bank, i in form.bank_connections">
                             <HeFlex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="account_balance" />
                                 <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removeBankConnection(i)"/>
@@ -100,7 +100,7 @@
                                 <IodInput v-model="bank.iban" label="IBAN" />
                                 <IodInput v-model="bank.swift_code" label="SWIFT / BIC" />
                             </HeFlex>
-                        </Card>
+                        </HeCard>
                     </div>
 
                     <IodAlert as="placeholder" class="h-40" v-else>
@@ -110,115 +110,115 @@
 
 
 
-                <Flex :gap="1">
-                    <Flex horizontal>
+                <HeFlex :gap="1">
+                    <HeFlex horizontal>
                         <h5 class="m-0 font-medium">Emails</h5>
                         <HeSpacer />
                         <IodButton type="button" label="Neue Email" size="s" variant="contained" @click="addEmail()"/>
-                    </Flex>
+                    </HeFlex>
 
                     <div class="entity-grid" v-if="form.emails.length">
-                        <Card class="entity-card" v-for="email, i in form.emails">
-                            <Flex class="entity-card-head" padding="1rem">
+                        <HeCard class="entity-card" v-for="email, i in form.emails">
+                            <HeFlex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="email" />
                                 <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removeEmail(i)"/>
-                            </Flex>
-                            <Flex padding="1rem" gap="1rem">
+                            </HeFlex>
+                            <HeFlex padding="1rem" gap="1rem">
                                 <IodSelect v-model="email.type" label="Email-Typ" :options="email_types"/>
                                 <IodInput v-model="email.email" label="Email" />
-                            </Flex>
-                        </Card>
+                            </HeFlex>
+                        </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-10" v-else>
+                    <IodAlert as="placeholder" class="h-40" v-else>
                         <span>Es wurden noch keine Emails angelegt</span>
                     </IodAlert>
-                </Flex>
+                </HeFlex>
 
 
 
-                <Flex :gap="1">
-                    <Flex horizontal>
+                <HeFlex :gap="1">
+                    <HeFlex horizontal>
                         <h5 class="m-0 font-medium">Telefonnummern</h5>
                         <HeSpacer />
                         <IodButton type="button" label="Neue Telefonnummer" size="s" variant="contained" @click="addPhonenumber()"/>
-                    </Flex>
+                    </HeFlex>
 
                     <div class="entity-grid" v-if="form.phonenumbers.length">
-                        <Card class="entity-card" v-for="number, i in form.phonenumbers">
-                            <Flex class="entity-card-head" padding="1rem">
+                        <HeCard class="entity-card" v-for="number, i in form.phonenumbers">
+                            <HeFlex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="phone" />
                                 <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removePhonenumber(i)"/>
-                            </Flex>
-                            <Flex padding="1rem" gap="1rem">
+                            </HeFlex>
+                            <HeFlex padding="1rem" gap="1rem">
                                 <IodSelect v-model="number.type" label="Nummer-Typ" :options="phonenumbers_types"/>
                                 <IodInput v-model="number.number" label="Nummer" />
-                            </Flex>
-                        </Card>
+                            </HeFlex>
+                        </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-10" v-else>
+                    <IodAlert as="placeholder" class="h-40" v-else>
                         <span>Es wurden noch keine Telefonnummern angelegt</span>
                     </IodAlert>
-                </Flex>
+                </HeFlex>
 
 
 
-                <Flex :gap="1">
-                    <Flex horizontal>
+                <HeFlex :gap="1">
+                    <HeFlex horizontal>
                         <h5 class="m-0 font-medium">Termine & Daten</h5>
                         <HeSpacer />
                         <IodButton type="button" label="Neuer Termin" size="s" variant="contained" @click="addDate()"/>
-                    </Flex>
+                    </HeFlex>
 
                     <div class="entity-grid" v-if="form.dates.length">
-                        <Card class="entity-card" v-for="date, i in form.dates">
-                            <Flex class="entity-card-head" padding="1rem">
+                        <HeCard class="entity-card" v-for="date, i in form.dates">
+                            <HeFlex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="event" />
                                 <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removeDate(i)"/>
-                            </Flex>
-                            <Flex padding="1rem" gap="1rem">
+                            </HeFlex>
+                            <HeFlex padding="1rem" gap="1rem">
                                 <IodSelect v-model="date.type" label="Datum-Typ" :options="date_types"/>
                                 <IodInput v-model="date.date" label="Datum" type="date" />
                                 <IodToggle v-model="date.ignore_year" label="Jahr ignorieren" />
                                 <IodToggle v-model="date.repeats_annually" label="Jährlich wiederholen" />
-                            </Flex>
-                        </Card>
+                            </HeFlex>
+                        </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-10" v-else>
+                    <IodAlert as="placeholder" class="h-40" v-else>
                         <span>Es wurden noch keine Termine angelegt</span>
                     </IodAlert>
-                </Flex>
+                </HeFlex>
 
 
 
-                <Flex :gap="1">
-                    <Flex horizontal>
+                <HeFlex :gap="1">
+                    <HeFlex horizontal>
                         <h5 class="m-0 font-medium">Links</h5>
                         <HeSpacer />
                         <IodButton type="button" label="Neuer Link" size="s" variant="contained" @click="addLink()"/>
-                    </Flex>
+                    </HeFlex>
 
                     <div class="entity-grid" v-if="form.links.length">
-                        <Card class="entity-card" v-for="link, i in form.links">
-                            <Flex class="entity-card-head" padding="1rem">
+                        <HeCard class="entity-card" v-for="link, i in form.links">
+                            <HeFlex class="entity-card-head" padding="1rem">
                                 <IodIcon icon="link" />
                                 <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removeLink(i)"/>
-                            </Flex>
-                            <Flex padding="1rem" gap="1rem">
+                            </HeFlex>
+                            <HeFlex padding="1rem" gap="1rem">
                                 <IodInput v-model="link.name" label="Label" />
                                 <IodInput v-model="link.url" label="URL" />
-                            </Flex>
-                        </Card>
+                            </HeFlex>
+                        </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-10" v-else>
+                    <IodAlert as="placeholder" class="h-40" v-else>
                         <span>Es wurden noch keine Links angelegt</span>
                     </IodAlert>
-                </Flex>
+                </HeFlex>
             </HeFlex>
-        </Card>
+        </HeCard>
     </NuxtLayout>
 </template>
 

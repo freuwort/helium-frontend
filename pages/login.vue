@@ -1,30 +1,30 @@
 <template>
     <NuxtLayout name="guest-form" pageTitle="Anmelden">
-        <div class="form-limiter">
-            <Card is="form" @submit.prevent="submit">
-                <Flex :gap="2" :padding="2">
+        <HeLimiter size="form">
+            <HeCard is="form" @submit.prevent="submit">
+                <HeFlex :gap="2" :padding="2">
                     <ErrorAlert :errors="form.errors"/>
-                    <h1 class="weight-medium align-center margin-0">Anmelden</h1>
+                    <h1 class="font-medium text-center m-0">Anmelden</h1>
     
-                    <Flex :gap="1">
+                    <HeFlex :gap="1">
                         <IodInput type="text" label="Email oder Nutzername" v-model="form.email"/>
                         <IodInput type="password" label="Passwort" v-model="form.password"/>
-                    </Flex>
-                    <Flex :gap="1">
+                    </HeFlex>
+                    <HeFlex :gap="1">
                         <IodToggle type="checkbox" label="Angemeldet bleiben" v-model="form.remember"/>
                         <IodButton label="Anmelden" size="l" :loading="form.processing"/>
-                    </Flex>
+                    </HeFlex>
     
-                    <hr class="margin-0">
+                    <HeDivider />
     
-                    <Flex :gap="1" horizontal>
+                    <HeFlex :gap="1" horizontal>
                         <NuxtLink to="/forgot-password">Passwort vergessen?</NuxtLink>
-                        <Spacer />
+                        <HeSpacer />
                         <NuxtLink to="/register">Neues Konto erstellen</NuxtLink>
-                    </Flex>
-                </Flex>
-            </Card>
-        </div>
+                    </HeFlex>
+                </HeFlex>
+            </HeCard>
+        </HeLimiter>
     </NuxtLayout>
 </template>
 

@@ -1,17 +1,17 @@
 <template>
     <Transition name="slide">
         <IodAlert :title="title" color-preset="error" v-show="errors.length">
-            <Flex class="error" v-for="error in errors">
-                <Flex horizontal>
+            <HeFlex class="error" v-for="error in errors">
+                <HeFlex horizontal>
                     <span class="flex-1">{{ error?.data?.message || error?.message }}</span>
-                </Flex>
+                </HeFlex>
                 
                 <ul v-if="error.statusCode === 422 && error?.data?.errors?.length > 1" class="m-0 pl-4">
                     <li v-for="hint in error?.data?.errors">
                         <small >{{ hint.join(' ') }}</small>
                     </li>
                 </ul>
-            </Flex>
+            </HeFlex>
         </IodAlert>
     </Transition>
 </template>

@@ -19,7 +19,7 @@
     <SettingsSpacer />
     <SettingsTitle>Sicherheit</SettingsTitle>
     <SettingsRow title="Passwort ändern" description="Ändern Sie Ihr Passwort">
-        <IodButton class="flex-1" label="Passwort ändern" @click="changePasswordPopup?.open()"/>
+        <IodButton class="flex-1" label="Passwort ändern" @click="changePasswordPopup.open()"/>
     </SettingsRow>
     
     
@@ -32,7 +32,7 @@
             <IodButton v-else class="flex-1" variant="contained" label="Als Standard festlegen" v-tooltip="'Als Standard-Methode festlegen'" @click="setDefaultTwoFactorMethod('totp')"/>
             <IodIconButton variant="contained" icon="close" v-tooltip="'Diese Zwei Faktor Methode löschen'" color-preset="error" @click="destroyTwoFactorMethod('totp')"/>
         </template>
-        <IodButton v-else class="flex-1" variant="contained" icon-left="screen_lock_portrait" label="App einrichten" @click="setup2faAppPopup?.open()"/>
+        <IodButton v-else class="flex-1" variant="contained" icon-left="screen_lock_portrait" label="App einrichten" @click="setup2faAppPopup.open()"/>
     </SettingsRow>
 
     <!-- <SettingsRow title="SMS Code" description="Zweiten Faktor via SMS Code einrichten">
@@ -54,119 +54,123 @@
     </SettingsRow> -->
 
     <SettingsRow title="Backup Codes" description="Alternative Backup Codes zum Einloggen">
-        <IodButton class="flex-1" variant="contained" icon-left="key" label="Backup-Codes Anzeigen" @click="backupCodesPopup?.open()"/>
+        <IodButton class="flex-1" variant="contained" icon-left="key" label="Backup-Codes Anzeigen" @click="backupCodesPopup.open()"/>
     </SettingsRow>
 
     
     <SettingsSpacer />
     <SettingsTitle>Konto</SettingsTitle>
     <SettingsRow title="Konto löschen" description="Wenn Sie Ihr Konto löschen, werden all Ihre Daten gelöscht">
-        <IodButton class="flex-1" label="Konto löschen" color-preset="error" @click="deleteAccountPopup?.open()"/>
+        <IodButton class="flex-1" label="Konto löschen" color-preset="error" @click="deleteAccountPopup.open()"/>
     </SettingsRow>
 
 
 
     <IodPopup ref="setup2faAppPopup" title="Auth-App einrichten" max-width="500px" @open="setup2faApp">
-        <form class="flex vertical gap-1 padding-2" @submit.prevent="enable2faApp">
-            <Flex class="background-soft radius-m">
-                <img class="h-12 aspect-ratio-1-1 margin-inline-auto margin-block-0-5 radius-s background" :src="setup2faAppForm.qr" alt="QR-Code"/>
-                <hr class="margin-0">
+        <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="enable2faApp">
+            <HeFlex class="bg-background-soft rounded-lg">
+                <img class="h-48 aspect-square mx-auto my-2 rounded bg-background" :src="setup2faAppForm.qr" alt="QR-Code"/>
+                <HeDivider />
                 <IodInput type="text" label="Geheimnis" readonly :modelValue="setup2faAppForm.secret">
                     <template #right>
                         <IodIconButton type="button" icon="content_copy" variant="text" size="s" v-tooltip="'Geheimnis kopieren'"/>
                     </template>
                 </IodInput>
-            </Flex>
+            </HeFlex>
             
-            <Flex :gap=".5" padding="1.75rem 0 1.5rem">
-                <p class="margin-0"><code>[1]</code> Scannen Sie den <b>QR-Code</b> mit Ihrer <b>Authenticator-App</b></p>
-                <p class="margin-0"><code>[2]</code> Geben Sie den <b>6-stelligen Code</b> aus Ihrer App ein.</p>
-                <p class="margin-0"><code>[3]</code> Klicken Sie auf <b>"Code Bestätigen"</b></p>
-            </Flex>
+            <HeFlex gap=".5rem" padding=".75rem 0 .5rem">
+                <p class="m-0"><code>[1]</code> Scannen Sie den <b>QR-Code</b> mit Ihrer <b>Authenticator-App</b></p>
+                <p class="m-0"><code>[2]</code> Geben Sie den <b>6-stelligen Code</b> aus Ihrer App ein.</p>
+                <p class="m-0"><code>[3]</code> Klicken Sie auf <b>"Code Bestätigen"</b></p>
+            </HeFlex>
             
-            <Flex :gap="1">
+            <HeFlex gap="1rem">
                 <ErrorAlert :errors="setup2faAppForm.errors"/>
                 <IodOtpInput :length="6" :dividers="[3]" v-model="setup2faAppForm.code" @complete="enable2faApp"/>
                 <IodButton label="Code Bestätigen" size="l"/>
-            </Flex>
-        </form>
+            </HeFlex>
+        </HeFlex>
     </IodPopup>
 
     <IodPopup ref="setup2faSmsPopup" title="SMS-Code einrichten" max-width="500px" @open="setup2faSmsForm.reset">
-        <Flex :gap="1" :padding="2">
-            <IodInput type="text" label="Handynummer" :modelValue="setup2faSmsForm.secret"/>
-            <IodButton type="button" label="SMS-Code senden" variant="contained"/>
+        <HeFlex gap="2.5rem" padding="1.5rem">
+            <HeFlex gap="1rem">
+                <IodInput type="text" label="Handynummer" :modelValue="setup2faSmsForm.secret"/>
+                <IodButton type="button" label="SMS-Code senden" variant="contained"/>
+            </HeFlex>
             
-            <Flex :gap=".5" padding="1.75rem 0 1.5rem">
-                <p class="margin-0"><code>[1]</code> Geben Sie Ihre <b>Handynummer</b> ein.</p>
-                <p class="margin-0"><code>[2]</code> Geben Sie den <b>6-stelligen Code</b> aus der SMS ein.</p>
-                <p class="margin-0"><code>[3]</code> Klicken Sie auf <b>"Code Bestätigen"</b></p>
-            </Flex>
+            <HeFlex gap=".5rem" padding=".75rem 0 .5rem">
+                <p class="m-0"><code>[1]</code> Geben Sie Ihre <b>Handynummer</b> ein.</p>
+                <p class="m-0"><code>[2]</code> Geben Sie den <b>6-stelligen Code</b> aus der SMS ein.</p>
+                <p class="m-0"><code>[3]</code> Klicken Sie auf <b>"Code Bestätigen"</b></p>
+            </HeFlex>
 
-            <Flex is="form" :gap="1" @submit.prevent="enable2faSms">
+            <HeFlex is="form" gap="1rem" @submit.prevent="enable2faSms">
                 <ErrorAlert :errors="setup2faSmsForm.errors"/>
                 <IodOtpInput :length="6" :dividers="[3]" v-model="setup2faSmsForm.code" @complete="enable2faSms"/>
                 <IodButton label="Code Bestätigen" size="l"/>
-            </Flex>
-        </Flex>
+            </HeFlex>
+        </HeFlex>
     </IodPopup>
 
     <IodPopup ref="backupCodesPopup" title="Ihre Backup Codes" max-width="500px" @open="fetchBackupCodes">
-        <Flex :gap="1" :padding="2">
+        <HeFlex gap="2.5rem" padding="1.5rem">
             <ErrorAlert :errors="backupCodesForm.errors"/>
-            <p class="margin-0">
+            <p class="m-0">
                 Mit diesen Backup-Codes können Sie sich in Ihren Account einloggen, wenn andere 2FA-Methoden nicht funktionieren.<br>
                 <b>Bitte legen Sie diese an einem sicheren Ort ab.</b>
             </p>
-            <Flex class="background-soft radius-m">
-                <code class="flex h-center wrap gap-1 background-soft padding-1 padding-block-2 radius-m">
+            <HeFlex class="bg-background-soft rounded-lg">
+                <code class="flex justify-center flex-wrap gap-4 bg-background-soft p-4 py-8 rounded-lg">
                     <span v-for="code in backupCodesForm.codes" :key="code">{{ code }}<br></span>
                 </code>
-                <Flex :padding="1" class="border-top">
+                <HeFlex :padding="1" class="border-t">
                     <IodButton label="Neue Codes generieren" variant="contained" :loading="backupCodesForm.processing" @click="regenerateBackupCodes"/>
-                </Flex>
-            </Flex>
-        </Flex>
+                </HeFlex>
+            </HeFlex>
+        </HeFlex>
     </IodPopup>
 
     <IodPopup ref="tfaSuccessPopup" title="Einrichtung erfolgreich!" max-width="500px">
-        <Flex :gap="1" :padding="2">
-            <p class="margin-0">
+        <HeFlex gap="2.5rem" padding="1.5rem">
+            <p class="m-0">
                 Die Einrichtung der Zwei Faktor Authentifizierung war erfolgreich!<br>
                 <b>Sie sollten nun Ihre Backup-Codes speichern und sicher aufbewahren.</b>
             </p>
-            <Flex horizontal :gap="1">
-                <IodButton class="flex-1" variant="contained" label="Schließen" @click="tfaSuccessPopup?.close()"/>
-                <IodButton class="flex-1" variant="filled" label="Backup-Codes Anzeigen" @click="tfaSuccessPopup?.close(); backupCodesPopup?.open()"/>
-            </Flex>
-        </Flex>
+            <HeFlex horizontal gap="1rem">
+                <IodButton class="flex-1" variant="contained" label="Schließen" @click="tfaSuccessPopup.close()"/>
+                <IodButton class="flex-1" variant="filled" label="Codes Anzeigen" @click="tfaSuccessPopup.close(); backupCodesPopup.open()"/>
+            </HeFlex>
+        </HeFlex>
     </IodPopup>
 
 
     <IodPopup ref="changePasswordPopup" title="Passwort ändern" max-width="500px" @open="changePasswordForm.reset">
-        <Flex is="form" :gap="2" :padding="2" @submit.prevent="changePassword">
+        <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="changePassword">
             <ErrorAlert :errors="changePasswordForm.errors"/>
-            <Flex :gap="1">
+            <HeFlex gap="1rem">
                 <IodInput v-model="changePasswordForm.password" label="Aktuelles Passwort" type="password"/>
                 <IodInput v-model="changePasswordForm.new_password" show-score :score-function="useZxcvbn()" label="Neues Passwort" type="password"/>
-            </Flex>
+            </HeFlex>
             <IodButton label="Passwort ändern" size="l" :loading="changePasswordForm.processing"/>
-        </Flex>
+        </HeFlex>
     </IodPopup>
 
     <IodPopup ref="deleteAccountPopup" title="Konto löschen" max-width="500px" @open="deleteAccountForm.reset">
-        <Flex is="form" :gap="2" :padding="2" @submit.prevent="deleteAccount">
-            <Flex :gap="1">
+        <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="deleteAccount">
+            <HeFlex gap="1rem">
                 <ErrorAlert :errors="deleteAccountForm.errors"/>
                 <IodAlert>
                     <span>Sie sind dabei Ihr Konto zu löschen. Wenn Sie Ihr Konto löschen, werden ebenfalls all Ihre Daten gelöscht.</span>
-                    <b class="margin-bottom-1">Dies kann nicht rückgängig gemacht werden!</b>
+                    <b class="mb-1">Dies kann nicht rückgängig gemacht werden!</b>
                     <span>Bestätigen Sie die Kontolöschung, indem Sie Ihr aktuelles Passwort eingeben.</span>
                 </IodAlert>
-            </Flex>
-            <IodInput v-model="deleteAccountForm.password" label="Passwort" type="password"/>
-            <IodButton label="Konto entgültig löschen" size="l" color-preset="error" :loading="deleteAccountForm.processing"/>
-        </Flex>
+            </HeFlex>
+            <HeFlex gap="1rem">
+                <IodInput v-model="deleteAccountForm.password" label="Passwort" type="password"/>
+                <IodButton label="Konto entgültig löschen" size="l" color-preset="error" :loading="deleteAccountForm.processing"/>
+            </HeFlex>
+        </HeFlex>
     </IodPopup>
 </template>
 

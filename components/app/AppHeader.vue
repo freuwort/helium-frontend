@@ -1,6 +1,6 @@
 <template>
     <header>
-        <Flex horizontal class="main-bar">
+        <HeFlex horizontal class="main-bar">
             <AppHeaderItem :is="NuxtLink" to="/d">
                 <img class="h-8" src="/images/app/logo.svg" alt="logo" />
             </AppHeaderItem>
@@ -131,11 +131,11 @@
                         <ContextMenuItem to="/d/profile" show-chevron icon="person">Profil</ContextMenuItem>
                         <ContextMenuItem to="/d/settings/personal" show-chevron icon="settings">Konto</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem is="button" show-chevron color="var(--color-red)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
+                        <ContextMenuItem is="button" show-chevron color="var(--color-error)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
-        </Flex>
+        </HeFlex>
     </header>
 </template>
 

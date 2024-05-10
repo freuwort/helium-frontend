@@ -1,91 +1,45 @@
 <template>
-    <form class="display-contents" @submit.prevent="save()">
-        <h5 class="margin-0 weight-medium">Firmen Einstellungen</h5>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Firmen Anzeigename</span>
-                <small>Der Name der Firma, welcher in Helium angezeigt wird</small>
-            </Flex>
-            <IodInput label="Anzeigename" v-model="form.company_name" class="w-18"/>
-        </Flex>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Eingetragener Firmenname</span>
-                <small>Der offizielle Name der Firma</small>
-            </Flex>
-            <IodInput label="Name" v-model="form.company_legalname" class="w-18" placeholder="Unternehmen GmbH"/>
-        </Flex>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Slogan</span>
-                <small>Ein kurzer Slogan, welcher in Helium angezeigt wird</small>
-            </Flex>
-            <IodInput label="Slogan" v-model="form.company_slogan" class="w-18"/>
-        </Flex>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Logo</span>
-                <small>Das Firmen Logo, welches in Helium angezeigt wird</small>
-            </Flex>
-            <IodInput label="Logo" v-model="form.company_logo" class="w-18" placeholder="https://example.com/logo.png"/>
-        </Flex>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Favicon</span>
-                <small>Das Favicon, welches in Helium angezeigt wird</small>
-            </Flex>
-            <IodInput label="Favicon" v-model="form.company_favicon" class="w-18" placeholder="https://example.com/favicon.ico"/>
-        </Flex>
+    <form class="contents" @submit.prevent="save()">
+        <SettingsTitle>Firmen Einstellungen</SettingsTitle>
+        <SettingsRow title="Firmen Anzeigename" description="Der Name der Firma, welcher in Helium angezeigt wird">
+            <IodInput class="flex-1" label="Anzeigename" v-model="form.company_name" />
+        </SettingsRow>
+        <SettingsRow title="Eingetragener Firmenname" description="Der offizielle Name der Firma">
+            <IodInput class="flex-1" label="Name" v-model="form.company_legalname" placeholder="Unternehmen GmbH"/>
+        </SettingsRow>
+        <SettingsRow title="Slogan" description="Ein kurzer Slogan, welcher in Helium angezeigt wird">
+            <IodInput class="flex-1" label="Slogan" v-model="form.company_slogan" />
+        </SettingsRow>
+        <SettingsRow title="Logo" description="Das Firmen Logo, welches in Helium angezeigt wird">
+            <IodInput class="flex-1" label="Logo" v-model="form.company_logo" placeholder="https://example.com/logo.png"/>
+        </SettingsRow>
+        <SettingsRow title="Favicon" description="Das Favicon, welches in Helium angezeigt wird">
+            <IodInput class="flex-1" label="Favicon" v-model="form.company_favicon" placeholder="https://example.com/favicon.ico"/>
+        </SettingsRow>
     
-        <div class="h-1"></div>
-    
-        <h5 class="margin-0 weight-medium">Standard Einheiten</h5>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Währung</span>
-                <small>Wählen Sie Ihre standard Währung</small>
-            </Flex>
-            <IodSelect class="w-18" label="Währung" v-model="form.default_currency" :options="options_currency"/>
-        </Flex>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Länge</span>
-                <small>Wählen Sie Ihre standard Längeneinheit</small>
-            </Flex>
-            <IodSelect class="w-18" label="Länge" v-model="form.default_unit_length" :options="options_unit_length"/>
-        </Flex>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Gewicht</span>
-                <small>Wählen Sie Ihre standard Gewichtseinheit</small>
-            </Flex>
-            <IodSelect class="w-18" label="Gewicht" v-model="form.default_unit_weight" :options="options_unit_weight"/>
-        </Flex>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Volumen</span>
-                <small>Wählen Sie Ihre standard Volumeneinheit</small>
-            </Flex>
-            <IodSelect class="w-18" label="Volumen" v-model="form.default_unit_volume" :options="options_unit_volume"/>
-        </Flex>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Temperatur</span>
-                <small>Wählen Sie Ihre standard Temperatureinheit</small>
-            </Flex>
-            <IodSelect class="w-18" label="Temperatur" v-model="form.default_unit_temperature" :options="options_unit_temperature"/>
-        </Flex>
-        <Flex horizontal>
-            <Flex class="flex-1">
-                <span class="font-heading color-text weight-medium">Geschwindigkeit</span>
-                <small>Wählen Sie Ihre standard Geschwindigkeitseinheit</small>
-            </Flex>
-            <IodSelect class="w-18" label="Geschwindigkeit" v-model="form.default_unit_speed" :options="options_unit_speed"/>
-        </Flex>
-
-        <div class="h-1"></div>
-
-        <IodButton class="w-18 margin-left-auto " label="Speichern" :loading="form.processing"/>
+        <SettingsSpacer />
+        <SettingsTitle>Standard Einstellungen</SettingsTitle>
+        <SettingsRow title="Währung" description="Wählen Sie Ihre standard Währung">
+            <IodSelect class="flex-1" label="Währung" v-model="form.default_currency" :options="options_currency"/>
+        </SettingsRow>
+        <SettingsRow title="Länge" description="Wählen Sie Ihre standard Längeneinheit">
+            <IodSelect class="flex-1" label="Länge" v-model="form.default_unit_length" :options="options_unit_length"/>
+        </SettingsRow>
+        <SettingsRow title="Gewicht" description="Wählen Sie Ihre standard Gewichtseinheit">
+            <IodSelect class="flex-1" label="Gewicht" v-model="form.default_unit_weight" :options="options_unit_weight"/>
+        </SettingsRow>
+        <SettingsRow title="Volumen" description="Wählen Sie Ihre standard Volumeneinheit">
+            <IodSelect class="flex-1" label="Volumen" v-model="form.default_unit_volume" :options="options_unit_volume"/>
+        </SettingsRow>
+        <SettingsRow title="Temperatur" description="Wählen Sie Ihre standard Temperatureinheit">
+            <IodSelect class="flex-1" label="Temperatur" v-model="form.default_unit_temperature" :options="options_unit_temperature"/>
+        </SettingsRow>
+        <SettingsRow title="Geschwindigkeit" description="Wählen Sie Ihre standard Geschwindigkeitseinheit">
+            <IodSelect class="flex-1" label="Geschwindigkeit" v-model="form.default_unit_speed" :options="options_unit_speed"/>
+        </SettingsRow>
+        <SettingsRow>
+            <IodButton class="flex-1" label="Speichern" :loading="form.processing"/>
+        </SettingsRow>
     </form>
 </template>
 

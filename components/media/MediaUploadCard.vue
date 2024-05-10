@@ -1,6 +1,6 @@
 <template>
     <Transition name="slide">
-        <Card class="upload-card" key="card" v-show="uploadManager.status.total > 0">
+        <HeCard class="upload-card" key="card" v-show="uploadManager.status.total > 0">
             <TransitionGroup name="fade">
                 <div class="header" key="header">
                     <span class="flex-1">{{ uploadManager.statusText || 'Keine Uploads' }} </span>
@@ -17,7 +17,7 @@
                     </TransitionGroup>
                 </div>
             </TransitionGroup>
-        </Card>
+        </HeCard>
     </Transition>
 </template>
 
@@ -126,20 +126,20 @@
                 mask-image: linear-gradient(to right, #00000066, #000000ff)
 
             &[data-status="uploading"]
-                color: var(--color-blue)
+                color: var(--color-info)
                 .progress
-                    background: var(--color-blue)
+                    background: var(--color-info)
                     opacity: .2
 
             &[data-status="completed"]
-                color: var(--color-green)
+                color: var(--color-success)
                 .progress
                     opacity: 0
 
             &[data-status="cancelled"]
-                color: var(--color-red)
+                color: var(--color-error)
                 .progress
-                    background: var(--color-red)
+                    background: var(--color-error)
                     opacity: .2
 
             .iod-button

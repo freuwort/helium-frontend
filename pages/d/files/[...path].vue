@@ -23,7 +23,7 @@
                 <HeFlex class="border-t" :padding="1" :gap=".5" horizontal>
                     <IodIconButton type="button" variant="text" corner="pill" icon="scan" @click="discover" background="var(--color-text-soft)" v-tooltip="'Verzeichnisse scannen'"/>
                     <IodIconButton type="button" variant="text" corner="pill" icon="refresh" @click="fetchItems" background="var(--color-text-soft)" v-tooltip="'Aktualisieren'"/>
-                    <Spacer />
+                    <HeSpacer />
                 </HeFlex>
             </HeFlex>
         </template>
@@ -31,7 +31,7 @@
         <HeFlex gap="1rem">
             <div class="selection-bar">
                 <MediaBreadcrumbs :path="path" root-path="/d/files" @drop="onDrop($event.event, $event.path)"/>
-                <Spacer />
+                <HeSpacer />
                 <IodIconButton type="button" corner="pill" variant="text" size="s" icon="delete" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
                 <IodLoader type="bar" v-show="loading"/>
             </div>
