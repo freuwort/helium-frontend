@@ -5,66 +5,46 @@
 
             <HeFlex padding=".5rem" gap=".5rem" class="border rounded-xl">
                 <IodButtonGroup>
-                    <IodButton type="button" background="var(--color-text-soft)" label="Vererbt" :variant="form.access === null ? 'filled' : 'contained'" @click="form.access = null"/>
-                    <IodButton type="button" background="var(--color-text-soft)" label="Öffentlich" :variant="form.access === 'public' ? 'filled' : 'contained'" @click="form.access = 'public'"/>
-                    <IodButton type="button" background="var(--color-text-soft)" label="Privat" :variant="form.access === 'private' ? 'filled' : 'contained'" @click="form.access = 'private'"/>
+                    <IodButton type="button" background="var(--color-text-soft)" label="Wie Überordner" :variant="form.access === null ? 'filled' : 'contained'" @click="form.access = null"/>
+                    <IodButton type="button" background="var(--color-text-soft)" label="Angebasst" :variant="form.access === 'custom' ? 'filled' : 'contained'" @click="form.access = 'custom'"/>
                 </IodButtonGroup>
                 <IodAlert as="placeholder" class="min-h-12">
                     <small v-show="form.access === null">Alle Freigaben des überliegenden Ordners werden übernommen</small>
-                    <small v-show="form.access === 'public'"><b>Alle Nutzer</b> mit dem Link können die Medien ansehen</small>
-                    <small v-show="form.access === 'private'">Nur <b>ausgewählte Nutzer</b> oder <b>Gruppen</b> können die Medien ansehen</small>
+                    <small v-show="form.access === 'custom'">Fragaben können individuell angepasst werden</small>
                 </IodAlert>
             </HeFlex>
             
-            <HeFlex padding=".5rem" gap=".5rem" class="border rounded-xl">
-                <VDropdown :shown="!!users.search.length && !!users.results.length" :triggers="[]" :auto-hide="false">
-                    <IodInput type="search" placeholder="Nutzer hinzufügen" v-model="users.search" @update:modelValue="searchUsers()">
+            <HeFlex padding=".5rem" gap=".5rem" class="border rounded-xl" v-show="form.access === 'custom'">
+                <VDropdown :shown="!!searchForm.search.length && !!searchForm.results.length" :triggers="[]" :auto-hide="false">
+                    <IodInput type="search" placeholder="Nutzer / Rolle suchen" v-model="searchForm.search" @update:modelValue="search()">
                         <template #right>
-                            <select v-model="userRole">
-                                <option value="read">{{ localizePermission('read') }}</option>
-                                <option value="write">{{ localizePermission('write') }}</option>
-                            </select>
+                            <IodButtonGroup>
+                                <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="visibility" v-tooltip="localizePermission('read')" :variant="searchForm.permission === 'read' ? 'filled' : 'contained'" @click="searchForm.permission = 'read'"/>
+                                <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="edit" v-tooltip="localizePermission('write')" :variant="searchForm.permission === 'write' ? 'filled' : 'contained'" @click="searchForm.permission = 'write'"/>
+                            </IodButtonGroup>
                         </template>
                     </IodInput>
 
                     <template #popper>
                         <HeFlex align-y="flex-start" padding="1rem 0" class="min-w-80 max-h-80 small-scrollbar">
-                            <ProfileChip class="h-12 p-2" corner="none" v-for="user in users.results" :title="user.name" :image="user.profile_image" @click="addUser(user)"/>
+                            <ProfileChip class="h-12 !p-2 flex-none" corner="none" v-for="result in searchForm.results" :title="result.title" :subtitle="localizeModelType(result.model_type)" :image="result.image" :icon="result.icon" :color="result.color" @click="addShare(result)"/>
                         </HeFlex>
                     </template>
                 </VDropdown>
 
-                <ProfileChip is="div" style="padding: .5rem; height: 3rem" v-for="user in form.users" :title="user.name" :subtitle="localizePermission(user.role)" :image="user.profile_image">
+                <ProfileChip is="div" class="h-12 !p-2 flex-none" v-for="share in form.shares" :title="share.title" :subtitle="localizeModelType(share.model_type) +' » ' + localizePermission(share.permission)" :image="share.image" :icon="share.icon" :color="share.color">
                     <HeFlex horizontal gap=".5rem">
-                        <template v-if="user.role !== 'owner'">
-                            <IodButtonGroup>
-                                <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="visibility" v-tooltip="localizePermission('read')" :variant="user.role === 'read' ? 'filled' : 'contained'" @click="user.role = 'read'"/>
-                                <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="edit" v-tooltip="localizePermission('write')" :variant="user.role === 'write' ? 'filled' : 'contained'" @click="user.role = 'write'"/>
-                            </IodButtonGroup>
-                            <IodIconButton type="button" size="s" icon="close" v-tooltip="'Entfernen'" variant="contained" color-preset="error" @click.stop="removeUser(user)"/>
-                        </template>
+                        <IodButtonGroup>
+                            <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="visibility" v-tooltip="localizePermission('read')" :variant="share.permission === 'read' ? 'filled' : 'contained'" @click="share.permission = 'read'"/>
+                            <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="edit" v-tooltip="localizePermission('write')" :variant="share.permission === 'write' ? 'filled' : 'contained'" @click="share.permission = 'write'"/>
+                        </IodButtonGroup>
+                        <IodIconButton type="button" size="s" icon="close" v-tooltip="'Entfernen'" variant="contained" color-preset="error" @click.stop="removeShare(share)"/>
                     </HeFlex>
                 </ProfileChip>
 
-                <IodAlert as="placeholder" class="h-12" v-if="!form.users.length">Keine Nutzer vorhanden</IodAlert>
-            </HeFlex>
-            
-            <HeFlex padding=".5rem" gap=".5rem" class="border rounded-xl">
-                <VDropdown :shown="!!roles.search.length && !!roles.results.length" :triggers="[]" :auto-hide="false">
-                    <IodInput type="search" placeholder="Rollen hinzufügen" v-model="roles.search" @update:modelValue="searchRoles()" />
-
-                    <template #popper>
-                        <HeFlex y-align="flex-start" padding="1rem 0" class="min-w-80 max-h-80 small-scrollbar">
-                            <ProfileChip class="h-12 p-2" corner="none" v-for="role in roles.results" :title="role.name" :icon="role.icon" :color="role.color" @click="addRole(role)"/>
-                        </HeFlex>
-                    </template>
-                </VDropdown>
-
-                <ProfileChip is="div" style="padding: .5rem; height: 3rem" v-for="role in form.roles" :title="role.name" :subtitle="localizePermission('read')" :icon="role.icon" :color="role.color">
-                    <IodIconButton type="button" size="s" icon="close" v-tooltip="'Entfernen'" variant="contained" color-preset="error" @click.stop="removeRole(role)"/>
-                </ProfileChip>
-
-                <IodAlert as="placeholder" class="h-12" v-if="!form.roles.length">Keine Rollen vorhanden</IodAlert>
+                <IodAlert as="placeholder" class="h-12" v-if="!form.shares.length">
+                    <small>Keine Freigaben vorhanden</small>
+                </IodAlert>
             </HeFlex>
             
             <IodButton type="submit" size="l" variant="filled" label="Freigabe übernehmen" :loading="form.processing" />
@@ -79,57 +59,102 @@
 
     const popup = ref()
     const form = useForm({
-        users: [],
-        roles: [],
+        shares: [],
         access: null,
         path: '',
     })
 
     function open(item: MediaItem)
     {
-        form.users = item.users.map(user => ({
-            id: user.id,
-            profile_image: user.profile_image,
-            name: user.name,
-            username: user.username,
-            role: user.pivot?.role ?? null
-        }))
-        form.roles = item.roles
-        form.access = item.access
-        form.path = item.src_path
+        form
+        .defaults({
+            shares: item.shares.map(share => ({
+                id: share.id,
+                model_id: share.model_id,
+                model_type: share.model_type,
+                image: share.model?.profile_image || null,
+                icon: share.model?.icon || null,
+                color: share.model?.color || null,
+                title: share.model?.name || null,
+                subtitle: share.permission || 'read',
+            })),
+            access: item.access || null,
+            path: item.src_path,
+        })
+        .reset()
 
-        users.search = ''
-        users.results = []
-        userRole.value = 'read'
-
-        roles.search = ''
-        roles.results = []
+        searchForm.reset()
 
         popup.value.open()
     }
 
     function share() {
-        form
-        .transform(data => {
-            let users = data.users.reduce((acc: any, user: any) => ({ ...acc, [user.id]: { role: user.role } }), {})
-            let roles = data.roles.map((role: any) => role.id)
-            return {...data, users, roles}
-        })
-        .patch('/api/media/share', {
+        form.patch('/api/media/share', {
             onSuccess() { emits('saved') }
         })
     }
 
 
 
-    const users = useForm({
+    const searchForm = useForm({
         search: '',
+        permission: 'read',
         results: [],
     })
-    const userRole = ref('read')
+
+    async function search() {
+        let results = []
+
+        let userResponse = await useAxios().get(apiRoute('/api/users/basic', {
+            filter: { search: searchForm.search },
+            size: 10,
+        }))
+        
+        results.push(...userResponse.data.data.map((user: any) => ({
+            model_id: user.id,
+            model_type: 'user',
+            title: user.name,
+            image: user.profile_image,
+            icon: null,
+            color: null,
+        })))
+        
+        let roleResponse = await useAxios().get(apiRoute('/api/roles/basic', {
+            filter: { search: searchForm.search },
+            size: 10,
+        }))
+
+        results.push(...roleResponse.data.data.map((role: any) => ({
+            model_id: role.id,
+            model_type: 'role',
+            title: role.name,
+            image: null,
+            icon: role.icon,
+            color: role.color,
+        })))
+
+        searchForm.results = results
+    }
+
+    function addShare(share: any) {
+        form.shares.push({
+            ...share,
+            id: null,
+            permission: searchForm.permission
+        })
+
+        searchForm.reset()
+    }
+
+    function removeShare(share: any) {
+        form.shares = form.shares.filter((e: any) => e.model_id !== share.model_id || e.model_type !== share.model_type)
+    }
+
+
 
     function localizePermission(role: string) {
         switch (role) {
+            case null : return 'Vererbt'
             case 'read': return 'Kann ansehen'
             case 'write': return 'Kann bearbeiten'
             case 'owner': return 'Eigentümer'
@@ -137,59 +162,12 @@
         }
     }
 
-    function searchUsers() {
-        users.get(apiRoute('/api/users/basic', {
-            filter: {
-                search: users.search
-            }
-        }), {
-            onSuccess(response: any) {
-                users.results = response.value.data
-            }
-        })
-    }
-
-    function addUser(user: any) {
-        form.users.push({
-            id: user.id,
-            profile_image: user.profile_image,
-            name: user.name,
-            username: user.username,
-            role: userRole.value
-        })
-
-        users.search = ''
-    }
-
-    function removeUser(user: any) {
-        form.users = form.users.filter((u: any) => u.id !== user.id)
-    }
-
-
-    const roles = useForm({
-        search: '',
-        results: [],
-    })
-
-    function searchRoles() {
-        roles.get(apiRoute('/api/roles/basic', {
-            filter: {
-                search: roles.search
-            }
-        }), {
-            onSuccess(response: any) {
-                roles.results = response.value.data
-            }
-        })
-    }
-
-    function addRole(role: any) {
-        form.roles.push(role)
-        roles.search = ''
-    }
-
-    function removeRole(role: any) {
-        form.roles = form.roles.filter((r: any) => r.id !== role.id)
+    function localizeModelType(type: string) {
+        switch (type) {
+            case 'user': return 'Nutzer'
+            case 'role': return 'Rolle'
+            default: return type
+        }
     }
 
 

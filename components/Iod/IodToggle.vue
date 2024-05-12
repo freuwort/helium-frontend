@@ -78,7 +78,6 @@
 
     const props = defineProps({
         modelValue: {
-            type: [Boolean, String, Number],
             default: null,
         },
         type: {
@@ -110,7 +109,7 @@
             default: '',
         },
         offValue: {
-            type: [Boolean, String, Number],
+            type: [Boolean, String, Number, null] as PropType<boolean|string|number|null>,
             default: false,
         },
         label: {
@@ -118,7 +117,7 @@
             default: '',
         },
         value: {
-            type: [Boolean, String, Number],
+            type: [Boolean, String, Number, null] as PropType<boolean|string|number|null>,
             default: true,
         },
         border: {

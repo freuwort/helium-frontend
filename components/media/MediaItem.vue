@@ -42,6 +42,7 @@
 
 <script lang="ts" setup>
     import type { MediaItem } from '~/types/media'
+    import type { BasicUser } from '~/types/user'
 
 
 
@@ -95,9 +96,9 @@
         return false
     })
 
-    const profiles = computed(() => props.item.users.map((user) => ({
-        label: user?.name || null,
-        image: user?.profile_image || null,
+    const profiles = computed(() => props.item.shares.map((share) => ({
+        label: share?.model?.name || null,
+        image: share?.model?.profile_image || null,
     })))
 
 

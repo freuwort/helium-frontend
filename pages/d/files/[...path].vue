@@ -94,7 +94,7 @@
 
 
     // START: Fetch
-    const path = computed(() => (route.params.path as string[] || ['public']).filter(e => e).join('/'))
+    const path = computed(() => (route.params.path as string[] || ['domain']).filter(e => e).join('/'))
     const items = ref<MediaItem[]>([])
     const loading = ref(false)
 
