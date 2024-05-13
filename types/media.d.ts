@@ -10,9 +10,11 @@ export type MediaItem = {
     cdn_path: string | null
     mime_type: string | null
     name: string
-    owner: BasicUser | null
-    access: string | null
-    shares: ModelHasMedia[]
+    owner_id: number | null
+    owner_type: string | null
+    owner: BasicUser | BasicRole | null
+    inherit_access: boolean
+    access: ModelAccess[]
     meta: {
         size?: number
         extension?: string
@@ -21,12 +23,11 @@ export type MediaItem = {
     updated_at: string | null
 }
 
-export type ModelHasMedia = {
-    id: number
+export type ModelAccess = {
     media_id: number
     model_id: number
     model_type: string
-    model: BasicUser | BasicRole | any
+    model: BasicUser | BasicRole | any | null
     type: string
     permission: string
 }

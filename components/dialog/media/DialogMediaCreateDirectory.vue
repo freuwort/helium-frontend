@@ -1,6 +1,6 @@
 <template>
     <IodPopup ref="popup" title="Ordner erstellen">
-        <HeFlex is="form" padding="1.5rem" gap="2.5rem" @submit.prevent="createFolder">
+        <HeFlex is="form" padding="1.5rem" gap="2.5rem" @submit.prevent="createDirectory">
             <ErrorAlert :errors="form.errors" />
 
             <IodInput label="Name" ref="input" v-model="form.name" />
@@ -28,9 +28,9 @@
         nextTick(() => input.value.input.select())
     }
 
-    async function createFolder() {
+    async function createDirectory() {
         form
-        .post('/api/folder', {
+        .post('/api/directory', {
             onSuccess() {
                 form.reset()
                 popup.value.close()

@@ -11,7 +11,7 @@
 
     const dict = {
         'file': { color: '#475569', icon: 'widgets' },
-        'folder': { color: '#475569', icon: 'category' },
+        'directory': { color: '#475569', icon: 'category' },
 
         'image': { color: '#0ea5e9', icon: 'landscape' },
         'image/svg+xml': { color: '#ec4899', icon: 'polyline' },
@@ -37,7 +37,7 @@
 
 
     const mediatype = computed(() => {
-        return props.mime === 'folder' ? 'folder' : 'file'
+        return props.mime === 'directory' ? 'directory' : 'file'
     })
 
     const meta = computed(() => {
@@ -79,7 +79,7 @@
             .iod-icon
                 font-size: 3em
 
-        &.type-folder
+        &.type-directory
             aspect-ratio: 14/11
             height: 4.5em
             clip-path: polygon(0 0, calc(50% - .5em) 0, 50% .5em, calc(100% - .25em) .5em, 100% .75em, 100% 100%, 0 100%)

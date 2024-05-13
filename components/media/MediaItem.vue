@@ -42,7 +42,6 @@
 
 <script lang="ts" setup>
     import type { MediaItem } from '~/types/media'
-    import type { BasicUser } from '~/types/user'
 
 
 
@@ -66,7 +65,7 @@
     })
 
     const dragOver = ref(false)
-    const isDirectory = computed(() => props.item.mime_type === 'folder')
+    const isDirectory = computed(() => props.item.mime_type === 'directory')
 
     const classes = computed(() => {
         return [
@@ -89,16 +88,16 @@
         // @case: selected and dragging
         if (props.selected && props.dragging) return true
 
-        // @case: dragging and not a folder
+        // @case: dragging and not a directory
         if (props.dragging && !isDirectory.value) return true
 
         // @case: not ghost
         return false
     })
 
-    const profiles = computed(() => props.item.shares.map((share) => ({
-        label: share?.model?.name || null,
-        image: share?.model?.profile_image || null,
+    const profiles = computed(() => props.item.access.map((access) => ({
+        label: access?.model?.name || null,
+        image: access?.model?.profile_image || null,
     })))
 
 

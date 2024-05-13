@@ -8,7 +8,7 @@
                         <template #popper>
                             <ContextMenu class="min-w-80">
                                 <ContextMenuItem icon="upload" v-close-popper @click="uploadInput?.click()">Hochladen</ContextMenuItem>
-                                <ContextMenuItem icon="create_new_folder" v-close-popper @click="createFolderPopup.open(path)">Ordner erstellen</ContextMenuItem>
+                                <ContextMenuItem icon="create_new_folder" v-close-popper @click="createDirectoryPopup.open(path)">Ordner erstellen</ContextMenuItem>
                             </ContextMenu>
                         </template>
                     </VDropdown>
@@ -46,7 +46,7 @@
                     @dragstart="onDragStart($event, item)"
                     @drop="onDrop($event, item.src_path)"
                     @click="select($event, item.src_path)"
-                    @dblclick="item.mime_type === 'folder' ? navigateTo(`/d/files/${item.src_path}`) : propertyPopup.open(item)"
+                    @dblclick="item.mime_type === 'directory' ? navigateTo(`/d/files/${item.src_path}`) : propertyPopup.open(item)"
                     @edit="propertyPopup.open(item)"
                     @share="sharePopup.open(item)"
                     @rename="renamePopup.open(item)"
@@ -62,7 +62,7 @@
         <input class="hidden" type="file" ref="uploadInput" multiple @change="upload(($event.target as HTMLInputElement)?.files || [])">
         
         <MediaUploadCard />
-        <DialogMediaCreateFolder ref="createFolderPopup" placement="center" max-width="500px" blur="0" @saved="fetchItems()"/>
+        <DialogMediaCreateDirectory ref="createDirectoryPopup" placement="center" max-width="500px" blur="0" @saved="fetchItems()"/>
         <DialogMediaRename ref="renamePopup" placement="center" max-width="500px" blur="0" @saved="fetchItems(); deselectAll()" />
         <DialogMediaShare ref="sharePopup" placement="center" max-width="500px" blur="0" @saved="fetchItems()"/>
         <DialogMediaProperties ref="propertyPopup" placement="right" max-width="500px" blur="0" />
@@ -85,7 +85,7 @@
 
 
     // START: Dialogs
-    const createFolderPopup = ref()
+    const createDirectoryPopup = ref()
     const renamePopup = ref()
     const propertyPopup = ref()
     const sharePopup = ref()

@@ -34,7 +34,7 @@
 
         // Get selection range
         let start = 0
-        let end = item.mime_type === 'folder' ? item.name.length : item.name.lastIndexOf('.')
+        let end = item.mime_type === 'directory' ? item.name.length : item.name.lastIndexOf('.')
 
         nextTick(() => input.value.input?.setSelectionRange(start, end))
     }
