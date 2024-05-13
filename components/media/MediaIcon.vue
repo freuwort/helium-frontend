@@ -10,21 +10,28 @@
     })
 
     const dict = {
-        'file': { color: '#57606f', icon: 'widgets' },
-        'folder': { color: '#57606f', icon: 'category' },
+        'file': { color: '#475569', icon: 'widgets' },
+        'folder': { color: '#475569', icon: 'category' },
 
-        'image': { color: '#3498db', icon: 'landscape' },
-        'image/svg+xml': { color: '#e84393', icon: 'polyline' },
+        'image': { color: '#0ea5e9', icon: 'landscape' },
+        'image/svg+xml': { color: '#ec4899', icon: 'polyline' },
+        'image/gif': { color: '#3b82f6', icon: 'animation' },
 
-        'video': { color: '#8e44ad', icon: 'movie' },
+        'video': { color: '#a855f7', icon: 'movie' },
 
-        'audio': { color: '#F79F1F', icon: 'audiotrack' },
+        'audio': { color: '#f59e0b', icon: 'audiotrack' },
 
-        'application/pdf': { color: '#F40F02', icon: 'category' },
+        'application/pdf': { color: '#F43F5E', icon: 'category' },
 
-        'text': { color: '#747d8c', icon: 'notes' },
-        'text/html': { color: '#747d8c', icon: 'language' },
-        'text/css': { color: '#264de4', icon: 'css' },
+        'text': { color: '#475569', icon: 'subject' },
+        'text/plain': { color: '#475569', icon: 'subject' },
+        'text/html': { color: '#4f46e5', icon: 'web' },
+        'text/php': { color: '#f97316', icon: 'php' },
+        'text/css': { color: '#f97316', icon: 'style' },
+        'text/javascript': { color: '#f59e0b', icon: 'data_object' },
+        'text/markdown': { color: '#06B6D4', icon: 'markdown' },
+        'text/xml': { color: '#16a34a', icon: 'code' },
+        'text/csv': { color: '#059669', icon: 'table' },
     }
 
 

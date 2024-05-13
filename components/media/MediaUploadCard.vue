@@ -12,7 +12,10 @@
                         <div class="upload" v-for="upload in uploadManager.uploads" :key="upload.id" :data-status="upload.status">
                             <div class="progress" :style="`transform: scaleX(${upload.progress / 100})`"></div>
                             <span class="flex-1">{{ upload.name }}</span>
-                            <IodIconButton type="button" variant="text" corner="pill" size="s" icon="close" @click="uploadManager.cancel(upload.id)" />
+                            <div class="h-9 w-9 flex items-center justify-center relative">
+                                <IodIconButton class="relative z-10" type="button" variant="text" corner="pill" size="s" icon="close" @click="uploadManager.cancel(upload.id)" />
+                                <IodLoader class="absolute pointer-events-none" :thickness="3" v-show="upload.status === 'uploading'"/>
+                            </div>
                         </div>
                     </TransitionGroup>
                 </div>
@@ -23,7 +26,7 @@
 
 <script lang="ts" setup>
     const uploadManager = useUploadStore()
-    const expanded = ref(false)
+    const expanded = ref(true)
 </script>
 
 <style lang="sass" scoped>

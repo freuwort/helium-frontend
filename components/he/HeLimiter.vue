@@ -28,7 +28,7 @@
             max-width: unset
 
         &.size-page
-            max-width: 1200px
+            max-width: 1300px
 
         &.size-text
             max-width: 650px
