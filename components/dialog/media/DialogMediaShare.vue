@@ -49,9 +49,9 @@
                 </IodAlert>
             </HeFlex>
 
-            <IodAlert>
+            <!-- <IodAlert>
                 <pre class="w-full overflow-auto small-scrollbar" v-text="JSON.stringify(form, null, 2)"></pre>
-            </IodAlert>
+            </IodAlert> -->
             
             <IodButton type="submit" size="l" variant="filled" label="Freigabe übernehmen" :loading="form.processing" />
         </HeFlex>

@@ -154,6 +154,7 @@
         box-shadow: var(--shadow-s)
 
         .profile-chip
-            height: 4rem
-            padding-block: .75rem
+            height: 3rem
+            padding-block: .5rem
+            margin-inline: .5rem
 </style>

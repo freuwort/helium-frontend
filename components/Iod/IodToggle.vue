@@ -201,8 +201,8 @@
             // Only go through child elements and stop at the container element
             if (element === containerElement.value) return false
 
-            // Bounce event for all elements with the "mui-container" class
-            if ([...element.classList].includes('mui-container')) return true
+            // Bounce event for all elements with the "iod-container" class
+            if ([...element.classList].includes('iod-container')) return true
 
             // Bounce event for interactive elements
             if (['A', 'BUTTON', 'INPUT', 'TEXTAREA'].includes(element.tagName)) return true
@@ -229,9 +229,9 @@
 <style lang="sass" scoped>
     .iod-container.iod-toggle
         --local-color-off: var(--color-border)
-        --local-color-off-text: var(--color-on-primary)
-        --local-color-on: var(--color-primary)
-        --local-color-on-text: var(--color-on-primary)
+        --local-color-off-text: var(--color-background)
+        --local-color-on: var(--color-text)
+        --local-color-on-text: var(--color-background)
 
         font-size: 1rem
         position: relative
