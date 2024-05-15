@@ -10,6 +10,14 @@ type Settings = {
     default_unit_volume?: string
     default_unit_temperature?: string
     default_unit_speed?: string
+    policy_allow_registration?: boolean
+    policy_allow_password_reset?: boolean
+    policy_allow_password_change?: boolean
+    policy_allow_email_change?: boolean
+    policy_allow_username_change?: boolean
+    policy_allow_profile_image_upload?: boolean
+    policy_allow_profile_banner_upload?: boolean
+    policy_require_tfa?: boolean
 }
 
 export const useDomainStore = defineStore('domain', () => {
