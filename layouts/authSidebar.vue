@@ -64,5 +64,5 @@
     main
         grid-area: main
         padding-bottom: 4.5rem
-        overflow: scroll
+        overflow-y: scroll
 </style>
