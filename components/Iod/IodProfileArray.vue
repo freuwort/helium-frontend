@@ -1,8 +1,16 @@
 <template>
     <div class="iod-container iod-profile-array" v-tooltip="tooltip">
-        <span class="item" v-if="showAdditionalCount" :style="{zIndex: limit + 1}">+{{ data.length - limit }}</span>
+        <span class="item additional" v-if="showAdditionalCount" :style="{zIndex: limit + 1}">+{{ data.length - limit }}</span>
         <template v-for="(item, i) in data.slice(0, limit)">
-            <img class="item" :src="item?.image as string" :alt="item?.label as string" :style="{zIndex: limit - i}">
+            <IodIcon
+                class="item"
+                use-backdrop
+                :image="(item.image as string)"
+                :icon="(item.icon as string)"
+                :color="(item.color as string)"
+                :alt="(item.label as string)"
+                :style="{zIndex: limit - i}"
+            />
         </template>
     </div>
 </template>
@@ -10,6 +18,8 @@
 <script lang="ts" setup>
     type Profile = {
         image?: string | null,
+        icon?: string | null,
+        color?: string | null,
         label?: string | null,
     }
 
@@ -46,21 +56,22 @@
             object-fit: cover
             border-radius: 100vh
             box-shadow: 0 0 0 2px var(--local-color-background)
-            background: var(--color-background-soft)
             margin-left: var(--local-inset)
+            background: var(--color-background)
             user-select: none
+            font-size: inherit
 
-            &:not(img)
+            &.additional
                 display: flex
                 align-items: center
                 justify-content: center
                 color: var(--color-text)
-                font-size: inherit
                 line-height: 1
                 font-weight: 600
                 white-space: nowrap
                 overflow: hidden
                 text-overflow: ellipsis
+                background: var(--color-background-soft)
                 padding: .5rem
 
             &:first-child

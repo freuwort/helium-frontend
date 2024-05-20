@@ -15,9 +15,11 @@
             </div>
         </div>
         <div class="media-info">
-            <NuxtLink v-if="isDirectory" class="title" v-tooltip="item.name" :to="`/d/files/${item.src_path}`">{{ item.name }}</NuxtLink>
-            <a v-if="!isDirectory" class="title" v-tooltip="item.name" href="#" @click.prevent="emits('edit', item)">{{ item.name }}</a>
-            <span v-if="!isDirectory" class="size" v-tooltip="humanFileSize(item.meta.size as number)">{{ item.meta.size ? humanFileSize(item.meta.size) : ''}}</span>
+            <NuxtLink v-if="isDirectory" class="title" v-tooltip="name" :to="`/d/files/${item.src_path}`">{{ name }}</NuxtLink>
+            <a v-if="!isDirectory" class="title" v-tooltip="item.name" href="#" @click.prevent="emits('edit', item)">{{ name }}</a>
+            <span v-if="!isDirectory" class="size" v-tooltip.right="item.meta.extension+' • '+humanFileSize(item.meta.size as number)">
+                {{ item.meta.extension }}
+            </span>
             <IodProfileArray class="profiles" :data="profiles" @dblclick.stop="emits('share', item)"/>
         </div>
         <div class="overlay">
@@ -95,10 +97,19 @@
         return false
     })
 
-    const profiles = computed(() => props.item.access.map((access) => ({
-        label: access?.model?.name || null,
-        image: access?.model?.profile_image || null,
-    })))
+    const profiles = computed(() => {
+        return props.item.access.map((access) => ({
+            label: access?.model?.name,
+            image: access?.model?.profile_image || null,
+            color: access?.model?.color || null,
+            icon: access?.model?.icon || null,
+        }))
+    })
+
+    const name = computed(() => {
+        if (isDirectory.value) return props.item.name
+        return props.item.name.split('.').slice(0, -1).join('.')
+    })
 
 
 
@@ -222,6 +233,7 @@
             .profiles
                 grid-area: profiles
                 height: 1.5rem
+                font-size: 1rem
 
             .size
                 grid-area: size

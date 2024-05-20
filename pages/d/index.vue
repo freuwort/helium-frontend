@@ -16,6 +16,15 @@
                 </HeFlex>
 
                 <IodProfileArray :data="profiles" :limit="6" class="mr-auto"/>
+
+                <HeFlex horizontal gap="1rem">
+                    <IodIcon icon="home" use-backdrop class="h-12 rounded-full text-blue-500"/>
+                    <IodIcon icon="home" color="var(--bg-purple-500)" use-backdrop class="h-12 rounded-full"/>
+                    <IodIcon icon="home" color="var(--bg-rose-500)" use-backdrop class="h-12 rounded-full"/>
+                    <IodIcon image="https://api.dicebear.com/8.x/shapes/svg?seed=1" use-backdrop class="h-12 rounded-full"/>
+                    <IodIcon image="https://api.dicebear.com/8.x/shapes/svg?seed=2" use-backdrop class="h-12 rounded-full"/>
+                    <IodIcon image="https://api.dicebear.com/8.x/shapes/svg?seed=3" use-backdrop class="h-12 rounded-full"/>
+                </HeFlex>
             </HeFlex>
         </HeCard>
 
@@ -49,11 +58,12 @@
     const popup_3 = ref()
 
     const profiles = ref([
-        { label: 'Salem', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=Salem' },
-        { label: 'Mike', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=Mike' },
-        { label: 'Hugo', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=Hugo' },
-        { label: 'Johannes', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=Johannes' },
-        { label: 'Amber', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=Amber' },
+        { label: 'Peter', icon: 'home', color: 'var(--bg-blue-500)' },
+        { label: 'Peter', icon: 'home', color: 'var(--bg-purple-500)' },
+        { label: 'Peter', icon: 'home', color: 'var(--bg-rose-500)' },
+        { label: 'Salem', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=1' },
+        { label: 'Mike', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=2' },
+        { label: 'Hugo', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=3' },
     ])
 </script>
 

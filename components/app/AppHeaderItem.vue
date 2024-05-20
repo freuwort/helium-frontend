@@ -29,6 +29,7 @@
         aspect-ratio: 1
         color: var(--color-text-soft)
         user-select: none
+        position: relative
 
         .app-icon
             font-size: 1.75rem
@@ -36,6 +37,8 @@
             height: 100%
 
         .chevron
+            position: absolute
+            right: 0
             font-size: 1rem
             color: var(--color-text-soft)
             transition: transform 80ms ease-in-out

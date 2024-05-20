@@ -13,9 +13,7 @@
                 <HeFlex :gap="1">
                     <HeFlex horizontal :gap="1">
                         <VDropdown :distance="6">
-                            <button type="button" class="color-button" :style="{background: form.color}" v-tooltip.bottom="'Farbe und Icon wählen'">
-                                <IodIcon :icon="form.icon" />
-                            </button>
+                            <IodIconButton type="button" :icon="form.icon" size="l" corner="pill" variant="contained" :background="form.color" v-tooltip.bottom="'Farbe und Icon wählen'" />
                             <template #popper>
                                 <HeFlex :padding="1">
                                     <ContextMenuLabel label="Farben" style="padding: 0;"/>
@@ -107,8 +105,23 @@
     ]
 
     const color_options = [
-        '#363E40', '#f39c12', '#ff6348', '#ff4757', '#8e44ad', '#3742fa', '#1e90ff', '#2ed573',
-        '#57606f', '#f1c40f', '#ff7f50', '#ff6b81', '#9b59b6', '#5352ed', '#70a1ff', '#7bed9f',
+        'rgb(34 197 94)',
+        'rgb(245 158 11)',
+        'rgb(249 115 22)',
+        'rgb(244 63 94)',
+        'rgb(168 85 247)',
+        'rgb(99 102 241)',
+        'rgb(59 130 246)',
+        'rgb(51 65 85)',
+
+        'rgb(74 222 128)',
+        'rgb(251 191 36)',
+        'rgb(251 146 60)',
+        'rgb(251 113 133)',
+        'rgb(192 132 252)',
+        'rgb(129 140 248)',
+        'rgb(96 165 250)',
+        'rgb(100 116 139)',
     ]
 
 
@@ -175,29 +188,4 @@
 </script>
 
 <style lang="sass" scoped>
-    .color-button
-        width: 3rem
-        height: 3rem
-        border-radius: 50%
-        background: var(--color-background-soft)
-        cursor: pointer
-        position: relative
-
-        &::after
-            content: ''
-            position: absolute
-            top: 0
-            left: 0
-            bottom: 0
-            right: 0
-            border-radius: inherit
-            pointer-events: none
-            border: 4px solid var(--color-background)
-            opacity: .5
-
-        .iod-icon
-            width: 100%
-            height: 100%
-            font-size: 1.5rem
-            color: white
 </style>

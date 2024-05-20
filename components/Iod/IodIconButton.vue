@@ -82,7 +82,9 @@
 
 
     const role = computed((): string => {
-        return ['a', 'Link'].includes(props.is) ? 'link' : 'button'
+        if (['a', 'Link'].includes(props.is as string)) return 'link'
+        if (['button', 'Button'].includes(props.is as string)) return 'button'
+        return ''
     })
 
     const classes = computed((): object => {
@@ -130,7 +132,6 @@
         font-weight: 500
         border-radius: var(--radius-m)
         border: none
-        cursor: pointer
         user-select: none
         vertical-align: top
         position: relative
@@ -200,6 +201,13 @@
                 opacity: 0 !important
 
 
+
+        &.button-size-xs
+            height: 1.5em
+            width: 1.5em
+
+            .content
+                font-size: 1rem
 
         &.button-size-s
             height: 2em

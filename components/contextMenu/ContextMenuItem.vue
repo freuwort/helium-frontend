@@ -71,6 +71,7 @@
         width: 4rem
         position: relative
         z-index: 1
+        aspect-ratio: unset !important
 
     .label
         color: var(--color-text-soft)
@@ -89,4 +90,5 @@
         position: relative
         z-index: 1
         transition: all 80ms ease-in-out
+        aspect-ratio: unset !important
 </style>
