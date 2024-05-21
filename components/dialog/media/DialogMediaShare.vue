@@ -1,30 +1,18 @@
 <template>
     <IodPopup ref="popup" title="Medien freigeben">
-        <HeFlex is="form" padding="1.5rem" gap="2.5rem" @submit.prevent="share">
+        <HeFlex is="form" padding="1.5rem" gap=".5rem" @submit.prevent="share">
             <ErrorAlert :errors="form.errors" />
-
-            <HeFlex padding=".5rem" gap=".5rem" class="border rounded-xl">
-                <IodButtonGroup>
-                    <IodButton type="button" background="var(--color-text-soft)" label="Wie Überordner" :variant="form.inherit_access ? 'filled' : 'contained'" @click="form.inherit_access = true"/>
-                    <IodButton type="button" background="var(--color-text-soft)" label="Angebasst" :variant="!form.inherit_access ? 'filled' : 'contained'" @click="form.inherit_access = false"/>
-                </IodButtonGroup>
-                <IodAlert as="placeholder" class="min-h-12">
-                    <small v-show="form.inherit_access">Alle Freigaben des überliegenden Ordners werden übernommen</small>
-                    <small v-show="!form.inherit_access">Fragaben können individuell angepasst werden</small>
-                </IodAlert>
-            </HeFlex>
             
-            <HeFlex padding=".5rem" gap=".5rem" class="border rounded-xl" v-show="!form.inherit_access">
+            <IodButtonGroup>
+                <IodButton type="button" size="l" background="var(--color-text-soft)" :variant="form.inherit_access ? 'filled' : 'contained'" label="Wie Überordner" v-tooltip="'Alle Freigaben des überliegenden Ordners werden übernommen'" @click="form.inherit_access = true"/>
+                <IodButton type="button" size="l" background="var(--color-text-soft)" :variant="!form.inherit_access ? 'filled' : 'contained'" label="Angebasst" v-tooltip="'Freigaben können individuell angepasst werden'" @click="form.inherit_access = false"/>
+            </IodButtonGroup>
+
+            <HeDivider class="my-4"/>
+
+            <template v-if="!form.inherit_access">
                 <VDropdown :shown="!!searchForm.search.length && !!searchForm.results.length" :triggers="[]" :auto-hide="false">
-                    <IodInput type="search" placeholder="Nutzer / Rolle suchen" v-model="searchForm.search" @update:modelValue="search()">
-                        <template #right>
-                            <IodButtonGroup>
-                                <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="visibility" v-tooltip="localizePermission('read')" :variant="searchForm.permission === 'read' ? 'filled' : 'contained'" @click="searchForm.permission = 'read'"/>
-                                <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="edit" v-tooltip="localizePermission('write')" :variant="searchForm.permission === 'write' ? 'filled' : 'contained'" @click="searchForm.permission = 'write'"/>
-                                <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="shield_person" v-tooltip="localizePermission('admin')" :variant="searchForm.permission === 'admin' ? 'filled' : 'contained'" @click="searchForm.permission = 'admin'"/>
-                            </IodButtonGroup>
-                        </template>
-                    </IodInput>
+                    <IodInput class="mb-2" type="search" placeholder="Nutzer / Rolle suchen" v-model="searchForm.search" @update:modelValue="search()" />
 
                     <template #popper>
                         <HeFlex align-y="flex-start" padding="1rem 0" class="min-w-80 max-h-80 small-scrollbar">
@@ -33,25 +21,30 @@
                     </template>
                 </VDropdown>
 
-                <ProfileChip is="div" class="h-12 !p-2 flex-none" v-for="access in form.access" :title="access.title" :subtitle="localizeModelType(access.model_type) +' » ' + localizePermission(access.permission)" :image="access.image" :icon="access.icon" :color="access.color">
+                <ProfileChip is="div" class="h-12 !p-2 flex-none" title="Jeder mit dem Link" :subtitle="localizePermission(form.public_access)" icon="public">
                     <HeFlex horizontal gap=".5rem">
+                        <IodIconButton type="button" size="s" icon="block" v-tooltip="localizePermission(null)" :variant="form.public_access === null ? 'filled' : 'contained'" color-preset="error" @click="form.public_access = null"/>
+                        <IodButtonGroup>
+                            <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="visibility" v-tooltip="localizePermission('read')" :variant="form.public_access === 'read' ? 'filled' : 'contained'" @click="form.public_access = 'read'"/>
+                            <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="edit" v-tooltip="localizePermission('write')" :variant="form.public_access === 'write' ? 'filled' : 'contained'" @click="form.public_access = 'write'"/>
+                            <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="shield_person" v-tooltip="localizePermission('admin')" :variant="form.public_access === 'admin' ? 'filled' : 'contained'" @click="form.public_access = 'admin'"/>
+                        </IodButtonGroup>
+                    </HeFlex>
+                </ProfileChip>
+
+                <ProfileChip is="div" class="h-12 !p-2 flex-none" v-for="access in form.access" :title="localizeModelType(access.model_type) +' » ' + access.title" :subtitle="localizePermission(access.permission)" :image="access.image" :icon="access.icon" :color="access.color">
+                    <HeFlex horizontal gap=".5rem">
+                        <IodIconButton type="button" size="s" icon="close" v-tooltip="'Entfernen'" variant="contained" color-preset="error" @click.stop="removeShare(access)"/>
                         <IodButtonGroup>
                             <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="visibility" v-tooltip="localizePermission('read')" :variant="access.permission === 'read' ? 'filled' : 'contained'" @click="access.permission = 'read'"/>
                             <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="edit" v-tooltip="localizePermission('write')" :variant="access.permission === 'write' ? 'filled' : 'contained'" @click="access.permission = 'write'"/>
                             <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="shield_person" v-tooltip="localizePermission('admin')" :variant="access.permission === 'admin' ? 'filled' : 'contained'" @click="access.permission = 'admin'"/>
                         </IodButtonGroup>
-                        <IodIconButton type="button" size="s" icon="close" v-tooltip="'Entfernen'" variant="contained" color-preset="error" @click.stop="removeShare(access)"/>
                     </HeFlex>
                 </ProfileChip>
 
-                <IodAlert as="placeholder" class="h-12" v-if="!form.access?.length">
-                    <small>Keine Freigaben vorhanden</small>
-                </IodAlert>
-            </HeFlex>
-
-            <!-- <IodAlert>
-                <pre class="w-full overflow-auto small-scrollbar" v-text="JSON.stringify(form, null, 2)"></pre>
-            </IodAlert> -->
+                <HeDivider class="my-4"/>
+            </template>
             
             <IodButton type="submit" size="l" variant="filled" label="Freigabe übernehmen" :loading="form.processing" />
         </HeFlex>
@@ -66,6 +59,7 @@
     const popup = ref()
     const form = useForm({
         access: [],
+        public_access: null,
         inherit_access: true,
         path: '',
     })
@@ -74,7 +68,10 @@
     {
         form
         .defaults({
-            access: item.access.map(access => ({
+            access: item.access
+            .filter(access => !!access.model_id)
+            .sort((a, b) => a.model_type.localeCompare(b.model_type) || a.model?.name?.localeCompare(b.model?.name))
+            .map(access => ({
                 model_id: access.model_id,
                 model_type: access.model_type,
                 permission: access.permission || 'read',
@@ -83,6 +80,7 @@
                 color: access.model?.color || null,
                 title: access.model?.name || null,
             })),
+            public_access: item.access.find(access => !access.model_id)?.permission ?? null,
             inherit_access: item.inherit_access || false,
             path: item.src_path,
         })
@@ -103,7 +101,6 @@
 
     const searchForm = useForm({
         search: '',
-        permission: 'read',
         results: [],
     })
 
@@ -144,7 +141,7 @@
     function addShare(access: any) {
         form.access.push({
             ...access,
-            permission: searchForm.permission
+            permission: 'read'
         })
 
         searchForm.reset()
@@ -156,8 +153,9 @@
 
 
 
-    function localizePermission(role: string) {
+    function localizePermission(role: any) {
         switch (role) {
+            case null: return 'Keinen Zugriff'
             case 'read': return 'Kann ansehen'
             case 'write': return 'Kann bearbeiten'
             case 'admin': return 'Kann bearbeiten und löschen'
@@ -165,7 +163,7 @@
         }
     }
 
-    function localizeModelType(type: string) {
+    function localizeModelType(type: any) {
         switch (type) {
             case 'user': return 'Nutzer'
             case 'role': return 'Rolle'

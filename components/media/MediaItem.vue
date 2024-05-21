@@ -18,7 +18,7 @@
             <NuxtLink v-if="isDirectory" class="title" v-tooltip="name" :to="`/d/files/${item.src_path}`">{{ name }}</NuxtLink>
             <a v-if="!isDirectory" class="title" v-tooltip="item.name" href="#" @click.prevent="emits('edit', item)">{{ name }}</a>
             <span v-if="!isDirectory" class="size" v-tooltip.right="item.meta.extension+' • '+humanFileSize(item.meta.size as number)">
-                {{ item.meta.extension }}
+                {{ item.meta.extension ?? '---' }}
             </span>
             <IodProfileArray class="profiles" :data="profiles" @dblclick.stop="emits('share', item)"/>
         </div>
@@ -98,12 +98,42 @@
     })
 
     const profiles = computed(() => {
-        return props.item.access.map((access) => ({
+        let profiles = props.item.access
+        .filter(access => !!access.model_id)
+        .sort((a, b) => a.model_type.localeCompare(b.model_type) || a.model?.name?.localeCompare(b.model?.name))
+        .map((access) => ({
             label: access?.model?.name,
             image: access?.model?.profile_image || null,
             color: access?.model?.color || null,
             icon: access?.model?.icon || null,
         }))
+
+        let publicAccess = props.item.access.find(access => !access.model_id)?.permission || null
+        if (publicAccess)
+        {
+            profiles.unshift({
+                label: 'Allgemeiner Zugriff',
+                icon: {
+                    'read': 'visibility',
+                    'write': 'edit',
+                    'admin': 'shield_person',
+                }[publicAccess],
+                color: null,
+                image: null,
+            })
+        }
+
+        if (props.item.inherit_access)
+        {
+            profiles.unshift({
+                label: 'Vererbt',
+                icon: 'folder',
+                color: null,
+                image: null,
+            })
+        }
+
+        return profiles
     })
 
     const name = computed(() => {

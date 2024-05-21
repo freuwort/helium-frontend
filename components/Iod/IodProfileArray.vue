@@ -47,7 +47,7 @@
         height: 2rem
         display: flex
         align-items: center
-        font-size: .8rem
+        font-size: .75rem
 
         .item
             position: relative
@@ -73,6 +73,7 @@
                 text-overflow: ellipsis
                 background: var(--color-background-soft)
                 padding: .5rem
+                font-size: .75rem
 
             &:first-child
                 margin-left: 0
