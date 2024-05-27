@@ -10,7 +10,8 @@
         @drop.prevent="onDrop"
     >
         <div class="media-preview">
-            <div class="media-icon-wrapper">
+            <img class="media-thumbnail" v-if="item.thumbnail" :src="item.thumbnail" :alt="item.name">
+            <div class="media-icon-wrapper" v-else>
                 <MediaIcon :mime="(item.mime_type as string)" />
             </div>
         </div>
@@ -218,6 +219,12 @@
             position: relative
             z-index: 1
             padding: .5rem
+            
+            .media-thumbnail
+                width: 100%
+                aspect-ratio: 1
+                border-radius: var(--radius-m)
+                object-fit: cover
 
             .media-icon-wrapper
                 display: flex

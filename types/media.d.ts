@@ -6,7 +6,7 @@ export type MediaItem = {
     parent_id: number | null
     drive: string | null
     src_path: string
-    thumbnail_path: string | null
+    thumbnail: string | null
     cdn_path: string | null
     mime_type: string | null
     name: string
