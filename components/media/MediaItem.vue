@@ -15,11 +15,8 @@
             </div>
         </div>
         <div class="media-info">
-            <NuxtLink v-if="isDirectory" class="title" v-tooltip="name" :to="`/d/files/${item.src_path}`">{{ name }}</NuxtLink>
-            <a v-if="!isDirectory" class="title" v-tooltip="item.name" href="#" @click.prevent="emits('edit', item)">{{ name }}</a>
-            <span v-if="!isDirectory" class="size" v-tooltip.right="item.meta.extension+' • '+humanFileSize(item.meta.size as number)">
-                {{ item.meta.extension ?? '---' }}
-            </span>
+            <NuxtLink v-if="isDirectory" class="title" v-tooltip="nameTooltip" :to="`/d/files/${item.src_path}`">{{ item.name }}</NuxtLink>
+            <a v-if="!isDirectory" class="title" v-tooltip="nameTooltip" href="#" @click.prevent="emits('edit', item)">{{ item.name }}</a>
             <IodProfileArray class="profiles" :data="profiles" @dblclick.stop="emits('share', item)"/>
         </div>
         <div class="overlay">
@@ -136,9 +133,8 @@
         return profiles
     })
 
-    const name = computed(() => {
-        if (isDirectory.value) return props.item.name
-        return props.item.name.split('.').slice(0, -1).join('.')
+    const nameTooltip = computed(() => {
+        return props.item.name + (isDirectory.value ? '' : ' - ' + humanFileSize(props.item.meta.size as number))
     })
 
 
@@ -218,12 +214,6 @@
             .more-button
                 opacity: 1
 
-        &.is-directory .media-info
-            grid-template-areas: 'title profiles' 'title profiles'
-
-        &.is-file .media-info
-            grid-template-areas: 'title profiles' 'size profiles'
-
         .media-preview
             position: relative
             z-index: 1
@@ -240,9 +230,7 @@
         .media-info
             position: relative
             z-index: 1
-            display: grid
-            grid-template-rows: 1.25rem 1.25rem
-            grid-template-columns: 1fr auto
+            display: flex
             align-items: center
             gap: 0 .5rem
             padding: 1rem
@@ -264,14 +252,6 @@
                 grid-area: profiles
                 height: 1.5rem
                 font-size: 1rem
-
-            .size
-                grid-area: size
-                margin-right: auto
-                font-size: .75rem
-                overflow: hidden
-                text-overflow: ellipsis
-                white-space: nowrap
 
         .overlay
             position: absolute
