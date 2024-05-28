@@ -26,6 +26,34 @@
 
                 <HeFlex :gap="1">
                     <HeFlex horizontal>
+                        <h5 class="m-0 font-medium">Identifikationsnummern</h5>
+                        <HeSpacer />
+                        <IodButton type="button" label="Neue Ident. Nr." size="s" variant="contained" @click="addIdentifier()"/>
+                    </HeFlex>
+    
+                    <div class="entity-grid" v-if="form.identifiers.length">
+                        <HeCard class="entity-card" v-for="identifier, i in form.identifiers">
+                            <HeFlex class="entity-card-head" padding="1rem">
+                                <IodIcon icon="badge" />
+                                <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removeIdentifier(i)"/>
+                            </HeFlex>
+                            <HeFlex padding="1rem" gap="1rem">
+                                <IodSelect v-model="identifier.type" label="Ident. Nr. Typ" :options="identifier_types"/>
+                                <IodInput v-model="identifier.label" label="Label" />
+                                <IodInput v-model="identifier.value" label="Identifikationsnummer" />
+                            </HeFlex>
+                        </HeCard>
+                    </div>
+
+                    <IodAlert as="placeholder" class="h-40" v-else>
+                        <span>Es wurden noch keine Identifikationsnummern angelegt</span>
+                    </IodAlert>
+                </HeFlex>
+
+
+
+                <HeFlex :gap="1">
+                    <HeFlex horizontal>
                         <h5 class="m-0 font-medium">Rechtliche Details</h5>
                         <HeSpacer />
                         <IodButton type="button" label="Neues Detail" size="s" variant="contained" @click="addLegalDetail()"/>
@@ -255,6 +283,7 @@
             updated_at: '',
         },
         legal_details: [],
+        identifiers: [],
         addresses: [],
         bank_connections: [],
         emails: [],
@@ -274,6 +303,14 @@
         { value: 'ev', text: 'e.V.' },
         { value: 'sole-proprietor', text: 'Einzelunternehmen' },
         { value: 'freelancer', text: 'Freiberufler' },
+        { value: 'other', text: 'Anders' },
+    ]
+
+    const identifier_types = [
+        { value: 'customer_id', text: 'Kundennummer' },
+        { value: 'company_id', text: 'Firmennummer' },
+        { value: 'debtor_id', text: 'Debitorennummer' },
+        { value: 'creditor_id', text: 'Kreditorennummer' },
         { value: 'other', text: 'Anders' },
     ]
 
@@ -341,6 +378,23 @@
         form.legal_details.splice(index, 1)
     }
     // END: Legal details
+
+
+
+    // START: Identifiers
+    function addIdentifier() {
+        form.identifiers.push({
+            id: null,
+            type: 'customer_id',
+            label: '',
+            value: '',
+        })
+    }
+
+    function removeIdentifier(index: number) {
+        form.identifiers.splice(index, 1)
+    }
+    // END: Identifiers
 
 
 
