@@ -69,7 +69,7 @@
                                 <IodInput v-model="address.address_line_1" label="Straße" />
                                 <IodInput v-model="address.postal_code" label="Postleitzahl" />
                                 <IodInput v-model="address.city" label="Stadt" />
-                                <IodInput v-model="address.country" label="Land" />
+                                <IodInput v-model="address.country_code" label="Land" />
                             </HeFlex>
                         </HeCard>
                     </div>
@@ -354,7 +354,7 @@
             postal_code: '',
             city: '',
             state: '',
-            country: '',
+            country_code: '',
             notes: '',
         })
     }
