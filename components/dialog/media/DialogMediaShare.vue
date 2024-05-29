@@ -16,7 +16,7 @@
 
                     <template #popper>
                         <HeFlex align-y="flex-start" padding="1rem 0" class="min-w-80 max-h-80 small-scrollbar">
-                            <ProfileChip class="h-12 !p-2 flex-none" corner="none" v-for="result in searchForm.results" :title="result.title" :subtitle="localizeModelType(result.model_type)" :image="result.image" :icon="result.icon" :color="result.color" @click="addShare(result)"/>
+                            <ProfileChip class="h-12 !p-2 flex-none" corner="none" v-for="result in searchForm.results" :title="result.title" :subtitle="localizeModelType(result.permissible_type)" :image="result.image" :icon="result.icon" :color="result.color" @click="addShare(result)"/>
                         </HeFlex>
                     </template>
                 </VDropdown>
@@ -32,7 +32,7 @@
                     </HeFlex>
                 </ProfileChip>
 
-                <ProfileChip is="div" class="h-12 !p-2 flex-none" v-for="access in form.access" :title="localizeModelType(access.model_type) +' » ' + access.title" :subtitle="localizePermission(access.permission)" :image="access.image" :icon="access.icon" :color="access.color">
+                <ProfileChip is="div" class="h-12 !p-2 flex-none" v-for="access in form.access" :title="localizeModelType(access.permissible_type) +' » ' + access.title" :subtitle="localizePermission(access.permission)" :image="access.image" :icon="access.icon" :color="access.color">
                     <HeFlex horizontal gap=".5rem">
                         <IodIconButton type="button" size="s" icon="close" v-tooltip="'Entfernen'" variant="contained" color-preset="error" @click.stop="removeShare(access)"/>
                         <IodButtonGroup>
@@ -69,18 +69,18 @@
         form
         .defaults({
             access: item.access
-            .filter(access => !!access.model_id)
-            .sort((a, b) => a.model_type.localeCompare(b.model_type) || a.model?.name?.localeCompare(b.model?.name))
+            .filter(access => !!access.permissible_id)
+            .sort((a, b) => a.permissible_type.localeCompare(b.permissible_type) || a.permissible?.name?.localeCompare(b.permissible?.name))
             .map(access => ({
-                model_id: access.model_id,
-                model_type: access.model_type,
+                permissible_id: access.permissible_id,
+                permissible_type: access.permissible_type,
                 permission: access.permission || 'read',
-                image: access.model?.profile_image || null,
-                icon: access.model?.icon || null,
-                color: access.model?.color || null,
-                title: access.model?.name || null,
+                image: access.permissible?.profile_image || null,
+                icon: access.permissible?.icon || null,
+                color: access.permissible?.color || null,
+                title: access.permissible?.name || null,
             })),
-            public_access: item.access.find(access => !access.model_id)?.permission ?? null,
+            public_access: item.access.find(access => !access.permissible_id)?.permission ?? null,
             inherit_access: item.inherit_access || false,
             path: item.src_path,
         })
@@ -113,8 +113,8 @@
         }))
         
         results.push(...userResponse.data.data.map((user: any) => ({
-            model_id: user.id,
-            model_type: 'user',
+            permissible_id: user.id,
+            permissible_type: 'user',
             title: user.name,
             image: user.profile_image,
             icon: null,
@@ -127,8 +127,8 @@
         }))
 
         results.push(...roleResponse.data.data.map((role: any) => ({
-            model_id: role.id,
-            model_type: 'role',
+            permissible_id: role.id,
+            permissible_type: 'role',
             title: role.name,
             image: null,
             icon: role.icon,
@@ -148,7 +148,7 @@
     }
 
     function removeShare(access: any) {
-        form.access = form.access.filter((e: any) => e.model_id !== access.model_id || e.model_type !== access.model_type)
+        form.access = form.access.filter((e: any) => e.permissible_id !== access.permissible_id || e.permissible_type !== access.permissible_type)
     }
 
 

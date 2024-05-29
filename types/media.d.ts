@@ -24,10 +24,11 @@ export type MediaItem = {
 }
 
 export type ModelAccess = {
-    media_id: number
-    model_id: number
-    model_type: string
-    model: BasicUser | BasicRole | any | null
+    accessable_id: number
+    accessable_type: string
+    permissible_id: number
+    permissible_type: string
+    permissible: BasicUser | BasicRole | any | null
     type: string
     permission: string
 }

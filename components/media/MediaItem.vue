@@ -97,16 +97,16 @@
 
     const profiles = computed(() => {
         let profiles = props.item.access
-        .filter(access => !!access.model_id)
-        .sort((a, b) => a.model_type.localeCompare(b.model_type) || a.model?.name?.localeCompare(b.model?.name))
+        .filter(access => !!access.permissible_id)
+        .sort((a, b) => a.permissible_type.localeCompare(b.permissible_type) || a.permissible?.name?.localeCompare(b.permissible?.name))
         .map((access) => ({
-            label: access?.model?.name,
-            image: access?.model?.profile_image || null,
-            color: access?.model?.color || null,
-            icon: access?.model?.icon || null,
+            label: access?.permissible?.name,
+            image: access?.permissible?.profile_image || null,
+            color: access?.permissible?.color || null,
+            icon: access?.permissible?.icon || null,
         }))
 
-        let publicAccess = props.item.access.find(access => !access.model_id)?.permission || null
+        let publicAccess = props.item.access.find(access => !access.permissible_id)?.permission || null
         if (publicAccess)
         {
             profiles.unshift({
