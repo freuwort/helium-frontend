@@ -18,7 +18,6 @@
                     <h5 class="m-0 font-medium">Konto</h5>
                     <IodInput label="Name" v-model="form.model.name"/>
                     <IodInput label="Benutzername" v-model="form.model.username"/>
-                    <IodInput label="Identifikationsnummer" v-model="form.model.ident_number"/>
                     <IodInput label="Email" v-model="form.model.email"/>
                     <IodInput type="password" label="Passwort" autocomplete="new-password" show-score :score-function="useZxcvbn()" v-model="form.password"/>
                 </HeFlex>
@@ -304,7 +303,6 @@
             profile_image: '',
             name: '',
             username: '',
-            ident_number: '',
             email: '',
             email_verified_at: '',
             enabled_at: '',

@@ -8,6 +8,7 @@
 
                     <ContextMenuLabel label="Domain" class="mt-1"/>
                     <ContextMenuItem to="/d/settings/" icon="domain" label="System" :active="isRoute('d-settings')" />
+                    <ContextMenuItem to="/d/settings/units" icon="square_foot" label="Einheiten" :active="isRoute('d-settings-units')" />
                     <ContextMenuItem to="/d/settings/policies" icon="policy" label="Richtlinien" :active="isRoute('d-settings-policies')" />
                     
                     <ContextMenuLabel label="Debug" class="mt-1"/>
