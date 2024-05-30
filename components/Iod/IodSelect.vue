@@ -452,7 +452,7 @@ function setFocus()
   color: var(--color-text-soft)
   padding-block: .5rem
   user-select: none
-  max-height: 100vh
+  max-height: min(90vh, 20rem)
   overflow-y: auto
   font-size: .9em
   box-shadow: var(--shadow-m)

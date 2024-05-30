@@ -122,7 +122,7 @@
                                 <IodInput v-model="address.address_line_1" label="Straße" />
                                 <IodInput v-model="address.postal_code" label="Postleitzahl" />
                                 <IodInput v-model="address.city" label="Stadt" />
-                                <IodInput v-model="address.country_code" label="Land" />
+                                <IodSelect v-model="address.country_code" label="Land" :options="countries.map((e: Country) => ({text: e.name, value: e.code}))"/>
                             </HeFlex>
                         </HeCard>
                     </div>
@@ -281,6 +281,7 @@
 <script lang="ts" setup>
     import { debounce, throttle } from 'lodash'
     import { toast } from 'vue3-toastify'
+    import type { Country } from '~/types/units'
 
     definePageMeta({
         middleware: 'auth',
@@ -334,6 +335,8 @@
         dates: [],
         links: [],
     })
+
+    const countries = ref((await useAxios().get('/api/domain/units')).data.countries)
 
     const fullname = computed(() => {
         const name = form.user_name
