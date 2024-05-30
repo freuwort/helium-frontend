@@ -3,7 +3,7 @@
         <HeCard is="form" @submit.prevent="save">
             <ProfileCard class="rounded-2xl" :title="form.model.name" :image="form.model.profile_image" :subtitle="form.model.description"/>
             
-            <HeFlex class="border-y" horizontal padding="1rem 2rem">
+            <HeFlex class="border-y sticky top-16 z-20 bg-background" horizontal padding="1rem 2rem">
                 <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/companies')"/>
                 <HeSpacer />
                 <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />

@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Rolle bearbeiten' : 'Rolle erstellen'" color="var(--color-primary)">
         <HeCard is="form" @submit.prevent="save">
-            <HeFlex class="border-b" horizontal padding="1rem 2rem">
+            <HeFlex class="border-b sticky top-16 z-20 bg-background rounded-t-xl" horizontal padding="1rem 2rem">
                 <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/roles')"/>
                 <HeSpacer />
                 <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
