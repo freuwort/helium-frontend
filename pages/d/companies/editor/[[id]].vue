@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" :pageTitle="id ? 'Unternehmen bearbeiten' : 'Unternehmen erstellen'" color="var(--color-primary)">
+    <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Unternehmen bearbeiten' : 'Unternehmen erstellen'" color="var(--color-primary)">
         <HeCard is="form" @submit.prevent="save">
             <ProfileCard class="rounded-2xl" :title="form.model.name" :image="form.model.profile_image" :subtitle="form.model.description"/>
             
@@ -560,7 +560,7 @@
         flex-direction: column
         align-items: stretch
         overflow: hidden
-        box-shadow: none
+        box-shadow: none !important
 
         .entity-card-head
             position: relative

@@ -1,9 +1,9 @@
 <template>
-    <NuxtLayout name="auth-default" :pageTitle="id ? 'Nutzer bearbeiten' : 'Nutzer erstellen'" color="var(--color-primary)">
+    <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Nutzer bearbeiten' : 'Nutzer erstellen'" color="var(--color-primary)">
         <HeCard is="form" @submit.prevent="save">
             <ProfileCard class="rounded-2xl" :title="fullname" :image="form.model.profile_image" :subtitle="form.model.username"/>
             
-            <HeFlex class="border-y" horizontal padding="1rem 2rem">
+            <HeFlex class="border-y sticky top-16 z-20 bg-background" horizontal padding="1rem 2rem">
                 <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/users')"/>
                 <HeSpacer />
                 <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
@@ -22,6 +22,35 @@
                     <IodInput label="Email" v-model="form.model.email"/>
                     <IodInput type="password" label="Passwort" autocomplete="new-password" show-score :score-function="useZxcvbn()" v-model="form.password"/>
                 </HeFlex>
+
+                <HeFlex :gap="1">
+                    <h5 class="m-0 font-medium">Berechtigungen</h5>
+                    <VDropdown :shown="!!searchForm.search.length && !!searchForm.results.length" :triggers="[]" :auto-hide="false">
+                        <IodInput type="search" placeholder="Rollen suchen" v-model="searchForm.search" @update:modelValue="throttledSearch()" />
+
+                        <template #popper>
+                            <HeFlex align-y="flex-start" padding="1rem 0" class="min-w-80 max-h-80 small-scrollbar">
+                                <ProfileChip class="h-12 !p-2 flex-none" corner="none" v-for="result in searchForm.results" :title="result.name" :icon="result.icon" :color="result.color" @click="addRole(result)"/>
+                            </HeFlex>
+                        </template>
+                    </VDropdown>
+                    <div class="flex gap-2 flex-wrap">
+                        <IodButton
+                            v-for="role in form.roles"
+                            border
+                            size="s"
+                            corner="pill"
+                            type="button"
+                            variant="contained"
+                            v-tooltip='`"${role.name}" Rolle entfernen`'
+                            :background="role.color"
+                            :icon-left="role.icon"
+                            :label="role.name"
+                            @click="removeRole(role)"
+                        />
+                    </div>
+                </HeFlex>
+
 
 
 
@@ -251,6 +280,7 @@
 </template>
 
 <script lang="ts" setup>
+    import { debounce, throttle } from 'lodash'
     import { toast } from 'vue3-toastify'
 
     definePageMeta({
@@ -282,6 +312,7 @@
             created_at: '',
             updated_at: '',
         },
+        roles: [],
         user_name: {
             salutation: '',
             prefix: '',
@@ -365,6 +396,35 @@
         { value: 'anniversary', text: 'Jahrestag' },
         { value: 'other', text: 'Anders' },
     ]
+
+
+
+    // START: Roles
+    const searchForm = useForm({
+        search: '',
+        results: [],
+    })
+
+    const throttledSearch = throttle(search, 400)
+
+    async function search() {
+        searchForm.results = (await useAxios().get(apiRoute('/api/roles/basic', {
+            filter: {
+                search: searchForm.search,
+                exclude: form.roles.map((e: any) => e.id)
+            },
+            size: 10,
+        }))).data.data
+    }
+
+    function addRole(role: any) {
+        form.roles.push(role)
+        searchForm.reset()
+    }
+
+    function removeRole(role: any) {
+        form.roles = form.roles.filter((e: any) => e.id !== role.id)
+    }
 
 
 
@@ -509,7 +569,12 @@
 
     function store()
     {
-        form.post(apiRoute('/api/users'), {
+        form
+        .transform(data => {
+            return { ...data, roles: data.roles.map((e: any) => e.id)
+            }
+        })
+        .post(apiRoute('/api/users'), {
             onSuccess(response: any)
             {
                 form.defaults(response.value?.data).reset()
@@ -521,7 +586,12 @@
 
     function update()
     {
-        form.patch(apiRoute('/api/users/:id', { id: id.value }), {
+        form
+        .transform(data => {
+            return { ...data, roles: data.roles.map((e: any) => e.id)
+            }
+        })
+        .patch(apiRoute('/api/users/:id', { id: id.value }), {
             onSuccess(response: any)
             {
                 form.defaults(response.value?.data).reset()
@@ -546,7 +616,7 @@
         flex-direction: column
         align-items: stretch
         overflow: hidden
-        box-shadow: none
+        box-shadow: none !important
 
         .entity-card-head
             position: relative

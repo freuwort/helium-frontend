@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout limiter="text" name="auth-default" :pageTitle="id ? 'Rolle bearbeiten' : 'Rolle erstellen'" color="var(--color-primary)">
+    <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Rolle bearbeiten' : 'Rolle erstellen'" color="var(--color-primary)">
         <HeCard is="form" @submit.prevent="save">
             <HeFlex class="border-b" horizontal padding="1rem 2rem">
                 <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/roles')"/>
@@ -12,7 +12,7 @@
 
                 <HeFlex :gap="1">
                     <HeFlex horizontal :gap="1">
-                        <VDropdown :distance="6">
+                        <VDropdown :distance="6" placement="bottom-start">
                             <IodIconButton type="button" :icon="form.icon" size="l" corner="pill" variant="contained" :background="form.color" v-tooltip.bottom="'Farbe und Icon wählen'" />
                             <template #popper>
                                 <HeFlex :padding="1">

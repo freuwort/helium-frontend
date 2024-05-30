@@ -30,6 +30,9 @@
         &.size-page
             max-width: 1300px
 
+        &.size-medium
+            max-width: 900px
+
         &.size-text
             max-width: 650px
 
