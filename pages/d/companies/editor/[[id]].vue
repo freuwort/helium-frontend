@@ -293,7 +293,7 @@
         links: [],
     })
 
-    const countries = ref((await useAxios().get('/api/domain/units')).data.countries)
+    const countries = ref([])
 
     const legal_forms = [
         { value: 'gmbh', text: 'GmbH' },
@@ -548,8 +548,15 @@
     }
     // END: Server routes
 
-    // Initial fetch
+
+    
+    // Fetch model
     if (id.value) fetch()
+    
+    onMounted(async () => {
+        // Fetch additional data
+        countries.value = (await useAxios().get('/api/domain/units')).data.countries
+    })
 </script>
 
 <style lang="sass" scoped>

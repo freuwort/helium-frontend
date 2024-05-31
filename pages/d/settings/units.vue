@@ -27,10 +27,11 @@
 
 <script lang="ts" setup>
     import { toast } from 'vue3-toastify'
+    import type { BaseUnit, Country, Currency } from '~/types/units'
 
-    const baseUnits = ref([])
-    const countries = ref([])
-    const currencies = ref([])
+    const baseUnits = ref([] as BaseUnit[])
+    const countries = ref([] as Country[])
+    const currencies = ref([] as Currency[])
 
     async function fetch()
     {

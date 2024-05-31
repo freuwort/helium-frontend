@@ -58,7 +58,7 @@
                             @mousedown="handleMouseDown($event)"
                         />
 
-                        <div class="placeholder" v-if="placeholder">{{placeholder}}</div>
+                        <div class="placeholder" v-if="placeholder && allowsForCenteredLabelOrPlaceholder">{{placeholder}}</div>
                     </div>
 
                     <span class="suffix" v-if="suffix">{{suffix}}</span>
@@ -257,7 +257,7 @@
     })
 
     const inputType = computed((): string => {
-        return ['text', 'email', 'number', 'url', 'password', 'search', 'tel'].includes(props.type) ? props.type : 'text'
+        return ['text', 'email', 'number', 'url', 'password', 'search', 'tel', 'date', 'time', 'datetime-local'].includes(props.type) ? props.type : 'text'
     })
 
     const computedInputType = computed((): string => {
@@ -312,6 +312,10 @@
         return isFocused.value || isFilled.value
     })
 
+    const allowsForCenteredLabelOrPlaceholder = computed((): boolean => {
+        return !['date', 'time', 'datetime-local'].includes(inputType.value)
+    })
+
 
 
     const hasClearButton = computed((): boolean => {
@@ -355,6 +359,7 @@
                 'focused': isFocused.value,
                 'filled': isFilled.value,
                 'focused-or-filled': isFocusedOrFilled.value,
+                'allows-for-centered-label-or-placeholder': allowsForCenteredLabelOrPlaceholder.value,
                 'invalid': !isValid.value,
                 'has-label': props.label,
                 'bottom-bar-space': hasBottomBar.value,
@@ -602,6 +607,8 @@
                 .progress-bar
                     transform: scaleY(1)
 
+        &.focused-or-filled,
+        &:not(.allows-for-centered-label-or-placeholder)
             .input-wrapper
                 .label
                     transform: translate(0, -5px) scale(0.72)

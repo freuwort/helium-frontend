@@ -336,12 +336,12 @@
         links: [],
     })
 
-    const countries = ref((await useAxios().get('/api/domain/units')).data.countries)
-
     const fullname = computed(() => {
         const name = form.user_name
         return [name.prefix, name.firstname, name.middlename, name.lastname, name.suffix].filter(Boolean).join(' ')
     })
+    
+    const countries = ref([])
 
     const salutation_options = [
         { value: 'Herr', text: 'Herr' },
@@ -602,8 +602,15 @@
     }
     // END: Server routes
 
-    // Initial fetch
+    
+    
+    // Fetch model
     if (id.value) fetch()
+    
+    onMounted(async () => {
+        // Fetch additional data
+        countries.value = (await useAxios().get('/api/domain/units')).data.countries
+    })
 </script>
 
 <style lang="sass" scoped>

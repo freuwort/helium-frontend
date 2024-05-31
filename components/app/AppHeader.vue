@@ -46,7 +46,16 @@
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/d/files" show-chevron color="var(--color-primary)" icon="folder">Alle Dateien</ContextMenuItem>
-                        <ContextMenuItem to="/d/files" color="var(--color-primary)" icon="drive_folder_upload">Dateien hochladen</ContextMenuItem>
+                    </ContextMenu>
+                </template>
+            </VDropdown>
+
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+                <AppHeaderItem show-chevron color="#10b981" icon="local_activity"/>
+                <template #popper>
+                    <ContextMenu class="min-w-80">
+                        <ContextMenuItem to="/d/events" show-chevron color="#10b981" icon="local_activity">Alle Events</ContextMenuItem>
+                        <ContextMenuItem to="/d/events/editor" color="#10b981" icon="add_circle">Event erstellen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
