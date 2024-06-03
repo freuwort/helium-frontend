@@ -18,11 +18,27 @@
                     <IodInput label="Slug" v-model="form.model.slug"/>
                     <IodInput label="Description" v-model="form.model.description"/>
                     <div class="flex gap-2 items-center">
-                        <IodInput class="flex-1" type="datetime-local" label="Anfangsdatum" v-model="form.model.start_at"/>
+                        <IodInput
+                            type="datetime-local"
+                            class="flex-1"
+                            label="Anfangsdatum"
+                            :modelValue="toLocalDate(form.model.start_at)"
+                            @update:modelValue="form.model.start_at = toUtcDate($event)"
+                        />
                         <IodIcon icon="remove" />
-                        <IodInput class="flex-1" type="datetime-local" label="Enddatum" v-model="form.model.end_at"/>
+                        <IodInput
+                            type="datetime-local"
+                            class="flex-1"
+                            label="Enddatum"
+                            :modelValue="toLocalDate(form.model.end_at)"
+                            @update:modelValue="form.model.end_at = toUtcDate($event)"
+                        />
                     </div>
                 </HeFlex>
+
+
+
+                <IodButton :is="NuxtLink" label="Einladungen verwalten" size="l" variant="contained" :to="`/d/events/${id}/invites`"/>
 
 
 
@@ -63,7 +79,7 @@
     import { toast } from 'vue3-toastify'
     import type { Country } from '~/types/units'
 
-    const dayjs = useDayjs()
+    const NuxtLink = defineNuxtLink({})
 
     definePageMeta({
         middleware: 'auth',
@@ -71,7 +87,7 @@
 
     
 
-    // Item id
+    // Params
     const id = computed(() => useRoute().params.id ?? null)
 
     // Save function
@@ -132,10 +148,7 @@
         form.get(apiRoute('/api/events/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                let data = response.value?.data
-                data.model.start_at = data.model.start_at ? dayjs(data.model.start_at).format('YYYY-MM-DDTHH:mm') : null
-                data.model.end_at = data.model.end_at ? dayjs(data.model.end_at).format('YYYY-MM-DDTHH:mm') : null
-                form.defaults(data).reset()
+                form.defaults(response.value?.data).reset()
             },
         })
     }

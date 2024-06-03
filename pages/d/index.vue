@@ -1,50 +1,19 @@
 <template>
     <NuxtLayout name="auth-default" pageTitle="Startseite" color="var(--color-primary)">
         <HeCard>
-            <HeFlex gap="1rem" padding="1rem">
-                <ContextMenu>
-                    <ContextMenuItem to="/d" show-chevron icon="dashboard">Startseite</ContextMenuItem>
-                    <ContextMenuItem to="/d/files" show-chevron icon="drive_folder_upload">Dateien</ContextMenuItem>
-                    <ContextMenuItem to="/d/users" show-chevron icon="group">Nutzer</ContextMenuItem>
-                    <ContextMenuItem to="/d/settings" show-chevron icon="settings">Einstellungen</ContextMenuItem>
-                </ContextMenu>
-
-                <HeFlex horizontal gap="1rem">
-                    <IodButton class="flex-1" @click="popup_1.open()" variant="contained" size="l" icon-left="dock_to_right">Left Popup</IodButton>
-                    <IodButton class="flex-1" @click="popup_2.open()" variant="contained" size="l" icon-left="picture_in_picture_center">Center Popup</IodButton>
-                    <IodButton class="flex-1" @click="popup_3.open()" variant="contained" size="l" icon-left="dock_to_left">Right Popup</IodButton>
-                </HeFlex>
-
-                <IodProfileArray :data="profiles" :limit="6" class="mr-auto"/>
-
-                <HeFlex horizontal gap="1rem">
-                    <IodIcon icon="home" use-backdrop class="h-12 rounded-full text-blue-500"/>
-                    <IodIcon icon="home" color="var(--bg-purple-500)" use-backdrop class="h-12 rounded-full"/>
-                    <IodIcon icon="home" color="var(--bg-rose-500)" use-backdrop class="h-12 rounded-full"/>
-                    <IodIcon image="https://api.dicebear.com/8.x/shapes/svg?seed=1" use-backdrop class="h-12 rounded-full"/>
-                    <IodIcon image="https://api.dicebear.com/8.x/shapes/svg?seed=2" use-backdrop class="h-12 rounded-full"/>
-                    <IodIcon image="https://api.dicebear.com/8.x/shapes/svg?seed=3" use-backdrop class="h-12 rounded-full"/>
-                </HeFlex>
-            </HeFlex>
+            <div class="flex flex-col gap-6 p-6">
+                <div class="flex items-center">
+                    <SettingsTitle class="flex-1">Schnelle Aktionen</SettingsTitle>
+                    <HeSpacer/>
+                    <IodButton :is="NuxtLink" size="s" variant="text" to="/d/settings" icon-right="chevron_right" label="Einstellungen" />
+                </div>
+                <div class="flex gap-6">
+                    <IodButton :is="NuxtLink" class="flex-1 !h-20" variant="contained" to="/d/users/editor" background="var(--bg-indigo-600)" icon-left="group" label="Nutzer erstellen" />
+                    <IodButton :is="NuxtLink" class="flex-1 !h-20" variant="contained" to="/d/roles/editor" background="var(--bg-indigo-600)" icon-left="badge" label="Rolle erstellen" />
+                    <IodButton :is="NuxtLink" class="flex-1 !h-20" variant="contained" to="/d/events/editor" background="var(--bg-emerald-600)" icon-left="local_activity" label="Event erstellen" />
+                </div>
+            </div>
         </HeCard>
-
-        <IodPopup ref="popup_1" title="Left Popup" placement="left">
-            <HeFlex gap="1rem" padding="1rem">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur
-            </HeFlex>
-        </IodPopup>
-
-        <IodPopup ref="popup_2" title="Center Popup" placement="center">
-            <HeFlex gap="1rem" padding="1rem">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur
-            </HeFlex>
-        </IodPopup>
-
-        <IodPopup ref="popup_3" title="Right Popup" placement="right">
-            <HeFlex gap="1rem" padding="1rem">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur
-            </HeFlex>
-        </IodPopup>
     </NuxtLayout>
 </template>
 
@@ -53,18 +22,7 @@
         middleware: ['auth', '2fa-verified'],
     })
 
-    const popup_1 = ref()
-    const popup_2 = ref()
-    const popup_3 = ref()
-
-    const profiles = ref([
-        { label: 'Peter', icon: 'home', color: 'var(--bg-blue-500)' },
-        { label: 'Peter', icon: 'home', color: 'var(--bg-purple-500)' },
-        { label: 'Peter', icon: 'home', color: 'var(--bg-rose-500)' },
-        { label: 'Salem', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=1' },
-        { label: 'Mike', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=2' },
-        { label: 'Hugo', image: 'https://api.dicebear.com/8.x/shapes/svg?seed=3' },
-    ])
+    const NuxtLink = defineNuxtLink({})
 </script>
 
 <style lang="sass" scoped></style>

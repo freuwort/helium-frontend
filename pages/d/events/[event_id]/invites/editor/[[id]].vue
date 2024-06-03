@@ -1,0 +1,144 @@
+<template>
+    <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Event-Einladung bearbeiten' : 'Event-Einladung erstellen'" color="#10b981">
+        <HeCard is="form" @submit.prevent="save">
+            <HeFlex class="rounded-t-2xl border-b sticky top-16 z-20 bg-background" horizontal padding="1rem 2rem">
+                <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/events/' + eventId + '/invites')"/>
+                <HeSpacer />
+                <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
+            </HeFlex>
+
+            <HeFlex :padding="2" :gap="3">
+                <ErrorAlert :errors="form.errors" />
+
+
+
+                <HeFlex :gap="1">
+                    <h5 class="m-0 font-medium">Allgemeines</h5>
+                    <IodInput label="Email" v-model="form.model.email"/>
+                    <IodInput label="Telefon" v-model="form.model.phone"/>
+                    <IodInput label="Code" v-model="form.model.code"/>
+                    <IodInput label="Nutzer" v-model="form.model.user_id"/>
+                    <div class="flex">
+                        <IodButtonGroup corner="l">
+                            <IodIconButton type="button" icon="remove" background="var(--bg-zinc-600)" :variant="form.model.status === null ? 'filled' : 'contained'" @click="form.model.status = null" />
+                            <IodIconButton type="button" icon="check" background="var(--bg-green-500)" :variant="form.model.status === 'accepted' ? 'filled' : 'contained'" @click="form.model.status = 'accepted'" />
+                            <IodIconButton type="button" icon="question_mark" background="var(--bg-amber-500)" :variant="form.model.status === 'maybe' ? 'filled' : 'contained'" @click="form.model.status = 'maybe'" />
+                            <IodIconButton type="button" icon="close" background="var(--bg-red-500)" :variant="form.model.status === 'rejected' ? 'filled' : 'contained'" @click="form.model.status = 'rejected'" />
+                        </IodButtonGroup>
+                    </div>
+                </HeFlex>
+            </HeFlex>
+        </HeCard>
+    </NuxtLayout>
+</template>
+
+<script lang="ts" setup>
+    import { debounce, throttle } from 'lodash'
+    import { toast } from 'vue3-toastify'
+    import type { Country } from '~/types/units'
+
+    const NuxtLink = defineNuxtLink({})
+
+    definePageMeta({
+        middleware: 'auth',
+    })
+
+    
+
+    // Params
+    const eventId = computed(() => useRoute().params.event_id ?? null)
+    const id = computed(() => useRoute().params.id ?? null)
+
+    // Save function
+    const save = id.value ? update : store
+
+
+
+    const form = useForm({
+        id: id.value,
+        model: {
+            event_id: eventId.value,
+            user_id: null,
+            email: '',
+            phone: '',
+            code: '',
+            status: null,
+            created_at: '',
+            updated_at: '',
+        },
+    })
+    
+    
+    
+    // START: Server routes
+    function fetch()
+    {
+        form.get(apiRoute('/api/events/:eventId/invites/:id', { eventId: eventId.value, id: id.value }), {
+            onSuccess(response: any)
+            {
+                form.defaults(response.value?.data).reset()
+            },
+        })
+    }
+
+    function store()
+    {
+        form
+        .post(apiRoute('/api/events/:eventId/invites', { eventId: eventId.value }), {
+            onSuccess(response: any)
+            {
+                form.defaults(response.value?.data).reset()
+                toast.success('Einladung wurde erstellt')
+                navigateTo(apiRoute('/d/events/:eventId/invites/editor/:id', {
+                    eventId: response.value?.data?.model?.event_id,
+                    id: response.value?.data?.id
+                }))
+            },
+        })
+    }
+
+    function update()
+    {
+        form
+        .patch(apiRoute('/api/events/:eventId/invites/:id', { eventId: eventId.value, id: id.value }), {
+            onSuccess(response: any)
+            {
+                form.defaults(response.value?.data).reset()
+                toast.success('Einladung wurde aktualisiert')
+            },
+        })
+    }
+    // END: Server routes
+
+
+
+    // Fetch model
+    if (id.value) fetch()
+</script>
+
+<style lang="sass" scoped>
+    .entity-grid
+        display: grid
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))
+        gap: 2rem
+
+    .entity-card
+        display: flex
+        flex-direction: column
+        align-items: stretch
+        overflow: hidden
+        box-shadow: none !important
+
+        .entity-card-head
+            position: relative
+            height: 10rem
+            background: var(--color-background-soft)
+
+        .iod-button
+            position: absolute
+            top: 1rem
+            right: 1rem
+
+        .iod-icon
+            font-size: 4rem
+</style>

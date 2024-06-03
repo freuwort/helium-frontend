@@ -15,7 +15,7 @@
                 @request:refresh="IPM.fetch()"
             >
                 <template #header>
-                    <IodButton type="button" label="Neues Event" @click="IPM.open()"/>
+                    <IodButton type="button" label="Neue Einladung" @click="IPM.open()"/>
                 </template>
             </IodTable>
         </HeCard>
@@ -31,23 +31,34 @@
 
 
 
+    // Params
+    const eventId = computed(() => useRoute().params.event_id ?? null)
+
     const IPM = useItemPageManager({
-        pageTitle: 'Events Verwaltung',
-        scope: 'admin.events.index',
+        pageTitle: 'Event-Einladungen Verwaltung',
+        scope: 'admin.event-invites.index',
         routes: {
-            fetch: '/api/events/',
-            duplicate: '/api/events/:id/duplicate',
-            delete: '/api/events/',
-            editor: '/d/events/editor/:id',
+            fetch: '/api/events/'+eventId.value+'/invites/',
+            duplicate: '/api/events/'+eventId.value+'/invites/:id/duplicate',
+            delete: '/api/events/'+eventId.value+'/invites/',
+            editor: '/d/events/'+eventId.value+'/invites/editor/:id',
         },
     })
 
     const tableColumns = [
-        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
-        { name: 'slug', label: 'Slug', valuePath: 'slug', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
-        { name: 'invites_count', label: 'Einladungen', valuePath: 'invites_count', sortable: false, width: 200, resizeable: true, hideable: true, default: '-'},
-        { name: 'start_at', label: 'Anfangsdatum', valuePath: 'start_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: toLocalDate(value, 'DD.MM.YYYY'), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
-        { name: 'end_at', label: 'Enddatum', valuePath: 'end_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: toLocalDate(value, 'DD.MM.YYYY'), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
+        { name: 'email', label: 'Email', valuePath: 'email', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
+        { name: 'phone', label: 'Telefon', valuePath: 'phone', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
+        { name: 'user_id', label: 'Zugewiesener Nutzer', valuePath: 'user_id', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
+            if (!value) return '-'
+            return {
+                text: item.user.name || '-',
+                tooltip: item.user.name,
+                image: item.user.profile_image,
+                icon: 'person',
+            }
+        }},
+        { name: 'code', label: 'Code', valuePath: 'code', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
+        { name: 'status', label: 'Status', valuePath: 'status', sortable: true, width: 200, resizeable: true, hideable: true, default: 'pending' },
         { name: 'created_at', label: 'Erstellt', valuePath: 'created_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
         { name: 'updated_at', label: 'Zuletzt geändert', valuePath: 'updated_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) => value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
     ]
