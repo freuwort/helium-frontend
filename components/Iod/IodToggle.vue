@@ -78,6 +78,7 @@
 
     const props = defineProps({
         modelValue: {
+            type: null as unknown as PropType<boolean | string | number | null | undefined>,
             default: null,
         },
         type: {
@@ -157,7 +158,7 @@
 
 
 
-    const parseValue = (value: string|boolean|number|null) => {
+    const parseValue = (value: string|boolean|number|null|undefined) => {
         if (value === props.offValue) return false
 
         if (value === props.value) return true

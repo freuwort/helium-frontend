@@ -16,9 +16,12 @@
             >
                 <template #header>
                     <IodButton type="button" label="Neue Einladung" @click="IPM.open()"/>
+                    <IodButton type="button" label="Importieren" @click="importPopup.select()"/>
                 </template>
             </IodTable>
         </HeCard>
+
+        <DialogCsvImport ref="importPopup" :expected-values="expectedValues" @import="importInvites" />
     </NuxtLayout>
 </template>
 
@@ -97,6 +100,27 @@
     ]
 
     const tableFilters = [] as any[]
+
+
+
+    // START: Import
+    const importPopup = ref()
+
+    const expectedValues = [
+        { name: 'email', label: 'Email', default: null },
+        { name: 'phone', label: 'Telefon', default: null },
+        { name: 'code', label: 'Code', default: null },
+        { name: 'user_id', label: 'Nutzer ID', default: null },
+        { name: 'status', label: 'Status', default: null },
+    ]
+
+    async function importInvites(data: any[])
+    {
+        await useAxios().post('/api/events/'+eventId.value+'/invites/import', {items: data})
+
+        IPM.fetch()
+    }
+    // END: Import
 </script>
 
 <style lang="sass" scoped></style>
