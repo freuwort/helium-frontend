@@ -16,14 +16,18 @@
                     <h5 class="m-0 font-medium">Allgemeines</h5>
                     <IodInput label="Email" v-model="form.model.email"/>
                     <IodInput label="Telefon" v-model="form.model.phone"/>
-                    <IodInput label="Code" v-model="form.model.code"/>
+                    <IodInput label="Code" v-model="form.model.code">
+                        <template #right>
+                            <IodIconButton type="button" icon="password" v-tooltip="'Code generieren'" size="s" variant="text" @click="form.model.code = randomString(40)"/>
+                        </template>
+                    </IodInput>
                     <IodInput label="Nutzer" v-model="form.model.user_id"/>
                     <div class="flex">
                         <IodButtonGroup corner="l">
                             <IodIconButton type="button" icon="remove" background="var(--bg-zinc-600)" :variant="form.model.status === null ? 'filled' : 'contained'" @click="form.model.status = null" />
-                            <IodIconButton type="button" icon="check" background="var(--bg-green-500)" :variant="form.model.status === 'accepted' ? 'filled' : 'contained'" @click="form.model.status = 'accepted'" />
-                            <IodIconButton type="button" icon="question_mark" background="var(--bg-amber-500)" :variant="form.model.status === 'maybe' ? 'filled' : 'contained'" @click="form.model.status = 'maybe'" />
                             <IodIconButton type="button" icon="close" background="var(--bg-red-500)" :variant="form.model.status === 'rejected' ? 'filled' : 'contained'" @click="form.model.status = 'rejected'" />
+                            <IodIconButton type="button" icon="question_mark" background="var(--bg-amber-500)" :variant="form.model.status === 'maybe' ? 'filled' : 'contained'" @click="form.model.status = 'maybe'" />
+                            <IodIconButton type="button" icon="check" background="var(--bg-green-500)" :variant="form.model.status === 'accepted' ? 'filled' : 'contained'" @click="form.model.status = 'accepted'" />
                         </IodButtonGroup>
                     </div>
                 </HeFlex>

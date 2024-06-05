@@ -14,8 +14,12 @@
 
                 <HeFlex :gap="1">
                     <h5 class="m-0 font-medium">Allgemeines</h5>
-                    <IodInput label="Name" v-model="form.model.name"/>
-                    <IodInput label="Slug" v-model="form.model.slug"/>
+                    <IodInput label="Name" v-model="form.model.name" @input="form.model.slug = slugify(form.model.name)"/>
+                    <IodInput label="Slug" v-model="form.model.slug">
+                        <template #right>
+                            <IodIconButton type="button" icon="auto_awesome" v-tooltip="'Automatisch generieren'" size="s" variant="text" @click="form.model.slug = slugify(form.model.name)"/>
+                        </template>
+                    </IodInput>
                     <IodInput label="Description" v-model="form.model.description"/>
                     <div class="flex gap-2 items-center">
                         <IodInput

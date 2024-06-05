@@ -30,14 +30,9 @@
                 </IodInput>
     
                 <template v-if="selection && selection.length">
-                    <div class="flex v-center padding-inline-1 background-soft radius-m" style="height: 2.5rem">
-                        <span>
-                            <b>{{ selection.length }} {{ selection.length === 1 ? 'Element' : 'Elemente' }}</b> ausgewählt
-                        </span>
-                    </div>
-                    <div class="flex v-center gap-0-5">
-                        <IodIconButton icon="deselect" style="--local-color-background: var(--color-text)" variant="contained" v-tooltip="'Alles abwählen'" @click="deselectAll()"/>
-                        <IodIconButton v-for="action in multipleActions" :icon="action.icon" :style="'--local-color-background: ' + action.color" variant="contained" v-tooltip="action.text" @click.stop="action.run(selection)"/>
+                    <div class="p-1 flex items-center gap-1 bg-background-soft rounded-lg">
+                        <IodButton class="!px-2" size="s" variant="text" :label="`Auswahl (${selection.length})`" v-tooltip="'Alles abwählen'" @click="deselectAll()"/>
+                        <IodIconButton size="s" variant="text" :icon="action.icon" v-tooltip="action.text" :background="action.color" v-for="action in multipleActions" @click.stop="action.run(selection)"/>
                     </div>
                 </template>
                 
@@ -98,7 +93,7 @@
 
                     <div class="table-column actions">
                         <div class="button-container">
-                            <IodIconButton v-for="action in individualActions" :icon="action.icon" :style="'--local-color-background: '+action.color" v-tooltip="action.text" @click.stop="action.run([item.id])"/>
+                            <IodIconButton v-for="action in individualActions" size="s" variant="contained" :icon="action.icon" :background="action.color" v-tooltip="action.text" @click.stop="action.run([item.id])"/>
                         </div>
                     </div>
                 </div>
@@ -633,26 +628,11 @@
                         display: flex
                         align-items: center
                         padding: .25rem 1rem
-                        gap: 0
+                        gap: .25rem
                         background: var(--color-background-soft)
                         transform-origin: right
                         transform: translateX(1rem)
                         transition: all 100ms
-                        border-radius: var(--radius-m) 0 0 var(--radius-m)
-
-                        .iod-button
-                            border-radius: 0
-                            height: 2.25rem
-                            width: 2.25rem
-                            
-                            &:not(:last-child)
-                                border: none
-                                
-                            &:first-child
-                                border-radius: var(--radius-m) 0 0 var(--radius-m)
-
-                            &:last-child
-                                border-radius: 0 var(--radius-m) var(--radius-m) 0
 
                 &.sortable:hover
                     .column-sort-indicator
@@ -685,7 +665,7 @@
                     top: 3px
                     bottom: 3px
                     border-radius: 3px
-                    background: var(--color-primary)
+                    background: var(--color-text)
                     z-index: 10
                     display: none
                     opacity: 0

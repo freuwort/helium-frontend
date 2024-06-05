@@ -1,14 +1,15 @@
 import _ from 'lodash'
 
-type Id = string | number
+type Key = string | number
 
 type Item = {
-    id: Id,
+    id: Key,
     [key: string]: any,
 }
 
 type PaginatedData = {
     data: Item[],
+    keys?: Key[],
     meta: {
         total: number,
         from: number,
@@ -64,8 +65,8 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
 
     const IPM = reactive({
         items: [] as Item[],
-        itemIds: [] as Id[],
-        selection: [] as Id[],
+        keys: [] as Key[],
+        selection: [] as Key[],
         processing: false as boolean,
         scope: options?.scope ?? '' as string,
         filter: {},
@@ -199,7 +200,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
 
 
 
-        open(id?: Id)
+        open(id?: Key)
         {
             navigateTo(apiRoute(this.options.routes?.editor as string, { id: id ?? '' }))
         },
@@ -213,7 +214,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
             })
         },
 
-        duplicate(id: Id)
+        duplicate(id: Key)
         {
             useForm({}).post(apiRoute(this.options.routes?.duplicate as string, { id }), {
                 onSuccess: () => {
@@ -222,7 +223,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
             })
         },
 
-        delete(ids: Id[] = [], message: string = 'Are you sure you want to delete the selected items?', options: DeleteOptions = {})
+        delete(ids: Key[] = [], message: string = 'Are you sure you want to delete the selected items?', options: DeleteOptions = {})
         {
             // Construct options
             options = {
@@ -284,7 +285,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
         let paginatedData = data?.value as PaginatedData
 
         IPM.items = paginatedData?.data ?? []
-        // IPM.itemIds = paginatedData.item_ids ?? IPM.items.map(i => i?.id).filter(id => id || id === 0 || id === '0') ?? []
+        IPM.keys = paginatedData?.keys ?? IPM.items.map(i => i?.id).filter(id => id || id === 0 || id === '0') ?? []
         IPM.pagination.from = paginatedData?.meta?.from ?? 0
         IPM.pagination.to = paginatedData?.meta?.to ?? 0
         IPM.pagination.total = paginatedData?.meta?.total ?? 0

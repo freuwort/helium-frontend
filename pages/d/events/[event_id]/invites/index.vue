@@ -15,17 +15,24 @@
                 @request:refresh="IPM.fetch()"
             >
                 <template #header>
-                    <IodButton type="button" label="Neue Einladung" @click="IPM.open()"/>
-                    <IodButton type="button" label="Importieren" @click="importPopup.select()"/>
+                    <div class="p-1 flex items-center gap-1 bg-background-soft rounded-lg">
+                        <IodIconButton type="button" size="s" variant="text" icon="cloud_upload" v-tooltip="'Importieren'" @click="importPopup.select()"/>
+                        <IodIconButton type="button" size="s" variant="text" icon="file_save" v-tooltip="'Exportieren'"/>
+                        <IodIconButton type="button" size="s" variant="text" icon="stacked_email" v-tooltip="'Massenmail versenden'" @click="sendEmailPopup.open(IPM.keys)"/>
+                    </div>
+                    <IodButton type="button" variant="filled" label="Neue&nbsp;Einladung" @click="IPM.open()"/>
                 </template>
             </IodTable>
         </HeCard>
 
         <DialogCsvImport ref="importPopup" :expected-values="expectedValues" @import="importInvites" />
+        <DialogSendTemplatedEmail ref="sendEmailPopup" :templates="templates" @send="sendEmail"/>
     </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
+    import { toast } from 'vue3-toastify'
+
     const dayjs = useDayjs()
     
     definePageMeta({
@@ -118,9 +125,40 @@
     {
         await useAxios().post('/api/events/'+eventId.value+'/invites/import', {items: data})
 
+        toast.success('Einladungen wurden importiert')
+
         IPM.fetch()
     }
     // END: Import
+
+
+
+    // START: Export
+    // END: Export
+
+
+
+    // START: Send mail
+    const sendEmailPopup = ref()
+
+    const templates = [
+        { template: '{{email}}', name: 'Email', type: 'email' },
+        { template: '{{phone}}', name: 'Telefonnummer', type: 'text' },
+        { template: '{{status}}', name: 'RSVP-Status', type: 'text' },
+        { template: '{{code}}', name: 'Einladungscode', type: 'text' },
+        { template: '{{invite_link}}', name: 'Einladungslink', type: 'html' },
+        { template: '{{user_name}}', name: 'Name des Nutzers', type: 'text' },
+        { template: '{{created_at}}', name: 'Erstellungsdatum', type: 'date' },
+        { template: '{{updated_at}}', name: 'Zuletzt geändert', type: 'date' },
+    ]
+
+    async function sendEmail(data: any)
+    {
+        await useAxios().patch('/api/events/'+eventId.value+'/invites/email', data)
+
+        toast.success('Emails wurden gesendet')
+    }
+    // END: Send mail
 </script>
 
 <style lang="sass" scoped></style>

@@ -124,7 +124,7 @@
             
             <HeSpacer />
 
-            <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
+            <!-- <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron icon="notifications"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -132,13 +132,15 @@
                         <ContextMenuDivider />
                     </ContextMenu>
                 </template>
-            </VDropdown>
+            </VDropdown> -->
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
                 <ProfileChip v-if="auth.user" :title="auth.user.name ?? auth.user.fullname ?? ''" :subtitle="auth.user.username ?? ''" :image="auth.user.profile_image" align="right"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/d/profile" show-chevron icon="person">Profil</ContextMenuItem>
-                        <ContextMenuItem to="/d/settings/personal" show-chevron icon="settings">Konto</ContextMenuItem>
+                        <ContextMenuItem to="/d/settings/personal" show-chevron icon="manage_accounts">Profil Einstellungen</ContextMenuItem>
+                        <ContextMenuDivider />
+                        <ContextMenuItem to="/d/settings" show-chevron icon="settings">Domain Verwaltung</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem is="button" show-chevron color="var(--color-error)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
                     </ContextMenu>

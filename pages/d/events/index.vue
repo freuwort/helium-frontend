@@ -23,6 +23,8 @@
 </template>
 
 <script lang="ts" setup>
+import { transform } from 'lodash';
+
     const dayjs = useDayjs()
     
     definePageMeta({
@@ -45,7 +47,7 @@
     const tableColumns = [
         { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
         { name: 'slug', label: 'Slug', valuePath: 'slug', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
-        { name: 'invites_count', label: 'Einladungen', valuePath: 'invites_count', sortable: false, width: 200, resizeable: true, hideable: true, default: '-'},
+        { name: 'invites_count', label: 'Einladungen', valuePath: 'invites_count', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: number | null) => (value || 0).toString() },
         { name: 'start_at', label: 'Anfangsdatum', valuePath: 'start_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: toLocalDate(value, 'DD.MM.YYYY'), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
         { name: 'end_at', label: 'Enddatum', valuePath: 'end_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: toLocalDate(value, 'DD.MM.YYYY'), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
         { name: 'created_at', label: 'Erstellt', valuePath: 'created_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
@@ -53,6 +55,16 @@
     ]
 
     const tableActions = [
+        {
+            icon: 'forward_to_inbox',
+            text: 'Einladungen verwalten',
+            color: 'var(--color-text)',
+            individual: true,
+            multiple: false,
+            triggerOnRowClick: false,
+            isAvailable: () => true,
+            run: (items: (number | string)[]) => navigateTo(`/d/events/${items[0]}/invites`),
+        },
         {
             icon: 'edit',
             text: 'Bearbeiten',
@@ -63,16 +75,16 @@
             isAvailable: () => true,
             run: (items: (number | string)[]) => IPM.open(items[0]),
         },
-        {
-            icon: 'content_copy',
-            text: 'Duplizieren',
-            color: 'var(--color-text)',
-            individual: true,
-            multiple: false,
-            triggerOnRowClick: false,
-            isAvailable: () => true,
-            run: (items: (number | string)[]) => IPM.duplicate(items[0]),
-        },
+        // {
+        //     icon: 'content_copy',
+        //     text: 'Duplizieren',
+        //     color: 'var(--color-text)',
+        //     individual: true,
+        //     multiple: false,
+        //     triggerOnRowClick: false,
+        //     isAvailable: () => true,
+        //     run: (items: (number | string)[]) => IPM.duplicate(items[0]),
+        // },
         {
             icon: 'delete',
             text: 'Löschen',
