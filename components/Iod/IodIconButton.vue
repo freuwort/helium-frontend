@@ -27,7 +27,7 @@
 
     const props = defineProps({
         is: {
-            type: String,
+            type: [String, Object, Function, Symbol, Array, Promise, Boolean, Number],
             default: 'button'
         },
         variant: {

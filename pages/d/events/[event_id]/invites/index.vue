@@ -14,12 +14,17 @@
                 v-model:pagination="IPM.modelPagination"
                 @request:refresh="IPM.fetch()"
             >
-                <template #header>
-                    <div class="p-1 flex items-center gap-1 bg-background-soft rounded-lg">
-                        <IodIconButton type="button" size="s" variant="text" icon="cloud_upload" v-tooltip="'Importieren'" @click="importPopup.select()"/>
-                        <IodIconButton type="button" size="s" variant="text" icon="file_save" v-tooltip="'Exportieren'"/>
-                        <IodIconButton type="button" size="s" variant="text" icon="stacked_email" v-tooltip="'Massenmail versenden'" @click="sendEmailPopup.open(IPM.keys)"/>
-                    </div>
+                <template #left>
+                    <IodIconButton :is="NuxtLink" :to="'/d/events/editor/' + $route.params.event_id" variant="text" icon="arrow_back" v-tooltip="'Zum Event'"/>
+                </template>
+
+                <template #wrapped-right>
+                    <IodIconButton type="button" size="s" variant="text" icon="cloud_upload" v-tooltip="'Importieren'" @click="importPopup.select()"/>
+                    <IodIconButton type="button" size="s" variant="text" icon="file_save" v-tooltip="'Exportieren'"/>
+                    <IodIconButton type="button" size="s" variant="text" icon="stacked_email" v-tooltip="'Massenmail versenden'" @click="sendEmailPopup.open(IPM.keys)"/>
+                </template>
+
+                <template #right>
                     <IodButton type="button" variant="filled" label="Neue&nbsp;Einladung" @click="IPM.open()"/>
                 </template>
             </IodTable>
@@ -34,6 +39,7 @@
     import { toast } from 'vue3-toastify'
 
     const dayjs = useDayjs()
+    const NuxtLink = defineNuxtLink({})
     
     definePageMeta({
         middleware: 'auth',
