@@ -3,28 +3,37 @@
         <HeFlex is="form" padding="1.5rem" gap="1.5rem" @submit.prevent="send()">
             <div class="flex flex-col gap-2">
                 <IodInput prefix="Empfänger:&nbsp;" placeholder="vorausgewählt" disabled />
-                <IodInput prefix="CC:&nbsp;" v-model="cc" />
-                <IodInput prefix="BCC:&nbsp;" v-model="bcc" />
-                <IodInput prefix="Betreff:&nbsp;" v-model="subject">
+                <IodInput prefix="CC:&nbsp;" v-model="form.cc" />
+                <IodInput prefix="BCC:&nbsp;" v-model="form.bcc" />
+                <IodInput prefix="Betreff:&nbsp;" v-model="form.subject">
                     <template #right>
                         <VDropdown placement="bottom-end">
                             <IodIconButton type="button" size="s" icon="data_object" variant="text" v-tooltip="'Vorlage auswählen'"/>
-
+                            
                             <template #popper>
                                 <ContextMenu class="min-w-64">
-                                    <ContextMenuItem class="!min-h-10" :icon="getIconFromType(template.type)" v-for="template in templates" @click="subject += template.template">{{ template.name ?? template.template }}</ContextMenuItem>
+                                    <ContextMenuItem class="!min-h-10" :icon="getIconFromType(template.type)" v-for="template in templates" @click="form.subject += template.template">{{ template.name ?? template.template }}</ContextMenuItem>
                                 </ContextMenu>
                             </template>
                         </VDropdown>
                     </template>
                 </IodInput>
             </div>
-
-            <textarea class="w-full h-40 p-2 px-4 bg-background-soft rounded-lg" v-model="message" placeholder="Nachricht" />
-
+            
+            <textarea class="w-full h-40 p-2 px-4 bg-background-soft rounded-lg" v-model="form.message" placeholder="Nachricht" />
+            
+            <IodInput prefix="Anhänge:&nbsp;" :modelValue="form.attachments.join(', ')" placeholder="keine" disabled>
+                <template #right>
+                    <IodIconButton type="button" size="s" icon="close" variant="text" v-tooltip="'Anhänge entfernen'" @click="form.attachments = []" v-show="form.attachments.length"/>
+                    <IodIconButton type="button" size="s" icon="attach_file" variant="text" v-tooltip="'Dateien auswählen'" @click="filePicker.open()"/>
+                </template>
+            </IodInput>
+            
             <IodButton class="w-full" type="submit" size="l" label="senden"/>
         </HeFlex>
     </IodPopup>
+
+    <DialogMediaPicker ref="filePicker" @select="form.attachments = $event" type="file" multiple/>
 </template>
 
 <script lang="ts" setup>
@@ -37,39 +46,36 @@
         description?: string
     }
 
-    const props = defineProps({
+    defineProps({
         templates: Object as PropType<Templates[]>,
     })
 
 
 
     const popup = ref()
-    const keys = ref([] as string[]|number[])
-    const cc = ref('')
-    const bcc = ref('')
-    const subject = ref('')
-    const message = ref('')
-    const attachments = ref([])
+    const filePicker = ref()
+    const form = useForm({
+        ids: [],
+        cc: '',
+        bcc: '',
+        subject: '',
+        message: '',
+        attachments: [],
+    })
 
 
 
     function open(items: string[]|number[])
     {
-        keys.value = items
+        form.reset()
+        form.ids = items
         
         popup.value.open()
     }
 
     function send()
     {
-        emits('send', {
-            ids: keys.value,
-            cc: cc.value,
-            bcc: bcc.value,
-            subject: subject.value,
-            message: message.value,
-            attachments: attachments.value
-        })
+        emits('send', form.data())
 
         popup.value.close()
     }

@@ -8,16 +8,16 @@
             <IodButton class="flex-1" label="Trigger" :loading="form.processing" />
         </SettingsRow>
     </form>
-    <SettingsSpacer />
-
     
-
+    
+    
+    <SettingsSpacer />
     <SettingsTitle>Iod Components</SettingsTitle>
     <SettingsRow title="IodPopup" description="Open a test popup">
         <IodButtonGroup class="flex-1">
-            <IodButton variant="contained" @click="popup_1.open()">Left</IodButton>
-            <IodButton variant="contained" @click="popup_2.open()">Center</IodButton>
-            <IodButton variant="contained" @click="popup_3.open()">Right</IodButton>
+            <IodButton variant="contained" @click="popupLeft.open()">Left</IodButton>
+            <IodButton variant="contained" @click="popupCenter.open()">Center</IodButton>
+            <IodButton variant="contained" @click="popupRight.open()">Right</IodButton>
         </IodButtonGroup>
     </SettingsRow>
 
@@ -36,25 +36,35 @@
         <IodProfileArray :data="profiles" :limit="6" class="ml-auto"/>
     </SettingsRow>
 
+    <IodPopup ref="popupLeft" title="Left Popup" blur="0" placement="left"><span class="p-6">Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur</span></IodPopup>
+    <IodPopup ref="popupCenter" title="Center Popup" blur="0" placement="center"><span class="p-6">Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur</span></IodPopup>
+    <IodPopup ref="popupRight" title="Right Popup" blur="0" placement="right"><span class="p-6">Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur</span></IodPopup>
+    
+    
+    
+    <SettingsSpacer />
+    <SettingsTitle>Media Picker</SettingsTitle>
+    <SettingsRow title="Media Picker" description="Open a media picker popup">
+        <IodButtonGroup class="flex-1">
+            <IodIconButton variant="contained" background="var(--bg-blue-600)" icon="draft" @click="filePicker.open()"/>
+            <IodIconButton variant="contained" background="var(--bg-blue-600)" icon="file_copy" @click="filesPicker.open()"/>
+        </IodButtonGroup>
+        <IodButtonGroup class="flex-1">
+            <IodIconButton variant="contained" background="var(--bg-blue-600)" icon="folder" @click="dirPicker.open()"/>
+            <IodIconButton variant="contained" background="var(--bg-blue-600)" icon="folder_copy" @click="dirsPicker.open()"/>
+        </IodButtonGroup>
+        <IodButtonGroup class="flex-1">
+            <IodIconButton variant="contained" background="var(--bg-blue-600)" icon="photo_library" @click="imagePicker.open()"/>
+            <IodIconButton variant="contained" background="var(--bg-blue-600)" icon="image" @click="jpegPicker.open()"/>
+        </IodButtonGroup>
+    </SettingsRow>
 
-
-    <IodPopup ref="popup_1" title="Left Popup" placement="left">
-        <HeFlex gap="1rem" padding="1rem">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur
-        </HeFlex>
-    </IodPopup>
-
-    <IodPopup ref="popup_2" title="Center Popup" placement="center">
-        <HeFlex gap="1rem" padding="1rem">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur
-        </HeFlex>
-    </IodPopup>
-
-    <IodPopup ref="popup_3" title="Right Popup" placement="right">
-        <HeFlex gap="1rem" padding="1rem">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur
-        </HeFlex>
-    </IodPopup>
+    <DialogMediaPicker ref="filePicker" @select="console.log" type="file"/>
+    <DialogMediaPicker ref="filesPicker" @select="console.log" type="file" multiple/>
+    <DialogMediaPicker ref="dirPicker" @select="console.log" type="directory"/>
+    <DialogMediaPicker ref="dirsPicker" @select="console.log" type="directory" multiple/>
+    <DialogMediaPicker ref="imagePicker" @select="console.log" type="file" mime="image/*"/>
+    <DialogMediaPicker ref="jpegPicker" @select="console.log" type="file" mime="image/jpeg"/>
 </template>
 
 <script lang="ts" setup>
@@ -62,9 +72,7 @@
 
 
 
-    const form = useForm({
-        status: 403,
-    })
+    const form = useForm({ status: 403 })
 
     function triggerStatus() {
         form.get('/api/debug/status/'+form.status, {
@@ -79,9 +87,11 @@
 
 
 
-    const popup_1 = ref()
-    const popup_2 = ref()
-    const popup_3 = ref()
+    const popupLeft = ref()
+    const popupCenter = ref()
+    const popupRight = ref()
+
+
 
     const profiles = ref([
         { label: 'Peter', icon: 'home', color: 'var(--bg-zinc-500)' },
@@ -91,6 +101,15 @@
         { label: 'Mike', image: 'https://api.dicebear.com/8.x/croodles/svg?seed=2' },
         { label: 'Hugo', image: 'https://api.dicebear.com/8.x/croodles/svg?seed=3' },
     ])
+
+
+
+    const filePicker = ref()
+    const filesPicker = ref()
+    const dirPicker = ref()
+    const dirsPicker = ref()
+    const imagePicker = ref()
+    const jpegPicker = ref()
 </script>
 
 <style lang="sass" scoped></style>

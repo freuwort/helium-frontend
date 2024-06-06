@@ -20,7 +20,7 @@
             <a v-if="!isDirectory" class="title" v-tooltip="nameTooltip" href="#" @click.prevent="emits('edit', item)">{{ item.name }}</a>
             <IodProfileArray class="profiles" :data="profiles" @dblclick.stop="emits('share', item)"/>
         </div>
-        <div class="overlay">
+        <div class="overlay" v-show="showContextMenu">
             <VDropdown placement="bottom">
                 <IodIconButton class="more-button" type="button" variant="contained" corner="pill" icon="more_vert" size="s"/>
                 <template #popper>
@@ -59,6 +59,10 @@
             default: false
         },
         dragging: {
+            type: Boolean,
+            default: false
+        },
+        showContextMenu: {
             type: Boolean,
             default: false
         },

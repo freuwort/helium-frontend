@@ -1,15 +1,16 @@
 <template>
     <div class="iod-container iod-breadcrumbs">
-        <NuxtLink
+        <button
+            type="button"
             class="breadcrumb"
             v-for="item in items"
             :key="item.navigate_path"
-            :to="item.navigate_path"
+            @click="emits('navigate', item.navigate_path)"
             @dragover.prevent
             @drop.prevent="onDrop($event, item.src_path)"
         >
             <div class="label">{{ item.text }}</div>
-        </NuxtLink>
+        </button>
     </div>
 </template>
 
@@ -38,7 +39,7 @@
 
             items.push({
                 text: part,
-                navigate_path: [props.rootPath, ...path].join('/'),
+                navigate_path: [props.rootPath, ...path].filter(e => e).join('/'),
                 src_path: path.join('/'),
             })
         }
@@ -54,7 +55,7 @@
         })
     }
 
-    const emits = defineEmits(['drop'])
+    const emits = defineEmits(['drop', 'navigate'])
 </script>
 
 <style lang="sass" scoped>

@@ -28,7 +28,7 @@
 
         <HeFlex gap="1rem">
             <div class="selection-bar">
-                <MediaBreadcrumbs :path="path" root-path="/d/files" @drop="onDrop($event.event, $event.path)"/>
+                <MediaBreadcrumbs :path="path" root-path="/d/files" @navigate="navigateTo($event)" @drop="onDrop($event.event, $event.path)"/>
                 <HeSpacer />
                 <IodIconButton type="button" corner="pill" variant="text" size="s" icon="delete" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
                 <IodLoader type="bar" v-show="loading"/>
@@ -102,6 +102,7 @@
         loading.value = true
         const { data } = await useAxios().get(`/api/media/${path.value}`)
         loading.value = false
+
         items.value = data.data
     }
 
