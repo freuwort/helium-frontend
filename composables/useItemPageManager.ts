@@ -10,6 +10,9 @@ type Item = {
 type PaginatedData = {
     data: Item[],
     keys?: Key[],
+    filter_values?: {
+        [key: string]: any[],
+    },
     meta: {
         total: number,
         from: number,
@@ -70,6 +73,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
         processing: false as boolean,
         scope: options?.scope ?? '' as string,
         filter: {},
+        availableFilterValues: {},
         sort: {
             field: null,
             order: 'desc',
@@ -208,7 +212,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
         store(data: any[])
         {
             useForm(data).post(this.options.routes?.store as string, {
-                onSuccess: () => {
+                onSuccess() {
                     $fetch()
                 },
             })
@@ -217,7 +221,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
         duplicate(id: Key)
         {
             useForm({}).post(apiRoute(this.options.routes?.duplicate as string, { id }), {
-                onSuccess: () => {
+                onSuccess() {
                     $fetch()
                 },
             })
@@ -286,6 +290,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
 
         IPM.items = paginatedData?.data ?? []
         IPM.keys = paginatedData?.keys ?? IPM.items.map(i => i?.id).filter(id => id || id === 0 || id === '0') ?? []
+        IPM.availableFilterValues = paginatedData?.filter_values ?? {}
         IPM.pagination.from = paginatedData?.meta?.from ?? 0
         IPM.pagination.to = paginatedData?.meta?.to ?? 0
         IPM.pagination.total = paginatedData?.meta?.total ?? 0
@@ -298,7 +303,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
 
 
 
-    // ToDo: there surely is a better way to do this
+    // TODO: there surely is a better way to do this
     IPM.filter = SessionStorage.get(IPM.scope, 'filter', {})
     IPM.sort.field = SessionStorage.get(IPM.scope, 'sort.field', null)
     IPM.sort.order = SessionStorage.get(IPM.scope, 'sort.order', 'desc')

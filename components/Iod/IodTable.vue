@@ -14,22 +14,7 @@
                     v-model="filter.search"
                 >
                     <template #right>
-                        <VDropdown placement="bottom" v-if="filterSettings && filterSettings.length">
-                            <IodIconButton type="button" variant="text" size="s" icon="filter_list" v-tooltip="'Filter'"/>
-                            <template #popper>
-                                <div class="flex vertical gap-1 padding-1">
-                                    <div class="flex gap-0-5 vertical" v-for="row in filterSettings">
-                                        <span>{{ row.label }}</span>
-                                        <template v-if="row.type == 'select'">
-                                            <!-- <IodSelect class="w-20" :label="row.label" :multiple="row.multiple" :options="row.values" v-model="filter[row.name]"/> -->
-                                            <select class="w-20 h-6" :multiple="row.multiple" v-model="filter[row.name]">
-                                                <option v-for="option in row.values" :value="option.value">{{ option.text }}</option>
-                                            </select>
-                                        </template>
-                                    </div>
-                                </div>
-                            </template>
-                        </VDropdown>
+                        <IodTableFilters :filter="filter" :filterSettings="filterSettings" />
                         <IodIconButton type="button" variant="text" size="s" icon="search" @click="$emit('request:refresh')" v-tooltip="'Suchen'"/>
                     </template>
                 </IodInput>
@@ -126,7 +111,7 @@
                 <VDropdown placement="top-end">
                     <IodIconButton type="button" size="s" variant="text" icon="grid_view" v-tooltip="'Ansicht anpassen'"/>
                     <template #popper>
-                        <div class="flex vertical padding-1">
+                        <div class="flex flex-col p-2">
                             <IodToggle
                                 type="switch"
                                 v-for="column in columns.filter(e => e.hideable)"

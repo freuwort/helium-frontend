@@ -14,6 +14,8 @@
 
                 <HeFlex :gap="1">
                     <h5 class="m-0 font-medium">Allgemeines</h5>
+                    <IodInput label="Einladungstyp" v-model="form.model.type"/>
+                    <IodInput label="Name" v-model="form.model.name"/>
                     <IodInput label="Email" v-model="form.model.email"/>
                     <IodInput label="Telefon" v-model="form.model.phone"/>
                     <IodInput label="Code" v-model="form.model.code">
@@ -63,6 +65,8 @@
         model: {
             event_id: eventId.value,
             user_id: null,
+            type: '',
+            name: '',
             email: '',
             phone: '',
             code: '',

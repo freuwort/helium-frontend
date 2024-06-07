@@ -62,6 +62,8 @@
     })
 
     const tableColumns = [
+        { name: 'type', label: 'Einladungstyp', valuePath: 'type', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
+        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
         { name: 'email', label: 'Email', valuePath: 'email', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
         { name: 'phone', label: 'Telefon', valuePath: 'phone', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
         { name: 'user_id', label: 'Zugewiesener Nutzer', valuePath: 'user_id', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
@@ -111,15 +113,37 @@
             run: (items: (number | string)[]) => IPM.delete(items),
         },
     ]
+    
+    const tableFilters = ref([
+        {
+            name: 'status',
+            label: 'Status',
+            type: 'select',
+            multiple: true,
+            values: [
+                { value: 'pending', text: 'Ausstehend' },
+                { value: 'accepted', text: 'Angenommen' },
+                { value: 'maybe', text: 'Unter Vorbehalt' },
+                { value: 'rejected', text: 'Abgelehnt' },
+            ],
+        },
+        {
+            name: 'type',
+            label: 'Einladungstyp',
+            type: 'select',
+            multiple: true,
+            values: computed(() => IPM.availableFilterValues['type']?.map((item: any) => ({ value: item, text: item })) || []),
+        }
+    ])
 
-    const tableFilters = [] as any[]
-
-
+    
 
     // START: Import
     const importPopup = ref()
 
     const expectedValues = [
+        { name: 'type', label: 'Einladungstyp', default: null },
+        { name: 'name', label: 'Name', default: null },
         { name: 'email', label: 'Email', default: null },
         { name: 'phone', label: 'Telefon', default: null },
         { name: 'code', label: 'Code', default: null },

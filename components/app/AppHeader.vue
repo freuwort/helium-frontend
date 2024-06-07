@@ -6,13 +6,13 @@
             </AppHeaderItem>
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="var(--color-primary)" icon="home"/>
+                <AppHeaderItem show-chevron color="#6366F1" icon="home"/>
 
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d" show-chevron color="var(--color-primary)" icon="home">Startseite</ContextMenuItem>
-                        <ContextMenuItem to="/d/users" show-chevron color="var(--color-primary)" icon="group">Nutzer</ContextMenuItem>
-                        <ContextMenuItem to="/d/files" show-chevron color="var(--color-primary)" icon="folder">Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/d" show-chevron color="#6366F1 " icon="home">Startseite</ContextMenuItem>
+                        <ContextMenuItem to="/d/users" show-chevron color="#3B82F6" icon="group">Nutzer</ContextMenuItem>
+                        <ContextMenuItem to="/d/files" show-chevron color="#0EA5E9" icon="folder">Dateien</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="#9747FF" icon="package_2">Produkte</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem>
@@ -27,34 +27,44 @@
             </VDropdown>
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="var(--color-primary)" icon="group"/>
+                <AppHeaderItem show-chevron color="#3B82F6" icon="group"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/users" show-chevron color="var(--color-primary)" icon="group">Alle Nutzer</ContextMenuItem>
-                        <ContextMenuItem to="/d/users/editor" color="var(--color-primary)" icon="person_add">Nutzer erstellen</ContextMenuItem>
+                        <ContextMenuItem to="/d/users" show-chevron color="#3B82F6" icon="group">Alle Nutzer</ContextMenuItem>
+                        <ContextMenuItem to="/d/users/editor" color="#3B82F6" icon="person_add">Nutzer erstellen</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem to="/d/companies" show-chevron color="var(--color-primary)" icon="store">Alle Unternehmen</ContextMenuItem>
-                        <ContextMenuItem to="/d/companies/editor" color="var(--color-primary)" icon="add_business">Unternehmen erstellen</ContextMenuItem>
+                        <ContextMenuItem to="/d/companies" show-chevron color="#3B82F6" icon="store">Alle Unternehmen</ContextMenuItem>
+                        <ContextMenuItem to="/d/companies/editor" color="#3B82F6" icon="add_business">Unternehmen erstellen</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem to="/d/roles" show-chevron color="var(--color-primary)" icon="badge">Berechtigungen</ContextMenuItem>
+                        <ContextMenuItem to="/d/roles" show-chevron color="#3B82F6" icon="badge">Berechtigungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="var(--color-primary)" icon="folder"/>
+                <AppHeaderItem show-chevron color="#0EA5E9" icon="folder"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/files" show-chevron color="var(--color-primary)" icon="folder">Alle Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/d/files" show-chevron color="#0EA5E9" icon="folder">Alle Dateien</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="#10b981" icon="local_activity"/>
+                <AppHeaderItem show-chevron color="#06B6D4" icon="edit_square"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/events" show-chevron color="#10b981" icon="local_activity">Alle Events</ContextMenuItem>
+                        <ContextMenuItem to="/d/forms" show-chevron color="#06B6D4" icon="edit_square">Alle Formulare</ContextMenuItem>
+                        <ContextMenuItem to="/d/forms/editor" color="#06B6D4" icon="add_circle">Formular erstellen</ContextMenuItem>
+                    </ContextMenu>
+                </template>
+            </VDropdown>
+
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+                <AppHeaderItem show-chevron color="#10b981" icon="confirmation_number"/>
+                <template #popper>
+                    <ContextMenu class="min-w-80">
+                        <ContextMenuItem to="/d/events" show-chevron color="#10b981" icon="confirmation_number">Alle Events</ContextMenuItem>
                         <ContextMenuItem to="/d/events/editor" color="#10b981" icon="add_circle">Event erstellen</ContextMenuItem>
                     </ContextMenu>
                 </template>
