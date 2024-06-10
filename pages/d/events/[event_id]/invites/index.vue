@@ -66,6 +66,7 @@
         { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
         { name: 'email', label: 'Email', valuePath: 'email', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
         { name: 'phone', label: 'Telefon', valuePath: 'phone', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
+        { name: 'status', label: 'Status', valuePath: 'status', sortable: true, width: 200, resizeable: true, hideable: true, default: 'pending' },
         { name: 'user_id', label: 'Zugewiesener Nutzer', valuePath: 'user_id', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
             if (!value) return '-'
             return {
@@ -76,7 +77,6 @@
             }
         }},
         { name: 'code', label: 'Code', valuePath: 'code', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
-        { name: 'status', label: 'Status', valuePath: 'status', sortable: true, width: 200, resizeable: true, hideable: true, default: 'pending' },
         { name: 'created_at', label: 'Erstellt', valuePath: 'created_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
         { name: 'updated_at', label: 'Zuletzt geändert', valuePath: 'updated_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) => value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
     ]

@@ -42,8 +42,14 @@
 
 
 
-                <IodButton :is="NuxtLink" label="Einladungen verwalten" size="l" variant="contained" :to="`/d/events/${id}/invites`"/>
-
+                
+                <HeFlex :gap="1">
+                    <HeFlex horizontal>
+                        <h5 class="m-0 font-medium">Einladungen ({{ form.invites_count }})</h5>
+                        <HeSpacer />
+                        <IodButton :is="NuxtLink" label="Einladungen verwalten" size="s" variant="contained" :to="`/d/events/${id}/invites`" :disabled="!id"/>
+                    </HeFlex>
+                </HeFlex>
 
 
                 <HeFlex :gap="1">
@@ -110,6 +116,7 @@
             created_at: '',
             updated_at: '',
         },
+        invites_count: 0,
         addresses: [],
     })
 

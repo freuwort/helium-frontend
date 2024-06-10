@@ -69,6 +69,16 @@
                     </ContextMenu>
                 </template>
             </VDropdown>
+
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+                <AppHeaderItem show-chevron color="#84cc16" icon="desktop_windows"/>
+                <template #popper>
+                    <ContextMenu class="min-w-80">
+                        <ContextMenuItem to="/d/screens" show-chevron color="#84cc16" icon="desktop_windows">Alle Screens</ContextMenuItem>
+                        <ContextMenuItem to="/d/screens/editor" color="#84cc16" icon="add_circle">Screen erstellen</ContextMenuItem>
+                    </ContextMenu>
+                </template>
+            </VDropdown>
             
             <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron color="#9747FF" icon="package_2"/>
