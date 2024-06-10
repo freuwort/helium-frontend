@@ -24,6 +24,7 @@
                         </template>
                     </IodInput>
                     <IodInput label="Nutzer" v-model="form.model.user_id"/>
+                    <IodInput label="Formular" v-model="form.model.form_id"/>
                     <div class="flex">
                         <IodButtonGroup corner="l">
                             <IodIconButton type="button" icon="remove" background="var(--bg-zinc-600)" :variant="form.model.status === null ? 'filled' : 'contained'" @click="form.model.status = null" />
@@ -39,11 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { debounce, throttle } from 'lodash'
     import { toast } from 'vue3-toastify'
-    import type { Country } from '~/types/units'
-
-    const NuxtLink = defineNuxtLink({})
 
     definePageMeta({
         middleware: 'auth',
@@ -65,6 +62,7 @@
         model: {
             event_id: eventId.value,
             user_id: null,
+            form_id: null,
             type: '',
             name: '',
             email: '',
