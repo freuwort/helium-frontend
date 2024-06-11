@@ -23,6 +23,7 @@
                             <IodIconButton type="button" icon="password" v-tooltip="'Code generieren'" size="s" variant="text" @click="form.model.code = randomString(40)"/>
                         </template>
                     </IodInput>
+                    <IodToggle label="Braucht Anmeldung" v-model="form.model.needs_claim"/>
                     <IodInput label="Nutzer" v-model="form.model.user_id"/>
                     <IodInput label="Formular" v-model="form.model.form_id"/>
                     <div class="flex">
@@ -64,6 +65,7 @@
             user_id: null,
             form_id: null,
             type: '',
+            needs_claim: false,
             name: '',
             email: '',
             phone: '',

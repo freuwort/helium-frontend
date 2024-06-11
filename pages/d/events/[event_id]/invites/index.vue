@@ -72,6 +72,7 @@
             }
         }},
         { name: 'type', label: 'Einladungstyp', valuePath: 'type', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
+        { name: 'needs_claim', label: 'Braucht Anmeldung', valuePath: 'needs_claim', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => value ? 'Ja' : 'Nein' },
         { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
         { name: 'email', label: 'Email', valuePath: 'email', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
         { name: 'phone', label: 'Telefon', valuePath: 'phone', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
@@ -160,11 +161,13 @@
 
     const expectedValues = [
         { name: 'type', label: 'Einladungstyp', default: null },
+        { name: 'needs_claim', label: 'Braucht Anmeldung', default: false },
         { name: 'name', label: 'Name', default: null },
         { name: 'email', label: 'Email', default: null },
         { name: 'phone', label: 'Telefon', default: null },
         { name: 'code', label: 'Code', default: null },
         { name: 'user_id', label: 'Nutzer ID', default: null },
+        { name: 'form_id', label: 'Formular ID', default: null },
         { name: 'status', label: 'Status', default: null },
     ]
 
