@@ -84,7 +84,9 @@
     async function updateDetails(data: any)
     {
         loading.value = true
-        await useAxios().patch('/api/event-invite/'+props.code+'/details', data)
+        console.log(data);
+        
+        await useAxios().postForm('/api/event-invite/'+props.code+'/details', data)
         await fetch()
     }
 

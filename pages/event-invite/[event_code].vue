@@ -14,6 +14,7 @@
 
                 <template #form="{ invite, loading, updateDetails }">
                     <IodInput label="Name" v-model="form.name" />
+                    <IodFileInput label="Logo" v-model="form.logo"/>
                     <IodButton type="button" label="Speichern" :loading="loading" @click="updateDetails(form.data())"/>
                 </template>
             </EventInviteCard>
@@ -32,6 +33,7 @@
 
     const form = useForm({
         name: '',
+        logo: null,
     })
 </script>
 

@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="media-info">
-            <NuxtLink v-if="isDirectory" class="title" v-tooltip="nameTooltip" :to="`/d/files/${item.src_path}`">{{ item.name }}</NuxtLink>
+            <NuxtLink v-if="isDirectory" class="title" v-tooltip="nameTooltip" :to="`/d/media/${item.src_path}`">{{ item.name }}</NuxtLink>
             <a v-if="!isDirectory" class="title" v-tooltip="nameTooltip" href="#" @click.prevent="emits('edit', item)">{{ item.name }}</a>
             <IodProfileArray class="profiles" :data="profiles" @dblclick.stop="emits('share', item)"/>
         </div>

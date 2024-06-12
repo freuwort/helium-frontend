@@ -14,8 +14,9 @@
                     </VDropdown>
                 </HeFlex>
                 <ContextMenu>
-                    <ContextMenuItem :is="NuxtLink" to="/d/files/domain" icon="domain">Domain Speicher</ContextMenuItem>
-                    <ContextMenuItem :is="NuxtLink" to="/d/files/profiles" icon="groups">Profil-Medien</ContextMenuItem>
+                    <ContextMenuItem :is="NuxtLink" to="/d/media/domain" icon="domain">Domain Speicher</ContextMenuItem>
+                    <ContextMenuItem :is="NuxtLink" to="/d/media/profiles" icon="groups">Profil-Medien</ContextMenuItem>
+                    <ContextMenuItem :is="NuxtLink" to="/d/media/forms" icon="cloud_upload">Formular Daten</ContextMenuItem>
                 </ContextMenu>
                 <HeSpacer />
                 <HeFlex class="border-t" :padding="1" :gap=".5" horizontal>
@@ -28,7 +29,7 @@
 
         <HeFlex gap="1rem">
             <div class="selection-bar">
-                <MediaBreadcrumbs :path="path" root-path="/d/files" @navigate="navigateTo($event)" @drop="onDrop($event.event, $event.path)"/>
+                <MediaBreadcrumbs :path="path" root-path="/d/media" @navigate="navigateTo($event)" @drop="onDrop($event.event, $event.path)"/>
                 <HeSpacer />
                 <IodIconButton type="button" corner="pill" variant="text" size="s" icon="delete" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
                 <IodLoader type="bar" v-show="loading"/>
@@ -43,10 +44,11 @@
                     :selected="selection.includes(item.src_path)"
                     :dragging="dragging"
                     :draggable="true"
+                    show-context-menu
                     @dragstart="onDragStart($event, item)"
                     @drop="onDrop($event, item.src_path)"
                     @click="select($event, item.src_path)"
-                    @dblclick="item.mime_type === 'directory' ? navigateTo(`/d/files/${item.src_path}`) : propertyPopup.open(item)"
+                    @dblclick="item.mime_type === 'directory' ? navigateTo(`/d/media/${item.src_path}`) : propertyPopup.open(item)"
                     @edit="propertyPopup.open(item)"
                     @share="sharePopup.open(item)"
                     @rename="renamePopup.open(item)"

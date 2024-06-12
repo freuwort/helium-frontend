@@ -12,7 +12,7 @@
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/d" show-chevron color="#6366F1 " icon="home">Startseite</ContextMenuItem>
                         <ContextMenuItem to="/d/users" show-chevron color="#3B82F6" icon="group">Nutzer</ContextMenuItem>
-                        <ContextMenuItem to="/d/files" show-chevron color="#0EA5E9" icon="folder">Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/d/media" show-chevron color="#0EA5E9" icon="folder">Dateien</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="#9747FF" icon="package_2">Produkte</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem>
@@ -45,7 +45,7 @@
                 <AppHeaderItem show-chevron color="#0EA5E9" icon="folder"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/files" show-chevron color="#0EA5E9" icon="folder">Alle Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/d/media" show-chevron color="#0EA5E9" icon="folder">Alle Dateien</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>

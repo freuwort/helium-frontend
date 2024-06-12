@@ -4,6 +4,7 @@
             <ContextMenu class="sidebar">
                 <ContextMenuItem @click="openDirectory('domain')" icon="domain">Domain Speicher</ContextMenuItem>
                 <ContextMenuItem @click="openDirectory('profiles')" icon="groups">Profil-Medien</ContextMenuItem>
+                <ContextMenuItem @click="openDirectory('forms')" icon="cloud_upload">Formular Daten</ContextMenuItem>
             </ContextMenu>
 
             <div class="header">
@@ -79,6 +80,7 @@
 
     
     // START: Fetch items
+    let callback = ((data: any) => {}) as Function
     const path = ref(props.rootPath || 'domain')
     const items = ref([] as MediaItem[])
     const loading = ref(false)
@@ -193,17 +195,21 @@
 
 
     // START: API functions
-    function open() {
+    function open(cb: Function) {
         deselectAll()
+        callback = cb
         popup.value.open()
     }
 
     function confirmSelection() {
         if (selection.value.length === 0) return
-        popup.value.close()
 
-        if (!props.multiple) return emits('select', selection.value[0])
-        if (props.multiple) return emits('select', selection.value)
+        let confirmedSelection = props.multiple ? selection.value : selection.value[0]
+        
+        emits('select', confirmedSelection)
+        callback(confirmedSelection)
+        
+        popup.value.close()
     }
     // END: API functions
 </script>

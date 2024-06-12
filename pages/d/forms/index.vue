@@ -45,7 +45,7 @@
     const tableColumns = [
         { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
         { name: 'slug', label: 'Slug', valuePath: 'slug', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
-        { name: 'form_submissions_count', label: 'Einsendungen', valuePath: 'formsubmissions_count', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: number | null) => (value || 0).toString() },
+        { name: 'form_submissions_count', label: 'Einsendungen', valuePath: 'form_submissions_count', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: number | null) => (value || 0).toString() },
         { name: 'created_at', label: 'Erstellt', valuePath: 'created_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
         { name: 'updated_at', label: 'Zuletzt geändert', valuePath: 'updated_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) => value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
     ]
