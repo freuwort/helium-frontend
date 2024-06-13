@@ -65,6 +65,14 @@
     <DialogMediaPicker ref="dirsPicker" @select="console.log" type="directory" multiple/>
     <DialogMediaPicker ref="imagePicker" @select="console.log" type="file" mime="image/*"/>
     <DialogMediaPicker ref="jpegPicker" @select="console.log" type="file" mime="image/jpeg"/>
+
+
+
+    <SettingsSpacer />
+    <SettingsTitle>HTML Editor</SettingsTitle>
+    <TextEditor v-model="text" label="HTML Editor" />
+
+    {{ text }}
 </template>
 
 <script lang="ts" setup>
@@ -110,6 +118,10 @@
     const dirsPicker = ref()
     const imagePicker = ref()
     const jpegPicker = ref()
+
+
+
+    const text = ref('')
 </script>
 
 <style lang="sass" scoped></style>

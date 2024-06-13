@@ -20,7 +20,7 @@
                 </IodInput>
             </div>
             
-            <textarea class="w-full h-40 p-2 px-4 bg-background-soft rounded-lg" v-model="form.message" placeholder="Nachricht" />
+            <TextEditor v-model="form.message" label="Nachricht" />
             
             <IodInput prefix="Anhänge:&nbsp;" :modelValue="form.attachments.join(', ')" placeholder="keine" disabled>
                 <template #right>
