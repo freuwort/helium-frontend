@@ -1,7 +1,13 @@
 <template>
     <div class="relative overflow-hidden" v-if="invite">
-        <div class="flex flex-col justify-end h-56 bg-background-soft">
-            <div class="flex flex-col justify-end p-4 gap-2 gradient">
+        <div class="flex flex-col justify-end h-56 bg-background-soft relative">
+            <img
+                class="w-full h-full object-cover absolute z-0 left-0 top-0"
+                v-if="invite.event.header_media.cdn_path"
+                :src="invite.event.header_media.cdn_path"
+                :alt="invite.event.name"
+            >
+            <div class="flex flex-col justify-end p-4 gap-2 relative z-10 gradient">
                 <h2 class="m-0">{{ invite.event.name }}</h2>
                 <div class="flex flex-col gap-1">
                     <small class="flex items-center gap-2" v-if="invite.event.start_at || invite.event.end_at">
@@ -39,10 +45,6 @@
         
         <div class="flex flex-col gap-2 p-4 border-t" v-if="['accepted', 'maybe'].includes(invite.status) && invite.form">
             <slot name="form" :invite="invite" :loading="loading" :updateDetails="updateDetails"/>
-        </div>
-
-        <div class="flex flex-col gap-2 p-4 border-t small-scrollbar overflow-scroll">
-            <pre v-html="JSON.stringify(invite, null, 2)"></pre>
         </div>
     </div>
 </template>
@@ -97,5 +99,9 @@
 
 <style lang="sass" scoped>
     .gradient
-        background: linear-gradient(0deg, rgba(0,0,0,.1) 0%, rgba(0,0,0,0) 100%)
+        background-image: linear-gradient(0deg, rgba(0,0,0,.7) 0%, rgba(0,0,0,0) 100%)
+        color: var(--color-background-soft)
+
+        h2
+            color: var(--color-background)
 </style>

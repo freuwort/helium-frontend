@@ -33,10 +33,12 @@
         </HeFlex>
     </IodPopup>
 
-    <DialogMediaPicker ref="filePicker" @select="form.attachments = $event" type="file" multiple/>
+    <DialogMediaPicker ref="filePicker" @select="form.attachments = $event.map((e: MediaItem) => e.src_path)" type="file" multiple/>
 </template>
 
 <script lang="ts" setup>
+    import type { MediaItem } from '~/types/media'
+
     type TemplateType = 'text' | 'number' | 'email' | 'date' | 'html'
 
     type Templates = {

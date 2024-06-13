@@ -19,17 +19,17 @@
                     <MediaItem
                         v-for="item in displayableItems"
                         :key="item.id"
-                        :selected="selection.includes(item.src_path)"
+                        :selected="selection.includes(item)"
                         :item="item"
                         :draggable="true"
-                        @click="select($event, item.src_path)"
+                        @click="select($event, item)"
                         @dblclick="navigateOrForceSelect($event, item)"
                     />
                 </div>
             </div>
             
             <div class="footer">
-                <IodInput class="!h-8 flex-1" placeholder="Auswahl" :modelValue="selection.join(', ')" disabled/>
+                <IodInput class="!h-8 flex-1" placeholder="Auswahl" :modelValue="selection.map(e => e.name).join(', ')" disabled/>
                 <IodButton type="button" :label="title" :disabled="!selection.length" @click="confirmSelection"/>
             </div>
         </div>
@@ -138,7 +138,7 @@
         }
         else
         {
-            select(event, item.src_path)
+            select(event, item)
             confirmSelection()
         }
     }
@@ -153,38 +153,36 @@
 
 
     // START: Selection
-    const selection = ref([] as string[])
+    const selection = ref([] as MediaItem[])
 
-    function select(event: MouseEvent, path: string) {
+    function select(event: MouseEvent, item: MediaItem) {
         if (props.multiple && event.ctrlKey)
         {
-            if (selection.value.includes(path))
+            if (selection.value.map(p => p.src_path).includes(item.src_path))
             {
-                selection.value = selection.value.filter(p => p !== path)
+                selection.value = selection.value.filter(p => p.src_path !== item.src_path)
             }
             else
             {
-                selection.value.push(path)
+                selection.value.push(item)
             }
         }
         else if (props.multiple && event.shiftKey)
         {
-            const index = items.value.findIndex(i => i.src_path === path)
-            const start = items.value.findIndex(i => i.src_path === selection.value[0])
+            const index = items.value.findIndex(i => i.src_path === item.src_path)
+            const start = items.value.findIndex(i => i.src_path === selection.value[0].src_path)
             const end = index
 
-            const range = start < end
+            selection.value = start < end
                 ? items.value.slice(start, end + 1)
                 : items.value.slice(end, start + 1)
-
-            selection.value = range.map(i => i.src_path)
         }
         else
         {
-            selection.value = [path]
+            selection.value = [item]
         }
 
-        selection.value = selection.value.filter(p => selectableItems.value?.map(i => i.src_path)?.includes(p))
+        selection.value = selection.value.filter(p => selectableItems.value?.map(i => i.src_path)?.includes(p.src_path))
     }
 
     function deselectAll() {
@@ -195,9 +193,9 @@
 
 
     // START: API functions
-    function open(cb: Function) {
+    function open(cb: Function|null = null) {
         deselectAll()
-        callback = cb
+        if (cb !== null) callback = cb
         popup.value.open()
     }
 

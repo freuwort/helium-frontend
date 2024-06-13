@@ -6,9 +6,9 @@
                     <div class="flex flex-col gap-4">
                         <IodAlert color-preset="info">
                             <b class="text-lg mb-2">Einladung verknüpfen</b>
-                            Um diese Einladung anzunehmen, müssen Sie diese mit Ihrem Account verknüpfen.
+                            <span class="mb-4">Um diese Einladung anzunehmen, müssen Sie diese mit Ihrem Account verknüpfen.</span>
+                            <IodButton class="w-full" type="button" label="Einladung mit Account verknüpfen" color-preset="info" :loading="loading" @click="claim()"/>
                         </IodAlert>
-                        <IodButton type="button" label="Einladung mit Account verknüpfen" :loading="loading" @click="claim()"/>
                     </div>
                 </template>
 

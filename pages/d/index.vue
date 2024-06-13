@@ -8,9 +8,9 @@
                     <IodButton :is="NuxtLink" size="s" variant="text" to="/d/settings" icon-right="chevron_right" label="Einstellungen" />
                 </div>
                 <div class="flex gap-6">
-                    <IodButton :is="NuxtLink" class="flex-1 !h-20" variant="contained" to="/d/users/editor" background="var(--bg-indigo-600)" icon-left="group" label="Nutzer erstellen" />
-                    <IodButton :is="NuxtLink" class="flex-1 !h-20" variant="contained" to="/d/roles/editor" background="var(--bg-indigo-600)" icon-left="badge" label="Rolle erstellen" />
-                    <IodButton :is="NuxtLink" class="flex-1 !h-20" variant="contained" to="/d/events/editor" background="var(--bg-emerald-600)" icon-left="local_activity" label="Event erstellen" />
+                    <IodButton :is="NuxtLink" class="flex-1 !h-20" size="l" variant="contained" to="/d/users" background="var(--bg-indigo-600)" icon-left="group" label="Nutzer" />
+                    <IodButton :is="NuxtLink" class="flex-1 !h-20" size="l" variant="contained" to="/d/roles" background="var(--bg-indigo-600)" icon-left="badge" label="Rolle" />
+                    <IodButton :is="NuxtLink" class="flex-1 !h-20" size="l" variant="contained" to="/d/events" background="var(--bg-emerald-600)" icon-left="local_activity" label="Event" />
                 </div>
             </div>
         </HeCard>

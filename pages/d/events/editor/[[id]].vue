@@ -8,6 +8,10 @@
                 <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
             </HeFlex>
 
+            <HeFlex class="border-b" horizontal padding="1rem 2rem">
+                <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/events')"/>
+            </HeFlex>
+
             <HeFlex :padding="2" :gap="3">
                 <ErrorAlert :errors="form.errors" />
 
@@ -21,7 +25,6 @@
                             <IodIconButton type="button" icon="auto_awesome" v-tooltip="'Automatisch generieren'" size="s" variant="text" @click="form.model.slug = slugify(form.model.name)"/>
                         </template>
                     </IodInput>
-                    <IodInput label="Description" v-model="form.model.description"/>
                     <div class="flex gap-2 items-center">
                         <IodInput
                             type="datetime-local"
@@ -39,35 +42,7 @@
                             @update:modelValue="form.model.end_at = toUtcDate($event)"
                         />
                     </div>
-                </HeFlex>
-
-
-                <HeFlex :gap="1">
-                    <HeFlex horizontal>
-                        <h5 class="m-0 font-medium">Medien</h5>
-                        <HeSpacer />
-                        <IodButton type="button" label="Medium hinzufügen" size="s" variant="contained" @click="addMedia()"/>
-                    </HeFlex>
-    
-                    <div class="flex flex-col gap-2" v-if="form.media.length">
-                        <IodInput placeholder="Pfad" v-model="media.src_path" v-for="media, i in form.media">
-                            <template #left>
-                                <select v-model="media.type" class="p-0 w-24">
-                                    <option value="header">Header</option>
-                                    <option value="Logo">Logo</option>
-                                </select>
-                                <HeDivider vertical class="h-8 ml-2"/>
-                            </template>
-                            <template #right>
-                                <IodIconButton type="button" size="s" icon="attach_file" variant="text" v-tooltip="'Dateien auswählen'" @click="filePicker.open((path: string) => media.src_path = path)"/>
-                                <IodIconButton type="button" size="s" icon="delete" variant="text" v-tooltip="'Löschen'" color-preset="error" @click="removeMedia(i)"/>
-                            </template>
-                        </IodInput>
-                    </div>
-
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Medien hinzugefügt</span>
-                    </IodAlert>
+                    <IodInput label="Description" v-model="form.model.description"/>
                 </HeFlex>
 
 
@@ -98,6 +73,35 @@
                         <span>Es wurden noch keine Adressen angelegt</span>
                     </IodAlert>
                 </HeFlex>
+
+
+                <HeFlex :gap="1">
+                    <HeFlex horizontal>
+                        <h5 class="m-0 font-medium">Medien</h5>
+                        <HeSpacer />
+                        <IodButton type="button" label="Medium hinzufügen" size="s" variant="contained" @click="addMedia()"/>
+                    </HeFlex>
+    
+                    <div class="flex flex-col gap-2" v-if="form.media.length">
+                        <IodInput placeholder="Pfad" v-model="media.src_path" v-for="media, i in form.media">
+                            <template #left>
+                                <select v-model="media.type" class="p-0 w-24">
+                                    <option value="header">Header</option>
+                                    <option value="Logo">Logo</option>
+                                </select>
+                                <HeDivider vertical class="h-8 ml-2"/>
+                            </template>
+                            <template #right>
+                                <IodIconButton type="button" size="s" icon="attach_file" variant="text" v-tooltip="'Dateien auswählen'" @click="filePicker.open((item: MediaItem) => {media.src_path = item.src_path; media.id = item.id })"/>
+                                <IodIconButton type="button" size="s" icon="delete" variant="text" v-tooltip="'Löschen'" color-preset="error" @click="removeMedia(i)"/>
+                            </template>
+                        </IodInput>
+                    </div>
+
+                    <IodAlert as="placeholder" class="h-40" v-else>
+                        <span>Es wurden noch keine Medien hinzugefügt</span>
+                    </IodAlert>
+                </HeFlex>
             </HeFlex>
         </HeCard>
 
@@ -106,9 +110,9 @@
 </template>
 
 <script lang="ts" setup>
-    import { debounce, throttle } from 'lodash'
-    import { toast } from 'vue3-toastify'
     import type { Country } from '~/types/units'
+    import type { MediaItem } from '~/types/media'
+    import { toast } from 'vue3-toastify'
 
     const NuxtLink = defineNuxtLink({})
 
@@ -180,7 +184,7 @@
 
     function addMedia() {
         form.media.push({
-            // id: null,
+            id: null,
             type: 'header',
             src_path: '',
         })
@@ -207,6 +211,13 @@
     function store()
     {
         form
+        .transform(data => ({
+            ...data,
+            media: data.media.map((e: any) => ({
+                media_id: e.id,
+                type: e.type,
+            }))
+        }))
         .post(apiRoute('/api/events'), {
             onSuccess(response: any)
             {
@@ -220,6 +231,13 @@
     function update()
     {
         form
+        .transform(data => ({
+            ...data,
+            media: data.media.map((e: any) => ({
+                media_id: e.id,
+                type: e.type,
+            }))
+        }))
         .patch(apiRoute('/api/events/:id', { id: id.value }), {
             onSuccess(response: any)
             {
