@@ -15,7 +15,7 @@
 
                 <IodIconButton type="button" size="s" variant="text" icon="undo" :disabled="!editor.can().undo()" @click="editor.chain().focus().undo().run()" v-tooltip="'Rückgängig'"/>
                 <IodIconButton type="button" size="s" variant="text" icon="redo" :disabled="!editor.can().redo()" @click="editor.chain().focus().redo().run()" v-tooltip="'Wiederholen'"/>
-                <IodIconButton type="button" class="ml-2" size="s" variant="text" :icon="isFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="toggleFullscreen()" v-if="fullscreenAvailable" v-tooltip.bottom="isFullscreen ? 'Vollbild verlassen' : 'Vollbild'"/>
+                <IodIconButton type="button" class="ml-2" size="s" variant="text" :icon="isFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="toggleFullscreen()" v-if="fullscreenAvailable" v-tooltip.bottom="isFullscreen ? 'Vollbild verlassen' : 'Vollbild'" v-show="!simplified && allowsFullscreen"/>
             </div>
 
 
@@ -191,6 +191,10 @@
             label: {
                 type: String,
                 default: '',
+            },
+            allowFullscreen: {
+                type: Boolean,
+                default: false,
             },
             simplified: {
                 type: Boolean,
@@ -568,13 +572,13 @@
                 display: flex
                 align-items: center
                 min-height: 2.25rem
-                padding: 0 .75rem
+                padding: 0 1rem
                 border-right: 1px solid var(--color-background-soft)
                 border-left: 1px solid var(--color-background-soft)
                 overflow: hidden
 
-                &.label-panel
-                    justify-content: center
+                &.tab-panel
+                    padding-inline: .75rem
 
                 &:first-child
                     border-top-left-radius: inherit
@@ -590,7 +594,7 @@
                     margin: 0
                     margin-top: .25rem
                     height: 2rem
-                    border-radius: var(--radius-m) var(--radius-m) 0 0
+                    border-radius: var(--radius-m)
                     border: none
                     cursor: pointer
                     user-select: none
@@ -627,8 +631,10 @@
                     &:focus
                         outline: none
                         color: var(--color-text)
+                        background: rgb(255, 255, 255, .5)
 
                     &.is-active
+                        border-radius: var(--radius-m) var(--radius-m) 0 0
                         background: var(--color-background)
                         color: var(--color-text)
                         z-index: 1

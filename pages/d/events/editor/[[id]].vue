@@ -8,10 +8,6 @@
                 <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
             </HeFlex>
 
-            <HeFlex class="border-b" horizontal padding="1rem 2rem">
-                <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/events')"/>
-            </HeFlex>
-
             <HeFlex :padding="2" :gap="3">
                 <ErrorAlert :errors="form.errors" />
 
@@ -42,8 +38,10 @@
                             @update:modelValue="form.model.end_at = toUtcDate($event)"
                         />
                     </div>
-                    <IodInput label="Description" v-model="form.model.description"/>
                 </HeFlex>
+
+
+                <TextEditor label="Beschreibung" v-model="form.model.description"/>
 
 
                 <HeFlex :gap="1">

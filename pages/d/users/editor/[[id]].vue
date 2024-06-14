@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Nutzer bearbeiten' : 'Nutzer erstellen'" color="var(--color-primary)">
         <HeCard is="form" @submit.prevent="save">
-            <ProfileCard class="rounded-2xl" :title="fullname" :image="form.model.profile_image" :subtitle="form.model.username"/>
+            <ProfileCard class="rounded-2xl" :title="fullname" :banner="form.model.profile_banner" :image="form.model.profile_image" :subtitle="form.model.username"/>
             
             <HeFlex class="border-y sticky top-16 z-20 bg-background" horizontal padding="1rem 2rem">
                 <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/users')"/>
@@ -13,6 +13,9 @@
                 <ErrorAlert :errors="form.errors" />
 
 
+
+                <input ref="imageInput" type="file" @change="uploadImage($event.target?.files[0])" />
+                <input ref="bannerInput" type="file" @change="uploadBanner($event.target?.files[0])" />
 
                 <HeFlex :gap="1">
                     <h5 class="m-0 font-medium">Konto</h5>
@@ -301,7 +304,8 @@
         id: id.value,
         password: '',
         model: {
-            profile_image: '',
+            profile_image: null,
+            profile_banner: null,
             name: '',
             username: '',
             email: '',
@@ -554,6 +558,26 @@
         form.links.splice(index, 1)
     }
     // END: Links
+
+
+
+    // START: Media
+    const imageInput = ref()
+    async function uploadImage(file: any) {
+        if (!file) return
+        await useAxios().postForm(apiRoute('/api/users/:id/image', { id: id.value }), {file})
+        imageInput.value.value = null
+        fetch()
+    }
+    
+    const bannerInput = ref()
+    async function uploadBanner(file: any) {
+        if (!file) return
+        await useAxios().postForm(apiRoute('/api/users/:id/banner', { id: id.value }), {file})
+        bannerInput.value.value = null
+        fetch()
+    }
+    // END: Media
 
 
 

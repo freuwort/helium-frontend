@@ -2,9 +2,13 @@
     <IodPopup ref="popup" title="Template Nachricht">
         <HeFlex is="form" padding="1.5rem" gap="1.5rem" @submit.prevent="send()">
             <div class="flex flex-col gap-2">
-                <IodInput prefix="Empfänger:&nbsp;" placeholder="vorausgewählt" disabled />
-                <IodInput prefix="CC:&nbsp;" v-model="form.cc" />
-                <IodInput prefix="BCC:&nbsp;" v-model="form.bcc" />
+                <IodInput prefix="Empfänger:&nbsp;" placeholder="vorausgewählt" readonly>
+                    <template #right>
+                        <IodIconButton type="button" size="s" :icon="expanded ? 'expand_less' : 'expand_more'" variant="text" v-tooltip="'CC und BCC einblenden'" @click="expanded = !expanded"/>
+                    </template>
+                </IodInput>
+                <IodInput prefix="CC:&nbsp;" v-model="form.cc" v-show="expanded"/>
+                <IodInput prefix="BCC:&nbsp;" v-model="form.bcc" v-show="expanded"/>
                 <IodInput prefix="Betreff:&nbsp;" v-model="form.subject">
                     <template #right>
                         <VDropdown placement="bottom-end">
@@ -18,16 +22,15 @@
                         </VDropdown>
                     </template>
                 </IodInput>
+                <IodInput prefix="Anhänge:&nbsp;" :modelValue="form.attachments.join(', ')" placeholder="keine" readonly>
+                    <template #right>
+                        <IodIconButton type="button" size="s" variant="text" icon="close" v-tooltip="'Anhänge entfernen'" @click="form.attachments = []" v-show="form.attachments.length"/>
+                        <IodIconButton type="button" size="s" variant="text" icon="attach_file" v-tooltip="'Anhänge auswählen'" @click="filePicker.open()"/>
+                    </template>
+                </IodInput>
             </div>
             
             <TextEditor v-model="form.message" label="Nachricht" />
-            
-            <IodInput prefix="Anhänge:&nbsp;" :modelValue="form.attachments.join(', ')" placeholder="keine" disabled>
-                <template #right>
-                    <IodIconButton type="button" size="s" icon="close" variant="text" v-tooltip="'Anhänge entfernen'" @click="form.attachments = []" v-show="form.attachments.length"/>
-                    <IodIconButton type="button" size="s" icon="attach_file" variant="text" v-tooltip="'Dateien auswählen'" @click="filePicker.open()"/>
-                </template>
-            </IodInput>
             
             <IodButton class="w-full" type="submit" size="l" label="senden"/>
         </HeFlex>
@@ -64,6 +67,7 @@
         message: '',
         attachments: [],
     })
+    const expanded = ref(false)
 
 
 
