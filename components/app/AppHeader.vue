@@ -79,6 +79,18 @@
                     </ContextMenu>
                 </template>
             </VDropdown>
+
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+                <AppHeaderItem show-chevron color="#F59E0B" icon="note_stack"/>
+                <template #popper>
+                    <ContextMenu class="min-w-80">
+                        <ContextMenuItem to="/d/screens" show-chevron color="#F59E0B" icon="news">Posts</ContextMenuItem>
+                        <ContextMenuDivider />
+                        <ContextMenuItem to="/d/screens" show-chevron color="#F59E0B" icon="data_array">Spaces</ContextMenuItem>
+                        <ContextMenuItem to="/d/screens" show-chevron color="#F59E0B" icon="label">Kategorien</ContextMenuItem>
+                    </ContextMenu>
+                </template>
+            </VDropdown>
             
             <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron color="#9747FF" icon="package_2"/>
@@ -115,29 +127,6 @@
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem show-chevron color="#FFA502" icon="local_mall">Shop Einrichten</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown>
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="#20bf6b" icon="edit_square"/>
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem show-chevron color="#20bf6b" icon="category">Alle Kategorien</ContextMenuItem>
-                        <ContextMenuItem color="#20bf6b" icon="add_circle">Kategorie erstellen</ContextMenuItem>
-                        <ContextMenuDivider />
-                        <ContextMenuItem show-chevron color="#20bf6b" icon="label">Alle Tags</ContextMenuItem>
-                        <ContextMenuItem color="#20bf6b" icon="add_circle">Tag erstellen</ContextMenuItem>
-                        <ContextMenuDivider />
-                        <ContextMenuItem show-chevron color="#20bf6b" icon="notes">Alle Inhalte</ContextMenuItem>
-                        <ContextMenuItem color="#20bf6b" icon="add_circle">Inhalt erstellen</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown>
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="#0fb9b1" icon="local_library"/>
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem show-chevron color="#0fb9b1" icon="local_library">Wiki Einrichten</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown> -->

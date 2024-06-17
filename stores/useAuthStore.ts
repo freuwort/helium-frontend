@@ -2,6 +2,7 @@ type User = {
     id: number
 
     profile_image: string
+    profile_banner: string | null
     email: string | null
     username: string | null
     ident_number: string | null

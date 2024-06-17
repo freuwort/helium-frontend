@@ -1,7 +1,18 @@
 <template>
     <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Nutzer bearbeiten' : 'Nutzer erstellen'" color="var(--color-primary)">
         <HeCard is="form" @submit.prevent="save">
-            <ProfileCard class="rounded-2xl" :title="fullname" :banner="form.model.profile_banner" :image="form.model.profile_image" :subtitle="form.model.username"/>
+            <ProfileCard
+                allow-image-upload
+                allow-banner-upload
+                class="rounded-2xl"
+                :title="fullname"
+                :banner="form.model.profile_banner"
+                :image="form.model.profile_image"
+                :subtitle="form.model.username"
+                @upload:image="selectMedia('image')"
+                @upload:banner="selectMedia('banner')"
+            />
+
             
             <HeFlex class="border-y sticky top-16 z-20 bg-background" horizontal padding="1rem 2rem">
                 <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/users')"/>
@@ -13,9 +24,7 @@
                 <ErrorAlert :errors="form.errors" />
 
 
-
-                <input ref="imageInput" type="file" @change="uploadImage($event.target?.files[0])" />
-                <input ref="bannerInput" type="file" @change="uploadBanner($event.target?.files[0])" />
+                <input class="hidden" ref="mediaInput" type="file" @change="uploadMedia($event.target?.files[0])" />
 
                 <HeFlex :gap="1">
                     <h5 class="m-0 font-medium">Konto</h5>
@@ -562,19 +571,18 @@
 
 
     // START: Media
-    const imageInput = ref()
-    async function uploadImage(file: any) {
-        if (!file) return
-        await useAxios().postForm(apiRoute('/api/users/:id/image', { id: id.value }), {file})
-        imageInput.value.value = null
-        fetch()
+    const mediaInput = ref()
+    const mediaType = ref<'image'|'banner'>('image')
+
+    function selectMedia(type: 'image'|'banner'){
+        mediaType.value = type
+        mediaInput.value.click()
     }
-    
-    const bannerInput = ref()
-    async function uploadBanner(file: any) {
+
+    async function uploadMedia(file: any) {
         if (!file) return
-        await useAxios().postForm(apiRoute('/api/users/:id/banner', { id: id.value }), {file})
-        bannerInput.value.value = null
+        await useAxios().postForm(apiRoute('/api/users/:id/:media', { id: id.value, media: mediaType.value }), {file})
+        mediaInput.value.value = null
         fetch()
     }
     // END: Media
