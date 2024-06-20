@@ -65,7 +65,6 @@
         .company-logo
             width: 128px
             height: 128px
-            padding: 16px
             display: flex
             justify-content: center
             align-items: center

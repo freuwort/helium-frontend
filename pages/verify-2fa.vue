@@ -43,7 +43,7 @@
                     <HeFlex :gap="1" horizontal>
                         <a href="#" v-if="form.method" @click="form.method = null">Andere Methode wählen</a>
                         <HeSpacer />
-                        <a href="#" class="color-red" @click="auth.logout">Anmeldung abbrechen</a>
+                        <a href="#" class="color-red" @click="auth.logout(redirect)">Anmeldung abbrechen</a>
                     </HeFlex>
                 </HeFlex>
             </HeCard>
@@ -52,6 +52,11 @@
 </template>
 
 <script lang="ts" setup>
+    const auth = useAuthStore()
+    const route = useRoute()
+
+
+
     definePageMeta({
         middleware: ['auth', '2fa-needed'],
     })
@@ -60,12 +65,16 @@
 
     const backupCodeCharset = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
     
-    const auth = useAuthStore()
     const splashscreen = useSplashscreenStore()
     const form = useForm({
         method: auth.user?.default_tfa_method || null,
         code: '',
     })
+
+    const redirect = computed(() => route.query.redirect as string ?? null)
+    const redirectQuery = computed(() => redirect.value ? `?redirect=${redirect.value}` : '')
+
+
 
     function submit()
     {
@@ -88,19 +97,23 @@
             case 'backup': route = auth.apiRoutes.verifyTfaBackup; break
         }
 
-        form.post(route, {
-            async onSuccess()
-            {
-                splashscreen.start()
+        form.post(route, { onSuccess, onError })
+    }
 
-                await auth.fetchSession()
+    async function onSuccess()
+    {
+        splashscreen.start()
 
-               navigateTo(auth.routes.authHome)
-            },
-            onError()
-            {
-                form.code = ''
-            },
+        await auth.fetchSession()
+
+        return navigateTo(redirect.value ?? auth.routes.authHome, {
+            replace: true,
+            external: !!redirect.value
         })
+    }
+
+    async function onError()
+    {
+        form.code = ''
     }
 </script>

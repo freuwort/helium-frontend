@@ -89,7 +89,7 @@
 
             <div class="styling-panel small-scrollbar" v-show="tab === 'insert'">
                 <div class="group">
-                    <IodIconButton type="button" size="s" variant="text" icon="IMage" v-tooltip="'Bild einzufügen'" @click="$refs.picker.open((item) => { imageForm.url = item.cdn_path; insertImage() })"/>
+                    <IodIconButton type="button" size="s" variant="text" icon="image" v-tooltip="'Bild einzufügen'" @click="$refs.picker.open((item) => { imageForm.url = item.cdn_path; insertImage() })"/>
                 </div>
                 <HeDivider vertical class="h-full" />
                 <div class="group">

@@ -18,9 +18,9 @@
                     <HeDivider />
     
                     <HeFlex :gap="1" horizontal>
-                        <NuxtLink to="/forgot-password">Passwort vergessen?</NuxtLink>
+                        <NuxtLink :to="'/forgot-password'+redirectQuery">Passwort vergessen?</NuxtLink>
                         <HeSpacer />
-                        <NuxtLink to="/register">Neues Konto erstellen</NuxtLink>
+                        <NuxtLink :to="'/register'+redirectQuery">Neues Konto erstellen</NuxtLink>
                     </HeFlex>
                 </HeFlex>
             </HeCard>
@@ -30,6 +30,7 @@
 
 <script lang="ts" setup>
     const auth = useAuthStore()
+    const route = useRoute()
     
 
 
@@ -46,6 +47,11 @@
         remember: false,
     })
 
+    const redirect = computed(() => route.query.redirect as string ?? null)
+    const redirectQuery = computed(() => redirect.value ? `?redirect=${redirect.value}` : '')
+
+
+
     function submit()
     {
         // Prevent submit if form is processing
@@ -54,15 +60,23 @@
         // Prevent submit if already logged in
         if (auth.session.authenticated) return
 
-        form.post(auth.apiRoutes.login, {
-            async onSuccess()
-            {
-                splashscreen.start()
-
-                await auth.fetchSession()
-
-                navigateTo(auth.routes.authHome)
-            },
+        form.post(auth.apiRoutes.login, { onSuccess })
+    }
+    
+    async function onSuccess()
+    {
+        splashscreen.start()
+    
+        await auth.fetchSession()
+    
+        if (auth.session.tfa_enabled && !auth.session.tfa_verified)
+        {
+            return navigateTo(auth.routes.verify2FA+redirectQuery.value)
+        }
+    
+        return navigateTo(redirect.value ?? auth.routes.authHome, {
+            replace: true,
+            external: !!redirect.value
         })
     }
 </script>

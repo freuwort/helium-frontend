@@ -136,7 +136,7 @@ export const useAuthStore = defineStore('auth', () => {
 
 
 
-    async function logout()
+    async function logout(redirect?: string)
     {
         splashscreen.start()
 
@@ -147,7 +147,10 @@ export const useAuthStore = defineStore('auth', () => {
         session.value.tfa_enabled = false
         session.value.tfa_verified = false
 
-        navigateTo(routes.value.guestHome)
+        return navigateTo(redirect ?? routes.value.guestHome, {
+            replace: true,
+            external: !!redirect
+        })
     }
 
 

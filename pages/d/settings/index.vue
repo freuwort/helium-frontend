@@ -11,7 +11,11 @@
             <IodInput class="flex-1" label="Slogan" v-model="form.company_slogan" />
         </SettingsRow>
         <SettingsRow title="Logo" description="Das Firmen Logo, welches in Helium angezeigt wird">
-            <IodInput class="flex-1" label="Logo" v-model="form.company_logo" placeholder="https://example.com/logo.png"/>
+            <IodInput class="flex-1" label="Logo" v-model="form.company_logo" placeholder="https://example.com/logo.png">
+                <template #right>
+                    <IodIconButton type="button" size="s" variant="text" icon="attach_file" v-tooltip="'Bild einzufügen'" @click="$refs.picker.open((item) => { form.company_logo = item.cdn_path })"/>
+                </template>
+            </IodInput>
         </SettingsRow>
         <SettingsRow title="Favicon" description="Das Favicon, welches in Helium angezeigt wird">
             <IodInput class="flex-1" label="Favicon" v-model="form.company_favicon" placeholder="https://example.com/favicon.ico"/>
@@ -41,12 +45,15 @@
             <IodButton class="flex-1" label="Speichern" :loading="form.processing"/>
         </SettingsRow>
     </form>
+
+    <DialogMediaPicker ref="picker" mime="image/*" />
 </template>
 
 <script lang="ts" setup>
     import { toast } from 'vue3-toastify'
 
     const domain = useDomainStore()
+    const picker = ref()
 
     const form = useForm({
         company_name: domain?.settings?.company_name ?? '',

@@ -204,7 +204,7 @@
             color: var(--color-text)
 
             &:not(:disabled):focus
-                outline: 3px solid var(--color-primary)
+                outline: 3px solid var(--color-text)
 
             &:disabled
                 color: var(--color-text-soft-disabled)
