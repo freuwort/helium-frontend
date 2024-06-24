@@ -48,7 +48,6 @@
                     <div class="flex gap-2 flex-wrap">
                         <IodButton
                             v-for="role in form.roles"
-                            border
                             size="s"
                             corner="pill"
                             type="button"
