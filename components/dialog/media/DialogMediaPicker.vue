@@ -1,16 +1,33 @@
 <template>
-    <IodPopup ref="popup" :title="title" max-width="75rem" blur="0">
+    <IodPopup ref="popup" :title="title" max-width="70rem" blur="0">
         <div class="layout">
-            <ContextMenu class="sidebar">
-                <ContextMenuItem @click="openDirectory('domain')" icon="domain">Domain Speicher</ContextMenuItem>
-                <ContextMenuItem @click="openDirectory('profiles')" icon="groups">Profil-Medien</ContextMenuItem>
-                <ContextMenuItem @click="openDirectory('forms')" icon="cloud_upload">Formular Daten</ContextMenuItem>
-            </ContextMenu>
-
             <div class="header">
                 <IodIconButton type="button" variant="text" corner="pill" icon="refresh" @click="fetchItems" background="var(--color-text-soft)" v-tooltip="'Aktualisieren'"/>
-                <MediaBreadcrumbs :path="path" @navigate="openDirectory($event)"/>
-                <HeSpacer />
+                <MediaBreadcrumbs class="flex-1" :path="path" @navigate="openDirectory($event)">
+                    <template #left>
+                        <VDropdown placement="bottom">
+                            <IodIconButton type="button" variant="text" corner="pill" icon="expand_more" size="s" v-tooltip="'Ordner auswählen'"/>
+        
+                            <template #popper>
+                                <ContextMenu class="min-w-80">
+                                    <ContextMenuItem @click="openDirectory('domain')" v-close-popper show-chevron icon="home_storage">Hauptspeicher</ContextMenuItem>
+                                    <ContextMenuItem @click="openDirectory('profiles')" v-close-popper show-chevron icon="switch_account">Profil Dateien</ContextMenuItem>
+                                    <ContextMenuItem @click="openDirectory('forms')" v-close-popper show-chevron icon="edit_square">Formular Dateien</ContextMenuItem>
+                                </ContextMenu>
+                            </template>
+                        </VDropdown>
+                    </template>
+                </MediaBreadcrumbs>
+                <!-- <VDropdown placement="bottom-end">
+                    <IodButton type="button" icon-right="add" label="Neu" corner="pill" size="m"/>
+                    <template #popper>
+                        <ContextMenu class="min-w-80">
+                            <ContextMenuItem icon="upload" v-close-popper @click="uploadInput?.click()">Hochladen</ContextMenuItem>
+                            <ContextMenuItem icon="create_new_folder" v-close-popper @click="createDirectoryPopup.open(path)">Ordner erstellen</ContextMenuItem>
+                        </ContextMenu>
+                    </template>
+                </VDropdown> -->
+
                 <IodLoader type="bar" v-show="loading"/>
             </div>
 
@@ -29,7 +46,7 @@
             </div>
             
             <div class="footer">
-                <IodInput class="!h-8 flex-1" placeholder="Auswahl" :modelValue="selection.map(e => e.name).join(', ')" disabled/>
+                <IodInput class="!h-10 flex-1" placeholder="Auswahl" :modelValue="selection.map(e => e.name).join(', ')" disabled/>
                 <IodButton type="button" :label="title" :disabled="!selection.length" @click="confirmSelection"/>
             </div>
         </div>
@@ -215,13 +232,9 @@
 <style lang="sass" scoped>
     .layout
         display: grid
-        grid-template-columns: 16rem 1fr
+        grid-template-columns: 1fr
         grid-template-rows: 4rem 33rem 4rem
-        grid-template-areas: 'sidebar header' 'sidebar main' 'sidebar footer'
-
-        .sidebar
-            grid-area: sidebar
-            border-right: 1px solid var(--color-border)
+        grid-template-areas: 'header' 'main' 'footer'
 
         .header
             grid-area: header

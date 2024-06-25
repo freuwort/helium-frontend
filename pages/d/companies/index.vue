@@ -15,7 +15,7 @@
                 @request:refresh="IPM.fetch()"
             >
                 <template #header>
-                    <IodButton type="button" label="Neues Unternehmen" @click="IPM.open()"/>
+                    <IodButton type="button" label="Neues Unternehmen" corner="pill" icon-right="add" @click="IPM.open()"/>
                 </template>
             </IodTable>
         </HeCard>

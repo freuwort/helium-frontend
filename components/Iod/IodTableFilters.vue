@@ -1,6 +1,6 @@
 <template>
     <VDropdown placement="bottom-end" v-if="filterSettings && filterSettings.length">
-        <IodIconButton type="button" variant="text" size="s" icon="filter_list" v-tooltip="'Filter'"/>
+        <IodIconButton type="button" variant="text" corner="pill" size="s" icon="filter_alt" v-tooltip="'Filter'"/>
         
         <template #popper>
             <div class="flex flex-col py-2 w-80 max-h-96 small-scrollbar">

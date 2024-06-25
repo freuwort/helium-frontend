@@ -4,25 +4,25 @@
             <div class="fixture-row">
                 <slot name="left"/>
 
-                <div class="p-1 flex items-center gap-1 bg-background-soft rounded-lg" v-if="$slots['wrapped-left']">
+                <div class="p-1 flex items-center gap-1 bg-background-soft rounded-full" v-if="$slots['wrapped-left']">
                     <slot name="wrapped-left"/>
                 </div>
 
                 <IodInput
-                    class="table-search-input"
+                    class="table-search-input !rounded-full"
                     placeholder="Suchen"
                     v-model="filter.search"
                 >
                     <template #right>
                         <IodTableFilters :filter="filter" :filterSettings="filterSettings" />
-                        <IodIconButton type="button" variant="text" size="s" icon="search" @click="$emit('request:refresh')" v-tooltip="'Suchen'"/>
+                        <IodIconButton type="button" corner="pill" variant="text" size="s" icon="refresh" @click="$emit('request:refresh')" v-tooltip="'Aktualisieren'"/>
                     </template>
                 </IodInput>
                 
                 <div class="spacer"></div>
                 
-                <div class="p-1 flex items-center gap-1 bg-background-soft rounded-lg" v-if="$slots['wrapped-right'] || selection.length">
-                    <IodIconButton size="s" variant="text" :icon="action.icon" v-tooltip="action.text" :background="action.color" v-for="action in multipleActions" @click.stop="action.run(selection)" :disabled="!selection.length"/>
+                <div class="p-1 px-2 flex items-center gap-1 bg-background-soft rounded-full" v-if="$slots['wrapped-right'] || selection.length">
+                    <IodIconButton size="s" corner="pill" variant="text" :icon="action.icon" v-tooltip="action.text" :background="action.color" v-for="action in multipleActions" @click.stop="action.run(selection)" :disabled="!selection.length"/>
                     <slot name="wrapped-right"/>
                 </div>
                 
@@ -31,7 +31,7 @@
             </div>
 
             <div class="fixture-row">
-                <IodIcon icon="filter_list" style="color: var(--color-text-soft)" v-tooltip="'Aktive Filter'"/>
+                <IodIcon icon="filter_alt" style="color: var(--color-text-soft)" v-tooltip="'Aktive Filter'"/>
                 <IodButton class="filter-tag" size="s" corner="pill" variant="contained" :label='`Auswahl: ${selection.length}`' v-show="selection.length" @click="deselectAll()" v-tooltip="'Alles abwählen'"/>
                 <IodButton class="filter-tag" size="s" corner="pill" variant="contained" :label='`Suche: "${filter.search}"`' v-show="filter.search" @click="filter.search = ''"/>
                 <IodButton class="filter-tag" size="s" corner="pill" variant="contained" :label="`${item.label}: ${item.value}`" @click="delete filter[item.key]" v-for="item in displayFilter"/>
@@ -109,7 +109,7 @@
                 ]"/>
 
                 <VDropdown placement="top-end">
-                    <IodIconButton type="button" size="s" variant="text" icon="grid_view" v-tooltip="'Ansicht anpassen'"/>
+                    <IodIconButton type="button" size="s" corner="pill" variant="text" icon="grid_view" v-tooltip="'Ansicht anpassen'"/>
                     <template #popper>
                         <div class="flex flex-col p-2">
                             <IodToggle
@@ -713,15 +713,15 @@
                 display: flex
                 align-items: center
                 gap: .25rem
-                padding: .25rem
+                padding: .25rem .5rem
                 height: 2.5rem
-                border-radius: var(--radius-m)
+                border-radius: 2.5rem
                 background: var(--color-background-soft)
 
                 .table-page-size-select
                     height: 2.5rem
                     width: 10rem
-                    border-radius: var(--radius-m)
+                    border-radius: 2.5rem
 
                 .iod-button
                     --local-color-background: var(--color-text) !important

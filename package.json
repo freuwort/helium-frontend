@@ -46,6 +46,7 @@
     "axios": "^1.6.7",
     "floating-vue": "^2.0.0-beta.24",
     "focus-trap-vue": "^4.0.3",
+    "hotkeys-js": "^3.13.7",
     "lodash": "^4.17.21",
     "lodash.clonedeep": "^4.5.0",
     "pinia": "^2.1.7",

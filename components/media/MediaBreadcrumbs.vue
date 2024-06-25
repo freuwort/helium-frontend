@@ -1,16 +1,21 @@
 <template>
-    <div class="iod-container iod-breadcrumbs">
-        <button
-            type="button"
-            class="breadcrumb"
-            v-for="item in items"
-            :key="item.navigate_path"
-            @click="emits('navigate', item.navigate_path)"
-            @dragover.prevent
-            @drop.prevent="onDrop($event, item.src_path)"
-        >
-            <div class="label">{{ item.text }}</div>
-        </button>
+    <div class="iod-container iod-breadcrumbs" :class="{ 'slot-left': $slots.left }">
+        <slot name="left" />
+        <template v-for="(item, i) in items">
+            <span v-show="i !== 0">/</span>
+            <IodButton
+                type="button"
+                :class="{ 'first': i === 0 }"
+                :icon-left="i === 0 ? 'home_storage' : ''"
+                size="s"
+                variant="text"
+                corner="pill"
+                @click="emits('navigate', item.navigate_path)"
+                @dragover.prevent
+                @drop.prevent="onDrop($event, item.src_path)"
+                :label="item.text"
+            />
+        </template>
     </div>
 </template>
 
@@ -62,50 +67,27 @@
     .iod-container.iod-breadcrumbs
         display: flex
         align-items: center
-        gap: 2rem
+        height: 2.5rem
+        border-radius: 2.5rem
+        background: var(--color-background-soft)
         user-select: none
+        padding: .25rem
 
-        .breadcrumb
-            background: transparent
-            border: none
-            display: flex
-            align-items: center
-            margin: 0
-            gap: .5rem
-            cursor: pointer
-            font-size: 1rem
-            text-decoration: none
-            color: var(--color-text-soft)
-            font-family: inherit
-            position: relative
-            padding: 0 .5rem
-            border: none
-            border-radius: var(--radius-s)
-            outline: none
+        &.slot-left
+            padding-left: .75rem
 
-            &:hover
-                color: var(--color-text)
-                background: #00000010
+        .iod-button
+            text-transform: none
+            letter-spacing: 0
+            font-weight: 400
+            font-family: var(--font-text)
+            padding-inline: .75rem !important
+            gap: .5rem !important
 
-            &:not(.breadcrumb:first-child)::after
-                content: 'chevron_right'
-                position: absolute
-                top: 50%
-                left: -1rem
-                color: #00000070
-                transform: translate(-50%, -50%)
-                user-select: none
-                pointer-events: none
-                font-family: var(--font-icon)
+            &.first
+                font-weight: 600
 
-            &:first-child
-                font-weight: 500
-
-                &::before
-                    content: 'home_storage'
-                    user-select: none
-                    pointer-events: none
-                    font-family: var(--font-icon)
-                    font-size: 1.5rem
-                    line-height: 1
+        > span
+            margin-inline: .25rem
+            color: var(--color-border-focused)
 </style>

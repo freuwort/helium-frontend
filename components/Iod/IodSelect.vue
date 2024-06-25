@@ -448,7 +448,7 @@ function setFocus()
   flex-direction: column
   border: 1px solid var(--color-border)
   border-radius: var(--radius-m)
-  background: var(--color-background-soft)
+  background: var(--color-background)
   color: var(--color-text-soft)
   padding-block: .5rem
   user-select: none
@@ -493,7 +493,7 @@ function setFocus()
       left: 0
       width: 0
       border-radius: 0 1rem 1rem 0
-      background-color: var(--color-primary)
+      background-color: var(--color-text)
       pointer-events: none
       transition: width 100ms ease-in-out
 

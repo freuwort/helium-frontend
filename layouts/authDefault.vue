@@ -29,6 +29,9 @@
             'class': 'small-scrollbar',
             'style': 'background: var(--color-background-soft)',
         },
+        bodyAttrs: {
+            'class': 'overflow-y-scroll',
+        },
     })
 
 

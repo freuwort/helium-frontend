@@ -45,7 +45,9 @@
                 <AppHeaderItem show-chevron color="#0EA5E9" icon="folder"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/media" show-chevron color="#0EA5E9" icon="folder">Alle Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/d/media/domain" show-chevron color="#0EA5E9" icon="home_storage">Hauptspeicher</ContextMenuItem>
+                        <ContextMenuItem to="/d/media/profiles" show-chevron color="#0EA5E9" icon="switch_account">Profil Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/d/media/forms" show-chevron color="#0EA5E9" icon="edit_square">Formular Dateien</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
