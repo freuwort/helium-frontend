@@ -37,7 +37,7 @@
         align-items: center
         justify-content: center
         gap: .25rem
-        padding: .25rem
+        padding: .25rem .5rem
         height: 2.5rem
         border-radius: 2.5rem
         background: var(--color-background-soft)

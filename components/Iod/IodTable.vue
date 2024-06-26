@@ -112,11 +112,11 @@
                     <IodIconButton type="button" size="s" corner="pill" variant="text" icon="grid_view" v-tooltip="'Ansicht anpassen'"/>
                     <template #popper>
                         <div class="flex flex-col p-2">
-                            <IodToggle
-                                type="switch"
-                                v-for="column in columns.filter(e => e.hideable)"
-                                :label="column.label"
-                                v-model="column.show" />
+                            <div class="flex gap-2 items-center" v-for="column in columns.filter(e => e.hideable)">
+                                <IodIcon icon="drag_indicator" />
+                                <span class="flex-1">{{ column.label }}</span>
+                                <IodIconButton size="s" variant="text" :icon="column.show ? 'visibility_off' : 'visibility'" v-tooltip="'Spalten aus-/einblenden'" @click="column.show = !column.show"/>
+                            </div>
                         </div>
                     </template>
                 </VDropdown>
