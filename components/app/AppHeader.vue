@@ -86,10 +86,10 @@
                 <AppHeaderItem show-chevron color="#F59E0B" icon="note_stack"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/screens" show-chevron color="#F59E0B" icon="news">Posts</ContextMenuItem>
+                        <ContextMenuItem to="/d/content/posts" show-chevron color="#F59E0B" icon="news">Posts</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem to="/d/screens" show-chevron color="#F59E0B" icon="data_array">Spaces</ContextMenuItem>
-                        <ContextMenuItem to="/d/screens" show-chevron color="#F59E0B" icon="label">Kategorien</ContextMenuItem>
+                        <ContextMenuItem to="/d/content/spaces" show-chevron color="#F59E0B" icon="data_array">Spaces</ContextMenuItem>
+                        <ContextMenuItem to="/d/content/categories" show-chevron color="#F59E0B" icon="label">Kategorien</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
