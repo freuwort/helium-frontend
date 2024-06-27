@@ -329,7 +329,7 @@
     // START: Keybinds
     useHotkeys('alt+n', () => { createDirectoryPopup.value.open(path.value) }, { prevent: true })
     useHotkeys('alt+u', () => { uploadInput.value.click() }, { prevent: true })
-    useHotkeys('del', () => { deleteItems(selection.value) }, { prevent: true })
+    // useHotkeys('del', () => { deleteItems(selection.value) }, { prevent: true })
     // END: Keybinds
 </script>
 
