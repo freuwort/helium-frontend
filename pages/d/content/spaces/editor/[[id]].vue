@@ -14,9 +14,16 @@
 
                 <HeFlex :gap="1">
                     <h5 class="m-0 font-medium">Allgemeines</h5>
-                    <IodInput label="Übergeordneter Space" v-model="form.model.parent_id"/>
-                    <IodInput label="Zugewiesener Nutzer" v-model="form.model.owner_id"/>
                     <IodInput label="Name" v-model="form.model.name"/>
+                    <IodInput label="Übergeordneter Space" v-model="form.model.parent_id"/>
+                    <IodInput label="Besitzer" v-model="form.model.owner_id"/>
+                </HeFlex>
+
+
+
+                <HeFlex :gap="1">
+                    <h5 class="m-0 font-medium">Zugriffsrechte</h5>
+                    <IodButton type="button" label="Zugriffsrechte bearbeiten" variant="contained" @click="sharePopup.open()"/>
                 </HeFlex>
             </HeFlex>
         </HeCard>
@@ -46,6 +53,7 @@
             parent_id: null,
             inherit_access: false,
             owner_id: null,
+            owner: null,
             name: '',
             created_at: '',
             updated_at: '',
@@ -74,7 +82,7 @@
             {
                 form.defaults(response.value?.data).reset()
                 toast.success('Space wurde erstellt')
-                navigateTo(apiRoute('/d/content/spaces/:id', {
+                navigateTo(apiRoute('/d/content/spaces/editor/:id', {
                     id: response.value?.data?.id
                 }))
             },
@@ -93,6 +101,12 @@
         })
     }
     // END: Server routes
+
+
+
+    // START: Share
+    const sharePopup = ref()
+    // END: Share
 
 
 

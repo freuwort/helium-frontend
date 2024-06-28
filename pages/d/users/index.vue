@@ -2,6 +2,7 @@
     <NuxtLayout name="auth-default" :pageTitle="IPM.options.pageTitle" color="var(--color-primary)">
         <HeCard>
             <IodTable
+                class="top-16"
                 :columns="tableColumns"
                 :actions="tableActions"
                 :filter-settings="tableFilters"
@@ -42,6 +43,7 @@
     })
 
     const tableColumns = [
+        { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizeable: true, hideable: true, default: '-'},
         { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
             return {
                 text: item.fullname || '-',
@@ -50,7 +52,6 @@
                 icon: 'person',
             }
         }},
-        // roles
         { name: 'roles', label: 'Rollen', valuePath: 'roles', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: any[]) =>  value.length ? (value.map(e => e.name).join(', ')) : null },
         { name: 'username', label: 'Nutzername', valuePath: 'username', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
         { name: 'email', label: 'Email', valuePath: 'email', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
@@ -91,7 +92,15 @@
         },
     ]
 
-    const tableFilters = [] as any[]
+    const tableFilters = ref([
+        {
+            name: 'roles',
+            label: 'Rollen',
+            type: 'select',
+            multiple: true,
+            values: computed(() => IPM.availableFilterValues['roles']?.map((item: any) => ({ value: item, text: item })) || []),
+        },
+    ])
 </script>
 
 <style lang="sass" scoped></style>

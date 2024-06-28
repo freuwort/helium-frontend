@@ -41,7 +41,7 @@
                 </HeFlex>
 
 
-                <TextEditor label="Beschreibung" v-model="form.model.description"/>
+                <TextEditor style="--top: 8.5rem" label="Beschreibung" sticky v-model="form.model.description"/>
 
 
                 <HeFlex :gap="1">

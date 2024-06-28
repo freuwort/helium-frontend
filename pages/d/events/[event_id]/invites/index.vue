@@ -151,7 +151,7 @@
             type: 'select',
             multiple: true,
             values: computed(() => IPM.availableFilterValues['type']?.map((item: any) => ({ value: item, text: item })) || []),
-        }
+        },
     ])
 
     

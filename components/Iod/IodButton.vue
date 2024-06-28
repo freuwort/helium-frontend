@@ -208,7 +208,7 @@
 
 
         &.button-size-xs
-            height: 1.75em
+            height: 1.5rem
             padding: 0 .75em
             gap: 0.75em
             font-size: .75rem

@@ -31,11 +31,13 @@
             </div>
 
             <div class="fixture-row">
-                <IodIcon icon="filter_alt" style="color: var(--color-text-soft)" v-tooltip="'Aktive Filter'"/>
-                <IodButton class="filter-tag" size="s" corner="pill" variant="contained" :label='`Auswahl: ${selection.length}`' v-show="selection.length" @click="deselectAll()" v-tooltip="'Alles abwählen'"/>
-                <IodButton class="filter-tag" size="s" corner="pill" variant="contained" :label='`Suche: "${filter.search}"`' v-show="filter.search" @click="filter.search = ''"/>
-                <IodButton class="filter-tag" size="s" corner="pill" variant="contained" :label="`${item.label}: ${item.value}`" @click="delete filter[item.key]" v-for="item in displayFilter"/>
-                <IodButton class="filter-tag" size="s" corner="pill" variant="contained" :label='`Seite: ${pagination.page}`' v-if="pagination" v-show="pagination.page > 1" @click="setPagination({ page: 0 })"/>
+                <div class="h-8 flex items-center gap-1 px-1 bg-background-soft rounded-full">
+                    <IodButton class="filter-tag" size="xs" corner="pill" variant="text" :label="`Filter`" icon-left="filter_alt" v-tooltip="'Filter/Auswahl löschen'" @click="setPagination({ page: 0 }); deselectAll(); filter = {}" />
+                    <IodButton class="filter-tag" size="xs" corner="pill" variant="text" :label='`Seite: ${pagination.page}`' v-if="pagination" v-show="pagination.page > 1" @click="setPagination({ page: 0 })"/>
+                    <IodButton class="filter-tag" size="xs" corner="pill" variant="text" :label='`Auswahl: ${selection.length}`' v-show="selection.length" @click="deselectAll()" v-tooltip="'Alles abwählen'"/>
+                    <IodButton class="filter-tag" size="xs" corner="pill" variant="text" :label='`Suche: "${filter.search}"`' v-show="filter.search" @click="filter.search = ''"/>
+                    <IodButton class="filter-tag" size="xs" corner="pill" variant="text" :label="`${item.label}: ${item.value}`" @click="delete filter[item.key]" v-for="item in displayFilter"/>
+                </div>
                 <div class="spacer"></div>
             </div>
 
@@ -45,9 +47,23 @@
 
 
 
-        <div class="table-empty-wrapper" v-show="!items.length">
+        <!-- <div class="table-empty-wrapper" v-show="!items.length">
             <div class="table-empty-text">Keine Einträge gefunden</div>
-        </div>
+        </div> -->
+
+        <IodAlert v-if="!items.length && !loading" class="h-72" as="placeholder">
+            <div class="flex item-center justify-center h-16 w-16">
+                <IodIcon icon="category" class="m-auto !text-5xl"/>
+            </div>
+            <span>Keine Einträge gefunden</span>
+        </IodAlert>
+        
+        <IodAlert v-if="!items.length &&loading" class="h-72" as="placeholder">
+            <div class="flex item-center justify-center h-16 w-16">
+                <IodLoader class="m-auto"/>
+            </div>
+            <span>Lade Einträge</span>
+        </IodAlert>
 
         <div class="table-inner-wrapper" v-show="items.length">
             <div class="table-head">
@@ -494,9 +510,16 @@
     .iod-container.iod-table
         display: grid
         grid-template-rows: auto auto
+        border-radius: var(--radius-l)
 
         .table-fixture-wrapper
-            position: relative
+            position: sticky
+            top: inherit
+            border-radius: inherit
+            border-bottom-right-radius: 0
+            border-bottom-left-radius: 0
+            background: var(--color-background)
+            z-index: 2
             padding-block: 1rem
             display: flex
             flex-direction: column
@@ -513,10 +536,8 @@
 
                 .filter-tag
                     padding-inline: .75rem !important
-                    height: 1.5rem !important
                     text-transform: unset !important
                     letter-spacing: unset !important
-                    --local-color-background: var(--color-text) !important
 
             .iod-loader
                 position: absolute !important

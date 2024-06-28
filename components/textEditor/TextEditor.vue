@@ -534,10 +534,12 @@
         background: var(--color-background-soft)
         border-radius: var(--radius-m)
         position: relative
+        --top: 0
 
         &.sticky
             .editor-controls
                 position: sticky
+                top: var(--top)
 
         &.fullscreen
             position: fixed
