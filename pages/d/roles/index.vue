@@ -48,7 +48,7 @@
                 text: item.name || '-',
                 tooltip: item.name,
                 icon: item.icon || 'category',
-                color: item.color || 'var(--color-primary)',
+                color: item.color || '#363E40',
             }
         }},
         { name: 'permissions', label: 'Berechtigungen', valuePath: 'permissions', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string[] | null) => {

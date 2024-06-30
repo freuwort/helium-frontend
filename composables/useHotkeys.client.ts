@@ -1,6 +1,10 @@
 export function useHotkeys(keys: string, callback: Function, options: any = {}): void
 {
-    let pressed = keys.replace(' ', '+').split('+').map((key) => key.toLowerCase()).reduce((obj: any, key: string) => (obj[key] = false, obj), {})
+    let pressed = keys
+    .replace(' ', '+')
+    .split('+')
+    .map((key) => key.toLowerCase())
+    .reduce((obj: any, key: string) => (obj[key] = false, obj), {})
 
     onMounted(() => { addEventListener('keydown', keyDown); addEventListener('keyup', keyUp) })
     onUnmounted(() => { removeEventListener('keydown', keyDown); removeEventListener('keyup', keyUp) })

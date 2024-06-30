@@ -15,7 +15,7 @@
                 @request:refresh="IPM.fetch()"
             >
                 <template #header>
-                    <IodButton type="button" label="Neuer Space" corner="pill" icon-right="add" @click="IPM.open()"/>
+                    <IodButton type="button" label="Neue Kategorie" corner="pill" icon-right="add" @click="IPM.open()"/>
                 </template>
             </IodTable>
         </HeCard>
@@ -32,19 +32,27 @@
 
 
     const IPM = useItemPageManager({
-        pageTitle: 'Spaces Verwaltung',
-        scope: 'admin.content.spaces.index',
+        pageTitle: 'Kategorie Verwaltung',
+        scope: 'admin.content.category.index',
         routes: {
-            fetch: '/api/content/spaces/',
-            duplicate: '/api/content/spaces/:id/duplicate',
-            delete: '/api/content/spaces/',
-            editor: '/d/content/spaces/editor/:id',
+            fetch: '/api/categories/',
+            duplicate: '/api/categories/:id/duplicate',
+            delete: '/api/categories/',
+            editor: '/d/content/categories/editor/:id',
         },
     })
 
     const tableColumns = [
         { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizeable: true, hideable: true, default: '-'},
-        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
+        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
+            return {
+                text: item.name || '-',
+                tooltip: item.name,
+                icon: item.icon || 'category',
+                color: item.color || '#363E40',
+            }
+        }},
+        { name: 'slug', label: 'Slug', valuePath: 'slug', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
         { name: 'parent', label: 'Teil von', valuePath: 'parent', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: any) => value?.name || '-' },
         { name: 'owner', label: 'Besitzer', valuePath: 'owner', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
             if (!value) return '-'
