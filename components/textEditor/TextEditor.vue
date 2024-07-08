@@ -151,6 +151,7 @@
     import Image from '@tiptap/extension-image'
     import Underline from '@tiptap/extension-underline'
     import CharacterCount from '@tiptap/extension-character-count'
+    import Placeholder from '@tiptap/extension-placeholder'
     import TextAlign from '@tiptap/extension-text-align'
     import TextStyle from '@tiptap/extension-text-style'
     import Table from '@tiptap/extension-table'
@@ -189,6 +190,10 @@
                 default: '',
             },
             label: {
+                type: String,
+                default: '',
+            },
+            placeholder: {
                 type: String,
                 default: '',
             },
@@ -237,6 +242,9 @@
                                 class: 'content-blockquote',
                             },
                         },
+                    }),
+                    Placeholder.configure({
+                        placeholder: this.placeholder,
                     }),
                     Link.configure({
                         linkOnPaste: true,

@@ -55,6 +55,13 @@
                 icon: 'person',
             }
         }},
+        { name: 'hidden', label: 'Wird angezeigt', valuePath: 'hidden', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: boolean) => {
+            return {
+                text: value ? 'Versteckt' : 'Angezeigt',
+                color: value ? 'var(--color-error)' : 'var(--color-success)',
+                icon: value ? 'visibility_off' : 'visibility',
+            }
+        }},
         { name: 'created_at', label: 'Erstellt', valuePath: 'created_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
         { name: 'updated_at', label: 'Zuletzt geändert', valuePath: 'updated_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) => value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
     ]

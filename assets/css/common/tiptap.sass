@@ -193,6 +193,12 @@
             *:last-child
                 margin-bottom: 0
 
+    p[data-placeholder]
+        &::before
+            position: absolute
+            content: attr(data-placeholder)
+            color: var(--color-text-soft-disabled)
+
     blockquote.content-blockquote
         background: var(--color-background-soft)
         border-radius: var(--radius-m)

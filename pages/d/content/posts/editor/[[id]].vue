@@ -2,7 +2,7 @@
     <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Beitrag bearbeiten' : 'Beitrag erstellen'" color="#F59E0B">
         <HeCard is="form" @submit.prevent="save">
             <HeFlex class="rounded-t-2xl border-b sticky top-16 z-20 bg-background" horizontal padding="1rem 1.5rem">
-                <IodButton type="button" corner="pill" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/content/categories')"/>
+                <IodButton type="button" corner="pill" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/content/posts')"/>
                 <HeSpacer />
                 <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
             </HeFlex>
@@ -13,6 +13,8 @@
 
 
                 <HeFlex :gap="1">
+                    <IodInput label="Space" v-model="form.model.space_id"/>
+                    
                     <h5 class="m-0 font-medium">Allgemeines</h5>
                     <IodInput label="Name" v-model="form.draft.name" @input="form.draft.slug = slugify(form.draft.name)"/>
                     <IodInput label="Slug" v-model="form.draft.slug">
@@ -21,7 +23,7 @@
                         </template>
                     </IodInput>
 
-                    <TextEditor v-model="form.draft.content" label="Beschreibung" />
+                    <TextEditor class="!min-h-96" v-model="form.draft.content" placeholder="Inhalt..."/>
                 </HeFlex>
                 
                 
