@@ -2,8 +2,10 @@
     <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Beitrag bearbeiten' : 'Beitrag erstellen'" color="#F59E0B">
         <HeCard is="form" @submit.prevent="save">
             <HeFlex class="rounded-t-2xl border-b sticky top-16 z-20 bg-background" horizontal padding="1rem 1.5rem">
-                <IodButton type="button" corner="pill" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/content/posts')"/>
+                <IodButton type="button" corner="pill" label="Zur Übersicht" variant="contained" @click="navigateTo('/d/content/posts')"/>
                 <HeSpacer />
+                <IodButton type="button" corner="pill" label="Zur Überprüfung freigeben" :loading="form.processing" variant="contained" @click="updateReviewStatus(true)"/>
+                <IodButton type="button" corner="pill" label="Freigeben" :loading="form.processing" variant="contained" @click="approveDraft()"/>
                 <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
             </HeFlex>
 
@@ -13,6 +15,12 @@
 
 
                 <HeFlex :gap="1">
+                    <IodAlert color-preset="info">
+                        <div class="flex gap-4 align-center">
+                            <IodIcon icon="info"/>
+                            <p>Dieser Beitrag wartet auf die finale Überprüfung bevor die Änderungen angezeigt werden.</p>
+                        </div>
+                    </IodAlert>
                     <IodInput label="Space" v-model="form.model.space_id"/>
                     
                     <h5 class="m-0 font-medium">Allgemeines</h5>
@@ -114,6 +122,32 @@
             {
                 form.defaults(response.value?.data).reset()
                 toast.success('Beitrag wurde aktualisiert')
+            },
+        })
+    }
+
+    function updateReviewStatus(status: boolean)
+    {
+        form.draft.review_ready = status
+
+        form
+        .patch(apiRoute('/api/content/posts/:id/review', { id: id.value }), {
+            onSuccess(response: any)
+            {
+                form.defaults(response.value?.data).reset()
+                toast.success('Beitrag wurde zur Überprüfung freigeben')
+            },
+        })
+    }
+
+    function approveDraft()
+    {
+        form
+        .patch(apiRoute('/api/content/posts/:id/approve', { id: id.value }), {
+            onSuccess(response: any)
+            {
+                form.defaults(response.value?.data).reset()
+                toast.success('Beitrag wurde freigegeben')
             },
         })
     }

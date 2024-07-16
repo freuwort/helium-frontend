@@ -44,8 +44,9 @@
 
     const tableColumns = [
         { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizeable: true, hideable: true, default: '-'},
-        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
-        { name: 'slug', label: 'Slug', valuePath: 'slug', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
+        { name: 'space.name', label: 'Space', valuePath: 'space.name', sortable: false, width: 200, resizeable: true, hideable: true, default: '-'},
+        { name: 'draft.name', label: 'Name', valuePath: 'draft.name', sortable: false, width: 200, resizeable: true, hideable: true, default: '-'},
+        { name: 'draft.slug', label: 'Slug', valuePath: 'draft.slug', sortable: false, width: 200, resizeable: true, hideable: true, default: '-'},
         { name: 'owner', label: 'Besitzer', valuePath: 'owner', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
             if (!value) return '-'
             return {
@@ -62,8 +63,15 @@
                 icon: value ? 'visibility_off' : 'visibility',
             }
         }},
-        { name: 'created_at', label: 'Erstellt', valuePath: 'created_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
-        { name: 'updated_at', label: 'Zuletzt geändert', valuePath: 'updated_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) => value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
+        { name: 'draft.review_ready', label: 'Überprüfung', valuePath: 'draft.review_ready', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: boolean) => {
+            return {
+                text: value ? 'Ausstehend' : 'Nicht bereit',
+                color: value ? 'var(--color-warning)' : 'var(--color-error)',
+                icon: value ? 'pace' : 'block',
+            }
+        }},
+        { name: 'draft.created_at', label: 'Erstellt', valuePath: 'draft.created_at', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
+        { name: 'draft.updated_at', label: 'Zuletzt geändert', valuePath: 'draft.updated_at', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) => value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
     ]
 
     const tableActions = [
@@ -99,7 +107,35 @@
         },
     ]
 
-    const tableFilters = ref([])
+    const tableFilters = ref([
+        {
+            name: 'hidden',
+            label: 'Wird angezeigt',
+            type: 'select',
+            multiple: false,
+            values: [
+                { value: 'shown', text: 'Angezeigt' },
+                { value: 'hidden', text: 'Versteckt' },
+            ],
+        },
+        {
+            name: 'review_ready',
+            label: 'Überprüfung',
+            type: 'select',
+            multiple: false,
+            values: [
+                { value: 'ready', text: 'Ausstehend' },
+                { value: 'not_ready', text: 'Nicht bereit' },
+            ],
+        },
+        {
+            name: 'space',
+            label: 'Space',
+            type: 'select',
+            multiple: true,
+            values: computed(() => IPM.availableFilterValues['space']?.map((item: any) => ({ value: item.id, text: item.name })) || []),
+        },
+    ])
 </script>
 
 <style lang="sass" scoped></style>
