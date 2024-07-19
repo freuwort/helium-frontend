@@ -2,7 +2,7 @@
     <header>
         <HeFlex horizontal class="main-bar">
             <VDropdown placement="bottom-start" :distance="-1">
-                <AppHeaderItem @dblclick="navigateTo('/d')">
+                <AppHeaderItem @dblclick="navigateTo('/d')" v-tooltip="'Home'">
                     <img class="h-8" src="/images/app/logo.svg" alt="logo" />
                 </AppHeaderItem>
 
@@ -37,7 +37,7 @@
             </VDropdown> -->
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron icon="group"/>
+                <AppHeaderItem show-chevron icon="group" v-tooltip="'Nutzer / Unternehmen / Berechtigungen'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/d/users" show-chevron icon="group">Nutzer</ContextMenuItem>
@@ -48,7 +48,7 @@
             </VDropdown>
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron icon="folder"/>
+                <AppHeaderItem show-chevron icon="folder" v-tooltip="'Dateien'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/d/media/domain" show-chevron icon="home_storage">Hauptspeicher</ContextMenuItem>
@@ -61,7 +61,7 @@
             <HeDivider vertical class="h-8 ml-2"/>
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="#06B6D4" icon="edit_square"/>
+                <AppHeaderItem show-chevron color="#06B6D4" icon="edit_square" v-tooltip="'Formulare'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/d/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
@@ -70,7 +70,7 @@
             </VDropdown>
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="#10b981" icon="confirmation_number"/>
+                <AppHeaderItem show-chevron color="#10b981" icon="confirmation_number" v-tooltip="'Events'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/d/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
@@ -79,7 +79,7 @@
             </VDropdown>
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="#84cc16" icon="desktop_windows"/>
+                <AppHeaderItem show-chevron color="#84cc16" icon="desktop_windows" v-tooltip="'Screens'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/d/screens" show-chevron color="#84cc16" icon="desktop_windows">Screens</ContextMenuItem>
@@ -87,8 +87,8 @@
                 </template>
             </VDropdown>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="#F59E0B" icon="note_stack"/>
+            <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+                <AppHeaderItem show-chevron color="#F59E0B" icon="note_stack" v-tooltip="'Inhalte'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/d/content/posts" show-chevron color="#F59E0B" icon="news">Beträge</ContextMenuItem>
@@ -99,8 +99,8 @@
                 </template>
             </VDropdown>
             
-            <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="#FF6348" icon="package_2"/>
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+                <AppHeaderItem show-chevron color="#FF6348" icon="package_2" v-tooltip="'Produkte'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
@@ -109,7 +109,7 @@
             </VDropdown>
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="#FF4757" icon="receipt"/>
+                <AppHeaderItem show-chevron color="#FF4757" icon="receipt" v-tooltip="'Rechnungen / Angebote'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem show-chevron color="#FF4757" icon="article">Angebote</ContextMenuItem>
@@ -120,8 +120,10 @@
             
             <HeSpacer />
 
+            <MediaUploadProgress />
+
             <!-- <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron icon="notifications"/>
+                <AppHeaderItem show-chevron icon="notifications" v-tooltip="'Benachrichtigungen'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem show-chevron icon="inbox">Alle Benachrichtigungen</ContextMenuItem>
@@ -131,7 +133,7 @@
             </VDropdown> -->
 
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
-                <ProfileChip v-if="auth.user" :title="auth.user.name ?? auth.user.fullname ?? ''" :subtitle="auth.user.username ?? ''" :image="auth.user.profile_image" align="right"/>
+                <ProfileChip v-if="auth.user" :title="auth.user.name ?? auth.user.fullname ?? ''" :subtitle="auth.user.username ?? ''" :image="auth.user.profile_image" align="right" v-tooltip="'Profil'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/d/profile" show-chevron icon="person">Profil</ContextMenuItem>
