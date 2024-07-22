@@ -1,11 +1,14 @@
 <template>
     <div class="iod-container iod-progress" :class="'loading-'+type">
-        <svg v-if="type === 'circle'" class="circle" viewBox="25 25 50 50">
-            <circle ref="circlePath" cx="50" cy="50" r="20" fill="none" :stroke-width="thickness" :stroke-dasharray="dasharray" :stroke-dashoffset="dashoffset" stroke-linecap="round" stroke-miterlimit="10"/>
+        <svg class="circle" v-if="type === 'circle'" viewBox="25 25 50 50">
+            <circle class="background-circle" cx="50" cy="50" r="20" fill="none" :stroke-width="thickness" stroke-linecap="round" stroke-miterlimit="10"/>
+            <circle class="progress-circle" cx="50" cy="50" r="20" fill="none" :stroke-width="thickness" :stroke-dasharray="dasharray" :stroke-dashoffset="dashoffset" stroke-linecap="round" stroke-miterlimit="10"/>
         </svg>
     
         <div v-if="type === 'bar'" class="bar">
-            <div class="progress" :style="`transform: scaleX(${progress / 100})`"></div>
+            <div class="background-bar"></div>
+            <div class="progress-bar" :style="`transform: scaleX(${progress / 100})`"></div>
+            <!-- <div class="indeterminate-bar"></div> -->
         </div>
     </div>
 </template>
@@ -26,10 +29,7 @@
         },
     })
 
-    const circlePath = ref()
-    const dasharray = computed(() => {
-        return 60
-    })
+    const dasharray = ref(124.85393524169922) // Trust me, this was a pain to calculate
     const dashoffset = computed(() => dasharray.value * (1 - props.progress / 100))
 </script>
 
@@ -59,20 +59,26 @@
             *
                 box-sizing: inherit
 
-            circle
+            .background-circle
                 stroke: currentColor
+                opacity: .2
+
+            .progress-circle
+                stroke: currentColor
+                transform-origin: 50px 50px
+                transform: rotate(-90deg)
 
         .bar
             position: relative
             display: block
             height: 100%
             width: 100%
-            color: var(--color-text)
+            border-radius: inherit
+            color: inherit
             background: var(--color-background)
             overflow: hidden
 
-            &:before
-                content: ''
+            .background-bar
                 position: absolute
                 background-color: currentColor
                 top: 0
@@ -81,6 +87,13 @@
                 right: 0
                 opacity: .2
 
-            .progress
+            .progress-bar
                 background-color: currentColor
+                position: absolute
+                top: 0
+                bottom: 0
+                left: 0
+                right: 0
+                transform-origin: left
+                transform: scaleX(0)
 </style>

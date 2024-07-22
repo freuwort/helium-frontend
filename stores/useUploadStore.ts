@@ -33,7 +33,7 @@ export const useUploadStore = defineStore('upload_manager', () => {
     const statusText = computed(() => {
         const s = status.value
 
-        if (s.uploading) return `Lade ${s.uploading} Dateien hoch`
+        if (s.uploading) return `Lade ${s.uploading} Dateien hoch (${totalProgress.value}%)`
         if (s.completed) return `${s.completed} Dateien hochgeladen`
         if (s.cancelled) return `${s.cancelled} Dateien abgebrochen`
 

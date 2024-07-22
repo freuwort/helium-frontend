@@ -96,7 +96,6 @@
         
         <input class="hidden" type="file" ref="uploadInput" multiple @change="upload(($event.target as HTMLInputElement)?.files || [])">
         
-        <MediaUploadCard />
         <DialogMediaCreateDirectory ref="createDirectoryPopup" placement="center" max-width="500px" blur="0" @saved="fetch()"/>
         <DialogMediaRename ref="renamePopup" placement="center" max-width="500px" blur="0" @saved="fetch(); deselectAll()" />
         <DialogMediaShare ref="sharePopup" placement="center" max-width="500px" blur="0" @saved="fetch()"/>

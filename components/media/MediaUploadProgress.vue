@@ -1,61 +1,111 @@
 <template>
-    <Transition name="slide">
-        <div class="upload-button" key="card" v-show="uploadManager.status.uploading">
-            <IodProgress :progress="uploadManager.totalProgress"/>
-        </div>
-    </Transition>
+    <VDropdown placement="bottom-center" :distance="-1">
+        <Transition name="slide">
+            <div class="upload-button" key="card" v-show="uploadManager.status.total > 0" :class="{
+                'uploading': uploadManager.status.uploading,
+                'completed': uploadManager.status.completed,
+                'cancelled': uploadManager.status.cancelled,
+            }" v-tooltip="uploadManager.statusText">
+                <IodProgress type="bar" :progress="uploadManager.totalProgress"/>
+                <IodIcon :icon="icon"/>
+            </div>
+        </Transition>
+
+        <template #popper>
+            <MediaUploadCard class="!w-80" v-show="uploadManager.status.total > 0"/>
+        </template>
+    </VDropdown>
 </template>
 
 <script lang="ts" setup>
     const uploadManager = useUploadStore()
+
+    const icon = computed(() => {
+        if (uploadManager.status.uploading) return 'upload'
+        if (uploadManager.status.completed) return 'check'
+        if (uploadManager.status.cancelled) return 'close'
+    })
 </script>
 
 <style lang="sass" scoped>
-    .slide-move,
     .slide-enter-active,
     .slide-leave-active
-        transition: all 200ms ease-in-out !important
+        transition: all 100ms ease-out !important
 
     .slide-enter-from,
     .slide-leave-to
-        transform: translateY(100%)
+        transform: translateY(1rem)
+        opacity: 0
 
     .slide-leave-active
         position: absolute
 
 
 
-    .upload-card
-        display: flex
-        flex-direction: column
-        border: none
-        border-radius: var(--radius-l) var(--radius-l) 0 0 !important
-        box-shadow: var(--shadow-m)
-        position: fixed
-        z-index: 100
-        bottom: 0
-        right: 1rem
-        padding: .25rem
-        gap: .25rem
-        width: calc(100% - 2rem)
-        max-width: 22rem
-        user-select: none
-        transition: all 200ms ease-in-out
+    @keyframes pulse
+        0%
+            opacity: 1
 
-        .header
-            display: flex
-            font-weight: 500
-            align-items: center
-            color: var(--color-text)
-            border-radius: var(--radius-m)
-            height: 3rem
-            background: var(--color-background-soft)
-            padding-inline: 1rem .5rem !important
+        50% 
+            opacity: .5
 
-            .iod-button
-                transition: transform 200ms ease-in-out
-                &.expanded
-                    transform: rotate(180deg)
+        100%     
+            opacity: 1
 
-        
+
+
+    .upload-button
+        aspect-ratio: 1
+        height: 3rem
+        position: relative
+        border-radius: var(--radius-m)
+        color: var(--color-text-soft)
+
+        &.completed
+            color: var(--color-success)
+
+        &.cancelled
+            color: var(--color-error)
+
+        &.uploading
+            color: var(--color-info)
+
+            .iod-icon
+                bottom: .5rem
+                animation: pulse 2s infinite
+
+            .iod-progress
+                opacity: 1
+
+        &::before
+            content: ''
+            position: absolute
+            top: 0
+            bottom: 0
+            left: 0
+            right: 0
+            border-radius: inherit
+            background-color: currentColor
+            opacity: .1
+
+        .iod-icon
+            position: absolute
+            top: 0
+            bottom: 0
+            left: 0
+            right: 0
+            aspect-ratio: unset
+            transition: all 100ms ease-out
+
+        .iod-progress
+            position: absolute
+            left: .5rem
+            right: .5rem
+            bottom: .5rem
+            border-radius: 1rem
+            width: unset !important
+            color: inherit !important
+            opacity: 0
+            pointer-events: none
+            transition: all 100ms ease-out
 </style>
