@@ -78,7 +78,7 @@
                 <span>Lade Dateien</span>
             </IodAlert>
 
-            <div class="footer" v-show="items.length">
+            <div class="footer">
                 <IodPagination v-model="pagination"/>
                 <HeSpacer />
                 <IodSelect class="!h-10 !rounded-full" v-tooltip="'Einträge pro Seite'" :modelValue="pagination.size" @update:modelValue="setPagination({ size: parseInt($event) })" :options="[
