@@ -51,6 +51,14 @@
                 color: item.color || '#363E40',
             }
         }},
+        { name: 'is_administrative', label: 'Administrativ', valuePath: 'is_administrative', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: boolean | null) => {
+            return {
+                text: value ? 'Admin' : 'Basis',
+                tooltip: value ? 'Admin' : 'Basis',
+                icon: value ? 'shield' : 'badge',
+                color: value ? 'var(--color-error)' : 'var(--color-text-soft)',
+            }
+        }},
         { name: 'permissions', label: 'Berechtigungen', valuePath: 'permissions', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string[] | null) => {
             return {
                 text: value ? value.join(', ') || '-' : '-',
@@ -94,7 +102,24 @@
         },
     ]
 
-    const tableFilters = [] as any[]
+    const tableFilters = ref([
+        {
+            name: 'administrative',
+            label: 'Administrativ',
+            type: 'select',
+            multiple: false,
+            values: [
+                { value: true, text: 'Admin' },
+            ],
+        },
+        {
+            name: 'permissions',
+            label: 'Berechtigungen',
+            type: 'select',
+            multiple: true,
+            values: computed(() => IPM.availableFilterValues['permission']?.map((item: any) => ({ value: item, text: item })) || []),
+        },
+    ])
 </script>
 
 <style lang="sass" scoped></style>
