@@ -43,6 +43,7 @@
     })
 
     const tableColumns = [
+        { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizeable: true, hideable: true, default: '-'},
         { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
             return {
                 text: item.name || '-',
@@ -55,7 +56,7 @@
             return {
                 text: value ? 'Admin' : 'Basis',
                 tooltip: value ? 'Admin' : 'Basis',
-                icon: value ? 'shield' : 'badge',
+                icon: value ? 'verified_user' : 'key',
                 color: value ? 'var(--color-error)' : 'var(--color-text-soft)',
             }
         }},

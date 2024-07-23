@@ -1,40 +1,35 @@
 <template>
     <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Rolle bearbeiten' : 'Rolle erstellen'" color="var(--color-primary)">
         <HeCard is="form" @submit.prevent="save">
-            <HeFlex class="border-b sticky top-16 z-20 bg-background rounded-t-xl" horizontal padding="1rem 2rem">
-                <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/roles')"/>
+            <div class="flex items-center py-4 px-6 border-b sticky top-16 z-20 bg-background rounded-t-xl">
+                <IodButton type="button" corner="pill" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/roles')"/>
                 <HeSpacer />
-                <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
-            </HeFlex>
+                <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
+            </div>
 
-            <HeFlex :padding="2" :gap="3">
+            <div class="flex flex-col py-4 px-6 gap-12">
                 <ErrorAlert :errors="form.errors" />
-
-                <HeFlex :gap="1">
-                    <HeFlex horizontal :gap="1">
-                        <IconColorPicker hasColor hasIcon v-model:color="form.color" v-model:icon="form.icon"/>
-                        <IodInput class="flex-1" label="Name" v-model="form.name"/>
-                    </HeFlex>
-                </HeFlex>
-
-                <HeFlex :gap="1">
-                    <HeFlex :gap="1" v-for="app in permissions.all">
-                        <h6 class="m-0 font-medium">{{ app.title }}</h6>
-                        <HeFlex :gap="1">
-                            <HeFlex v-for="group in app.permissions">
-                                <IodToggle v-for="permission in group" :key="permission.name" :modelValue="form.permissions.includes(permission.name)" @update:modelValue="togglePermission(permission.name)">
-                                    <template #label>
-                                        <HeFlex :gap=".25" style="font-size: 0.875rem">
-                                            <span class="font-heading color-text font-medium">{{ permission.label }}</span>
-                                            <small>{{ permission.description }}</small>
-                                        </HeFlex>
-                                    </template>
-                                </IodToggle>
-                            </HeFlex>
-                        </HeFlex>
-                    </HeFlex>
-                </HeFlex>
-            </HeFlex>
+    
+                <div class="flex gap-4">
+                    <IconColorPicker hasColor hasIcon v-model:color="form.color" v-model:icon="form.icon"/>
+                    <IodInput class="flex-1" label="Name" v-model="form.name"/>
+                </div>
+    
+                <div class="flex flex-col gap-4 mb-4" v-for="app in permissions.all">
+                    <h6 class="m-0 font-medium">{{ app.title }}</h6>
+                    
+                    <div class="flex flex-col" v-for="group in app.permissions">
+                        <IodToggle v-for="permission in group" :key="permission.name" :modelValue="form.permissions.includes(permission.name)" @update:modelValue="togglePermission(permission.name)">
+                            <template #label>
+                                <div class="flex flex-col gap-1 text-sm">
+                                    <span class="font-heading color-text font-medium">{{ permission.label }}</span>
+                                    <small>{{ permission.description }}</small>
+                                </div>
+                            </template>
+                        </IodToggle>
+                    </div>
+                </div>
+            </div>
         </HeCard>
     </NuxtLayout>
 </template>
