@@ -1,13 +1,13 @@
 <template>
     <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Rolle bearbeiten' : 'Rolle erstellen'" color="var(--color-primary)">
         <HeCard is="form" @submit.prevent="save">
-            <div class="flex items-center py-4 px-6 border-b sticky top-16 z-20 bg-background rounded-t-xl">
-                <IodButton type="button" corner="pill" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/roles')"/>
+            <div class="flex items-center p-4 border-b sticky top-16 z-20 bg-background rounded-t-xl">
+                <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" :loading="form.processing" variant="contained" to="/d/roles"/>
                 <HeSpacer />
                 <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
             </div>
 
-            <div class="flex flex-col py-4 px-6 gap-12">
+            <div class="flex flex-col p-4 gap-12">
                 <ErrorAlert :errors="form.errors" />
     
                 <div class="flex gap-4">
@@ -40,6 +40,8 @@
     definePageMeta({
         middleware: 'auth',
     })
+
+    const NuxtLink = defineNuxtLink({})
 
 
 

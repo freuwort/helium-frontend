@@ -14,11 +14,11 @@
             />
 
             
-            <HeFlex class="border-y sticky top-16 z-20 bg-background" horizontal padding="1rem 2rem">
-                <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/users')"/>
+            <div class="flex items-center p-4 border-y sticky top-16 z-20 bg-background">
+                <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" :loading="form.processing" variant="contained" to="/d/users"/>
                 <HeSpacer />
-                <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
-            </HeFlex>
+                <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
+            </div>
 
             <HeFlex :padding="2" :gap="3">
                 <ErrorAlert :errors="form.errors" />
@@ -297,6 +297,8 @@
     definePageMeta({
         middleware: 'auth',
     })
+
+    const NuxtLink = defineNuxtLink({})
 
     
 

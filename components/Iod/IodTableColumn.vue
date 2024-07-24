@@ -1,5 +1,5 @@
 <template>
-    <div class="iod-container iod-table-column" v-tooltip="data.tooltip || data.text">
+    <div class="iod-container iod-table-column" :class="{'monospace': monospace}" v-tooltip="data.tooltip || data.text">
         <IodIcon
             class="pictogram"
             use-backdrop
@@ -24,7 +24,11 @@
                 color: null,
                 image: null,
             })
-        }
+        },
+        monospace: {
+            type: Boolean,
+            default: false,
+        },
     })
 </script>
 
@@ -35,6 +39,9 @@
         overflow: hidden
         padding-inline: 1rem
         gap: .75rem
+
+        &.monospace
+            font-family: var(--font-mono)
 
         > .text-wrapper
             flex: 1

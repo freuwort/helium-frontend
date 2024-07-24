@@ -95,7 +95,7 @@
                     </div>
 
                     <div class="table-column" v-for="column in columns.filter(e => e.show)" :style="`width: ${column.width}px;`">
-                        <IodTableColumn :data="getData(item, column)"/>
+                        <IodTableColumn :data="getData(item, column)" :monospace="column.monospace"/>
                     </div>
 
                     <div class="table-column actions">
@@ -151,6 +151,7 @@
         sortable?: boolean,
         resizeable?: boolean,
         hideable?: boolean,
+        monospace?: boolean,
         default?: string | undefined,
         // Private
         show?: boolean,
