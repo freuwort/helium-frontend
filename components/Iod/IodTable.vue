@@ -27,7 +27,6 @@
                 </div>
                 
                 <slot name="right"/>
-                <slot name="header"/> <!-- Depricated -->
             </div>
 
             <div class="fixture-row">
@@ -153,7 +152,7 @@
         hideable?: boolean,
         monospace?: boolean,
         default?: string | undefined,
-        // Private
+        
         show?: boolean,
         resizing?: boolean,
     }
@@ -188,15 +187,17 @@
         order: 'asc' | 'desc',
     }
 
-    type FilterSetting = {
+    type FilterSettingValue = {
+        value: any,
+        text: string
+    }
+
+    export type FilterSetting = {
         name: string,
         label: string,
         type: 'select',
         multiple: boolean,
-        values: {
-            value: any,
-            text: string
-        }[],
+        values: FilterSettingValue[] | ComputedRef<FilterSettingValue[]>,
     }
 
 

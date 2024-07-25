@@ -14,7 +14,7 @@
                 v-model:pagination="IPM.modelPagination"
                 @request:refresh="IPM.fetch()"
             >
-                <template #header>
+                <template #right>
                     <IodButton type="button" label="Neue Rolle" corner="pill" icon-right="add" @click="IPM.open()"/>
                 </template>
             </IodTable>
@@ -23,13 +23,15 @@
 </template>
 
 <script lang="ts" setup>
+    import type { FilterSetting } from '~/components/Iod/IodTable.vue'
+
+    const dayjs = useDayjs()
+
     definePageMeta({
         middleware: 'auth',
     })
 
 
-
-    const dayjs = useDayjs()
 
     const IPM = useItemPageManager({
         pageTitle: 'Rollen Verwaltung',
@@ -91,7 +93,7 @@
         },
     ]
 
-    const tableFilters = ref([
+    const tableFilters = ref<FilterSetting[]>([
         {
             name: 'permissions',
             label: 'Berechtigungen',

@@ -15,7 +15,7 @@
                 v-model:pagination="IPM.modelPagination"
                 @request:refresh="IPM.fetch()"
             >
-                <template #header>
+                <template #right>
                     <IodButton type="button" label="Neuer Nutzer" corner="pill" icon-right="add" @click="IPM.open()"/>
                 </template>
             </IodTable>
@@ -24,7 +24,10 @@
 </template>
 
 <script lang="ts" setup>
+    import type { FilterSetting } from '~/components/Iod/IodTable.vue'
+    
     const dayjs = useDayjs()
+
     definePageMeta({
         middleware: 'auth',
     })
@@ -108,7 +111,7 @@
         },
     ]
 
-    const tableFilters = ref([
+    const tableFilters = ref<FilterSetting[]>([
         {
             name: 'roles',
             label: 'Rollen',

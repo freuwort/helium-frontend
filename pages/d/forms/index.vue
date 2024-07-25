@@ -14,7 +14,7 @@
                 v-model:pagination="IPM.modelPagination"
                 @request:refresh="IPM.fetch()"
             >
-                <template #header>
+                <template #right>
                     <IodButton type="button" label="Neues Formular" corner="pill" icon-right="add" @click="IPM.open()"/>
                 </template>
             </IodTable>
@@ -23,6 +23,8 @@
 </template>
 
 <script lang="ts" setup>
+    import type { FilterSetting } from '~/components/Iod/IodTable.vue'
+
     const dayjs = useDayjs()
     
     definePageMeta({
@@ -83,7 +85,7 @@
         },
     ]
 
-    const tableFilters = [] as any[]
+    const tableFilters = ref<FilterSetting[]>([])
 </script>
 
 <style lang="sass" scoped></style>

@@ -10,9 +10,7 @@ type Item = {
 type PaginatedData = {
     data: Item[],
     keys?: Key[],
-    filter_values?: {
-        [key: string]: any[],
-    },
+    filter_values?: FilterValues,
     meta: {
         total: number,
         from: number,
@@ -21,6 +19,10 @@ type PaginatedData = {
         last_page: number,
         per_page: number,
     },
+}
+
+type FilterValues = {
+    [key: string]: any[],
 }
 
 type Sort = {
@@ -73,7 +75,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
         processing: false as boolean,
         scope: options?.scope ?? '' as string,
         filter: {},
-        availableFilterValues: {},
+        availableFilterValues: {} as FilterValues,
         sort: {
             field: null,
             order: 'desc',

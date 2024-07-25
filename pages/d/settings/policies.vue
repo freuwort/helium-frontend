@@ -7,9 +7,6 @@
         <SettingsRow title="Nutzer können ihr Passwort zurücksetzen">
             <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_password_reset" />
         </SettingsRow>
-        <SettingsRow title="Nutzer können ihr Passwort selber ändern">
-            <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_password_change" />
-        </SettingsRow>
         <SettingsRow title="Nutzer können ihre Email selber ändern">
             <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_email_change" />
         </SettingsRow>
@@ -21,9 +18,6 @@
         </SettingsRow>
         <SettingsRow title="Nutzer können ihr Profilbanner selber ändern">
             <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_profile_banner_upload" />
-        </SettingsRow>
-        <SettingsRow title="Zwei Faktor Authentifizierung ist domänenweit erforderlich">
-            <IodToggle type="switch" class="ml-auto" v-model="form.policy_require_tfa" />
         </SettingsRow>
         <SettingsRow>
             <IodButton class="flex-1" label="Speichern" :loading="form.processing"/>
@@ -39,12 +33,10 @@
     const form = useForm({
         policy_allow_registration: domain?.settings?.policy_allow_registration ?? false,
         policy_allow_password_reset: domain?.settings?.policy_allow_password_reset ?? true,
-        policy_allow_password_change: domain?.settings?.policy_allow_password_change ?? true,
         policy_allow_email_change: domain?.settings?.policy_allow_email_change ?? false,
         policy_allow_username_change: domain?.settings?.policy_allow_username_change ?? false,
         policy_allow_profile_image_upload: domain?.settings?.policy_allow_profile_image_upload ?? false,
         policy_allow_profile_banner_upload: domain?.settings?.policy_allow_profile_banner_upload ?? false,
-        policy_require_tfa: domain?.settings?.policy_require_tfa ?? false,
     })
 
 
