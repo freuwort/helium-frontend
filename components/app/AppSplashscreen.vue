@@ -66,6 +66,6 @@
                 height: 100%
                 width: 100%
                 pointer-events: none
-                color: var(--color-primary)
+                color: var(--color-text)
                 transition: all 300ms ease-in-out
 </style>

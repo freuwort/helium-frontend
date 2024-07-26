@@ -28,7 +28,7 @@
                         </VDropdown>
                     </template>
                 </MediaBreadcrumbs>
-                <IodIconButton type="button" variant="text" corner="pill" icon="delete" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
+                <IodIconButton type="button" variant="text" corner="pill" icon="delete" color-preset="error" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
                 <VDropdown placement="bottom-end">
                     <IodButton type="button" icon-right="add" label="Neu" corner="pill" size="m"/>
                     <template #popper>

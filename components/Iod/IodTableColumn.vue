@@ -7,7 +7,7 @@
             :image="data.image"
             :icon="data.icon"
             :color="data.color"
-            :alt="data.text || data.tooltip || 'icon'"
+            :alt="(data.text || data.tooltip || 'icon')+''"
             />
         <span class="text-wrapper" v-show="data.text">{{ data.text }}</span>
     </div>

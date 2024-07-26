@@ -52,6 +52,7 @@
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/d/media/domain" show-chevron icon="home_storage">Hauptspeicher</ContextMenuItem>
+                        <ContextMenuDivider />
                         <ContextMenuItem to="/d/media/profiles" show-chevron icon="switch_account">Profil Dateien</ContextMenuItem>
                         <ContextMenuItem to="/d/media/forms" show-chevron icon="edit_square">Formular Dateien</ContextMenuItem>
                     </ContextMenu>
@@ -136,11 +137,10 @@
                 <ProfileChip v-if="auth.user" :title="auth.user.name ?? auth.user.fullname ?? ''" :subtitle="auth.user.username ?? ''" :image="auth.user.profile_image" align="right" v-tooltip="'Profil'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
+                        <ContextMenuItem to="/d/settings" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
+                        <ContextMenuDivider />
                         <ContextMenuItem to="/d/profile" show-chevron icon="person">Profil</ContextMenuItem>
                         <ContextMenuItem to="/d/settings/personal" show-chevron icon="manage_accounts">Profil Einstellungen</ContextMenuItem>
-                        <ContextMenuDivider />
-                        <ContextMenuItem to="/d/settings" show-chevron icon="settings">Domain Verwaltung</ContextMenuItem>
-                        <ContextMenuDivider />
                         <ContextMenuItem is="button" show-chevron color="var(--color-error)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
                     </ContextMenu>
                 </template>

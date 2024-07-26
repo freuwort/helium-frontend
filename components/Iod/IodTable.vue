@@ -46,10 +46,6 @@
 
 
 
-        <!-- <div class="table-empty-wrapper" v-show="!items.length">
-            <div class="table-empty-text">Keine Einträge gefunden</div>
-        </div> -->
-
         <IodAlert v-if="!items.length && !loading" class="h-72" as="placeholder">
             <div class="flex item-center justify-center h-16 w-16">
                 <IodIcon icon="category" class="m-auto !text-5xl"/>
@@ -57,7 +53,7 @@
             <span>Keine Einträge gefunden</span>
         </IodAlert>
         
-        <IodAlert v-if="!items.length &&loading" class="h-72" as="placeholder">
+        <IodAlert v-if="!items.length && loading" class="h-72" as="placeholder">
             <div class="flex item-center justify-center h-16 w-16">
                 <IodLoader class="m-auto"/>
             </div>
@@ -123,24 +119,28 @@
                     { value: 100000000, text: 'Alle' },
                 ]"/>
 
-                <VDropdown placement="top-end">
-                    <IodIconButton type="button" size="s" corner="pill" variant="text" icon="grid_view" v-tooltip="'Ansicht anpassen'"/>
-                    <template #popper>
-                        <div class="flex flex-col p-2 min-w-64">
-                            <div class="flex gap-2 items-center" v-for="column in columns.filter(e => e.hideable)">
-                                <IodIcon icon="drag_indicator" />
-                                <span class="flex-1 select-none">{{ column.label }}</span>
-                                <IodIconButton size="s" variant="text" :icon="column.show ? 'visibility_off' : 'visibility'" v-tooltip="'Spalten aus-/einblenden'" @click="column.show = !column.show"/>
-                            </div>
-                        </div>
-                    </template>
-                </VDropdown>
+                <IodIconButton type="button" size="s" corner="pill" variant="text" icon="grid_view" v-tooltip="'Ansicht anpassen'" @click="columnPopup.open()"/>
             </div>
         </div>
+        
+        <IodPopup ref="columnPopup" title="Ansicht anpassen" blur="0" backdrop-color="#00000020" max-width="350px" placement="right">
+            <Container orientation="vertical" lock-axis="y">
+                <Draggable v-for="column in columnCustomisations" :key="column.name">
+                    <div class="flex h-10 gap-2 items-center">
+                        <IodIcon icon="drag_indicator" />
+                        <span class="flex-1 select-none">{{ column.label }}</span>
+                        <IodIconButton size="s" variant="text" :icon="column.show ? 'visibility_off' : 'visibility'" v-tooltip="'Spalten aus-/einblenden'" @click="column.show = !column.show"/>
+                    </div>
+                </Draggable>
+            </Container>
+        </IodPopup>
     </div>
 </template>
 
 <script lang="ts" setup>
+    // @ts-nocheck
+    import { Container, Draggable } from 'vue3-smooth-dnd'
+
     type Column = {
         name: string,
         label: string,
@@ -260,7 +260,7 @@
         return props.actions.filter((action: Action) => action.multiple ?? false)
     })
 
-    const rowClick = (item: Item) => {
+    function rowClick(item: Item) {
         for (const action of individualActions.value.filter(action => action.triggerOnRowClick))
         {
             action.run([item.id])
@@ -406,17 +406,26 @@
 
 
 
+    const columnPopup = ref()
     const columns = ref<Column[]>([])
+    const columnCustomisations = ref([] as any[])
 
     watch(() => props.columns, () => {
-        columns.value = props.columns.map(column => { return {
+        columnCustomisations.value = props.columns.map(column => ({
+            name: column.name,
+            label: column.label,
+            width: column.width ?? 200,
+            show: column.show,
+        }))
+
+        columns.value = props.columns.map(column => ({
             ...column,
             resizing: false,
             // show: LocalSetting.get(props.scope, 'show.'+column.name, true),
             // width: LocalSetting.get(props.scope, 'width.'+column.name, column.width ?? 50),
             show: true,
-            width: column.width ?? 50,
-        }})
+            width: column.width ?? 200,
+        }))
     },{
         immediate: true,
         deep: true,
@@ -516,6 +525,7 @@
 
         .table-fixture-wrapper
             position: sticky
+            z-index: 200
             top: inherit
             border-radius: inherit
             border-bottom-right-radius: 0
