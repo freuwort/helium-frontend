@@ -65,8 +65,7 @@ type DeleteOptions = {
 
 export function useItemPageManager(options: Partial<IPMOptions> = {})
 {
-    const LocalStorage = useBrowserStorage('local')
-    const SessionStorage = useBrowserStorage('session')
+    const auth = useAuthStore()
 
     const IPM = reactive({
         items: [] as Item[],
@@ -74,6 +73,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
         selection: [] as Key[],
         processing: false as boolean,
         scope: options?.scope ?? '' as string,
+        columnSettings: [] as any[],
         filter: {},
         availableFilterValues: {} as FilterValues,
         sort: {
@@ -104,10 +104,28 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
             fetchImmediately: options?.fetchImmediately ?? true,
         } as IPMOptions,
 
+
+
         get tableScope()
         {
             return this.scope + '.table'
         },
+
+
+
+        get modelColumnSettings()
+        {
+            return this.columnSettings
+        },
+
+        set modelColumnSettings(value)
+        {
+            this.columnSettings = value
+
+            auth.setSettings(this.scope+'_column_settings', this.columnSettings, 'db')
+        },
+
+
 
         get modelFilter()
         {
@@ -119,8 +137,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
             this.filter = value
 
             this.throttledFetch()
-
-            SessionStorage.set(this.scope, 'filter', this.filter)
+            auth.setSettings(this.scope+'_filter', this.filter, 'session')
         },
 
 
@@ -132,15 +149,11 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
 
         set modelSort(value)
         {
-            this.sort = {
-                ...this.sort,
-                ...value,
-            }
+            this.sort = { ...this.sort, ...value }
 
             this.throttledFetch()
-
-            SessionStorage.set(this.scope, 'sort.field', this.sort.field)
-            SessionStorage.set(this.scope, 'sort.order', this.sort.order)
+            auth.setSettings(this.scope+'_sort_field', this.sort.field, 'session')
+            auth.setSettings(this.scope+'_sort_order', this.sort.order, 'session')
         },
 
 
@@ -152,15 +165,11 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
 
         set modelPagination(value)
         {
-            this.pagination = {
-                ...this.pagination,
-                ...value,
-            }
-
+            this.pagination = { ...this.pagination, ...value }
+            
             this.throttledFetch()
-
-            SessionStorage.set(this.scope, 'pagination.page', this.pagination.page)
-            SessionStorage.set(this.scope, 'pagination.size', this.pagination.size)
+            auth.setSettings(this.scope+'_pagination_page', this.pagination.page, 'session')
+            auth.setSettings(this.scope+'_pagination_size', this.pagination.size, 'db')
         },
 
 
@@ -305,12 +314,12 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
 
 
 
-    // TODO: there surely is a better way to do this
-    IPM.filter = SessionStorage.get(IPM.scope, 'filter', {})
-    IPM.sort.field = SessionStorage.get(IPM.scope, 'sort.field', null)
-    IPM.sort.order = SessionStorage.get(IPM.scope, 'sort.order', 'desc')
-    IPM.pagination.page = SessionStorage.get(IPM.scope, 'pagination.page', 1)
-    IPM.pagination.size = SessionStorage.get(IPM.scope, 'pagination.size', 20)
+    IPM.filter = auth.getSettings(IPM.scope+'_filter', {}, 'session')
+    IPM.sort.field = auth.getSettings(IPM.scope+'_sort_field', null, 'session')
+    IPM.sort.order = auth.getSettings(IPM.scope+'_sort_order', 'desc', 'session')
+    IPM.pagination.page = auth.getSettings(IPM.scope+'_pagination_page', 1, 'session')
+    IPM.pagination.size = auth.getSettings(IPM.scope+'_pagination_size', 20, 'db')
+    IPM.columnSettings = auth.getSettings(IPM.scope+'_column_settings', [], 'db')
 
 
 

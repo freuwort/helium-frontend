@@ -68,17 +68,20 @@
                             :modelValue="items.length && items.every(item => selection.includes(item.id))"
                             @update:modelValue="$event ? selectAll() : deselectAll()"
                             v-tooltip="'Alle auswählen'"
-                            />
+                        />
                     </div>
-                    <div class="table-column" v-for="column in columns.filter(e => e.show)" :class="{
+
+                    <div class="table-column" v-for="column in columns" :class="{
                         'resizeable': column.resizeable,
-                        'resizing': column.resizing,
+                        'resizing': getColumnSettings(column).resizing,
                         'sortable': column.sortable,
                         'sorted-field': sort.field === column.name,
-                    }" :style="`width: ${column.width}px;`" @mousedown.exact="toggleSort(column.name)">
+                    }"
+                    :style="`width: ${getColumnSettings(column).width}px;`"
+                    @mousedown.exact="toggleSort(column.name)">
                         <div class="column-label" v-tooltip="column.label">{{ column.label }}</div>
                         <div class="column-sort-indicator">{{ sort.order === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</div>
-                        <div class="column-resize-handle" @mousedown.stop="startResize($event, column)"></div>
+                        <div class="column-resize-handle" @mousedown.stop="resize($event, column)"></div>
                     </div>
                 </div>
             </div>
@@ -89,13 +92,21 @@
                         <IodToggle :modelValue="getSelection.includes(item.id)" @click.stop @update:modelValue="setSelection(item, $event)"/>
                     </div>
 
-                    <div class="table-column" v-for="column in columns.filter(e => e.show)" :style="`width: ${column.width}px;`">
+                    <div class="table-column" v-for="column in columns" :style="`width: ${getColumnSettings(column).width}px;`">
                         <IodTableColumn :data="getData(item, column)" :monospace="column.monospace"/>
                     </div>
 
                     <div class="table-column actions">
                         <div class="button-container">
-                            <IodIconButton v-for="action in individualActions" size="s" variant="contained" :icon="action.icon" :background="action.color" v-tooltip="action.text" @click.stop="action.run([item.id])"/>
+                            <IodIconButton
+                                v-for="action in individualActions"
+                                size="s"
+                                variant="contained"
+                                :icon="action.icon"
+                                :background="action.color"
+                                v-tooltip="action.text"
+                                @click.stop="action.run([item.id])"
+                            />
                         </div>
                     </div>
                 </div>
@@ -104,7 +115,7 @@
 
 
 
-        <div class="table-pagination-wrapper" v-show="items.length">
+        <div class="table-pagination-wrapper">
             <IodPagination :modelValue="pagination" @update:modelValue="setPagination($event)"/>
             
             <div class="spacer"></div>
@@ -123,16 +134,28 @@
             </div>
         </div>
         
-        <IodPopup ref="columnPopup" title="Ansicht anpassen" blur="0" backdrop-color="#00000020" max-width="350px" placement="right">
-            <Container orientation="vertical" lock-axis="y">
-                <Draggable v-for="column in columnCustomisations" :key="column.name">
-                    <div class="flex h-10 gap-2 items-center">
-                        <IodIcon icon="drag_indicator" />
-                        <span class="flex-1 select-none">{{ column.label }}</span>
-                        <IodIconButton size="s" variant="text" :icon="column.show ? 'visibility_off' : 'visibility'" v-tooltip="'Spalten aus-/einblenden'" @click="column.show = !column.show"/>
-                    </div>
-                </Draggable>
-            </Container>
+
+
+        <IodPopup ref="columnPopup" title="Spalten anpassen" blur="0" backdrop-color="#00000020" max-width="400px" placement="right">
+            <div class="customization-wrapper">
+                <Container orientation="vertical" lock-axis="y" @drop="onDrop">
+                    <Draggable v-for="columnSetting in columnSettings" :key="columnSetting.name">
+                        <div class="customization-row" :class="{'shown': columnSetting.show}">
+                            <IodIcon icon="drag_handle" />
+                            <span class="label">{{ columnSetting.label }}</span>
+                            <IodIconButton
+                                type="button"
+                                size="s"
+                                variant="text"
+                                background="inherit"
+                                :icon="columnSetting.show ? 'visibility' : 'visibility_off'"
+                                v-tooltip="columnSetting.show ? 'Spalte ausblenden' : 'Spalten einblenden'"
+                                @click="columnSetting.show = !columnSetting.show"
+                            />
+                        </div>
+                    </Draggable>
+                </Container>
+            </div>
         </IodPopup>
     </div>
 </template>
@@ -155,6 +178,13 @@
         
         show?: boolean,
         resizing?: boolean,
+    }
+
+    type ColumnSetting = {
+        name: string,
+        label?: string,
+        show?: boolean,
+        width?: number,
     }
 
     type Action = {
@@ -207,6 +237,10 @@
             type: Array as PropType<Column[]>,
             default: () => [],
         },
+        columnSettings: {
+            type: Array as PropType<ColumnSetting[]>,
+            default: () => [],
+        },
         actions: {
             type: Array as PropType<Action[]>,
             default: () => [],
@@ -244,14 +278,84 @@
 
     const emits = defineEmits([
         'update:selection',
-        'update:filter',
         'update:pagination',
         'update:sort',
+        'update:filter',
+        'update:filterSettings',
+        'update:columnSettings',
         'request:refresh',
     ])
 
 
 
+    // START: Columns
+    const columnPopup = ref()
+    const columnSettings = ref<ColumnSetting[]>([])
+
+    const shownColumns = computed<ColumnSetting[]>(() => {
+        return columnSettings.value
+        .filter(customisation => customisation.show)
+    })
+
+    const columns = computed<Column[]>(() => {
+        return props.columns
+        .filter(column => shownColumns.value.find(shownColumn => shownColumn.name === column.name))
+        .sort((a, b) => shownColumns.value.findIndex(shownColumn => shownColumn.name === a.name) - shownColumns.value.findIndex(shownColumn => shownColumn.name === b.name))
+    })
+
+    function loadColumnSettings() {
+        // Load customizations from saved settings
+        console.log(props.columnSettings);
+        
+        columnSettings.value = props.columnSettings.map(column => ({
+            name: column.name,
+            width: column.width ?? 200,
+            show: column.show ?? true,
+            resizing: false,
+        }))
+
+        for (const i of props.columns) {
+            const column = getColumnSettings(i.name)
+
+            // If the column was loaded, add the label
+            if (column) column.label = i.label
+
+            // Otherwise add it
+            else columnSettings.value.push({
+                name: i.name,
+                label: i.label,
+                width: i.width ?? 200,
+                show: i.show ?? true,
+                resizing: false,
+            })
+        }
+    }
+
+    function saveColumnSettings() {
+        emits('update:columnSettings', columnSettings.value.map(customisation => ({
+            name: customisation.name,
+            width: customisation.width,
+            show: customisation.show,
+        })))
+    }
+
+    function getColumnSettings(name: string|Column) {
+        name = typeof name === 'string' ? name : name.name
+
+        return columnSettings.value.find(customisation => customisation.name === name)
+    }
+
+    function onDrop(dropResult: any) {
+        columnSettings.value = applyDrag(columnSettings.value, dropResult)
+    }
+
+    watch(() => props.columns, loadColumnSettings, { immediate: true, deep: true })
+    watch(columnSettings, saveColumnSettings, { immediate: false, deep: true })
+    // END: Columns
+
+
+
+    // START: Actions
     const individualActions = computed<Action[]>(() => {
         return props.actions.filter((action: Action) => action.individual ?? false)
     })
@@ -266,6 +370,7 @@
             action.run([item.id])
         }
     }
+    // END: Actions
 
 
 
@@ -372,23 +477,21 @@
         return props.sort ?? { field: '', order: '' }
     })
 
-    const setSort = (value: Sort) => {
-        value = {
-            ...getSort.value,
-            ...value,
-        }
+    function saveSort() {
+        emits('update:sort', getSort.value)
+    }
+
+    function setSort(value: Sort) {
+        value = { ...getSort.value, ...value }
 
         // Prevent non sortable columns from being sorted
-        if (!columns.value.find((column: Column) => column.name === value.field)?.sortable)
-        {
-            return
-        }
+        if (!columns.value.find((column: Column) => column.name === value.field)?.sortable) return
 
         // Emit the new sort
         emits('update:sort', value)
     }
 
-    const toggleSort = (field: string) => {
+    function toggleSort(field: string) {
         let value = (getSort.value.field === field) ? { order: getSort.value.order === 'asc' ? 'desc' : 'asc' } : { field, order: 'asc' }
         
         setSort(value as Sort)
@@ -406,66 +509,33 @@
 
 
 
-    const columnPopup = ref()
-    const columns = ref<Column[]>([])
-    const columnCustomisations = ref([] as any[])
-
-    watch(() => props.columns, () => {
-        columnCustomisations.value = props.columns.map(column => ({
-            name: column.name,
-            label: column.label,
-            width: column.width ?? 200,
-            show: column.show,
-        }))
-
-        columns.value = props.columns.map(column => ({
-            ...column,
-            resizing: false,
-            // show: LocalSetting.get(props.scope, 'show.'+column.name, true),
-            // width: LocalSetting.get(props.scope, 'width.'+column.name, column.width ?? 50),
-            show: true,
-            width: column.width ?? 200,
-        }))
-    },{
-        immediate: true,
-        deep: true,
-    })
-
-    watch(() => columns.value, () => {
-        for (const column of columns.value)
-        {
-            // LocalSetting.set(props.scope, 'show.'+column.name, column.show)
-            // LocalSetting.set(props.scope, 'width.'+column.name, column.width)
-        }
-    },{
-        deep: true,
-    })
-
-
-
-    const startResize = (event: MouseEvent, column: Column) => {
+    // START: Resizing
+    const resize = (event: MouseEvent, column: Column) => {
+        let columnSetting = getColumnSettings(column)
         let startX = event.clientX
-        let startWidth = column.width ?? 100
-        column.resizing = true
+        let startWidth = columnSetting.width
+
+        columnSetting.resizing = true
         
-        const mouseMove = (event: MouseEvent) => {
+        function mouseMove(event: MouseEvent) {
             let diff = event.clientX - startX
             let newWidth = startWidth + diff
             
             // Limit the width to 80px - 2000px
-            column.width = Math.min(Math.max(newWidth, 80), 2000)
+            columnSetting.width = Math.min(Math.max(newWidth, 80), 2000)
         }
 
-        const mouseUp = () => {
+        function mouseUp() {
             document.removeEventListener('mousemove', mouseMove)
             document.removeEventListener('mouseup', mouseUp)
 
-            column.resizing = false
+            columnSetting.resizing = false
         }
 
         document.addEventListener('mousemove', mouseMove)
         document.addEventListener('mouseup', mouseUp)
     }
+    // END: Resizing
 
 
 
@@ -518,6 +588,36 @@
 </script>
 
 <style lang="sass" scoped>
+    .customization-wrapper
+        .customization-row
+            display: flex
+            align-items: center
+            height: 3rem
+            padding-inline: .5rem
+            padding-block: .25rem
+            gap: .5rem
+            user-select: none
+            color: var(--color-text-soft-disabled)
+
+            &.shown
+                color: var(--color-text-soft)
+
+            .iod-icon
+                height: 2rem
+                width: 2rem
+                color: var(--color-text-soft-disabled)
+                font-size: 1.25rem
+
+            .label
+                flex: 1
+                color: inherit
+                font-weight: 600
+
+        .smooth-dnd-ghost
+            left: 0 !important
+            background: var(--color-background-soft)
+            border-radius: var(--radius-m)
+
     .iod-container.iod-table
         display: grid
         grid-template-rows: auto auto

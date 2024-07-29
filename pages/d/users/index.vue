@@ -5,7 +5,7 @@
                 class="top-16"
                 :columns="tableColumns"
                 :actions="tableActions"
-                :filter-settings="tableFilters"
+                :filterSettings="tableFilters"
                 :items="IPM.items"
                 :scope="IPM.options.scope"
                 :loading="IPM.processing"
@@ -13,6 +13,7 @@
                 v-model:filter="IPM.modelFilter"
                 v-model:sort="IPM.modelSort"
                 v-model:pagination="IPM.modelPagination"
+                v-model:columnSettings="IPM.columnSettings"
                 @request:refresh="IPM.fetch()"
             >
                 <template #right>
@@ -36,7 +37,7 @@
 
     const IPM = useItemPageManager({
         pageTitle: 'Nutzer Verwaltung',
-        scope: 'admin.users.index',
+        scope: 'view_admin_users_index',
         routes: {
             fetch: '/api/users/',
             duplicate: '/api/users/:id/duplicate',

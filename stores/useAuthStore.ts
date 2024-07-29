@@ -35,9 +35,7 @@ type User = {
     updated_at: string | null
 
     settings: {
-        language?: string
-        timezone?: string
-        theme?: string
+        [key: string]: any
     }
 
     roles: string[]
@@ -155,6 +153,27 @@ export const useAuthStore = defineStore('auth', () => {
 
 
 
+    function getSettings(key: string, defaultValue: any = null, storage: 'session'|'local'|'db' = 'db')
+    {
+        if (storage === 'session') return useBrowserStorage('session').get(key, defaultValue)
+        if (storage === 'local') return useBrowserStorage('local').get(key, defaultValue)
+        if (storage === 'db') {
+            return user.value?.settings[key] ?? defaultValue
+        }
+    }
+
+    async function setSettings(key: string, value: any, storage: 'session'|'local'|'db' = 'db')
+    {
+        if (storage === 'session') useBrowserStorage('session').set(key, value)
+        if (storage === 'local') useBrowserStorage('local').set(key, value)
+        if (storage === 'db') {
+            if (user.value?.settings) user.value.settings[key] = value
+            await useAxios().patch('/api/user/settings/'+key, { value })
+        }
+    }
+
+
+
     return {
         user: user as unknown as User | null,
         session: session as unknown as SessionInfo,
@@ -163,5 +182,8 @@ export const useAuthStore = defineStore('auth', () => {
         fetchUser,
         fetchSession,
         logout,
+
+        getSettings,
+        setSettings,
     }
 })
