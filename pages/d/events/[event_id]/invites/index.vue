@@ -1,17 +1,19 @@
 <template>
-    <NuxtLayout name="auth-default" :pageTitle="IPM.options.pageTitle" color="#10b981">
+    <NuxtLayout name="auth-default" :scope :pageTitle="IPM.options.pageTitle" color="#10b981">
         <HeCard>
             <IodTable
+                class="top-16"
+                :scope
                 :columns="tableColumns"
                 :actions="tableActions"
-                :filter-settings="tableFilters"
+                :filterSettings="tableFilters"
                 :items="IPM.items"
-                :scope="IPM.options.scope"
                 :loading="IPM.processing"
                 v-model:selection="IPM.selection"
                 v-model:filter="IPM.modelFilter"
                 v-model:sort="IPM.modelSort"
                 v-model:pagination="IPM.modelPagination"
+                v-model:columnSettings="IPM.modelColumnSettings"
                 @request:refresh="IPM.fetch()"
             >
                 <template #left>
@@ -36,10 +38,12 @@
 </template>
 
 <script lang="ts" setup>
+    import type { FilterSetting } from '~/components/Iod/IodTable.vue'
     import { toast } from 'vue3-toastify'
 
     const dayjs = useDayjs()
     const NuxtLink = defineNuxtLink({})
+    const scope = 'view_admin_eventinvites_index'
     
     definePageMeta({
         middleware: 'auth',
@@ -51,8 +55,8 @@
     const eventId = computed(() => useRoute().params.event_id ?? null)
 
     const IPM = useItemPageManager({
+        scope,
         pageTitle: 'Event-Einladungen Verwaltung',
-        scope: 'admin.event-invites.index',
         routes: {
             fetch: '/api/events/'+eventId.value+'/invites/',
             duplicate: '/api/events/'+eventId.value+'/invites/:id/duplicate',
@@ -110,16 +114,16 @@
             isAvailable: () => true,
             run: (items: (number | string)[]) => IPM.open(items[0]),
         },
-        {
-            icon: 'content_copy',
-            text: 'Duplizieren',
-            color: 'var(--color-text)',
-            individual: true,
-            multiple: false,
-            triggerOnRowClick: false,
-            isAvailable: () => true,
-            run: (items: (number | string)[]) => IPM.duplicate(items[0]),
-        },
+        // {
+        //     icon: 'content_copy',
+        //     text: 'Duplizieren',
+        //     color: 'var(--color-text)',
+        //     individual: true,
+        //     multiple: false,
+        //     triggerOnRowClick: false,
+        //     isAvailable: () => true,
+        //     run: (items: (number | string)[]) => IPM.duplicate(items[0]),
+        // },
         {
             icon: 'delete',
             text: 'Löschen',
@@ -132,7 +136,7 @@
         },
     ]
     
-    const tableFilters = ref([
+    const tableFilters = ref<FilterSetting[]>([
         {
             name: 'status',
             label: 'Status',

@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" pageTitle="Dateien">
+    <NuxtLayout name="auth-default" :scope pageTitle="Dateien">
         <HeCard>
             <div class="header">
                 <IodIconButton type="button" variant="text" corner="pill" icon="refresh" @click="fetch" v-tooltip="'Aktualisieren'"/>
@@ -108,8 +108,6 @@
     import type { Pagination } from '~/types/general'
     import { throttle } from 'lodash'
 
-
-
     definePageMeta({
         middleware: 'auth',
     })
@@ -117,6 +115,7 @@
     const route = useRoute()
     const uploadManager = useUploadStore()
     const NuxtLink = defineNuxtLink({})
+    const scope = 'view_admin_media_index'
 
 
 

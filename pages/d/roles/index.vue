@@ -1,17 +1,19 @@
 <template>
-    <NuxtLayout name="auth-default" :pageTitle="IPM.options.pageTitle" color="var(--color-primary)">
+    <NuxtLayout name="auth-default" :scope :pageTitle="IPM.options.pageTitle" color="var(--color-primary)">
         <HeCard>
             <IodTable
+                class="top-16"
+                :scope
                 :columns="tableColumns"
                 :actions="tableActions"
-                :filter-settings="tableFilters"
+                :filterSettings="tableFilters"
                 :items="IPM.items"
-                :scope="IPM.options.scope"
                 :loading="IPM.processing"
                 v-model:selection="IPM.selection"
                 v-model:filter="IPM.modelFilter"
                 v-model:sort="IPM.modelSort"
                 v-model:pagination="IPM.modelPagination"
+                v-model:columnSettings="IPM.modelColumnSettings"
                 @request:refresh="IPM.fetch()"
             >
                 <template #right>
@@ -26,6 +28,7 @@
     import type { FilterSetting } from '~/components/Iod/IodTable.vue'
 
     const dayjs = useDayjs()
+    const scope = 'view_admin_roles_index'
 
     definePageMeta({
         middleware: 'auth',
@@ -34,8 +37,8 @@
 
 
     const IPM = useItemPageManager({
+        scope,
         pageTitle: 'Rollen Verwaltung',
-        scope: 'admin.roles.index',
         routes: {
             fetch: '/api/roles/',
             duplicate: '/api/roles/:id/duplicate',

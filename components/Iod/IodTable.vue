@@ -305,8 +305,6 @@
 
     function loadColumnSettings() {
         // Load customizations from saved settings
-        console.log(props.columnSettings);
-        
         columnSettings.value = props.columnSettings.map(column => ({
             name: column.name,
             width: column.width ?? 200,

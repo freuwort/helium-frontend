@@ -1,17 +1,19 @@
 <template>
-    <NuxtLayout name="auth-default" :pageTitle="IPM.options.pageTitle" color="#10b981">
+    <NuxtLayout name="auth-default" :scope :pageTitle="IPM.options.pageTitle" color="#10b981">
         <HeCard>
             <IodTable
+                class="top-16"
+                :scope
                 :columns="tableColumns"
                 :actions="tableActions"
-                :filter-settings="tableFilters"
+                :filterSettings="tableFilters"
                 :items="IPM.items"
-                :scope="IPM.options.scope"
                 :loading="IPM.processing"
                 v-model:selection="IPM.selection"
                 v-model:filter="IPM.modelFilter"
                 v-model:sort="IPM.modelSort"
                 v-model:pagination="IPM.modelPagination"
+                v-model:columnSettings="IPM.modelColumnSettings"
                 @request:refresh="IPM.fetch()"
             >
                 <template #right>
@@ -26,6 +28,7 @@
     import type { FilterSetting } from '~/components/Iod/IodTable.vue'
 
     const dayjs = useDayjs()
+    const scope = 'view_admin_events_index'
     
     definePageMeta({
         middleware: 'auth',
@@ -34,8 +37,8 @@
 
 
     const IPM = useItemPageManager({
+        scope,
         pageTitle: 'Events Verwaltung',
-        scope: 'admin.events.index',
         routes: {
             fetch: '/api/events/',
             duplicate: '/api/events/:id/duplicate',

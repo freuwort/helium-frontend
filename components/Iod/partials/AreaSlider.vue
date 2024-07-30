@@ -33,7 +33,7 @@
         x: 0,
         y: 0,
     })
-    const container = ref({} as HTMLElement)
+    const container = ref()
     const isDragging = ref(false)
 
     const handleMouseDown = (event: MouseEvent) => {
