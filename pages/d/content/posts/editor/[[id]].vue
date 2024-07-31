@@ -1,13 +1,13 @@
 <template>
-    <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Beitrag bearbeiten' : 'Beitrag erstellen'" color="#F59E0B">
+    <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Beitrags Editor" color="#F59E0B">
         <HeCard is="form" @submit.prevent="save">
-            <HeFlex class="rounded-t-2xl border-b sticky top-16 z-20 bg-background" horizontal padding="1rem 1.5rem">
-                <IodButton type="button" corner="pill" label="Zur Übersicht" variant="contained" @click="navigateTo('/d/content/posts')"/>
+            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-20 bg-background">
+                <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/d/content/posts"/>
                 <HeSpacer />
                 <IodButton type="button" corner="pill" label="Zur Überprüfung freigeben" :loading="form.processing" variant="contained" @click="updateReviewStatus(true)"/>
                 <IodButton type="button" corner="pill" label="Freigeben" :loading="form.processing" variant="contained" @click="approveDraft()"/>
                 <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
-            </HeFlex>
+            </div>
 
             <HeFlex :padding="1.5" :gap="3">
                 <ErrorAlert :errors="form.errors" />
@@ -51,6 +51,9 @@
     definePageMeta({
         middleware: 'auth',
     })
+
+    const NuxtLink = defineNuxtLink({})
+    const scope = 'view_admin_content_posts_show'
 
     
 

@@ -1,10 +1,10 @@
 <template>
-    <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Nutzer bearbeiten' : 'Nutzer erstellen'" color="var(--color-primary)">
+    <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Nutzer Editor" color="#3737FA">
         <HeCard is="form" @submit.prevent="save">
             <ProfileCard
                 allow-image-upload
                 allow-banner-upload
-                class="rounded-2xl"
+                class="rounded-t-2xl border-b"
                 :title="fullname"
                 :banner="form.model.profile_banner"
                 :image="form.model.profile_image"
@@ -14,24 +14,51 @@
             />
 
             
-            <div class="flex items-center p-4 border-y sticky top-16 z-20 bg-background">
-                <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" :loading="form.processing" variant="contained" to="/d/users"/>
+            <div class="flex items-center p-4 border-b sticky top-16 z-20 bg-background">
+                <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/d/users"/>
                 <HeSpacer />
                 <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
             </div>
 
-            <HeFlex :padding="2" :gap="3">
+            <div class="flex items-center gap-4 p-4 border-b bg-background">
+                <IodButton
+                    type="button"
+                    size="s"
+                    corner="pill"
+                    variant="contained"
+                    :disabled="!form.id"
+                    :icon-left="form.model.email_verified_at ? 'check' : 'close'"
+                    :color-preset="form.model.email_verified_at ? 'success' : 'error'"
+                    :label="form.model.email_verified_at ? 'Email verifiziert' : 'Email nicht verifiziert'"
+                    v-tooltip="form.model.email_verified_at ? 'Verifizierung aufheben' : 'Verifizieren'"
+                    @click="verifyEmail(!form.model.email_verified_at)"
+                />
+                <IodButton
+                    type="button"
+                    size="s"
+                    corner="pill"
+                    variant="contained"
+                    :disabled="!form.id"
+                    :icon-left="form.model.enabled_at ? 'check' : 'close'"
+                    :color-preset="form.model.enabled_at ? 'success' : 'error'"
+                    :label="form.model.enabled_at ? 'Aktiviert' : 'Nicht aktiviert'"
+                    v-tooltip="form.model.enabled_at ? 'Deaktivieren' : 'Aktivieren'"
+                    @click="enable(!form.model.enabled_at)"
+                />
+                <HeSpacer />
+                <IodButton type="button" corner="pill" size="s" label="Passwort ändern" variant="filled" :disabled="!form.id" @click="changePasswordPopup.open()"/>
+            </div>
+
+            <HeFlex padding="1.5rem 1rem" :gap="3">
                 <ErrorAlert :errors="form.errors" />
 
 
-                <input class="hidden" ref="mediaInput" type="file" @change="uploadMedia($event.target?.files[0])" />
+                <input class="hidden" ref="mediaInput" type="file" @change="uploadMedia(($event.target as any).files[0])" />
 
                 <HeFlex :gap="1">
                     <h5 class="m-0 font-medium">Konto</h5>
-                    <IodInput label="Name" v-model="form.model.name"/>
                     <IodInput label="Benutzername" v-model="form.model.username"/>
                     <IodInput label="Email" v-model="form.model.email"/>
-                    <IodInput type="password" label="Passwort" autocomplete="new-password" show-score :score-function="useZxcvbn()" v-model="form.password"/>
                 </HeFlex>
 
                 <HeFlex :gap="1">
@@ -286,6 +313,18 @@
                 </HeFlex>
             </HeFlex>
         </HeCard>
+
+
+
+        <IodPopup ref="changePasswordPopup" title="Passwort ändern" max-width="500px" @open="changePasswordForm.reset">
+            <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="changePassword">
+                <ErrorAlert :errors="changePasswordForm.errors"/>
+                <HeFlex gap="1rem">
+                    <IodInput v-model="changePasswordForm.password" show-score :score-function="useZxcvbn()" label="Neues Passwort" type="password"/>
+                </HeFlex>
+                <IodButton label="Passwort ändern" corner="pill" size="l" :loading="changePasswordForm.processing"/>
+            </HeFlex>
+        </IodPopup>
     </NuxtLayout>
 </template>
 
@@ -299,6 +338,7 @@
     })
 
     const NuxtLink = defineNuxtLink({})
+    const scope = 'view_admin_users_show'
 
     
 
@@ -312,7 +352,6 @@
 
     const form = useForm({
         id: id.value,
-        password: '',
         model: {
             profile_image: null,
             profile_banner: null,
@@ -633,7 +672,38 @@
             },
         })
     }
+
+    async function verifyEmail(status: boolean)
+    {
+        await useAxios().patch(apiRoute('/api/users/:id/verify-email', { id: id.value }), { email_verified: status })
+        fetch()
+    }
+
+    async function enable(status: boolean)
+    {
+        await useAxios().patch(apiRoute('/api/users/:id/enable', { id: id.value }), { enabled: status })
+        fetch()
+    }
     // END: Server routes
+
+
+
+    // START: Change password
+    const changePasswordPopup = ref()
+    const changePasswordForm = useForm({
+        password: '',
+    })
+
+    function changePassword()
+    {
+        changePasswordForm.patch(apiRoute('/api/users/:id/password', { id: id.value }), {
+            onSuccess() {
+                changePasswordPopup.value?.close()
+                toast.success('Passwort geändert')
+            },
+        })
+    }
+    // END: Change password
 
     
     

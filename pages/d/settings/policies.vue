@@ -20,7 +20,7 @@
             <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_profile_banner_upload" />
         </SettingsRow>
         <SettingsRow>
-            <IodButton class="flex-1" label="Speichern" :loading="form.processing"/>
+            <IodButton class="flex-1" corner="pill" label="Speichern" :loading="form.processing"/>
         </SettingsRow>
     </form>
 </template>

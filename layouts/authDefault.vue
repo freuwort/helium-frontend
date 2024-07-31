@@ -6,18 +6,8 @@
             <h2><slot name="title">{{ props.pageTitle }}</slot></h2>
 
             <div class="action-wrapper">
-                <VDropdown placement="bottom-end">
-                    <IodIconButton icon="more_vert" size="s" variant="text" corner="pill" background="inherit" v-tooltip.bottom="'Seite konfigurieren'"/>
-                    
-                    <template #popper>
-                        <ContextMenu class="w-64">
-                            <ContextMenuLabel :label="'Seitenbreite: ' + limiter.label" />
-                            <ContextMenuItem icon="view_array">
-                                <IodRange min="1" max="5" :modelValue="limiter.id" @update:modelValue="setLimiter($event)"/>
-                            </ContextMenuItem>
-                        </ContextMenu>
-                    </template>
-                </VDropdown>
+                <IodIconButton :icon="limiter.icon" size="s" variant="text" corner="pill" background="inherit" @click="toggleLimiter()" v-tooltip.left="'Seitebreite anpassen ('+limiter.label+')'"/>
+                <!-- <IodIconButton icon="palette" size="s" variant="text" corner="pill" background="inherit" v-tooltip.left="'Seitefarbe anpassen'"/> -->
             </div>
         </div>
 
@@ -78,22 +68,16 @@
 
 
     // START: Scope
-    const scope = computed(() => {
-        console.log(props.scope);
-        
-        return props.scope as string || 'view_general'
-    })
+    const scope = computed(() => props.scope as string || 'view_general')
     // END: Scope
 
     
     
     // START: Limiter
     const limiterDict = [
-        { id: 5, default: false, size: 'full',   label: 'Vollbreite' },
-        { id: 4, default: true,  size: 'page',   label: 'Groß' },
-        { id: 3, default: false, size: 'medium', label: 'Mittel' },
-        { id: 2, default: false, size: 'text',   label: 'Klein' },
-        { id: 1, default: false, size: 'form',   label: 'Sehr klein' },
+        { id: 1, default: false, size: 'medium', label: 'Mittel', icon: 'width_normal', },
+        { id: 2, default: true,  size: 'page',   label: 'Groß', icon: 'width_wide', },
+        { id: 3, default: false, size: 'full',   label: 'Vollbreite', icon: 'width_full', },
     ]
     
     const limiter = computed(() => {
@@ -113,7 +97,13 @@
     }
 
     function setLimiter(value: any) {
-        auth.setSettings(scope.value + '_page_limiter', limiterFromId(value).size, 'db')
+        auth.setSettings(scope.value + '_page_limiter', limiterFromSize(value).size, 'db')
+    }
+
+    function toggleLimiter() {
+        if (limiter.value.size === 'medium') return setLimiter('page')
+        if (limiter.value.size === 'page') return setLimiter('full')
+        if (limiter.value.size === 'full') return setLimiter('medium')
     }
     // END: Limiter
 
@@ -170,6 +160,7 @@
                 top: 1rem
                 right: 1rem
                 display: flex
+                flex-direction: column
                 align-items: center
                 padding: .25rem
                 gap: .5rem

@@ -13,7 +13,7 @@
         <SettingsRow title="Logo" description="Das Firmen Logo, welches in Helium angezeigt wird">
             <IodInput class="flex-1" label="Logo" v-model="form.company_logo" placeholder="https://example.com/logo.png">
                 <template #right>
-                    <IodIconButton type="button" size="s" variant="text" icon="attach_file" v-tooltip="'Bild einzufügen'" @click="$refs.picker.open((item) => { form.company_logo = item.cdn_path })"/>
+                    <IodIconButton type="button" size="s" variant="text" icon="attach_file" v-tooltip="'Bild einzufügen'" @click="picker.open((item: any) => { form.company_logo = item.cdn_path })"/>
                 </template>
             </IodInput>
         </SettingsRow>
@@ -42,7 +42,7 @@
             <IodSelect class="flex-1" label="Geschwindigkeit" v-model="form.default_unit_speed" :options="options_unit_speed"/>
         </SettingsRow>
         <SettingsRow>
-            <IodButton class="flex-1" label="Speichern" :loading="form.processing"/>
+            <IodButton class="flex-1" corner="pill" label="Speichern" :loading="form.processing"/>
         </SettingsRow>
     </form>
 

@@ -9,7 +9,7 @@
 
         <SettingsSpacer />
         <SettingsRow>
-            <IodButton class="flex-1" label="Speichern" :loading="form.processing"/>
+            <IodButton class="flex-1" corner="pill" label="Speichern" :loading="form.processing"/>
         </SettingsRow>
     </form>
 </template>

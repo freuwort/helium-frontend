@@ -16,14 +16,14 @@
                 v-model:columnSettings="IPM.modelColumnSettings"
                 @request:refresh="IPM.fetch()"
             >
-                <template #left>
-                    <IodIconButton :is="NuxtLink" :to="'/d/events/editor/' + $route.params.event_id" variant="text" corner="pill" icon="arrow_back" v-tooltip="'Zum Event'"/>
+                <template #wrapped-left>
+                    <IodIconButton :is="NuxtLink" size="s" corner="pill" icon="arrow_back" variant="text" :to="'/d/events/editor/' + $route.params.event_id" v-tooltip="'Zum Event'"/>
                 </template>
 
                 <template #wrapped-right>
-                    <IodIconButton type="button" size="s" corner="pill" variant="text" icon="cloud_upload" v-tooltip="'Importieren'" @click="importPopup.select()"/>
-                    <IodIconButton type="button" size="s" corner="pill" variant="text" icon="file_save" v-tooltip="'Exportieren'"/>
-                    <IodIconButton type="button" size="s" corner="pill" variant="text" icon="stacked_email" v-tooltip="'Massenmail versenden'" @click="sendEmailPopup.open(IPM.keys)"/>
+                    <IodIconButton type="button" size="s" corner="pill" variant="text" icon="cloud_upload" @click="importPopup.select()" v-tooltip="'Importieren'"/>
+                    <IodIconButton type="button" size="s" corner="pill" variant="text" icon="file_save" @click="true" v-tooltip="'Exportieren'"/>
+                    <IodIconButton type="button" size="s" corner="pill" variant="text" icon="stacked_email" @click="sendEmailPopup.open(IPM.keys)" v-tooltip="'Massenmail versenden'"/>
                 </template>
 
                 <template #right>
@@ -39,15 +39,16 @@
 
 <script lang="ts" setup>
     import type { FilterSetting } from '~/components/Iod/IodTable.vue'
+    import type { Template } from '~/components/dialog/DialogSendTemplatedEmail.vue'
     import { toast } from 'vue3-toastify'
 
-    const dayjs = useDayjs()
-    const NuxtLink = defineNuxtLink({})
-    const scope = 'view_admin_eventinvites_index'
-    
     definePageMeta({
         middleware: 'auth',
     })
+    
+    const dayjs = useDayjs()
+    const NuxtLink = defineNuxtLink({})
+    const scope = 'view_admin_eventinvites_index'
 
 
 
@@ -204,7 +205,7 @@
         { template: '{{user_name}}', name: 'Name des Nutzers', type: 'text' },
         { template: '{{created_at}}', name: 'Erstellungsdatum', type: 'date' },
         { template: '{{updated_at}}', name: 'Zuletzt geändert', type: 'date' },
-    ]
+    ] as Template[]
 
     async function sendEmail(data: any)
     {

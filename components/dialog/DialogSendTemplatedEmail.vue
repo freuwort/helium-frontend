@@ -44,7 +44,7 @@
 
     type TemplateType = 'text' | 'number' | 'email' | 'date' | 'html'
 
-    type Templates = {
+    export type Template = {
         template: string
         type: TemplateType
         name?: string
@@ -52,7 +52,7 @@
     }
 
     defineProps({
-        templates: Object as PropType<Templates[]>,
+        templates: Object as PropType<Template[]>,
     })
 
 

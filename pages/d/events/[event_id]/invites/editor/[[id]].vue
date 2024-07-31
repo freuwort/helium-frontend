@@ -1,11 +1,11 @@
 <template>
-    <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Event-Einladung bearbeiten' : 'Event-Einladung erstellen'" color="#10b981">
+    <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Event-Einladungs Editor" color="#10b981">
         <HeCard is="form" @submit.prevent="save">
-            <HeFlex class="rounded-t-2xl border-b sticky top-16 z-20 bg-background" horizontal padding="1rem 2rem">
-                <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/events/' + eventId + '/invites')"/>
+            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-20 bg-background">
+                <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" :to="'/d/events/' + eventId + '/invites'"/>
                 <HeSpacer />
-                <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
-            </HeFlex>
+                <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
+            </div>
 
             <HeFlex :padding="2" :gap="3">
                 <ErrorAlert :errors="form.errors" />
@@ -46,6 +46,9 @@
     definePageMeta({
         middleware: 'auth',
     })
+
+    const NuxtLink = defineNuxtLink({})
+    const scope = 'view_admin_eventinvites_show'
 
     
 

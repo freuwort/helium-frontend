@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" :scope :pageTitle="IPM.options.pageTitle" color="var(--color-primary)">
+    <NuxtLayout name="auth-default" :scope :pageTitle="IPM.options.pageTitle" color="#3737FA">
         <HeCard>
             <IodTable
                 class="top-16"
@@ -27,12 +27,12 @@
 <script lang="ts" setup>
     import type { FilterSetting } from '~/components/Iod/IodTable.vue'
     
-    const dayjs = useDayjs()
-    const scope = 'view_admin_users_index'
-
     definePageMeta({
         middleware: 'auth',
     })
+    
+    const dayjs = useDayjs()
+    const scope = 'view_admin_users_index'
 
 
 

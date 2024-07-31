@@ -27,12 +27,12 @@
 <script lang="ts" setup>
     import type { FilterSetting } from '~/components/Iod/IodTable.vue'
 
-    const dayjs = useDayjs()
-    const scope = 'view_admin_events_index'
-    
     definePageMeta({
         middleware: 'auth',
     })
+    
+    const dayjs = useDayjs()
+    const scope = 'view_admin_events_index'
 
 
 

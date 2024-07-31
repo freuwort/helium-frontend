@@ -5,7 +5,7 @@
             <IodInput class="flex-1" type="number" v-model="form.status" />
         </SettingsRow>
         <SettingsRow>
-            <IodButton class="flex-1" label="Trigger" :loading="form.processing" />
+            <IodButton class="flex-1" corner="pill" label="Trigger" :loading="form.processing" />
         </SettingsRow>
     </form>
     
@@ -14,7 +14,7 @@
     <SettingsSpacer />
     <SettingsTitle>Iod Components</SettingsTitle>
     <SettingsRow title="IodPopup" description="Open a test popup">
-        <IodButtonGroup class="flex-1">
+        <IodButtonGroup class="flex-1" corner="pill">
             <IodButton variant="contained" @click="popupLeft.open()">Left</IodButton>
             <IodButton variant="contained" @click="popupCenter.open()">Center</IodButton>
             <IodButton variant="contained" @click="popupRight.open()">Right</IodButton>
@@ -36,7 +36,7 @@
         <IodProfileArray :data="profiles" :limit="6" class="ml-auto"/>
     </SettingsRow>
 
-    <SettingsRow title="IodRange" description="Show a single IodIcon">
+    <SettingsRow title="IodRange" description="Show a range slider">
         <IodRange :min="1" :max="5" :step=".5"/>
     </SettingsRow>
 
@@ -49,15 +49,15 @@
     <SettingsSpacer />
     <SettingsTitle>Media Picker</SettingsTitle>
     <SettingsRow title="Media Picker" description="Open a media picker popup">
-        <IodButtonGroup class="flex-1">
+        <IodButtonGroup class="flex-1" corner="pill">
             <IodIconButton variant="contained" background="var(--bg-blue-600)" icon="draft" @click="filePicker.open()"/>
             <IodIconButton variant="contained" background="var(--bg-blue-600)" icon="file_copy" @click="filesPicker.open()"/>
         </IodButtonGroup>
-        <IodButtonGroup class="flex-1">
+        <IodButtonGroup class="flex-1" corner="pill">
             <IodIconButton variant="contained" background="var(--bg-blue-600)" icon="folder" @click="dirPicker.open()"/>
             <IodIconButton variant="contained" background="var(--bg-blue-600)" icon="folder_copy" @click="dirsPicker.open()"/>
         </IodButtonGroup>
-        <IodButtonGroup class="flex-1">
+        <IodButtonGroup class="flex-1" corner="pill">
             <IodIconButton variant="contained" background="var(--bg-blue-600)" icon="photo_library" @click="imagePicker.open()"/>
             <IodIconButton variant="contained" background="var(--bg-blue-600)" icon="image" @click="jpegPicker.open()"/>
         </IodButtonGroup>

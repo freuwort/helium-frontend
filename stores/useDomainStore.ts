@@ -4,6 +4,8 @@ type Settings = {
     company_slogan: string
     company_logo: string
     company_favicon: string
+    legal_notice?: string
+    legal_privacy?: string
     default_currency?: string
     default_unit_length?: string
     default_unit_weight?: string

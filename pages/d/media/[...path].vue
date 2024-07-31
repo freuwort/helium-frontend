@@ -111,7 +111,7 @@
     definePageMeta({
         middleware: 'auth',
     })
-
+    
     const route = useRoute()
     const uploadManager = useUploadStore()
     const NuxtLink = defineNuxtLink({})

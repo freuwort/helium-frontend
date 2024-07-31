@@ -1,13 +1,13 @@
 <template>
-    <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Unternehmen bearbeiten' : 'Unternehmen erstellen'" color="var(--color-primary)">
+    <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Unternehmens Editor" color="#3737FA">
         <HeCard is="form" @submit.prevent="save">
             <ProfileCard class="rounded-2xl" :title="form.model.name" :image="form.model.profile_image" :subtitle="form.model.description"/>
             
-            <HeFlex class="border-y sticky top-16 z-20 bg-background" horizontal padding="1rem 2rem">
-                <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/companies')"/>
+            <div class="flex items-center p-4 border-y sticky top-16 z-20 bg-background">
+                <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/d/companies"/>
                 <HeSpacer />
-                <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
-            </HeFlex>
+                <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
+            </div>
 
             <HeFlex :padding="2" :gap="3">
                 <ErrorAlert :errors="form.errors" />
@@ -260,6 +260,9 @@
     definePageMeta({
         middleware: 'auth',
     })
+
+    const NuxtLink = defineNuxtLink({})
+    const scope = 'view_admin_companies_show'
 
     
 

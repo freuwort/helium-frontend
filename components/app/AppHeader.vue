@@ -9,7 +9,7 @@
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/d" show-chevron icon="home">Startseite</ContextMenuItem>
-                        <!-- <ContextMenuItem show-chevron icon="location_on">Standorte</ContextMenuItem> -->
+                        <ContextMenuItem show-chevron icon="location_on">Standorte</ContextMenuItem>
                         <ContextMenuItem to="/d/users" show-chevron icon="group">Nutzer</ContextMenuItem>
                         <ContextMenuItem to="/d/media" show-chevron icon="folder">Dateien</ContextMenuItem>
                         <ContextMenuDivider />
@@ -17,24 +17,24 @@
                         <ContextMenuItem to="/d/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
                         <ContextMenuItem to="/d/screens" show-chevron color="#84cc16" icon="desktop_windows">Screens</ContextMenuItem>
                         <ContextMenuItem to="/d/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
-                        <!-- <ContextMenuItem show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
-                        <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem> -->
+                        <ContextMenuItem show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
+                        <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem to="/d/settings/" show-chevron icon="settings">Einstellungen</ContextMenuItem>
+                        <ContextMenuItem to="/d/settings/" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
 
             <HeDivider vertical class="h-8"/>
 
-            <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron icon="location_on"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem show-chevron icon="location_on">Standorte</ContextMenuItem>
                     </ContextMenu>
                 </template>
-            </VDropdown> -->
+            </VDropdown>
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron icon="group" v-tooltip="'Nutzer / Unternehmen / Berechtigungen'"/>
@@ -88,7 +88,7 @@
                 </template>
             </VDropdown>
 
-            <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron color="#F59E0B" icon="note_stack" v-tooltip="'Inhalte'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -117,13 +117,13 @@
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
-            </VDropdown> -->
+            </VDropdown>
             
             <HeSpacer />
 
             <MediaUploadProgress />
 
-            <!-- <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron icon="notifications" v-tooltip="'Benachrichtigungen'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -131,17 +131,16 @@
                         <ContextMenuDivider />
                     </ContextMenu>
                 </template>
-            </VDropdown> -->
+            </VDropdown>
 
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
                 <ProfileChip v-if="auth.user" :title="auth.user.name ?? auth.user.fullname ?? ''" :subtitle="auth.user.username ?? ''" :image="auth.user.profile_image" align="right" v-tooltip="'Profil'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/settings" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
-                        <ContextMenuDivider />
                         <ContextMenuItem to="/d/profile" show-chevron icon="person">Profil</ContextMenuItem>
-                        <ContextMenuItem to="/d/settings/personal" show-chevron icon="manage_accounts">Profil Einstellungen</ContextMenuItem>
                         <ContextMenuItem is="button" show-chevron color="var(--color-error)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
+                        <ContextMenuDivider />
+                        <ContextMenuItem to="/d/settings" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>

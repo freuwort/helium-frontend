@@ -1,11 +1,11 @@
 <template>
-    <NuxtLayout limiter="medium" name="auth-default" :pageTitle="id ? 'Formular bearbeiten' : 'Formular erstellen'" color="#06B6D4">
+    <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Formular Editor" color="#06B6D4">
         <HeCard is="form" @submit.prevent="save">
-            <HeFlex class="rounded-t-2xl border-b sticky top-16 z-20 bg-background" horizontal padding="1rem 2rem">
-                <IodButton type="button" label="Zur Übersicht" :loading="form.processing" variant="contained" @click="navigateTo('/d/forms')"/>
+            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-20 bg-background">
+                <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/d/forms"/>
                 <HeSpacer />
-                <IodButton type="submit" label="Speichern" :loading="form.processing" variant="filled" />
-            </HeFlex>
+                <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
+            </div>
 
             <HeFlex :padding="2" :gap="3">
                 <ErrorAlert :errors="form.errors" />
@@ -80,11 +80,12 @@
     import { toast } from 'vue3-toastify'
     import type { Country } from '~/types/units'
 
-    const NuxtLink = defineNuxtLink({})
-
     definePageMeta({
         middleware: 'auth',
     })
+    
+    const NuxtLink = defineNuxtLink({})
+    const scope = 'view_admin_forms_show'
 
     
 
