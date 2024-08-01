@@ -1,6 +1,6 @@
 <template>
     <span class="iod-container iod-icon" aria-hidden="true" :style="{color}">
-        <img v-if="image" :src="image" :alt="alt"/>
+        <img v-if="image" :lazy :src="image" :alt="alt"/>
         <span v-else><slot>{{ icon }}</slot></span>
         <div v-if="useBackdrop" class="color-backdrop"></div>
     </span>
@@ -25,6 +25,10 @@
             default: '',
         },
         useBackdrop: {
+            type: Boolean,
+            default: false,
+        },
+        lazy: {
             type: Boolean,
             default: false,
         },

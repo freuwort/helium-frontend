@@ -2,6 +2,7 @@
     <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Nutzer Editor" color="#3737FA">
         <HeCard is="form" @submit.prevent="save">
             <ProfileCard
+                v-show="!!form.id"
                 allow-image-upload
                 allow-banner-upload
                 class="rounded-t-2xl border-b"
@@ -14,7 +15,7 @@
             />
 
             
-            <div class="flex items-center p-4 border-b sticky top-16 z-20 bg-background">
+            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-20 bg-background">
                 <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/d/users"/>
                 <HeSpacer />
                 <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />

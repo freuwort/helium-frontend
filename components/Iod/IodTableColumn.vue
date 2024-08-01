@@ -3,6 +3,7 @@
         <IodIcon
             class="pictogram"
             use-backdrop
+            lazy
             v-show="!!data.image || !!data.icon"
             :image="data.image"
             :icon="data.icon"
