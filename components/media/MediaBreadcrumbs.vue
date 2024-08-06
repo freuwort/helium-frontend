@@ -1,5 +1,5 @@
 <template>
-    <div class="iod-container iod-breadcrumbs" :class="{ 'slot-left': $slots.left }">
+    <div class="iod-container iod-breadcrumbs" :class="{ 'slot-left': $slots.left, 'slot-right': $slots.right }">
         <slot name="left" />
         <template v-for="(item, i) in items">
             <span v-show="i !== 0">/</span>
@@ -16,6 +16,8 @@
                 :label="item.text"
             />
         </template>
+        <HeSpacer />
+        <slot name="right" />
     </div>
 </template>
 
@@ -75,6 +77,9 @@
 
         &.slot-left
             padding-left: .75rem
+
+        &.slot-right
+            padding-right: .75rem
 
         .iod-button
             text-transform: none

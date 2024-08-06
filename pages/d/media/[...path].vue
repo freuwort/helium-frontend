@@ -2,11 +2,20 @@
     <NuxtLayout name="auth-default" :scope pageTitle="Dateien">
         <HeCard>
             <div class="header">
-                <IodIconButton type="button" variant="text" corner="pill" icon="refresh" @click="fetch" v-tooltip="'Aktualisieren'"/>
                 <MediaBreadcrumbs class="flex-1" :path="path" root-path="/d/media" @navigate="navigateTo($event)" @drop="onDrop($event.event, $event.path)">
                     <template #left>
+                        <IodIconButton type="button" variant="text" corner="pill" icon="refresh" size="s" @click="fetch" v-tooltip="'Aktualisieren'"/>
+                        
+                        <VDropdown placement="right">
+                            <IodIconButton type="button" :variant="!!search ? 'filled' : 'text'" corner="pill" icon="search" size="s" v-tooltip="'Im Ordner suchen'" @dblclick="search = ''"/>
+                            
+                            <template #popper>
+                                <IodInput class="!bg-white" type="search" v-model="search" placeholder="Im Ordner suchen..."/>
+                            </template>
+                        </VDropdown>
+                        
                         <VDropdown placement="bottom">
-                            <IodIconButton type="button" variant="text" corner="pill" icon="expand_more" size="s" v-tooltip="'Ordner auswählen'"/>
+                            <IodIconButton type="button" variant="text" corner="pill" icon="topic" size="s" v-tooltip="'Ordner auswählen'"/>
         
                             <template #popper>
                                 <ContextMenu class="min-w-80">
@@ -19,16 +28,15 @@
                             </template>
                         </VDropdown>
 
-                        <VDropdown placement="right">
-                            <IodIconButton type="button" :variant="!!search ? 'filled' : 'text'" corner="pill" icon="search" size="s" v-tooltip="'Im Ordner suchen'" @dblclick="search = ''"/>
-        
-                            <template #popper>
-                                <IodInput class="!bg-white" type="search" v-model="search" placeholder="Im Ordner suchen..."/>
-                            </template>
-                        </VDropdown>
+                        <HeDivider vertical class="h-6 mx-3 !border-slate-300" />
+                    </template>
+
+                    <template #right>
+                        <HeDivider vertical class="h-6 mx-3 !border-slate-300" />
+                        <IodIconButton type="button" variant="text" corner="pill" icon="delete" size="s" color-preset="error" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
                     </template>
                 </MediaBreadcrumbs>
-                <IodIconButton type="button" variant="text" corner="pill" icon="delete" color-preset="error" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
+
                 <VDropdown placement="bottom-end">
                     <IodButton type="button" icon-right="add" label="Neu" corner="pill" size="m"/>
                     <template #popper>
@@ -347,7 +355,7 @@
         z-index: 100
         display: flex
         align-items: center
-        gap: .5rem
+        gap: 1rem
         border-bottom: 1px solid var(--color-border)
         background: var(--color-background)
         border-top-left-radius: var(--radius-l)
