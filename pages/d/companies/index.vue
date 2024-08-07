@@ -52,7 +52,7 @@
             return {
                 text: item.name || '-',
                 tooltip: item.name,
-                image: item.profile_image,
+                image: item.logo,
             }
         }},
         { name: 'legal_form', label: 'Rechtsform', valuePath: 'legal_form', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},

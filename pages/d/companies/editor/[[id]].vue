@@ -1,7 +1,22 @@
 <template>
     <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Unternehmens Editor" color="#3737FA">
         <HeCard is="form" @submit.prevent="save">
-            <ProfileCard class="rounded-2xl" :title="form.model.name" :image="form.model.profile_image" :subtitle="form.model.description"/>
+            <!-- <ProfileCard class="rounded-2xl" :title="form.model.name" :image="form.model.profile_image" :subtitle="form.model.description"/> -->
+
+            <ProfileCard
+                v-show="!!form.id"
+                allow-image-upload
+                allow-banner-upload
+                class="rounded-t-2xl border-b"
+                :title="form.model.name"
+                :banner="form.model.banner"
+                :image="form.model.logo"
+                :subtitle="form.model.name"
+                @upload:image="selectMedia('logo')"
+                @upload:banner="selectMedia('banner')"
+            />
+
+            <input class="hidden" ref="mediaInput" type="file" @change="uploadMedia(($event.target as any).files[0])" />
             
             <div class="flex items-center p-4 border-y sticky top-16 z-20 bg-background">
                 <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/d/companies"/>
@@ -277,7 +292,8 @@
     const form = useForm({
         id: id.value,
         model: {
-            profile_image: '',
+            logo: '',
+            banner: '',
             name: '',
             legal_form: '',
             description: '',
@@ -512,6 +528,25 @@
         form.links.splice(index, 1)
     }
     // END: Links
+
+
+
+    // START: Media
+    const mediaInput = ref()
+    const mediaType = ref<'logo'|'banner'>('logo')
+
+    function selectMedia(type: 'logo'|'banner'){
+        mediaType.value = type
+        mediaInput.value.click()
+    }
+
+    async function uploadMedia(file: any) {
+        if (!file) return
+        await useAxios().postForm(apiRoute('/api/companies/:id/:media', { id: id.value, media: mediaType.value }), {file})
+        mediaInput.value.value = null
+        fetch()
+    }
+    // END: Media
 
 
 
