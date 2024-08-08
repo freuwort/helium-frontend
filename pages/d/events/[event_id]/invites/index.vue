@@ -87,7 +87,7 @@
             return {
                 text: item.user.name || '-',
                 tooltip: item.user.name,
-                image: item.user.profile_image,
+                image: item.user.avatar,
                 icon: 'person',
             }
         }},

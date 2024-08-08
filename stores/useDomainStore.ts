@@ -17,8 +17,8 @@ type Settings = {
     policy_allow_password_change?: boolean
     policy_allow_email_change?: boolean
     policy_allow_username_change?: boolean
-    policy_allow_profile_image_upload?: boolean
-    policy_allow_profile_banner_upload?: boolean
+    policy_allow_avatar_upload?: boolean
+    policy_allow_banner_upload?: boolean
     policy_require_tfa?: boolean
 }
 

@@ -3,14 +3,14 @@
         <HeCard is="form" @submit.prevent="save">
             <ProfileCard
                 v-show="!!form.id"
-                allow-image-upload
+                allow-avatar-upload
                 allow-banner-upload
                 class="rounded-t-2xl border-b"
                 :title="fullname"
-                :banner="form.model.profile_banner"
-                :image="form.model.profile_image"
+                :avatar="form.model.avatar"
+                :banner="form.model.banner"
                 :subtitle="form.model.username"
-                @upload:image="selectMedia('image')"
+                @upload:avatar="selectMedia('avatar')"
                 @upload:banner="selectMedia('banner')"
             />
 
@@ -354,8 +354,8 @@
     const form = useForm({
         id: id.value,
         model: {
-            profile_image: null,
-            profile_banner: null,
+            avatar: null,
+            banner: null,
             name: '',
             username: '',
             email: '',
@@ -612,10 +612,11 @@
 
 
     // START: Media
+    type MediaType = 'avatar' | 'banner'
     const mediaInput = ref()
-    const mediaType = ref<'image'|'banner'>('image')
+    const mediaType = ref<MediaType>('avatar')
 
-    function selectMedia(type: 'image'|'banner'){
+    function selectMedia(type: MediaType){
         mediaType.value = type
         mediaInput.value.click()
     }

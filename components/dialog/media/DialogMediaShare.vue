@@ -75,7 +75,7 @@
                 permissible_id: access.permissible_id,
                 permissible_type: access.permissible_type,
                 permission: access.permission || 'read',
-                image: access.permissible?.profile_image || null,
+                image: access.permissible?.avatar || null,
                 icon: access.permissible?.icon || null,
                 color: access.permissible?.color || null,
                 title: access.permissible?.name || null,
@@ -116,7 +116,7 @@
             permissible_id: user.id,
             permissible_type: 'user',
             title: user.name,
-            image: user.profile_image,
+            image: user.avatar,
             icon: null,
             color: null,
         })))

@@ -1,18 +1,18 @@
 <template>
     <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Unternehmens Editor" color="#3737FA">
         <HeCard is="form" @submit.prevent="save">
-            <!-- <ProfileCard class="rounded-2xl" :title="form.model.name" :image="form.model.profile_image" :subtitle="form.model.description"/> -->
-
             <ProfileCard
                 v-show="!!form.id"
-                allow-image-upload
+                allow-avatar-upload
+                avatar-tooltip="Logo hochladen"
                 allow-banner-upload
+                banner-tooltip="Banner hochladen"
                 class="rounded-t-2xl border-b"
                 :title="form.model.name"
                 :banner="form.model.banner"
-                :image="form.model.logo"
-                :subtitle="form.model.name"
-                @upload:image="selectMedia('logo')"
+                :avatar="form.model.logo"
+                :subtitle="form.model.description"
+                @upload:avatar="selectMedia('logo')"
                 @upload:banner="selectMedia('banner')"
             />
 
@@ -532,10 +532,11 @@
 
 
     // START: Media
+    type MediaType = 'logo'|'banner'
     const mediaInput = ref()
-    const mediaType = ref<'logo'|'banner'>('logo')
+    const mediaType = ref<MediaType>('logo')
 
-    function selectMedia(type: 'logo'|'banner'){
+    function selectMedia(type: MediaType){
         mediaType.value = type
         mediaInput.value.click()
     }

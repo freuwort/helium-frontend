@@ -4,8 +4,8 @@
             <ProfileCard
                 class="rounded-t-2xl border-b"
                 :title="(auth.user?.fullname as string)"
-                :image="(auth.user?.profile_image as string)"
-                :banner="(auth.user?.profile_banner as string)"
+                :avatar="(auth.user?.avatar as string)"
+                :banner="(auth.user?.banner as string)"
                 :subtitle="(auth.user?.username as string)"
             />
 

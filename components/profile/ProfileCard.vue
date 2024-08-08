@@ -1,7 +1,7 @@
 <template>
     <div class="profile-card">
         <div class="profile-banner" :style="{ backgroundImage: `url(${banner})` }">
-            <IodIconButton v-if="allowBannerUpload" class="overlay-button" type="button" size="xl" corner="l" icon="upload" v-tooltip="'Banner hochladen'" @click="$emit('upload:banner')" />
+            <IodIconButton v-if="allowBannerUpload" class="overlay-button" type="button" size="xl" corner="l" icon="upload" v-tooltip="bannerTooltip" @click="$emit('upload:banner')" />
             
             <VDropdown v-if="showActions" placement="bottom-end">
                 <IodButton type="button" size="s" label="Bearbeiten" corner="pill" variant="contained" background="var(--color-background)" />
@@ -13,8 +13,8 @@
         </div>
 
         <div class="profile-image">
-            <img :src="image" :alt="title">
-            <IodIconButton v-if="allowImageUpload" class="overlay-button" type="button" size="xl" corner="pill" icon="upload" v-tooltip="'Profilbild hochladen'" @click="$emit('upload:image')" />
+            <img :src="avatar" :alt="title">
+            <IodIconButton v-if="allowAvatarUpload" class="overlay-button" type="button" size="xl" corner="pill" icon="upload" v-tooltip="avatarTooltip" @click="$emit('upload:avatar')" />
         </div>
 
         <div class="profile-info">
@@ -30,7 +30,7 @@
             type: String,
             default: '/images/app/default/user_banner.jpg',
         },
-        image: {
+        avatar: {
             type: String,
             default: '/images/app/default/user_image.jpg',
         },
@@ -44,7 +44,7 @@
             type: Boolean,
             default: false,
         },
-        allowImageUpload: {
+        allowAvatarUpload: {
             type: Boolean,
             default: false,
         },
@@ -52,9 +52,17 @@
             type: Boolean,
             default: false,
         },
+        avatarTooltip: {
+            type: String,
+            default: 'Profilbild hochladen',
+        },
+        bannerTooltip: {
+            type: String,
+            default: 'Banner hochladen',
+        },
     })
 
-    defineEmits(['upload:image', 'upload:banner'])
+    defineEmits(['upload:avatar', 'upload:banner'])
 </script>
 
 <style lang="sass" scoped>

@@ -14,10 +14,10 @@
             <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_username_change" />
         </SettingsRow>
         <SettingsRow title="Nutzer können ihr Profilbild selber ändern">
-            <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_profile_image_upload" />
+            <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_avatar_upload" />
         </SettingsRow>
         <SettingsRow title="Nutzer können ihr Profilbanner selber ändern">
-            <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_profile_banner_upload" />
+            <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_banner_upload" />
         </SettingsRow>
         <SettingsRow>
             <IodButton class="flex-1" corner="pill" label="Speichern" :loading="form.processing"/>
@@ -35,8 +35,8 @@
         policy_allow_password_reset: domain?.settings?.policy_allow_password_reset ?? true,
         policy_allow_email_change: domain?.settings?.policy_allow_email_change ?? false,
         policy_allow_username_change: domain?.settings?.policy_allow_username_change ?? false,
-        policy_allow_profile_image_upload: domain?.settings?.policy_allow_profile_image_upload ?? false,
-        policy_allow_profile_banner_upload: domain?.settings?.policy_allow_profile_banner_upload ?? false,
+        policy_allow_avatar_upload: domain?.settings?.policy_allow_avatar_upload ?? false,
+        policy_allow_banner_upload: domain?.settings?.policy_allow_banner_upload ?? false,
     })
 
 

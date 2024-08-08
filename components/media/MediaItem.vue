@@ -105,7 +105,7 @@
         .sort((a, b) => a.permissible_type.localeCompare(b.permissible_type) || a.permissible?.name?.localeCompare(b.permissible?.name))
         .map((access) => ({
             label: access?.permissible?.name,
-            image: access?.permissible?.profile_image || null,
+            image: access?.permissible?.avatar || null,
             color: access?.permissible?.color || null,
             icon: access?.permissible?.icon || null,
         }))

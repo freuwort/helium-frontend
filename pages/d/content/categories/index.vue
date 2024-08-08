@@ -64,7 +64,7 @@
             return {
                 text: item.owner.name || '-',
                 tooltip: item.owner.name,
-                image: item.owner.profile_image,
+                image: item.owner.avatar,
                 icon: 'person',
             }
         }},
