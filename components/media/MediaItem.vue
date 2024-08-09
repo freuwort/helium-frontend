@@ -10,8 +10,8 @@
         @drop.prevent="onDrop"
     >
         <div class="media-preview">
-            <img class="media-thumbnail" v-if="item.thumbnail" :src="item.thumbnail" :alt="item.name">
-            <div class="media-icon-wrapper" v-else>
+            <img class="media-thumbnail bg-zinc-800" v-if="item.thumbnail" :src="item.thumbnail" :alt="item.name">
+            <div class="media-icon-wrapper bg-zinc-100" v-else>
                 <MediaIcon :mime="(item.mime_type as string)" />
             </div>
         </div>
