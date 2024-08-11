@@ -23,7 +23,7 @@
                                     <ContextMenuItem :is="NuxtLink" to="/d/media/profiles" show-chevron icon="switch_account">Profil Dateien</ContextMenuItem>
                                     <ContextMenuItem :is="NuxtLink" to="/d/media/forms" show-chevron icon="edit_square">Formular Dateien</ContextMenuItem>
                                     <ContextMenuDivider />
-                                    <ContextMenuItem icon="scan" v-close-popper @click="discover" >Ordner scannen</ContextMenuItem>
+                                    <ContextMenuItem icon="scan" v-close-popper @click="discover">Ordner scannen</ContextMenuItem>
                                 </ContextMenu>
                             </template>
                         </VDropdown>
@@ -326,7 +326,7 @@
 
     // START: Discovery
     function discover() {
-        useAxios().patch('/api/media/discovery', { path: path.value })
+        useAxios().patch('/api/media/discover', { path: path.value })
     }
     // END: Discovery
 
