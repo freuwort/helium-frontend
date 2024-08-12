@@ -1,5 +1,5 @@
 <template>
-    <div class="media-icon" :class="['type-'+ mediatype]" :style="{color: meta.color}">
+    <div class="media-icon" :class="['type-'+ mediatype, 'variant-'+ variant]" :style="{color: meta.color}">
         <IodIcon :icon="meta.icon"/>
     </div>
 </template>
@@ -7,11 +7,15 @@
 <script lang="ts" setup>
     const props = defineProps({
         mime: String,
+        variant: {
+            type: String,
+            default: 'contained',
+        }
     })
 
     const dict = {
-        'file': { color: '#475569', icon: 'widgets' },
-        'directory': { color: '#475569', icon: 'category' },
+        'file': { color: '#27272a', icon: 'widgets' },
+        'directory': { color: '#27272a', icon: 'category' },
 
         'image': { color: '#0ea5e9', icon: 'landscape' },
         'image/svg+xml': { color: '#ec4899', icon: 'polyline' },
@@ -89,6 +93,22 @@
             .iod-icon
                 font-size: 2.5em
 
+        &.variant-filled
+            .iod-icon
+                color: white
+
+            &::after
+                background: currentColor
+                opacity: 1
+
+        &.variant-contained
+            .iod-icon
+                color: inherit
+
+            &::after
+                background: currentColor
+                opacity: .2
+
         &::after
             content: ''
             position: absolute
@@ -97,6 +117,5 @@
             right: 0
             bottom: 0
             background: currentColor
-            opacity: .2
             pointer-events: none
 </style>

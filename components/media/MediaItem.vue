@@ -12,17 +12,20 @@
         <div class="media-preview">
             <img class="media-thumbnail bg-zinc-800" v-if="item.thumbnail" :src="item.thumbnail" :alt="item.name">
             <div class="media-icon-wrapper bg-zinc-100" v-else>
-                <MediaIcon :mime="(item.mime_type as string)" />
+                <MediaIcon :mime="(item.mime_type as string)"/>
+            </div>
+            <div class="media-tags" v-if="metaTags.length">
+                <div class="tag" v-for="tag in metaTags" v-tooltip="tag">{{ tag }}</div>
             </div>
         </div>
         <div class="media-info">
-            <NuxtLink v-if="isDirectory" class="title" v-tooltip="nameTooltip" :to="`/d/media/${item.src_path}`">{{ item.name }}</NuxtLink>
-            <a v-if="!isDirectory" class="title" v-tooltip="nameTooltip" href="#" @click.prevent="emits('edit', item)">{{ item.name }}</a>
+            <NuxtLink v-if="isDirectory" class="title" v-tooltip="item.name" :to="`/d/media/${item.src_path}`">{{ item.name }}</NuxtLink>
+            <a v-if="!isDirectory" class="title" v-tooltip="item.name" href="#" @click.prevent="emits('edit', item)" >{{ item.name }}</a>
             <IodProfileArray class="profiles" :data="profiles" @dblclick.stop="emits('share', item)"/>
         </div>
         <div class="overlay" v-show="showContextMenu">
             <VDropdown placement="bottom">
-                <IodIconButton class="more-button" type="button" variant="contained" corner="pill" icon="more_vert" size="s"/>
+                <IodIconButton class="more-button" type="button" variant="filled" corner="pill" icon="more_vert" size="s" background="white" color="var(--color-text)" v-tooltip="'Mehr'"/>
                 <template #popper>
                     <ContextMenu class="min-w-15">
                         <ContextMenuItem is="a" icon="open_in_new" :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">In neuem Tab öffnen</ContextMenuItem>
@@ -142,6 +145,15 @@
         return props.item.name + (isDirectory.value ? '' : ' - ' + humanFileSize(props.item.meta.size as number))
     })
 
+    const metaTags = computed(() => {
+        let items = []
+
+        if (props.item.meta.extension) items.push(props.item.meta.extension)
+        if (props.item.meta.size) items.push(humanFileSize(props.item.meta.size as number))
+        
+        return items
+    })
+
 
 
     function onStartDraggingOver()
@@ -238,6 +250,28 @@
                 aspect-ratio: 1
                 border-radius: var(--radius-m)
 
+            .media-tags
+                position: absolute
+                bottom: 1rem
+                left: 1rem
+                display: flex
+                gap: .5rem
+                overflow: hidden
+                max-width: calc(100% - 2rem)
+
+                .tag
+                    display: flex
+                    align-items: center
+                    min-height: 1.25rem
+                    font-size: .6rem
+                    line-height: 1
+                    font-weight: 500
+                    padding: .15rem .6rem
+                    background: rgb(#000000, .6)
+                    color: var(--color-background)
+                    border-radius: var(--radius-xl)
+                    backdrop-filter: blur(10px)
+
         .media-info
             position: relative
             z-index: 1
@@ -268,7 +302,7 @@
             position: absolute
             top: 0
             right: 0
-            padding: .5rem
+            padding: 1rem
             z-index: 10
             pointer-events: none
             
