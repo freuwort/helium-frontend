@@ -83,7 +83,9 @@
                 <AppHeaderItem show-chevron color="#84cc16" icon="desktop_windows" v-tooltip="'Screens'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/screens" show-chevron color="#84cc16" icon="desktop_windows">Screens</ContextMenuItem>
+                        <ContextMenuItem to="/d/screens/devices" show-chevron color="#84cc16" icon="desktop_windows">Geräte</ContextMenuItem>
+                        <ContextMenuItem to="/d/screens/playlists" show-chevron color="#84cc16" icon="playlist_play">Playlists</ContextMenuItem>
+                        <ContextMenuItem to="/d/screens/screens" show-chevron color="#84cc16" icon="slideshow">Screens</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
