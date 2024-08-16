@@ -31,8 +31,26 @@
                     <HeDivider />
                     <IodInput label="Notiz" v-model="form.address.notes"/>
                 </HeFlex>
+
+
+
+                <HeFlex :gap="1">
+                    <HeFlex horizontal>
+                        <h5 class="m-0 font-medium">Playlists</h5>
+                        <HeSpacer />
+                        <IodButton type="button" label="Playlist hinzufügen" size="s" variant="contained" @click="playlistPicker.open(addPlaylists)"/>
+                    </HeFlex>
+
+                    {{ form.playlists }}
+
+                    <IodAlert as="placeholder" class="h-40">
+                        <span>Es wurden noch keine Playlists hinzugefügt</span>
+                    </IodAlert>
+                </HeFlex>
             </HeFlex>
         </HeCard>
+
+        <DialogScreensPlaylistPicker ref="playlistPicker" multiple/>
     </NuxtLayout>
 </template>
 
@@ -54,6 +72,9 @@
 
     // Save function
     const save = id.value ? update : store
+
+    // Playlist picker
+    const playlistPicker = ref()
 
 
 
@@ -78,16 +99,44 @@
             longitude: 0,
             notes: '',
         },
+        playlists: [],
     })
 
 
 
-    // Countries
+    // START: Countries
     const countries = ref([])
 
     onMounted(async () => {
         countries.value = (await useAxios().get('/api/domain/units')).data?.countries ?? []
     })
+    // END: Countries
+
+
+
+    // START: Playlists
+    function addPlaylists(items: any)
+    {
+        for (const item of items)
+        {
+            form.playlists.push({
+                id: item,
+                name: 'Test',
+                from_date: null,
+                from_time: null,
+                to_date: null,
+                to_time: null,
+                on_days: [0,1,2,3,4,5,6],
+                on_screen: '',
+            })
+        }
+    }
+
+    function removePlaylists(item: any)
+    {
+        form.playlists = form.playlists.filter((e: any) => e.id !== item.id)
+    }
+    // END: Playlists
 
 
 

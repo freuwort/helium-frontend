@@ -17,7 +17,7 @@
                 @request:refresh="IPM.fetch()"
             >
                 <template #right>
-                    <IodButton type="button" label="Neues Gerät" corner="pill" icon-right="add" @click="IPM.open()"/>
+                    <IodButton type="button" label="Neuer Screen" corner="pill" icon-right="add" @click="IPM.open()"/>
                 </template>
             </IodTable>
         </HeCard>
@@ -32,27 +32,28 @@
     })
     
     const dayjs = useDayjs()
-    const scope = 'view_admin_screen_devices_index'
+    const scope = 'view_admin_screen_screens_index'
 
 
 
     const IPM = useItemPageManager({
         scope,
-        pageTitle: 'Screen Geräte Verwaltung',
+        pageTitle: 'Screen Verwaltung',
         routes: {
-            fetch: '/api/screens/devices/',
-            duplicate: '/api/screens/devices/:id/duplicate',
-            delete: '/api/screens/devices/',
-            editor: '/d/screens/devices/editor/:id',
+            fetch: '/api/screens/',
+            duplicate: '/api/screens/:id/duplicate',
+            delete: '/api/screens/',
+            editor: '/d/screens/screens/editor/:id',
         },
     })
 
     const tableColumns = [
         { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizeable: true, hideable: true, default: '-', },
         { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
-        { name: 'group', label: 'Gruppe', valuePath: 'group', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
-        { name: 'address', label: 'Adresse', valuePath: 'address.full_address_with_country', sortable: false, width: 200, resizeable: true, hideable: true, default: '-' },
-        { name: 'address_notes', label: 'Notiz', valuePath: 'address.notes', sortable: false, width: 200, resizeable: true, hideable: true, default: '-' },
+        { name: 'width', label: 'Breite', valuePath: 'width', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
+        { name: 'height', label: 'Höhe', valuePath: 'height', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
+        { name: 'duration', label: 'Dauer', valuePath: 'duration', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
+        { name: 'background', label: 'Hintergrund', valuePath: 'background', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
         { name: 'owner', label: 'Besitzer', valuePath: 'owner', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
             if (!value) return '-'
             return {
