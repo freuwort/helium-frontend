@@ -41,9 +41,21 @@
                         <IodButton type="button" label="Playlist hinzufügen" size="s" variant="contained" @click="playlistPicker.open(addPlaylists)"/>
                     </HeFlex>
 
-                    {{ form.playlists }}
+                    <div class="flex items-center gap-4 border border-solid rounded-lg p-4" v-for="playlist in form.playlists" :key="playlist.id">
+                        <b class="flex-1">{{ playlist.name }}</b>
+                        <IodButtonGroup>
+                            <IodButton type="button" class="!px-0 !w-10" label="Mo" size="s" :variant="playlist.on_days.includes(1) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 1)"/>
+                            <IodButton type="button" class="!px-0 !w-10" label="Di" size="s" :variant="playlist.on_days.includes(2) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 2)"/>
+                            <IodButton type="button" class="!px-0 !w-10" label="Mi" size="s" :variant="playlist.on_days.includes(3) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 3)"/>
+                            <IodButton type="button" class="!px-0 !w-10" label="Do" size="s" :variant="playlist.on_days.includes(4) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 4)"/>
+                            <IodButton type="button" class="!px-0 !w-10" label="Fr" size="s" :variant="playlist.on_days.includes(5) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 5)"/>
+                            <IodButton type="button" class="!px-0 !w-10" label="Sa" size="s" :variant="playlist.on_days.includes(6) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 6)"/>
+                            <IodButton type="button" class="!px-0 !w-10" label="So" size="s" :variant="playlist.on_days.includes(0) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 0)"/>
+                        </IodButtonGroup>
+                        <IodIconButton type="button" icon="close" size="s" variant="contained" color-preset="error" @click="removePlaylist(playlist)"/>
+                    </div>
 
-                    <IodAlert as="placeholder" class="h-40">
+                    <IodAlert as="placeholder" class="h-40" v-if="!form.playlists.length">
                         <span>Es wurden noch keine Playlists hinzugefügt</span>
                     </IodAlert>
                 </HeFlex>
@@ -132,9 +144,15 @@
         }
     }
 
-    function removePlaylists(item: any)
+    function removePlaylist(item: any)
     {
         form.playlists = form.playlists.filter((e: any) => e.id !== item.id)
+    }
+
+    function toggleWeekday(item: any, day: number)
+    {
+        if (item?.on_days.includes(day)) item.on_days = item?.on_days.filter((e: number) => e !== day)
+        else item?.on_days.push(day)
     }
     // END: Playlists
 
