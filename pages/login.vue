@@ -12,7 +12,7 @@
                     </HeFlex>
                     <HeFlex :gap="1">
                         <IodToggle type="checkbox" label="Angemeldet bleiben" v-model="form.remember"/>
-                        <IodButton label="Anmelden" size="l" :loading="form.processing"/>
+                        <IodButton label="Anmelden" size="l" corner="pill" :loading="form.processing"/>
                     </HeFlex>
     
                     <HeDivider />

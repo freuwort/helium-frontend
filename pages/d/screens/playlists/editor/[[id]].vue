@@ -202,4 +202,6 @@
         padding: 1rem
         overflow: hidden
         box-shadow: none !important
+
+        margin-bottom: 1rem
 </style>
