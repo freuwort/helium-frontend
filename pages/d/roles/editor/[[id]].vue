@@ -101,9 +101,9 @@
         form.post(apiRoute('/api/roles'), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Rolle wurde erstellt')
-                navigateTo(apiRoute('/d/roles/editor/:id', { id: response.value?.data?.id }))
+                navigateTo(apiRoute('/d/roles/editor/:id', { id: response.data?.id }))
             },
         })
     }

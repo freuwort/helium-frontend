@@ -72,7 +72,7 @@
         form.get(apiRoute('/api/content/spaces/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
             },
         })
     }
@@ -83,10 +83,10 @@
         .post(apiRoute('/api/content/spaces'), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Space wurde erstellt')
                 navigateTo(apiRoute('/d/content/spaces/editor/:id', {
-                    id: response.value?.data?.id
+                    id: response.data?.id
                 }))
             },
         })
@@ -98,7 +98,7 @@
         .patch(apiRoute('/api/content/spaces/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Space wurde aktualisiert')
             },
         })

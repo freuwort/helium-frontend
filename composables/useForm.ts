@@ -96,49 +96,33 @@ export function useForm(fields: Object): Form
             this.errors = []
         },
 
-        async submit(path: string, options: SubmitOptions = {}): Promise<void>
+        async submit(url: string, options: SubmitOptions = {}): Promise<void>
         {
             this.processing = true
             this.clearErrors()
 
-            const transformedData = $transform(this.data())
-
-            const request = {
-                method: options.method || 'get',
-                body: transformedData,
-            }
+            let method = options.method || 'get'
+            let data = $transform(this.data())
         
             // Convert the body to FormData if needed
             if (options.forceFormData)
             {
                 const formData = new FormData()
-
-                for (const key in transformedData)
-                {
-                    formData.append(key, transformedData[key])
-                }
-
-                request.body = formData
+                data.map((value: any, key: string) => formData.append(key, value))
+                data = formData
             }
 
             // Remove the body if not needed
-            if (['get', 'head'].includes(request.method)) request.body = null
+            if (['get', 'head'].includes(method)) data = null
+            
+            try {
+                const response = await useAxios().request({url, method, data})
+                
+                if (options.onSuccess) options.onSuccess(response?.data)
+            } catch (error: any) {
+                this.errors = [createError(error?.response?.data?.message || error?.message || 'An error occurred')]
     
-            const { data, error } = await useApiFetch(path, request)
-    
-            // Handle errors
-            if (error.value)
-            {
-                let nuxtError = createError(error.value)
-
-                this.errors = [nuxtError]
-    
-                if (options.onError) options.onError(nuxtError)
-            }
-            // Handle success
-            else
-            {
-                if (options.onSuccess) options.onSuccess(data)
+                if (options.onError) options.onError(this.errors[0])
             }
         
             // Set the form as not processing

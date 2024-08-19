@@ -94,7 +94,7 @@
         form.get(apiRoute('/api/screens/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
             },
         })
     }
@@ -105,9 +105,9 @@
         .post(apiRoute('/api/screens'), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Screen wurde erstellt')
-                navigateTo(apiRoute('/d/screens/screens/editor/:id', { id: response.value?.data?.id }))
+                navigateTo(apiRoute('/d/screens/screens/editor/:id', { id: response.data?.id }))
             },
         })
     }
@@ -118,7 +118,7 @@
         .patch(apiRoute('/api/screens/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Screen wurde aktualisiert')
             },
         })

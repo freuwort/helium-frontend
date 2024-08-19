@@ -41,21 +41,37 @@
                         <IodButton type="button" label="Playlist hinzufügen" size="s" variant="contained" @click="playlistPicker.open(addPlaylists)"/>
                     </HeFlex>
 
-                    <div class="flex items-center gap-4 border border-solid rounded-lg p-4" v-for="playlist in form.playlists" :key="playlist.id">
-                        <b class="flex-1">{{ playlist.name }}</b>
-                        <IodButtonGroup>
-                            <IodButton type="button" class="!px-0 !w-10" label="Mo" size="s" :variant="playlist.on_days.includes(1) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 1)"/>
-                            <IodButton type="button" class="!px-0 !w-10" label="Di" size="s" :variant="playlist.on_days.includes(2) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 2)"/>
-                            <IodButton type="button" class="!px-0 !w-10" label="Mi" size="s" :variant="playlist.on_days.includes(3) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 3)"/>
-                            <IodButton type="button" class="!px-0 !w-10" label="Do" size="s" :variant="playlist.on_days.includes(4) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 4)"/>
-                            <IodButton type="button" class="!px-0 !w-10" label="Fr" size="s" :variant="playlist.on_days.includes(5) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 5)"/>
-                            <IodButton type="button" class="!px-0 !w-10" label="Sa" size="s" :variant="playlist.on_days.includes(6) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 6)"/>
-                            <IodButton type="button" class="!px-0 !w-10" label="So" size="s" :variant="playlist.on_days.includes(0) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 0)"/>
-                        </IodButtonGroup>
-                        <IodIconButton type="button" icon="close" size="s" variant="contained" color-preset="error" @click="removePlaylist(playlist)"/>
+                    <div class="entity-grid" v-if="form.playlists.length">
+                        <HeCard class="entity-card" v-for="playlist in form.playlists">
+                            <HeFlex class="entity-card-head" padding="1rem">
+                                <IodIcon icon="playlist_play" />
+                                <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removePlaylist(playlist)"/>
+                            </HeFlex>
+                            <HeFlex padding="1rem" gap="1rem">
+                                <IodInput class="flex-1" label="Name" v-model="playlist.name" readonly/>
+                                <HeDivider/>
+                                <IodButtonGroup>
+                                    <IodButton type="button" class="!px-0" label="Mo" :variant="playlist.on_days.includes(1) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 1)"/>
+                                    <IodButton type="button" class="!px-0" label="Di" :variant="playlist.on_days.includes(2) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 2)"/>
+                                    <IodButton type="button" class="!px-0" label="Mi" :variant="playlist.on_days.includes(3) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 3)"/>
+                                    <IodButton type="button" class="!px-0" label="Do" :variant="playlist.on_days.includes(4) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 4)"/>
+                                    <IodButton type="button" class="!px-0" label="Fr" :variant="playlist.on_days.includes(5) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 5)"/>
+                                    <IodButton type="button" class="!px-0" label="Sa" :variant="playlist.on_days.includes(6) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 6)"/>
+                                    <IodButton type="button" class="!px-0" label="So" :variant="playlist.on_days.includes(0) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 0)"/>
+                                </IodButtonGroup>
+                                <HeDivider/>
+                                <IodInput type="date" label="Von Datum" v-model="playlist.from_date" clearable/>
+                                <IodInput type="date" label="Bis Datum" v-model="playlist.to_date" clearable/>
+                                <HeDivider/>
+                                <IodInput type="time" step="1" label="Von Zeit" v-model="playlist.from_time" clearable/>
+                                <IodInput type="time" step="1" label="Bis Zeit" v-model="playlist.to_time" clearable/>
+                                <HeDivider/>
+                                <IodInput label="Bildschirm" v-model="playlist.on_screen" clearable/>
+                            </HeFlex>
+                        </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-if="!form.playlists.length">
+                    <IodAlert as="placeholder" class="h-40" v-else>
                         <span>Es wurden noch keine Playlists hinzugefügt</span>
                     </IodAlert>
                 </HeFlex>
@@ -84,9 +100,6 @@
 
     // Save function
     const save = id.value ? update : store
-
-    // Playlist picker
-    const playlistPicker = ref()
 
 
 
@@ -127,13 +140,15 @@
 
 
     // START: Playlists
+    const playlistPicker = ref()
+    
     function addPlaylists(items: any)
     {
         for (const item of items)
         {
             form.playlists.push({
                 id: item,
-                name: 'Test',
+                name: 'Playlist',
                 from_date: null,
                 from_time: null,
                 to_date: null,
@@ -164,7 +179,7 @@
         form.get(apiRoute('/api/screens/devices/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
             },
         })
     }
@@ -175,9 +190,9 @@
         .post(apiRoute('/api/screens/devices'), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Gerät wurde erstellt')
-                navigateTo(apiRoute('/d/screens/devices/editor/:id', { id: response.value?.data?.id }))
+                navigateTo(apiRoute('/d/screens/devices/editor/:id', { id: response.data?.id }))
             },
         })
     }
@@ -188,7 +203,7 @@
         .patch(apiRoute('/api/screens/devices/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Gerät wurde aktualisiert')
             },
         })

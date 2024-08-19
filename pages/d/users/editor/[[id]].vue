@@ -637,7 +637,7 @@
         form.get(apiRoute('/api/users/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
             },
         })
     }
@@ -652,9 +652,9 @@
         .post(apiRoute('/api/users'), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Nutzer wurde erstellt')
-                navigateTo(apiRoute('/d/users/editor/:id', { id: response.value?.data?.id }))
+                navigateTo(apiRoute('/d/users/editor/:id', { id: response.data?.id }))
             },
         })
     }
@@ -669,7 +669,7 @@
         .patch(apiRoute('/api/users/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Nutzer wurde aktualisiert')
             },
         })

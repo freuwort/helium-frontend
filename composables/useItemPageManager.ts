@@ -295,9 +295,9 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
             ...IPM.pagination,
         })
 
-        let { data, error } = await useApiFetch(route)
+        const { data } = await useAxios().get(route)
 
-        let paginatedData = data?.value as PaginatedData
+        let paginatedData = data as PaginatedData
 
         IPM.items = paginatedData?.data ?? []
         IPM.keys = paginatedData?.keys ?? IPM.items.map(i => i?.id).filter(id => id || id === 0 || id === '0') ?? []

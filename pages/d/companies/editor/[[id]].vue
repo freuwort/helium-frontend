@@ -558,7 +558,7 @@
         form.get(apiRoute('/api/companies/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
             },
         })
     }
@@ -568,9 +568,9 @@
         form.post(apiRoute('/api/companies'), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Unternehmen wurde erstellt')
-                navigateTo(apiRoute('/d/companies/editor/:id', { id: response.value?.data?.id }))
+                navigateTo(apiRoute('/d/companies/editor/:id', { id: response.data?.id }))
             },
         })
     }
@@ -580,7 +580,7 @@
         form.patch(apiRoute('/api/companies/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Unternehmen wurde aktualisiert')
             },
         })

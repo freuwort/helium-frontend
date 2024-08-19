@@ -48,31 +48,6 @@ type SessionInfo = {
     tfa_verified: boolean
 }
 
-type ApiError = {
-    value?: {
-        message: string
-    }
-}
-
-type UserApiResponse = {
-    data: {
-        value: {
-            data: User
-        }
-    }
-    error: ApiError
-}
-
-type SessionApiResponse = {
-    data: {
-        value: {
-            user: User
-            session: SessionInfo
-        }
-    }
-    error: ApiError
-}
-
 
 
 export const useAuthStore = defineStore('auth', () => {
@@ -113,23 +88,17 @@ export const useAuthStore = defineStore('auth', () => {
 
 
 
-    async function fetchUser()
-    {
-        const response = await useApiFetch(apiRoutes.value.user) as UserApiResponse
-
-        if (response.error.value) return
-
-        user.value = response.data.value.data
-    }
-
     async function fetchSession()
     {
-        const response = await useApiFetch(apiRoutes.value.session) as SessionApiResponse
-        
-        if (response.error.value) return
-    
-        user.value = response.data.value.user
-        session.value = response.data.value.session
+        try {
+            const { data } = await useAxios().get(apiRoutes.value.session)
+
+            user.value = data.user
+            session.value = data.session
+        }
+        catch (error) {
+            console.log(error)
+        }
     }
 
 
@@ -138,7 +107,7 @@ export const useAuthStore = defineStore('auth', () => {
     {
         splashscreen.start()
 
-        await useApiFetch(apiRoutes.value.logout, { method: 'POST' })
+        await useAxios().post(apiRoutes.value.logout)
 
         user.value = null
         session.value.authenticated = false
@@ -179,7 +148,6 @@ export const useAuthStore = defineStore('auth', () => {
         session: session as unknown as SessionInfo,
         routes: routes as unknown as Record<string, string>,
         apiRoutes: apiRoutes as unknown as Record<string, string>,
-        fetchUser,
         fetchSession,
         logout,
 

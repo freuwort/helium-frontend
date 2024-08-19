@@ -40,20 +40,10 @@ bun run dev
 
 ## Production
 
-Build the application for production:
+Build the application for production with docker:
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+docker build -t helium-frontend .
 ```
 
 Locally preview production build:

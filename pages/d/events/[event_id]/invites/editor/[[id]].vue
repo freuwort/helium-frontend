@@ -87,7 +87,7 @@
         form.get(apiRoute('/api/events/:eventId/invites/:id', { eventId: eventId.value, id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
             },
         })
     }
@@ -98,11 +98,11 @@
         .post(apiRoute('/api/events/:eventId/invites', { eventId: eventId.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Einladung wurde erstellt')
                 navigateTo(apiRoute('/d/events/:eventId/invites/editor/:id', {
-                    eventId: response.value?.data?.model?.event_id,
-                    id: response.value?.data?.id
+                    eventId: response.data?.model?.event_id,
+                    id: response.data?.id
                 }))
             },
         })
@@ -114,7 +114,7 @@
         .patch(apiRoute('/api/events/:eventId/invites/:id', { eventId: eventId.value, id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Einladung wurde aktualisiert')
             },
         })

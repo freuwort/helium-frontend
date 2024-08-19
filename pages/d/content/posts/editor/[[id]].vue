@@ -97,7 +97,7 @@
         form.get(apiRoute('/api/content/posts/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
             },
         })
     }
@@ -108,10 +108,10 @@
         .post(apiRoute('/api/content/posts'), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Beitrag wurde erstellt')
                 navigateTo(apiRoute('/d/content/posts/editor/:id', {
-                    id: response.value?.data?.id
+                    id: response.data?.id
                 }))
             },
         })
@@ -123,7 +123,7 @@
         .patch(apiRoute('/api/content/posts/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Beitrag wurde aktualisiert')
             },
         })
@@ -137,7 +137,7 @@
         .patch(apiRoute('/api/content/posts/:id/review', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Beitrag wurde zur Überprüfung freigeben')
             },
         })
@@ -149,7 +149,7 @@
         .patch(apiRoute('/api/content/posts/:id/approve', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Beitrag wurde freigegeben')
             },
         })

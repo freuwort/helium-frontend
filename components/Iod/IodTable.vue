@@ -21,7 +21,7 @@
                 
                 <div class="spacer"></div>
                 
-                <div class="p-1 px-2 flex items-center gap-1 bg-background-soft rounded-full" v-if="$slots['wrapped-right'] || selection.length">
+                <div class="p-1 px-2 flex items-center gap-1 bg-background-soft rounded-full" v-if="$slots['wrapped-right'] || (selection.length && multipleActions)">
                     <IodIconButton size="s" corner="pill" variant="text" :icon="action.icon" v-tooltip="action.text" :background="action.color" v-for="action in multipleActions" @click.stop="action.run(selection)" :disabled="!selection.length"/>
                     <slot name="wrapped-right"/>
                 </div>

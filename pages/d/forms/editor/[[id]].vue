@@ -134,7 +134,7 @@
         form.get(apiRoute('/api/forms/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
             },
         })
     }
@@ -145,9 +145,9 @@
         .post(apiRoute('/api/forms'), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Formular wurde erstellt')
-                navigateTo(apiRoute('/d/forms/editor/:id', { id: response.value?.data?.id }))
+                navigateTo(apiRoute('/d/forms/editor/:id', { id: response.data?.id }))
             },
         })
     }
@@ -158,7 +158,7 @@
         .patch(apiRoute('/api/forms/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Formular wurde aktualisiert')
             },
         })

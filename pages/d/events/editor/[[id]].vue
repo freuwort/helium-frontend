@@ -202,7 +202,7 @@
         form.get(apiRoute('/api/events/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
             },
         })
     }
@@ -220,9 +220,9 @@
         .post(apiRoute('/api/events'), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Event wurde erstellt')
-                navigateTo(apiRoute('/d/events/editor/:id', { id: response.value?.data?.id }))
+                navigateTo(apiRoute('/d/events/editor/:id', { id: response.data?.id }))
             },
         })
     }
@@ -240,7 +240,7 @@
         .patch(apiRoute('/api/events/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Event wurde aktualisiert')
             },
         })

@@ -27,9 +27,12 @@ export const useDomainStore = defineStore('domain', () => {
 
     async function fetchSettings()
     {
-        const { data } = await useApiFetch('/api/domain/settings')
-
-        settings.value = data.value as Settings
+        try {
+            settings.value = (await useAxios().get('/api/domain/settings')).data
+        }
+        catch (error) {
+            console.log(error)
+        }
     }
 
     return {

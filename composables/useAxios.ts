@@ -25,6 +25,7 @@ export function useAxios(options: Options = {})
         headers = {
             ...headers,
             ...useRequestHeaders(['cookie']),
+            referer: 'http://localhost:3000',
         }
     }
 

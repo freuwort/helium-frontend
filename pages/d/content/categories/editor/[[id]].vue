@@ -88,7 +88,7 @@
         form.get(apiRoute('/api/categories/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
             },
         })
     }
@@ -99,10 +99,10 @@
         .post(apiRoute('/api/categories'), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Kategorie wurde erstellt')
                 navigateTo(apiRoute('/d/content/categories/editor/:id', {
-                    id: response.value?.data?.id
+                    id: response.data?.id
                 }))
             },
         })
@@ -114,7 +114,7 @@
         .patch(apiRoute('/api/categories/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value?.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Kategorie wurde aktualisiert')
             },
         })
