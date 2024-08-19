@@ -91,7 +91,7 @@
         form.get(apiRoute('/api/roles/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value.data).reset()
+                form.defaults(response.data).reset()
             },
         })
     }
@@ -113,7 +113,7 @@
         form.patch(apiRoute('/api/roles/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                form.defaults(response.value.data).reset()
+                form.defaults(response.data).reset()
                 toast.success('Rolle wurde aktualisiert')
             },
         })
@@ -126,7 +126,7 @@
     permissions.get(apiRoute('/api/permissions'), {
         onSuccess(response: any)
         {
-            permissions.defaults({all: response.value.data}).reset()
+            permissions.defaults({all: response.data}).reset()
         },
     })
 </script>
