@@ -38,36 +38,78 @@
                     <HeFlex horizontal>
                         <h5 class="m-0 font-medium">Playlists</h5>
                         <HeSpacer />
-                        <IodButton type="button" label="Playlist hinzufügen" size="s" variant="contained" @click="playlistPicker.open(addPlaylists)"/>
+                        <IodButton type="button" label="Playlist hinzufügen" size="s" corner="pill" variant="contained" @click="playlistPicker.open(addPlaylists)"/>
                     </HeFlex>
 
                     <div class="entity-grid" v-if="form.playlists.length">
                         <HeCard class="entity-card" v-for="playlist in form.playlists">
-                            <HeFlex class="entity-card-head" padding="1rem">
-                                <IodIcon icon="playlist_play" />
-                                <IodButton type="button" label="Löschen" size="s" variant="contained" color-preset="error" @click="removePlaylist(playlist)"/>
-                            </HeFlex>
-                            <HeFlex padding="1rem" gap="1rem">
-                                <IodInput class="flex-1" label="Name" v-model="playlist.name" readonly/>
-                                <HeDivider/>
-                                <IodButtonGroup>
-                                    <IodButton type="button" class="!px-0" label="Mo" :variant="playlist.on_days.includes(1) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 1)"/>
-                                    <IodButton type="button" class="!px-0" label="Di" :variant="playlist.on_days.includes(2) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 2)"/>
-                                    <IodButton type="button" class="!px-0" label="Mi" :variant="playlist.on_days.includes(3) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 3)"/>
-                                    <IodButton type="button" class="!px-0" label="Do" :variant="playlist.on_days.includes(4) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 4)"/>
-                                    <IodButton type="button" class="!px-0" label="Fr" :variant="playlist.on_days.includes(5) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 5)"/>
-                                    <IodButton type="button" class="!px-0" label="Sa" :variant="playlist.on_days.includes(6) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 6)"/>
-                                    <IodButton type="button" class="!px-0" label="So" :variant="playlist.on_days.includes(0) ? 'filled' : 'contained'" @click="toggleWeekday(playlist, 0)"/>
+                            <div class="entity-card-head">
+                                <IodIcon icon="drag_indicator" />
+                                <b class="flex-1" >{{ playlist.name }}</b>
+                                <IodButtonGroup corner="pill">
+                                    <IodIconButton :is="NuxtLink" class="!w-10" icon="open_in_new" size="s" v-tooltip="'Playlist bearbeiten'" target="_blank" :to="`/d/screens/playlists/editor/${playlist.id}`"/>
+                                    <IodIconButton type="button" class="!w-10" icon="close" size="s" color-preset="error" v-tooltip="'Entfernen'" @click="removePlaylist(playlist)"/>
                                 </IodButtonGroup>
-                                <HeDivider/>
-                                <IodInput type="date" label="Von Datum" v-model="playlist.from_date" clearable/>
-                                <IodInput type="date" label="Bis Datum" v-model="playlist.to_date" clearable/>
-                                <HeDivider/>
-                                <IodInput type="time" step="1" label="Von Zeit" v-model="playlist.from_time" clearable/>
-                                <IodInput type="time" step="1" label="Bis Zeit" v-model="playlist.to_time" clearable/>
-                                <HeDivider/>
-                                <IodInput label="Bildschirm" v-model="playlist.on_screen" clearable/>
-                            </HeFlex>
+                            </div>
+                            <div class="entity-card-body">
+                                <div class="h-10 flex items-center gap-2 pl-3 pr-1 rounded-full bg-background-soft">
+                                    <IodIcon icon="view_week" v-tooltip="'Wochentage'"/>
+                                    <HeDivider vertical class="h-6 !border-slate-300"/>
+                                    <IodButtonGroup corner="pill" class="flex-1">
+                                        <IodButton type="button" class="weekday-button" label="Mo" size="s" :variant="playlist.on_days.includes(1) ? 'filled' : 'text'" @click="toggleWeekday(playlist, 1)"/>
+                                        <IodButton type="button" class="weekday-button" label="Di" size="s" :variant="playlist.on_days.includes(2) ? 'filled' : 'text'" @click="toggleWeekday(playlist, 2)"/>
+                                        <IodButton type="button" class="weekday-button" label="Mi" size="s" :variant="playlist.on_days.includes(3) ? 'filled' : 'text'" @click="toggleWeekday(playlist, 3)"/>
+                                        <IodButton type="button" class="weekday-button" label="Do" size="s" :variant="playlist.on_days.includes(4) ? 'filled' : 'text'" @click="toggleWeekday(playlist, 4)"/>
+                                        <IodButton type="button" class="weekday-button" label="Fr" size="s" :variant="playlist.on_days.includes(5) ? 'filled' : 'text'" @click="toggleWeekday(playlist, 5)"/>
+                                        <IodButton type="button" class="weekday-button" label="Sa" size="s" :variant="playlist.on_days.includes(6) ? 'filled' : 'text'" @click="toggleWeekday(playlist, 6)"/>
+                                        <IodButton type="button" class="weekday-button" label="So" size="s" :variant="playlist.on_days.includes(0) ? 'filled' : 'text'" @click="toggleWeekday(playlist, 0)"/>
+                                    </IodButtonGroup>
+                                </div>
+
+                                <div class="h-10 flex items-center gap-2 pl-3 pr-1 rounded-full bg-background-soft">
+                                    <IodIcon icon="desktop_windows" v-tooltip="'Auswahl des Bildschirms'"/>
+                                    <HeDivider vertical class="h-6 !border-slate-300"/>
+                                    <div corner="pill" class="flex-1 flex gap-1">
+                                        <IodButton type="button" class="flex-1" label="Alle" size="s" corner="pill" :variant="playlist.on_screen === null ? 'filled' : 'text'" @click="playlist.on_screen = null"/>
+                                        <IodButton type="button" class="flex-1" label="1" size="s" corner="pill" :variant="playlist.on_screen === '1' ? 'filled' : 'text'" @click="playlist.on_screen = '1'"/>
+                                        <IodButton type="button" class="flex-1" label="2" size="s" corner="pill" :variant="playlist.on_screen === '2' ? 'filled' : 'text'" @click="playlist.on_screen = '2'"/>
+                                        <IodButton type="button" class="flex-1" label="3" size="s" corner="pill" :variant="playlist.on_screen === '3' ? 'filled' : 'text'" @click="playlist.on_screen = '3'"/>
+                                        <IodButton type="button" class="flex-1" label="4" size="s" corner="pill" :variant="playlist.on_screen === '4' ? 'filled' : 'text'" @click="playlist.on_screen = '4'"/>
+                                    </div>
+                                </div>
+
+                                <div class="h-10 flex items-center gap-2 pl-3 pr-2 rounded-full bg-background-soft">
+                                    <IodIcon icon="calendar_month" v-tooltip="'Start- und Enddatum'"/>
+                                    <HeDivider vertical class="h-6 !border-slate-300"/>
+                                    <span>von</span>
+                                    <VDropdown>
+                                        <a class="font-mono cursor-pointer font-bold">{{playlist.from_date ?? 'tt.mm.jjjj'}}</a>
+                                        <template #popper><IodTimePicker v-model="playlist.from_time"/></template>
+                                    </VDropdown>
+                                    <span>bis</span>
+                                    <VDropdown>
+                                        <a class="font-mono cursor-pointer font-bold">{{playlist.to_date ?? 'tt.mm.jjjj'}}</a>
+                                        <template #popper><IodTimePicker v-model="playlist.to_time"/></template>
+                                    </VDropdown>
+                                </div>
+                                <!-- <IodInput type="date" label="Von Datum" v-model="playlist.from_date" clearable/>
+                                <IodInput type="date" label="Bis Datum" v-model="playlist.to_date" clearable/>-->
+
+                                <div class="h-10 flex items-center gap-2 pl-3 pr-2 rounded-full bg-background-soft">
+                                    <IodIcon icon="schedule" v-tooltip="'Start- und Endzeit'"/>
+                                    <HeDivider vertical class="h-6 !border-slate-300"/>
+                                    <span>von</span>
+                                    <VDropdown>
+                                        <a class="font-mono cursor-pointer font-bold">{{playlist.from_time ?? '--:--:--'}}</a>
+                                        <template #popper><IodTimePicker v-model="playlist.from_time"/></template>
+                                    </VDropdown>
+                                    <span>bis</span>
+                                    <VDropdown>
+                                        <a class="font-mono cursor-pointer font-bold">{{playlist.to_time ?? '--:--:--'}}</a>
+                                        <template #popper><IodTimePicker v-model="playlist.to_time"/></template>
+                                    </VDropdown>
+                                </div>
+                            </div>
                         </HeCard>
                     </div>
 
@@ -218,9 +260,9 @@
 
 <style lang="sass" scoped>
     .entity-grid
-        display: grid
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))
-        gap: 2rem
+        display: flex
+        flex-direction: column
+        gap: 1rem
 
     .entity-card
         display: flex
@@ -230,15 +272,33 @@
         box-shadow: none !important
 
         .entity-card-head
-            position: relative
-            height: 10rem
-            background: var(--color-background-soft)
+            display: flex
+            align-items: center
+            min-height: 5rem
+            padding: 1rem
+            gap: 1rem
+            user-select: none
+            background-color: var(--color-background-soft)
+            background-image: url('/images/app/banner_pattern_dark.png')
+            background-size: auto 150%
+            background-position: top center
 
-            .iod-button
-                position: absolute
-                top: 1rem
-                right: 1rem
+            > b
+                text-shadow: 0px 0px 4px var(--color-background-soft)
+                font-family: var(--font-heading)
+                font-weight: 600
+                font-size: 1rem
+                color: var(--color-text)
 
-            .iod-icon
-                font-size: 4rem
+        .entity-card-body
+            display: grid
+            grid-template-columns: 1fr 1fr
+            grid-template-rows: 1fr 1fr
+            gap: 1rem
+            padding: 1rem
+
+            .weekday-button
+                padding: 0 !important
+                text-transform: none !important
+                letter-spacing: 0 !important
 </style>

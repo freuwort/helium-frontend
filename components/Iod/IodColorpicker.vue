@@ -2,11 +2,8 @@
     <div class="iod-container iod-colorpicker">
         <div class="sb-container">
             <div class="colorpanel" :style="`background: ${hueColorString};`"></div>
-            <div class="handle"
-                :style="`left: ${color.saturation * 100}%; top: ${(1 - color.brightness) * 100}%; background: ${fullColorString};`">
-            </div>
-            <area-slider class="bar" v-model:x="color.saturation" :y="1 - color.brightness"
-                @update:y="color.brightness = 1 - $event" />
+            <div class="handle" :style="`left: ${color.saturation * 100}%; top: ${(1 - color.brightness) * 100}%; background: ${fullColorString};`"></div>
+            <area-slider class="bar" v-model:x="color.saturation" :y="1 - color.brightness" @update:y="color.brightness = 1 - $event" />
         </div>
 
         <div class="slider-layout">

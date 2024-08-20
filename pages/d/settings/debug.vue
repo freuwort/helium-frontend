@@ -40,6 +40,17 @@
         <IodRange :min="1" :max="5" :step=".5"/>
     </SettingsRow>
 
+    <SettingsRow title="IodTimePicker" description="Show a time picker">
+        <IodTimePicker v-model="time"/>
+    </SettingsRow>
+
+    <SettingsRow title="IodDatePicker" description="Show a date picker">
+        <div class="flex flex-col">
+            {{ JSON.stringify(date) }}
+            <IodDatePicker v-model="date"/>
+        </div>
+    </SettingsRow>
+
     <IodPopup ref="popupLeft" title="Left Popup" blur="0" placement="left"><span class="p-6">Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur</span></IodPopup>
     <IodPopup ref="popupCenter" title="Center Popup" blur="0" placement="center"><span class="p-6">Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur</span></IodPopup>
     <IodPopup ref="popupRight" title="Right Popup" blur="0" placement="right"><span class="p-6">Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur</span></IodPopup>
@@ -88,11 +99,11 @@
 
     function triggerStatus() {
         form.get('/api/debug/status/'+form.status, {
-            onSuccess(data: Object) {
+            onSuccess(data: any) {
                 toast.success('Status triggered')
             },
             onError(error: any) {
-                toast.error(error.statusCode+' - '+error.data.message)
+                toast.error(error?.message)
             },
         })
     }
@@ -113,6 +124,11 @@
         { label: 'Mike', image: 'https://api.dicebear.com/8.x/croodles/svg?seed=2' },
         { label: 'Hugo', image: 'https://api.dicebear.com/8.x/croodles/svg?seed=3' },
     ])
+
+
+
+    const time = ref(null)
+    const date = ref(null)
 
 
 
