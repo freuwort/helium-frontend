@@ -84,16 +84,16 @@
                                     <span>von</span>
                                     <VDropdown>
                                         <a class="font-mono cursor-pointer font-bold">{{playlist.from_date ?? 'tt.mm.jjjj'}}</a>
-                                        <template #popper><IodTimePicker v-model="playlist.from_time"/></template>
+                                        <template #popper><IodDatePicker v-model="playlist.from_date"/></template>
                                     </VDropdown>
                                     <span>bis</span>
                                     <VDropdown>
                                         <a class="font-mono cursor-pointer font-bold">{{playlist.to_date ?? 'tt.mm.jjjj'}}</a>
-                                        <template #popper><IodTimePicker v-model="playlist.to_time"/></template>
+                                        <template #popper><IodDatePicker v-model="playlist.to_date"/></template>
                                     </VDropdown>
                                 </div>
-                                <!-- <IodInput type="date" label="Von Datum" v-model="playlist.from_date" clearable/>
-                                <IodInput type="date" label="Bis Datum" v-model="playlist.to_date" clearable/>-->
+                                <IodInput type="date" label="Von Datum" v-model="playlist.from_date" clearable/>
+                                <IodInput type="date" label="Bis Datum" v-model="playlist.to_date" clearable/>
 
                                 <div class="h-10 flex items-center gap-2 pl-3 pr-2 rounded-full bg-background-soft">
                                     <IodIcon icon="schedule" v-tooltip="'Start- und Endzeit'"/>

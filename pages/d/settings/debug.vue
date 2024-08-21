@@ -41,12 +41,13 @@
     </SettingsRow>
 
     <SettingsRow title="IodTimePicker" description="Show a time picker">
-        <IodTimePicker v-model="time"/>
+        <div class="flex flex-col">
+            <IodTimePicker v-model="time"/>
+        </div>
     </SettingsRow>
 
     <SettingsRow title="IodDatePicker" description="Show a date picker">
         <div class="flex flex-col">
-            {{ JSON.stringify(date) }}
             <IodDatePicker v-model="date"/>
         </div>
     </SettingsRow>

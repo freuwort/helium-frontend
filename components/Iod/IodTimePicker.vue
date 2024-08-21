@@ -3,12 +3,12 @@
         <div class="header">
             <span class="font-mono">{{ reconstruct(internalValue) }}</span>
         </div>
-        <div class="flex flex-col gap-6 px-4 py-6">
+        <div class="body">
             <IodInput class="!h-10" placeholder="Schnelleingabe" v-model="quickInput" @blur="quickInputBlur"/>
         </div>
         <div class="footer">
-            <IodButton class="!w-28" size="s" corner="pill" variant="contained" label="löschen" @click="setTime(null)"/>
-            <IodButton class="!w-28" size="s" corner="pill" variant="filled" label="Jetzt" @click="setTime('now')"/>
+            <IodButton class="flex-1" corner="pill" variant="contained" label="löschen" @click="setTime(null)"/>
+            <IodButton class="flex-1" corner="pill" variant="filled" label="Jetzt" @click="setTime('now')"/>
         </div>
     </div>
 </template>
@@ -145,32 +145,40 @@
 
 <style lang="sass" scoped>
     .iod-container.iod-timepicker
-        width: 300px
+        width: 360px
         display: flex
         flex-direction: column
         background: var(--color-background)
-        border-radius: var(--radius-m)
-        border: 1px solid var(--color-background-soft)
 
         .header
             display: flex
             align-items: center
             justify-content: center
-            height: 5rem
+            height: 7rem
             font-family: var(--font-mono)
             font-size: 1.5rem
             color: var(--color-background)
-            background: var(--color-text)
-            border-start-start-radius: inherit
-            border-start-end-radius: inherit
+            background-color: var(--color-text)
+            background-image: url('/images/app/banner_pattern_light.png')
+            background-size: auto 150%
+            background-position: top center
+            user-select: none
+            border-top-left-radius: inherit
+            border-top-right-radius: inherit
+
+        .body
+            flex: 1
+            display: flex
+            flex-direction: column
+            overflow: hidden
+            padding: 1rem
 
         .footer
             display: flex
             align-items: center
-            justify-content: space-between
-            height: 4rem
+            padding: 1rem
+            gap: 1rem
             border-top: 1px solid var(--color-background-soft)
-            border-end-start-radius: inherit
-            border-end-end-radius: inherit
-            padding-inline: 1rem
+            border-bottom-left-radius: inherit
+            border-bottom-right-radius: inherit
 </style>
