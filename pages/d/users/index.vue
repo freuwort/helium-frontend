@@ -40,9 +40,9 @@
         scope,
         pageTitle: 'Nutzer Verwaltung',
         routes: {
-            fetch: '/api/users/',
+            fetch: '/api/users',
             duplicate: '/api/users/:id/duplicate',
-            delete: '/api/users/',
+            delete: '/api/users',
             editor: '/d/users/editor/:id',
         },
     })
