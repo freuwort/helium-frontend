@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="guest-form" pageTitle="Passwort wiederherstellen">
+    <NuxtLayout name="guest-default" pageTitle="Passwort wiederherstellen">
         <HeLimiter size="form">
             <HeCard is="form" @submit.prevent>
                 <HeFlex gap="2rem" padding="2rem">
@@ -22,6 +22,6 @@
 
 <script lang="ts" setup>
     definePageMeta({
-        layout: 'guest-form',
+        middleware: ['guest'],
     })
 </script>

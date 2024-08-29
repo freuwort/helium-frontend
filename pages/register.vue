@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="guest-form" pageTitle="Registrieren">
+    <NuxtLayout name="guest-default" pageTitle="Registrieren">
         <HeLimiter size="form">
             <HeCard is="form" @submit.prevent="handleRegister">
                 <HeFlex :gap="2" :padding="2">
@@ -34,7 +34,7 @@
 
 <script lang="ts" setup>
     definePageMeta({
-        middleware: 'guest',
+        middleware: ['guest'],
     })
 
     

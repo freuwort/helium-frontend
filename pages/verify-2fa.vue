@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="guest-form" pageTitle="Anmeldung bestätigen">
+    <NuxtLayout name="guest-default" pageTitle="Anmeldung bestätigen">
         <HeLimiter size="form">
             <HeCard is="form" @submit.prevent="submit">
                 <HeFlex :gap="2" :padding="2">

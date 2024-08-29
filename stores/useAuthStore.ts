@@ -54,7 +54,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     const options = ref({
         routes: {
-            authHome: '/d',
+            authHome: '/',
             guestHome: '/login',
             register: '/register',
             login: '/login',

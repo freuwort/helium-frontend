@@ -14,11 +14,6 @@ describe('An unauthenticated user:', async () => {
     })
 
     
-    test('gets redirected to login when visiting the home page', async () => {
-        const page = await createPage('/')
-        expect(page.url()).toBe(url('/login'))
-    })
-
     test('can visit the login page', async () => {
         const page = await createPage('/login')
         expect(page.url()).toBe(url('/login'))
@@ -35,7 +30,7 @@ describe('An unauthenticated user:', async () => {
     })
 
     test('can not visit the dashboard', async () => {
-        const page = await createPage('/d')
+        const page = await createPage('/')
         expect(page.url()).toBe(url('/login'))
     })
 })

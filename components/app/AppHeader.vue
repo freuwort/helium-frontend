@@ -2,25 +2,25 @@
     <header>
         <HeFlex horizontal class="main-bar">
             <VDropdown placement="bottom-start" :distance="-1">
-                <AppHeaderItem @dblclick="navigateTo('/d')" v-tooltip="'Home'">
+                <AppHeaderItem @dblclick="navigateTo('/')" v-tooltip="'Home'">
                     <img class="h-8" src="/images/app/logo.svg" alt="logo" />
                 </AppHeaderItem>
 
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d" show-chevron icon="home">Startseite</ContextMenuItem>
+                        <ContextMenuItem to="/" show-chevron icon="home">Startseite</ContextMenuItem>
                         <ContextMenuItem show-chevron icon="location_on">Standorte</ContextMenuItem>
-                        <ContextMenuItem to="/d/users" show-chevron icon="group">Nutzer</ContextMenuItem>
-                        <ContextMenuItem to="/d/media" show-chevron icon="folder">Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/users" show-chevron icon="group">Nutzer</ContextMenuItem>
+                        <ContextMenuItem to="/media" show-chevron icon="folder">Dateien</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem to="/d/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
-                        <ContextMenuItem to="/d/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
-                        <ContextMenuItem to="/d/screens" show-chevron color="#84cc16" icon="desktop_windows">Screens</ContextMenuItem>
-                        <ContextMenuItem to="/d/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
+                        <ContextMenuItem to="/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
+                        <ContextMenuItem to="/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
+                        <ContextMenuItem to="/screens" show-chevron color="#84cc16" icon="desktop_windows">Screens</ContextMenuItem>
+                        <ContextMenuItem to="/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem to="/d/settings/" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
+                        <ContextMenuItem to="/settings/" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -40,9 +40,9 @@
                 <AppHeaderItem show-chevron icon="group" v-tooltip="'Nutzer / Unternehmen / Berechtigungen'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/users" show-chevron icon="group">Nutzer</ContextMenuItem>
-                        <ContextMenuItem to="/d/companies" show-chevron icon="store">Unternehmen</ContextMenuItem>
-                        <ContextMenuItem to="/d/roles" show-chevron icon="badge">Berechtigungen</ContextMenuItem>
+                        <ContextMenuItem to="/users" show-chevron icon="group">Nutzer</ContextMenuItem>
+                        <ContextMenuItem to="/companies" show-chevron icon="store">Unternehmen</ContextMenuItem>
+                        <ContextMenuItem to="/roles" show-chevron icon="badge">Berechtigungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -51,10 +51,10 @@
                 <AppHeaderItem show-chevron icon="folder" v-tooltip="'Dateien'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/media/domain" show-chevron icon="home_storage">Hauptspeicher</ContextMenuItem>
+                        <ContextMenuItem to="/media/domain" show-chevron icon="home_storage">Hauptspeicher</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem to="/d/media/profiles" show-chevron icon="switch_account">Profil Dateien</ContextMenuItem>
-                        <ContextMenuItem to="/d/media/forms" show-chevron icon="edit_square">Formular Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/media/profiles" show-chevron icon="switch_account">Profil Dateien</ContextMenuItem>
+                        <ContextMenuItem to="/media/forms" show-chevron icon="edit_square">Formular Dateien</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -65,7 +65,7 @@
                 <AppHeaderItem show-chevron color="#06B6D4" icon="edit_square" v-tooltip="'Formulare'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
+                        <ContextMenuItem to="/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -74,7 +74,7 @@
                 <AppHeaderItem show-chevron color="#10b981" icon="confirmation_number" v-tooltip="'Events'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
+                        <ContextMenuItem to="/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -83,9 +83,9 @@
                 <AppHeaderItem show-chevron color="#84cc16" icon="desktop_windows" v-tooltip="'Screens'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/screens/devices" show-chevron color="#84cc16" icon="desktop_windows">Geräte</ContextMenuItem>
-                        <ContextMenuItem to="/d/screens/playlists" show-chevron color="#84cc16" icon="playlist_play">Playlists</ContextMenuItem>
-                        <ContextMenuItem to="/d/screens/screens" show-chevron color="#84cc16" icon="slideshow">Screens</ContextMenuItem>
+                        <ContextMenuItem to="/screens/devices" show-chevron color="#84cc16" icon="desktop_windows">Geräte</ContextMenuItem>
+                        <ContextMenuItem to="/screens/playlists" show-chevron color="#84cc16" icon="playlist_play">Playlists</ContextMenuItem>
+                        <ContextMenuItem to="/screens/screens" show-chevron color="#84cc16" icon="slideshow">Screens</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -94,10 +94,10 @@
                 <AppHeaderItem show-chevron color="#F59E0B" icon="note_stack" v-tooltip="'Inhalte'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/content/posts" show-chevron color="#F59E0B" icon="news">Beträge</ContextMenuItem>
+                        <ContextMenuItem to="/content/posts" show-chevron color="#F59E0B" icon="news">Beträge</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem to="/d/content/spaces" show-chevron color="#F59E0B" icon="data_array">Spaces</ContextMenuItem>
-                        <ContextMenuItem to="/d/content/categories" show-chevron color="#F59E0B" icon="label">Kategorien</ContextMenuItem>
+                        <ContextMenuItem to="/content/spaces" show-chevron color="#F59E0B" icon="data_array">Spaces</ContextMenuItem>
+                        <ContextMenuItem to="/content/categories" show-chevron color="#F59E0B" icon="label">Kategorien</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -139,10 +139,10 @@
                 <ProfileChip v-if="auth.user" :title="auth.user.name ?? auth.user.fullname ?? ''" :subtitle="auth.user.username ?? ''" :image="auth.user.avatar" align="right" v-tooltip="'Profil'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/d/profile" show-chevron icon="person">Profil</ContextMenuItem>
+                        <ContextMenuItem to="/profile" show-chevron icon="person">Profil</ContextMenuItem>
                         <ContextMenuItem is="button" show-chevron color="var(--color-error)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem to="/d/settings" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
+                        <ContextMenuItem to="/settings" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
