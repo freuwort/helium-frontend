@@ -40,9 +40,9 @@
         scope,
         pageTitle: 'Formulare Verwaltung',
         routes: {
-            fetch: '/api/forms/',
+            fetch: '/api/forms',
             duplicate: '/api/forms/:id/duplicate',
-            delete: '/api/forms/',
+            delete: '/api/forms',
             editor: '/d/forms/editor/:id',
         },
     })

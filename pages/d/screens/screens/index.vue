@@ -40,9 +40,9 @@
         scope,
         pageTitle: 'Screen Verwaltung',
         routes: {
-            fetch: '/api/screens/',
+            fetch: '/api/screens',
             duplicate: '/api/screens/:id/duplicate',
-            delete: '/api/screens/',
+            delete: '/api/screens',
             editor: '/d/screens/screens/editor/:id',
         },
     })

@@ -40,9 +40,9 @@
         scope,
         pageTitle: 'Events Verwaltung',
         routes: {
-            fetch: '/api/events/',
+            fetch: '/api/events',
             duplicate: '/api/events/:id/duplicate',
-            delete: '/api/events/',
+            delete: '/api/events',
             editor: '/d/events/editor/:id',
         },
     })

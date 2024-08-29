@@ -40,9 +40,9 @@
         scope,
         pageTitle: 'Kategorie Verwaltung',
         routes: {
-            fetch: '/api/categories/',
+            fetch: '/api/categories',
             duplicate: '/api/categories/:id/duplicate',
-            delete: '/api/categories/',
+            delete: '/api/categories',
             editor: '/d/content/categories/editor/:id',
         },
     })

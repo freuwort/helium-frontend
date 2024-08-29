@@ -40,9 +40,9 @@
         scope,
         pageTitle: 'Screen Geräte Verwaltung',
         routes: {
-            fetch: '/api/screens/devices/',
+            fetch: '/api/screens/devices',
             duplicate: '/api/screens/devices/:id/duplicate',
-            delete: '/api/screens/devices/',
+            delete: '/api/screens/devices',
             editor: '/d/screens/devices/editor/:id',
         },
     })

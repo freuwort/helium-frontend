@@ -315,7 +315,7 @@
 
     // START: Delete
     async function deleteItems(paths: string[]) {
-        const { data } = await useAxios().delete(`/api/media/`, { data: { paths } })
+        const { data } = await useAxios().delete(`/api/media`, { data: { paths } })
 
         fetch()
         deselectAll()

@@ -40,9 +40,9 @@
         scope,
         pageTitle: 'Screen Playlist Verwaltung',
         routes: {
-            fetch: '/api/screens/playlists/',
+            fetch: '/api/screens/playlists',
             duplicate: '/api/screens/playlists/:id/duplicate',
-            delete: '/api/screens/playlists/',
+            delete: '/api/screens/playlists',
             editor: '/d/screens/playlists/editor/:id',
         },
     })

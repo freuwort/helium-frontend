@@ -40,9 +40,9 @@
         scope,
         pageTitle: 'Beitrags Verwaltung',
         routes: {
-            fetch: '/api/content/posts/',
+            fetch: '/api/content/posts',
             duplicate: '/api/content/posts/:id/duplicate',
-            delete: '/api/content/posts/',
+            delete: '/api/content/posts',
             editor: '/d/content/posts/editor/:id',
         },
     })

@@ -59,9 +59,9 @@
         scope,
         pageTitle: 'Event-Einladungen Verwaltung',
         routes: {
-            fetch: '/api/events/'+eventId.value+'/invites/',
+            fetch: '/api/events/'+eventId.value+'/invites',
             duplicate: '/api/events/'+eventId.value+'/invites/:id/duplicate',
-            delete: '/api/events/'+eventId.value+'/invites/',
+            delete: '/api/events/'+eventId.value+'/invites',
             editor: '/d/events/'+eventId.value+'/invites/editor/:id',
         },
     })

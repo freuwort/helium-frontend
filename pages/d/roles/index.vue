@@ -40,9 +40,9 @@
         scope,
         pageTitle: 'Rollen Verwaltung',
         routes: {
-            fetch: '/api/roles/',
+            fetch: '/api/roles',
             duplicate: '/api/roles/:id/duplicate',
-            delete: '/api/roles/',
+            delete: '/api/roles',
             editor: '/d/roles/editor/:id',
         },
     })

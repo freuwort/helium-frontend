@@ -40,9 +40,9 @@
         scope,
         pageTitle: 'Spaces Verwaltung',
         routes: {
-            fetch: '/api/content/spaces/',
+            fetch: '/api/content/spaces',
             duplicate: '/api/content/spaces/:id/duplicate',
-            delete: '/api/content/spaces/',
+            delete: '/api/content/spaces',
             editor: '/d/content/spaces/editor/:id',
         },
     })

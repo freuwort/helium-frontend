@@ -40,9 +40,9 @@
         scope,
         pageTitle: 'Unternehmen Verwaltung',
         routes: {
-            fetch: '/api/companies/',
+            fetch: '/api/companies',
             duplicate: '/api/companies/:id/duplicate',
-            delete: '/api/companies/',
+            delete: '/api/companies',
             editor: '/d/companies/editor/:id',
         },
     })
