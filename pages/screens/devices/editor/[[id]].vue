@@ -34,7 +34,7 @@
 
 
 
-                <HeFlex :gap="1">
+                <HeFlex>
                     <HeFlex horizontal>
                         <h5 class="m-0 font-medium">Playlists</h5>
                         <HeSpacer />
@@ -44,7 +44,6 @@
                     <div class="entity-grid" v-if="form.playlists.length">
                         <HeCard class="entity-card" v-for="playlist in form.playlists">
                             <div class="entity-card-head">
-                                <IodIcon icon="drag_indicator" />
                                 <b class="flex-1" >{{ playlist.name }}</b>
                                 <IodButtonGroup corner="pill">
                                     <IodIconButton :is="NuxtLink" class="!w-10" icon="open_in_new" size="s" v-tooltip="'Playlist bearbeiten'" target="_blank" :to="`/screens/playlists/editor/${playlist.id}`"/>
@@ -92,8 +91,6 @@
                                         <template #popper><IodDatePicker v-model="playlist.to_date"/></template>
                                     </VDropdown>
                                 </div>
-                                <IodInput type="date" label="Von Datum" v-model="playlist.from_date" clearable/>
-                                <IodInput type="date" label="Bis Datum" v-model="playlist.to_date" clearable/>
 
                                 <div class="h-10 flex items-center gap-2 pl-3 pr-2 rounded-full bg-background-soft">
                                     <IodIcon icon="schedule" v-tooltip="'Start- und Endzeit'"/>
@@ -262,7 +259,6 @@
     .entity-grid
         display: flex
         flex-direction: column
-        gap: 1rem
 
     .entity-card
         display: flex
@@ -270,6 +266,7 @@
         align-items: stretch
         overflow: hidden
         box-shadow: none !important
+        margin-top: 1.5rem
 
         .entity-card-head
             display: flex

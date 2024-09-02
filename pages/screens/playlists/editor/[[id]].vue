@@ -26,49 +26,71 @@
 
 
 
-                <HeFlex :gap="1.5">
+                <HeFlex>
                     <HeFlex horizontal>
                         <h5 class="m-0 font-medium">Screens</h5>
                         <HeSpacer />
                         <IodButton type="button" label="Screen hinzufügen" size="s" corner="pill" variant="contained" @click="screenPicker.open(addScreens)"/>
                     </HeFlex>
 
-                    <div class="entity-list" v-if="form.screens.length">
+                    <div class="entity-grid" v-if="form.screens.length">
                         <Container orientation="vertical" lock-axis="y" behaviour="contain" @drop="onDrop">
                             <Draggable v-for="screen in form.screens" :key="screen.id">
-                                <HeCard class="entity-card">
-                                    <IodIcon icon="drag_handle" />
-                                    <b class="flex-1">{{screen.name}}</b>
-                                    <!-- <div class="flex items-center gap-4">
-                                        <IodInput class="flex-1 !h-10" type="date" v-model="screen.from_date"/>
-                                        <IodInput class="flex-1 !h-10" type="date" v-model="screen.to_date"/>
-                                    </div> -->
-                                    <div class="h-8 flex items-center gap-2 pl-1 pr-2 rounded-full bg-background-soft">
-                                        <IodIcon icon="schedule" v-tooltip="'Start- und Endzeit'"/>
-                                        <VDropdown>
-                                            <a class="font-mono cursor-pointer font-bold">{{screen.from_time ?? '--:--:--'}}</a>
-                                            <template #popper><IodTimePicker ref="test" v-model="screen.from_time"/></template>
-                                        </VDropdown>
-                                        <span>bis</span>
-                                        <VDropdown>
-                                            <a class="font-mono cursor-pointer font-bold">{{screen.to_time ?? '--:--:--'}}</a>
-                                            <template #popper><IodTimePicker v-model="screen.to_time"/></template>
-                                        </VDropdown>
-                                    </div>
-                                    <IodButtonGroup corner="pill" class="bg-background-soft">
-                                        <IodButton type="button" class="weekday-button" label="Mo" size="s" :variant="screen.on_days.includes(1) ? 'filled' : 'text'" @click="toggleWeekday(screen, 1)"/>
-                                        <IodButton type="button" class="weekday-button" label="Di" size="s" :variant="screen.on_days.includes(2) ? 'filled' : 'text'" @click="toggleWeekday(screen, 2)"/>
-                                        <IodButton type="button" class="weekday-button" label="Mi" size="s" :variant="screen.on_days.includes(3) ? 'filled' : 'text'" @click="toggleWeekday(screen, 3)"/>
-                                        <IodButton type="button" class="weekday-button" label="Do" size="s" :variant="screen.on_days.includes(4) ? 'filled' : 'text'" @click="toggleWeekday(screen, 4)"/>
-                                        <IodButton type="button" class="weekday-button" label="Fr" size="s" :variant="screen.on_days.includes(5) ? 'filled' : 'text'" @click="toggleWeekday(screen, 5)"/>
-                                        <IodButton type="button" class="weekday-button" label="Sa" size="s" :variant="screen.on_days.includes(6) ? 'filled' : 'text'" @click="toggleWeekday(screen, 6)"/>
-                                        <IodButton type="button" class="weekday-button" label="So" size="s" :variant="screen.on_days.includes(0) ? 'filled' : 'text'" @click="toggleWeekday(screen, 0)"/>
-                                    </IodButtonGroup>
 
-                                    <IodButtonGroup corner="pill">
-                                        <IodIconButton :is="NuxtLink" class="!w-10" icon="open_in_new" size="s" v-tooltip="'Screen bearbeiten'" target="_blank" :to="`/screens/screens/editor/${screen.id}`"/>
-                                        <IodIconButton type="button" class="!w-10" icon="close" size="s" color-preset="error" v-tooltip="'Entfernen'" @click="removeScreen(screen)"/>
-                                    </IodButtonGroup>
+                                <HeCard class="entity-card">
+                                    <div class="entity-card-head">
+                                        <IodIcon icon="drag_indicator" />
+                                        <b class="flex-1" >{{ screen.name }}</b>
+                                        <IodButtonGroup corner="pill">
+                                            <IodIconButton :is="NuxtLink" class="!w-10" icon="open_in_new" size="s" v-tooltip="'Screen bearbeiten'" target="_blank" :to="`/screens/screens/editor/${screen.id}`"/>
+                                            <IodIconButton type="button" class="!w-10" icon="close" size="s" color-preset="error" v-tooltip="'Entfernen'" @click="removePlaylist(screen)"/>
+                                        </IodButtonGroup>
+                                    </div>
+                                    <div class="entity-card-body">
+                                        <div class="h-10 flex items-center gap-2 pl-3 pr-1 rounded-full bg-background-soft">
+                                            <IodIcon icon="view_week" v-tooltip="'Wochentage'"/>
+                                            <HeDivider vertical class="h-6 !border-slate-300"/>
+                                            <IodButtonGroup corner="pill" class="flex-1">
+                                                <IodButton type="button" class="weekday-button" label="Mo" size="s" :variant="screen.on_days.includes(1) ? 'filled' : 'text'" @click="toggleWeekday(screen, 1)"/>
+                                                <IodButton type="button" class="weekday-button" label="Di" size="s" :variant="screen.on_days.includes(2) ? 'filled' : 'text'" @click="toggleWeekday(screen, 2)"/>
+                                                <IodButton type="button" class="weekday-button" label="Mi" size="s" :variant="screen.on_days.includes(3) ? 'filled' : 'text'" @click="toggleWeekday(screen, 3)"/>
+                                                <IodButton type="button" class="weekday-button" label="Do" size="s" :variant="screen.on_days.includes(4) ? 'filled' : 'text'" @click="toggleWeekday(screen, 4)"/>
+                                                <IodButton type="button" class="weekday-button" label="Fr" size="s" :variant="screen.on_days.includes(5) ? 'filled' : 'text'" @click="toggleWeekday(screen, 5)"/>
+                                                <IodButton type="button" class="weekday-button" label="Sa" size="s" :variant="screen.on_days.includes(6) ? 'filled' : 'text'" @click="toggleWeekday(screen, 6)"/>
+                                                <IodButton type="button" class="weekday-button" label="So" size="s" :variant="screen.on_days.includes(0) ? 'filled' : 'text'" @click="toggleWeekday(screen, 0)"/>
+                                            </IodButtonGroup>
+                                        </div>
+        
+                                        <div class="h-10 flex items-center gap-2 pl-3 pr-2 rounded-full bg-background-soft">
+                                            <IodIcon icon="calendar_month" v-tooltip="'Start- und Enddatum'"/>
+                                            <HeDivider vertical class="h-6 !border-slate-300"/>
+                                            <span>von</span>
+                                            <VDropdown>
+                                                <a class="font-mono cursor-pointer font-bold">{{screen.from_date ?? 'tt.mm.jjjj'}}</a>
+                                                <template #popper><IodDatePicker v-model="screen.from_date"/></template>
+                                            </VDropdown>
+                                            <span>bis</span>
+                                            <VDropdown>
+                                                <a class="font-mono cursor-pointer font-bold">{{screen.to_date ?? 'tt.mm.jjjj'}}</a>
+                                                <template #popper><IodDatePicker v-model="screen.to_date"/></template>
+                                            </VDropdown>
+                                        </div>
+        
+                                        <div class="h-10 flex items-center gap-2 pl-3 pr-2 rounded-full bg-background-soft">
+                                            <IodIcon icon="schedule" v-tooltip="'Start- und Endzeit'"/>
+                                            <HeDivider vertical class="h-6 !border-slate-300"/>
+                                            <span>von</span>
+                                            <VDropdown>
+                                                <a class="font-mono cursor-pointer font-bold">{{screen.from_time ?? '--:--:--'}}</a>
+                                                <template #popper><IodTimePicker v-model="screen.from_time"/></template>
+                                            </VDropdown>
+                                            <span>bis</span>
+                                            <VDropdown>
+                                                <a class="font-mono cursor-pointer font-bold">{{screen.to_time ?? '--:--:--'}}</a>
+                                                <template #popper><IodTimePicker v-model="screen.to_time"/></template>
+                                            </VDropdown>
+                                        </div>
+                                    </div>
                                 </HeCard>
                             </Draggable>
                         </Container>
@@ -235,24 +257,46 @@
 </script>
 
 <style lang="sass" scoped>
-    .entity-list
+    .entity-grid
         display: flex
         flex-direction: column
-        gap: 1rem
 
     .entity-card
         display: flex
-        align-items: center
-        gap: 1rem
-        padding: 1rem
+        flex-direction: column
+        align-items: stretch
         overflow: hidden
         box-shadow: none !important
+        margin-top: 1.5rem
 
-        margin-bottom: 1rem
+        .entity-card-head
+            display: flex
+            align-items: center
+            min-height: 5rem
+            padding: 1rem
+            gap: 1rem
+            user-select: none
+            background-color: var(--color-background-soft)
+            background-image: url('/images/app/banner_pattern_dark.png')
+            background-size: auto 150%
+            background-position: top center
 
-    .weekday-button
-        padding: 0 !important
-        width: 2rem !important
-        text-transform: none !important
-        letter-spacing: 0 !important
+            > b
+                text-shadow: 0px 0px 4px var(--color-background-soft)
+                font-family: var(--font-heading)
+                font-weight: 600
+                font-size: 1rem
+                color: var(--color-text)
+
+        .entity-card-body
+            display: grid
+            grid-template-columns: 1fr 1fr
+            grid-template-rows: 1fr 1fr
+            gap: 1rem
+            padding: 1rem
+
+            .weekday-button
+                padding: 0 !important
+                text-transform: none !important
+                letter-spacing: 0 !important
 </style>

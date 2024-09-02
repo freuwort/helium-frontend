@@ -1,7 +1,7 @@
 <template>
     <div class="iod-container iod-datepicker">
         <div class="header">
-            <span class="font-mono">{{ internalValue?.toLocaleDateString('de-DE', { year: 'numeric', month: 'short', day: '2-digit' }) ?? 'TT. MMM. JJJJ' }}</span>
+            <span class="font-mono">{{ displayValue }}</span>
         </div>
         <div class="sub-header">
             <IodIconButton icon="keyboard_double_arrow_left" corner="pill" variant="text" @click="updateSelected(-12)"/>
@@ -38,14 +38,26 @@
 </template>
 
 <script lang="ts" setup>
+    import dayjs from 'dayjs'
+
+
+
     const props = defineProps({
         modelValue: {
             type: [String, null] as PropType<string | null>,
             default: null,
         },
         format: {
-            type: String,
+            type: [String, null] as PropType<string | null>,
             default: 'YYYY-MM-DD',
+        },
+        displayFormat: {
+            type: String,
+            default: 'DD. MMM YYYY',
+        },
+        placeholder: {
+            type: String,
+            default: 'TT. MMM. JJJJ',
         },
     })
 
@@ -54,24 +66,25 @@
 
 
     const internalValue = ref<Date|null>(null)
-    const selectedMonth = ref(7)
-    const selectedYear = ref(2024)
-    const selectedMonthString = computed(() => {
-        return new Intl.DateTimeFormat('de-DE', { month: 'short' }).format(new Date(selectedYear.value, selectedMonth.value, 1))
-    })
+    const selectedMonth = ref(0)
+    const selectedYear = ref(2000)
+    const selectedMonthString = computed(() => dayjs().month(selectedMonth.value).format('MMM'))
 
     const days = computed(() => {
-        // Erstes Datum des Monats
-        const firstDayOfMonth = new Date(selectedYear.value, selectedMonth.value, 1)
+        const firstDayOfMonth = new Date()
+        
+        firstDayOfMonth.setFullYear(selectedYear.value)
+        firstDayOfMonth.setMonth(selectedMonth.value)
+        firstDayOfMonth.setDate(1)
         firstDayOfMonth.setHours(0, 0, 0, 0)
         
-        // Erster Tag des Monats (Wochentag)
+        // First day of month (weekday)
         let startDay = firstDayOfMonth.getDay()
         
-        // Wenn der erste Tag Sonntag ist, setzen wir startDay auf 7 (damit Sonntag nach Samstag kommt)
+        // If first day is Sunday, set startDay to 7 (so that Sunday comes after Saturday)
         if (startDay === 0) startDay = 7
 
-        // Startdatum ist der Montag der Woche des ersten Tages des Monats
+        // Start date is the monday of the first day of the month
         let startDate = new Date(firstDayOfMonth)
         startDate.setDate(firstDayOfMonth.getDate() - (startDay - 1))
         
@@ -90,6 +103,11 @@
         }
 
         return days
+    })
+
+    const displayValue = computed(() => {
+        if (!internalValue.value) return props.placeholder
+        return dayjs(internalValue.value).format(props.displayFormat)
     })
 
 
@@ -129,6 +147,9 @@
     function parse(value: string|null)
     {
         if (!value) return null
+
+        if (props.format) return dayjs(value, props.format).hour(0).minute(0).second(0).millisecond(0).toDate()
+        
         return new Date(value)
     }
 
@@ -143,8 +164,18 @@
     }, { immediate: true })
 
     watch(internalValue, (value) => {
-        emit('update:modelValue', value?.toISOString() ?? null)
+        if (!value) return emit('update:modelValue', null)
+
+        if (props.format) return emit('update:modelValue', dayjs(value).format(props.format))
+
+        return emit('update:modelValue', value.toISOString())
     })
+
+
+
+    defineExpose([
+        displayValue,
+    ])
 </script>
 
 <style lang="sass" scoped>
