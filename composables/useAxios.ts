@@ -9,6 +9,9 @@ type Options = {
 
 export function useAxios(options: Options = {})
 {
+    // Runtime variables
+    const runtimeConfig = useRuntimeConfig()
+
     let headers: any = {
         accept: 'application/json',
     }
@@ -25,13 +28,13 @@ export function useAxios(options: Options = {})
         headers = {
             ...headers,
             ...useRequestHeaders(['cookie']),
-            referer: 'http://localhost:3000',
+            referer: runtimeConfig.public.frontendUrl as string,
         }
     }
 
     // Create axios instance
     return axios.create({
-        baseURL: 'http://localhost:8000',
+        baseURL: runtimeConfig.public.backendUrl as string,
         withCredentials: true,
         headers: {
             ...headers,
