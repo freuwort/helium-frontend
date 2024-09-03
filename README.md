@@ -1,65 +1,33 @@
-# Nuxt 3 Minimal Starter
+# Helium Frontend
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+**Helium Frontend is the frontend admin-panel for the Helium CMS.**  
+[Helium Compose](https://github.com/freuwort/helium-compose) | [Helium Backend](https://github.com/freuwort/helium-backend) | Helium Frontend | [Helium Screens](https://github.com/freuwort/helium-screens)
 
 ## Setup
 
-Make sure to install the dependencies:
-
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
+## Development
 
-Start the development server on `http://localhost:3000`:
-
+Start the development server on `http://localhost:3000`
 ```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+## Build
 
-Build the application for production with docker:
-
+To build the Helium Frontend image
 ```bash
 docker build -t helium-frontend .
 ```
 
-Locally preview production build:
+## Security Vulnerabilities
 
-```bash
-# npm
-npm run preview
+If you discover a security vulnerability within the Helium frontend, please send an email to Alyx Freuwört via [contact@freuwort.com](mailto:contact@freuwort.com).  
+We will address all security vulnerabilities promptly.
 
-# pnpm
-pnpm run preview
+## License
 
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+The Helium frontend is an open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
