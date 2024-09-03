@@ -38,15 +38,16 @@
                             <Draggable v-for="screen in form.screens" :key="screen.id">
 
                                 <HeCard class="entity-card">
-                                    <div class="entity-card-head">
+                                    <div class="entity-card-head" @click.self="screen.expanded = !screen.expanded">
                                         <IodIcon icon="drag_indicator" />
-                                        <b class="flex-1" >{{ screen.name }}</b>
+                                        <b class="mr-auto" >{{ screen.name }}</b>
                                         <IodButtonGroup corner="pill">
                                             <IodIconButton :is="NuxtLink" class="!w-10" icon="open_in_new" size="s" v-tooltip="'Screen bearbeiten'" target="_blank" :to="`/screens/screens/editor/${screen.id}`"/>
-                                            <IodIconButton type="button" class="!w-10" icon="close" size="s" color-preset="error" v-tooltip="'Entfernen'" @click="removePlaylist(screen)"/>
+                                            <IodIconButton type="button" class="!w-10" icon="close" size="s" color-preset="error" v-tooltip="'Entfernen'" @click="removeScreen(screen)"/>
                                         </IodButtonGroup>
+                                        <IodIconButton type="button" :icon="screen.expanded ? 'expand_less' : 'expand_more'" corner="pill" size="s" v-tooltip="screen.expanded ? 'Einklappen' : 'Ausklappen'" @click="screen.expanded = !screen.expanded"/>
                                     </div>
-                                    <div class="entity-card-body">
+                                    <div class="entity-card-body" v-if="screen.expanded">
                                         <div class="h-10 flex items-center gap-2 pl-3 pr-1 rounded-full bg-background-soft">
                                             <IodIcon icon="view_week" v-tooltip="'Wochentage'"/>
                                             <HeDivider vertical class="h-6 !border-slate-300"/>
@@ -65,12 +66,12 @@
                                             <IodIcon icon="calendar_month" v-tooltip="'Start- und Enddatum'"/>
                                             <HeDivider vertical class="h-6 !border-slate-300"/>
                                             <span>von</span>
-                                            <VDropdown>
+                                            <VDropdown placement="left">
                                                 <a class="font-mono cursor-pointer font-bold">{{screen.from_date ?? 'tt.mm.jjjj'}}</a>
                                                 <template #popper><IodDatePicker v-model="screen.from_date"/></template>
                                             </VDropdown>
                                             <span>bis</span>
-                                            <VDropdown>
+                                            <VDropdown placement="right">
                                                 <a class="font-mono cursor-pointer font-bold">{{screen.to_date ?? 'tt.mm.jjjj'}}</a>
                                                 <template #popper><IodDatePicker v-model="screen.to_date"/></template>
                                             </VDropdown>
@@ -80,12 +81,12 @@
                                             <IodIcon icon="schedule" v-tooltip="'Start- und Endzeit'"/>
                                             <HeDivider vertical class="h-6 !border-slate-300"/>
                                             <span>von</span>
-                                            <VDropdown>
+                                            <VDropdown placement="left">
                                                 <a class="font-mono cursor-pointer font-bold">{{screen.from_time ?? '--:--:--'}}</a>
                                                 <template #popper><IodTimePicker v-model="screen.from_time"/></template>
                                             </VDropdown>
                                             <span>bis</span>
-                                            <VDropdown>
+                                            <VDropdown placement="right">
                                                 <a class="font-mono cursor-pointer font-bold">{{screen.to_time ?? '--:--:--'}}</a>
                                                 <template #popper><IodTimePicker v-model="screen.to_time"/></template>
                                             </VDropdown>
