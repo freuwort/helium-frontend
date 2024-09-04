@@ -1,5 +1,10 @@
-# Step 1: Build Stage
+# Build Stage
 FROM node:20 AS build-stage
+
+ENV BACKEND_DOMAIN=api.marketing-bs.de
+ENV FRONTEND_DOMAIN=admin.marketing-bs.de
+ENV SCREENS_DOMAIN=screens.marketing-bs.de
+ENV WEBSITE_DOMAIN=marketing-bs.de
 
 WORKDIR /app
 
@@ -9,7 +14,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Step 2: Production Stage
+# Production Stage
 FROM node:20-alpine AS production-stage
 
 WORKDIR /app
