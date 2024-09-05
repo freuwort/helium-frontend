@@ -67,7 +67,7 @@
     async function fetch() {
         loading.value = true
 
-        let route = apiRoute('/api/screens/playlists/', {
+        let route = apiRoute('/api/screens/playlists', {
             filter: filter.value,
             sort: sort.value,
             ...pagination.value,

@@ -69,7 +69,7 @@
     async function fetch() {
         loading.value = true
 
-        let route = apiRoute('/api/screens/', {
+        let route = apiRoute('/api/screens', {
             filter: filter.value,
             sort: sort.value,
             ...pagination.value,

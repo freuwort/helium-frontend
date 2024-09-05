@@ -1,4 +1,4 @@
-import { remove } from "lodash"
+import _ from "lodash"
 
 type Upload = {
     id: string
@@ -103,7 +103,7 @@ export const useUploadStore = defineStore('upload_manager', () => {
 
         if (['cancelled', 'completed'].includes(upload.status))
         {
-            remove(uploads.value, upload)
+            _.remove(uploads.value, upload)
         }
     }
 

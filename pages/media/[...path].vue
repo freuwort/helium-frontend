@@ -114,7 +114,7 @@
 <script lang="ts" setup>
     import type { MediaItem } from '~/types/media'
     import type { Pagination } from '~/types/general'
-    import { throttle } from 'lodash'
+    import _ from 'lodash'
 
     definePageMeta({
         middleware: 'auth',
@@ -177,7 +177,7 @@
 
         loading.value = false
     }
-    const throttledFetch = throttle(fetch, 300)
+    const throttledFetch = _.throttle(fetch, 300)
 
     function setPagination(value: Partial<Pagination>) {
         pagination.value = { ...pagination.value, ...value }
