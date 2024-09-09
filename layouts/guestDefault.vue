@@ -1,15 +1,15 @@
 <template>
     <div class="page-layout">
         <header>
-            <div class="company-logo" v-if="domain.settings">
+            <div class="company-logo" v-if="domain.settings && domain.settings?.company_logo">
                 <img :src="domain.settings?.company_logo" :alt="domain.settings?.company_name" />
             </div>
-            <h2>{{ domain.settings?.company_name }}</h2>
+            <h2>{{ domain.settings?.company_name || 'Helium Erstanmeldung' }}</h2>
         </header>
         <main>
             <slot />
         </main>
-        <footer>
+        <footer v-if="domain.settings?.company_legalname">
             <HeLimiter size="form">
                 <HeFlex horizontal gap="1rem">
                     <span>© {{ $dayjs().year() }} {{ domain.settings?.company_legalname }}</span>
@@ -29,7 +29,7 @@
     
     useHead({
         title: props.pageTitle as string,
-        titleTemplate: `%s – ${domain.settings?.company_name} Verwaltung`,
+        titleTemplate: `%s – ${domain.settings?.company_name || 'Helium'} Verwaltung`,
         bodyAttrs: {
             style: 'background: var(--color-background-soft)',
         }

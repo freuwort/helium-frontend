@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" :scope :pageTitle="IPM.options.pageTitle" color="#3737FA">
+    <NuxtLayout name="auth-default" :scope :pageTitle="IPM.options.pageTitle">
         <HeCard>
             <IodTable
                 class="top-16"

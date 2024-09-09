@@ -16,6 +16,8 @@
                 <slot />
             </HeLimiter>
         </main>
+
+        <DialogFirstTimeSetupWizard />
     </div>
 </template>
 
@@ -28,7 +30,7 @@
     
     useHead({
         title: props.pageTitle as string,
-        titleTemplate: `%s – ${domain?.settings?.company_name} Verwaltung`,
+        titleTemplate: `%s – ${domain?.settings?.company_name ?? 'Helium'} Verwaltung`,
         htmlAttrs: {
             'class': 'small-scrollbar',
             'style': 'background: var(--color-background-soft)',

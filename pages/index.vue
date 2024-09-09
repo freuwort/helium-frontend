@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" pageTitle="Startseite" color="#3737FA">
+    <NuxtLayout name="auth-default" pageTitle="Startseite">
         <HeCard>
             <div class="flex flex-col gap-6 p-6">
                 <div class="flex items-center">

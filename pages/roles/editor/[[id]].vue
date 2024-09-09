@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Rollen Editor" color="#3737FA">
+    <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Rollen Editor">
         <HeCard is="form" @submit.prevent="save">
             <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-20 bg-background">
                 <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/roles"/>

@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Unternehmens Editor" color="#3737FA">
+    <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Unternehmens Editor">
         <HeCard is="form" @submit.prevent="save">
             <ProfileCard
                 v-show="!!form.id"

@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" :scope pageTitle="Einstellungen" color="#363E40">
+    <NuxtLayout name="auth-default" :scope pageTitle="Einstellungen">
         <HeCard>
             <HeFlex horizontal align-y="stretch">
                 <HeFlex padding="1rem 0" align-y="flex-start" class="w-80 border-r">
