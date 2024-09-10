@@ -3,7 +3,6 @@ type Settings = {
     company_legalname: string
     company_slogan: string
     company_logo: string
-    company_favicon: string
     legal_notice?: string
     legal_privacy?: string
     default_currency?: string

@@ -10,16 +10,6 @@
         <SettingsRow title="Slogan" description="Ein kurzer Slogan, welcher in Helium angezeigt wird">
             <IodInput class="flex-1" label="Slogan" v-model="form.company_slogan" />
         </SettingsRow>
-        <SettingsRow title="Logo" description="Das Firmen Logo, welches in Helium angezeigt wird">
-            <IodInput class="flex-1" label="Logo" v-model="form.company_logo" placeholder="https://example.com/logo.png">
-                <template #right>
-                    <IodIconButton type="button" size="s" variant="text" icon="attach_file" v-tooltip="'Bild einzufügen'" @click="picker.open((item: any) => { form.company_logo = item.cdn_path })"/>
-                </template>
-            </IodInput>
-        </SettingsRow>
-        <SettingsRow title="Favicon" description="Das Favicon, welches in Helium angezeigt wird">
-            <IodInput class="flex-1" label="Favicon" v-model="form.company_favicon" placeholder="https://example.com/favicon.ico"/>
-        </SettingsRow>
     
         <SettingsSpacer />
         <SettingsTitle>Standard Einstellungen</SettingsTitle>
@@ -59,8 +49,6 @@
         company_name: domain?.settings?.company_name ?? '',
         company_legalname: domain?.settings?.company_legalname ?? '',
         company_slogan: domain?.settings?.company_slogan ?? '',
-        company_logo: domain?.settings?.company_logo ?? '',
-        company_favicon: domain?.settings?.company_favicon ?? '',
         default_currency: domain?.settings?.default_currency ?? 'EUR',
         default_unit_length: domain?.settings?.default_unit_length ?? 'm',
         default_unit_weight: domain?.settings?.default_unit_weight ?? 'kg',

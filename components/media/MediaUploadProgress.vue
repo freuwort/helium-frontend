@@ -1,5 +1,5 @@
 <template>
-    <VDropdown placement="bottom-center" :distance="-1">
+    <VDropdown placement="bottom" :distance="-1">
         <Transition name="slide">
             <div class="upload-button" key="card" v-show="uploadManager.status.total > 0" :class="{
                 'uploading': uploadManager.status.uploading,

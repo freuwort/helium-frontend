@@ -17,7 +17,7 @@
             </HeLimiter>
         </main>
 
-        <DialogFirstTimeSetupWizard />
+        <DialogFirstTimeSetupWizard ref="ftsWizard"/>
     </div>
 </template>
 
@@ -36,6 +36,12 @@
             'style': 'background: var(--color-background-soft)',
         },
     })
+
+
+
+    // START: Setup Wizard
+    const ftsWizard = ref()
+    // END: Setup Wizard
 
 
 
@@ -115,6 +121,8 @@
 
         // Hide splashscreen if it is still idle
         if (!splashscreen.isIdle) splashscreen.finish()
+
+        ftsWizard.value?.open()
     })
     // END: Splashscreen
 </script>
