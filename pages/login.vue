@@ -30,6 +30,7 @@
 
 <script lang="ts" setup>
     const auth = useAuthStore()
+    const domain = useDomainStore()
     const route = useRoute()
     
 
@@ -68,6 +69,7 @@
         splashscreen.start()
     
         await auth.fetchSession()
+        await domain.fetchSettings()
     
         if (auth.session.tfa_enabled && !auth.session.tfa_verified)
         {
