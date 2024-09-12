@@ -33,6 +33,8 @@ export default defineNuxtConfig({
             frontendUrl: `${process.env.BASE_PROTOCOL ?? 'http://'}${process.env.FRONTEND_DOMAIN ?? 'localhost:3000'}`,
             websiteUrl: `${process.env.BASE_PROTOCOL ?? 'http://'}${process.env.WEBSITE_DOMAIN ?? 'localhost:3001'}`,
             screensUrl: `${process.env.BASE_PROTOCOL ?? 'http://'}${process.env.SCREENS_DOMAIN ?? 'localhost:3002'}`,
+            adminPermissions: ['system.super-admin', 'system.admin'],
+            superAdminPermissions: ['system.super-admin'],
         },
     },
 })

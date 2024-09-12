@@ -41,6 +41,20 @@
 
     // START: Setup Wizard
     const ftsWizard = ref()
+
+    function openFtsWizard() {
+        // Only continue if setup is not completed
+        if (domain.settings.setup_completed) return
+
+        // Only continue if setup is not dismissed
+        if (domain.settings.setup_dismissed) return
+        
+        // User must have super admin permissions
+        if (!auth.hasSuperAdminPermissions()) return
+
+        // Open wizard
+        ftsWizard.value.open()
+    }
     // END: Setup Wizard
 
 
@@ -122,7 +136,7 @@
         // Hide splashscreen if it is still idle
         if (!splashscreen.isIdle) splashscreen.finish()
 
-        ftsWizard.value?.open()
+        openFtsWizard()
     })
     // END: Splashscreen
 </script>

@@ -1,24 +1,5 @@
 type Settings = {
-    company_name: string
-    company_legalname: string
-    company_slogan: string
-    company_logo: string
-    legal_notice?: string
-    legal_privacy?: string
-    default_currency?: string
-    default_unit_length?: string
-    default_unit_weight?: string
-    default_unit_volume?: string
-    default_unit_temperature?: string
-    default_unit_speed?: string
-    policy_allow_registration?: boolean
-    policy_allow_password_reset?: boolean
-    policy_allow_password_change?: boolean
-    policy_allow_email_change?: boolean
-    policy_allow_username_change?: boolean
-    policy_allow_avatar_upload?: boolean
-    policy_allow_banner_upload?: boolean
-    policy_require_tfa?: boolean
+    [key: string]: any
 }
 
 export const useDomainStore = defineStore('domain', () => {
@@ -34,8 +15,23 @@ export const useDomainStore = defineStore('domain', () => {
         }
     }
 
+    async function patchSettings(keys: Settings|string, value: any = null)
+    {
+        if (typeof keys === 'string') {
+            keys = {[keys]: value}
+        }
+
+        try {
+            await useAxios().patch('/api/settings', keys)
+        }
+        catch (error) {
+            console.log('Could not patch domain settings!')
+        }
+    }
+
     return {
         settings: settings as unknown as Settings,
         fetchSettings,
+        patchSettings
     }
 })

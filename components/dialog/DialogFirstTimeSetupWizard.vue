@@ -25,8 +25,9 @@
                         </div>
 
                         <div class="footer">
+                            <IodButton type="button" label="Setup abbrechen" variant="text" corner="pill" v-tooltip="'Das Setup wird dauerhaft geschlossen und Sie können Helium manuell einrichten'" @click="submitDismiss()" />
                             <HeSpacer />
-                            <IodButton type="button" class="w-40" label="Starten" variant="filled" corner="pill" @click="setPage(1)" />
+                            <IodButton type="button" class="w-56" label="Starten" variant="filled" corner="pill" @click="setPage(1)" />
                         </div>
                     </div>
 
@@ -46,29 +47,54 @@
                         </div>
 
                         <div class="footer">
-                            <IodButton type="button" class="w-40" label="Zurück" variant="contained" corner="pill" @click="setPage(0)" />
                             <HeSpacer />
-                            <IodButton type="submit" class="w-40" label="Weiter" variant="filled" corner="pill" :disabled="!isDomainSettingsValid" :loading="domainForm.processing" />
+                            <IodButton type="submit" class="w-56" label="Speichern" variant="filled" corner="pill" :disabled="!isDomainSettingsValid" :loading="domainForm.processing" />
                         </div>
                     </form>
 
-                    <div class="page" v-if="page === 2">
+                    <form class="page" v-if="page === 2" @submit.prevent="submitRoles">
                         <div class="header">
-                            <h3>Standard Benutzergruppen</h3>
+                            <h3>Standard Rollen anlegen</h3>
                             <small class="px-2">Schritt <b>2</b> von <b>4</b></small>
                         </div>
 
                         <div class="main small-scrollbar">
-                            <div class="flex flex-col gap-4">
+                            <div class="flex flex-col gap-6 mr-1">
+                                <div class="flex flex-col gap-2">
+                                    <span>Pflichtrollen – {{ requiredRoles.length }}</span>
+                                    <ProfileChip
+                                        is="button"
+                                        type="button"
+                                        class="h-12 py-2 border border-solid border-blue-500 bg-blue-100"
+                                        v-for="role in requiredRoles"
+                                        :title="role.name"
+                                        :subtitle="role.permissions.join(', ')"
+                                        :icon="role.icon"
+                                    />
+                                </div>
+                                    
+                                <div class="flex flex-col gap-2">
+                                    <span>Optionale Rollen – {{ selectedRoles.length }}</span>
+                                    <ProfileChip
+                                        is="button"
+                                        type="button"
+                                        class="h-12 py-2 border border-solid border-slate-400 bg-slate-100"
+                                        v-for="role in optionalRoles"
+                                        :title="role.name"
+                                        :subtitle="role.permissions.join(', ') || 'Keine Berechtigungen'"
+                                        :icon="role.icon"
+                                        :class="{ '!bg-blue-100 !border-blue-500 ml-4': selectedRoles.includes(role.name) }"
+                                        @click="toggleRole(role.name)"
+                                    />
+                                </div>
                             </div>
                         </div>
 
                         <div class="footer">
-                            <IodButton type="button" class="w-40" label="Zurück" variant="contained" corner="pill" @click="setPage(1)" />
                             <HeSpacer />
-                            <IodButton type="button" class="w-40" label="Weiter" variant="filled" corner="pill" @click="setPage(3)" />
+                            <IodButton type="submit" class="w-56" :label="'Rollen anlegen ('+ roles.length +')'" variant="filled" corner="pill" :loading="rolesForm.processing"/>
                         </div>
-                    </div>
+                    </form>
 
                     <div class="page" v-if="page === 3">
                         <div class="header">
@@ -82,9 +108,8 @@
                         </div>
 
                         <div class="footer">
-                            <IodButton type="button" class="w-40" label="Zurück" variant="contained" corner="pill" @click="setPage(2)" />
                             <HeSpacer />
-                            <IodButton type="button" class="w-40" label="Weiter" variant="filled" corner="pill" @click="setPage(4)" />
+                            <IodButton type="button" class="w-56" label="Weiter" variant="filled" corner="pill" @click="setPage(4)" />
                         </div>
                     </div>
 
@@ -100,9 +125,8 @@
                         </div>
 
                         <div class="footer">
-                            <IodButton type="button" class="w-40" label="Zurück" variant="contained" corner="pill" @click="setPage(3)" />
                             <HeSpacer />
-                            <IodButton type="button" class="w-40" label="Weiter" variant="filled" corner="pill" @click="setPage(5)" />
+                            <IodButton type="button" class="w-56" label="Weiter" variant="filled" corner="pill" @click="setPage(5)" />
                         </div>
                     </div>
 
@@ -115,9 +139,8 @@
                         </div>
 
                         <div class="footer">
-                            <IodButton type="button" class="w-40" label="Zurück" variant="contained" corner="pill" @click="setPage(4)" />
                             <HeSpacer />
-                            <IodButton type="button" class="w-40" label="Fertig" variant="filled" corner="pill" @click="close()" />
+                            <IodButton type="button" class="w-56" label="Fertig" variant="filled" corner="pill" @click="submitFinish()" />
                         </div>
                     </div>
                 </TransitionGroup>
@@ -134,17 +157,24 @@
     const direction = ref('')
 
     function setPage(p: number) {
+        // Limit
         if (p > 5) return
         if (p < 0) return
 
+        // Skip steps if already completed
+        if (p == 1 && domain.settings.setup_completed_domain_basics) return setPage(2)
+        if (p == 2 && domain.settings.setup_completed_role_import) return setPage(3)
+        if (p == 3 && domain.settings.setup_completed_user_import) return setPage(4)
+        if (p == 4 && domain.settings.setup_completed_admin_selection) return setPage(5)
+
+        // Set page
         direction.value = page.value < p ? 'forwards' : 'backwards'
         page.value = p
     }
 
     function open() {
         isOpen.value = true
-        direction.value = '' // disables transition
-        page.value = 0
+        setPage(0)
     }
 
     function close() {
@@ -152,6 +182,15 @@
     }
 
     defineExpose({ open, close })
+
+
+
+    // START: Dismiss step
+    async function submitDismiss() {
+        close()
+        await domain.patchSettings('setup_dismissed', true)
+        await domain.fetchSettings()
+    }
 
 
 
@@ -173,17 +212,81 @@
 
         await useAxios().postForm('/api/settings/logo', {file})
         logoInput.value.value = null
+
+        await domain.patchSettings('setup_completed_domain_logo', true)
+        await domain.fetchSettings()
     }
 
     async function submitDomainSettings() {
         domainForm.patch('/api/settings', {
-            onSuccess() {
-                domain.fetchSettings()
+            async onSuccess() {
                 setPage(2)
+                await domain.patchSettings('setup_completed_domain_basics', true)
+                await domain.fetchSettings()
             }
         })
     }
     // END: Domain step
+
+
+
+    // START: Roles step
+    const requiredRoles = ref([
+        {name: 'Admin', icon: 'shield', color: null, permissions: ['system.admin']},
+    ])
+
+    const optionalRoles = ref([
+        {name: 'Kunde', icon: 'shopping_cart', color: null, permissions: []},
+        {name: 'Lieferant', icon: 'shopping_cart', color: null, permissions: []},
+        {name: 'Personal', icon: 'work', color: null, permissions: []},
+        {name: 'Buchhaltung', icon: 'work', color: null, permissions: []},
+        {name: 'Verwaltung', icon: 'work', color: null, permissions: []},
+        {name: 'Einkauf', icon: 'work', color: null, permissions: []},
+        {name: 'Vertrieb', icon: 'work', color: null, permissions: []},
+        {name: 'Support', icon: 'work', color: null, permissions: []},
+        {name: 'Logistik', icon: 'work', color: null, permissions: []},
+    ])
+
+    const selectedRoles = ref([] as string[])
+
+    function toggleRole(role: string) {
+        if (selectedRoles.value.includes(role)) {
+            selectedRoles.value = selectedRoles.value.filter(r => r !== role)
+        }
+        else {
+            selectedRoles.value.push(role)
+        }
+    }
+
+    const roles = computed(() => [...requiredRoles.value, ...optionalRoles.value.filter(r => selectedRoles.value.includes(r.name))])
+    const rolesForm = useForm({
+        items: [],
+    })
+
+    async function submitRoles() {
+        rolesForm
+        .transform((data) => {
+            return {items: roles.value}
+        })
+        .post('/api/roles/import', {
+            async onSuccess() {
+                setPage(3)
+                await domain.patchSettings('setup_completed_role_import', true)
+                await domain.fetchSettings()
+            }
+        })
+    }
+    // END: Roles step
+
+
+
+    // START: Finish step
+    async function submitFinish() {
+        close()
+        await domain.patchSettings('setup_completed', true)
+        await domain.fetchSettings()
+    }
+    // END: Finish step
 </script>
 
 <style lang="sass" scoped>

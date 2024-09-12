@@ -77,6 +77,7 @@ export const useAuthStore = defineStore('auth', () => {
     const routes = computed(() => options.value.routes)
     const apiRoutes = computed(() => options.value.apiRoutes)
     const splashscreen = useSplashscreenStore()
+    const runtimeConfig = useRuntimeConfig()
 
 
     const user = ref<User | null>(null)
@@ -143,7 +144,50 @@ export const useAuthStore = defineStore('auth', () => {
 
 
 
+    function hasAdminPermissions()
+    {
+        if (!user.value) return false
+
+        return user.value.permissions.some((permission) => runtimeConfig.public.adminPermissions.includes(permission))
+    }
+
+    function hasSuperAdminPermissions()
+    {
+        if (!user.value) return false
+
+        return user.value.permissions.some((permission) => runtimeConfig.public.superAdminPermissions.includes(permission))
+    }
+
+    function can(permissions: string|string[])
+    {
+        if (!user.value) return false
+
+        // Convert string to array
+        if (!Array.isArray(permissions)) permissions = [permissions]
+
+        // Check for super user
+        if (hasAdminPermissions()) return true
+
+        return user.value.permissions.every((permission) => permissions.includes(permission))
+    }
+
+    function canAny(permissions: string|string[])
+    {
+        if (!user.value) return false
+
+        // Convert string to array
+        if (!Array.isArray(permissions)) permissions = [permissions]
+
+        // Check for admin
+        if (hasAdminPermissions()) return true
+
+        return user.value.permissions.some((permission) => permissions.includes(permission))
+    }
+
+
+
     return {
+        // Auth
         user: user as unknown as User | null,
         session: session as unknown as SessionInfo,
         routes: routes as unknown as Record<string, string>,
@@ -151,7 +195,14 @@ export const useAuthStore = defineStore('auth', () => {
         fetchSession,
         logout,
 
+        // Settings
         getSettings,
         setSettings,
+
+        // Permissions
+        hasAdminPermissions,
+        hasSuperAdminPermissions,
+        can,
+        canAny,
     }
 })
