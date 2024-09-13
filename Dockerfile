@@ -1,12 +1,6 @@
 # Build Stage
 FROM node:20 AS build-stage
 
-ENV BACKEND_DOMAIN="api.marketing-bs.de"
-ENV FRONTEND_DOMAIN="admin.marketing-bs.de"
-ENV SCREENS_DOMAIN="screens.marketing-bs.de"
-ENV WEBSITE_DOMAIN="marketing-bs.de"
-ENV BASE_PROTOCOL="https://"
-
 WORKDIR /app
 
 COPY package*.json ./
