@@ -9,16 +9,16 @@
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/" show-chevron icon="home">Startseite</ContextMenuItem>
-                        <ContextMenuItem show-chevron icon="location_on">Standorte</ContextMenuItem>
+                        <ContextMenuItem v-if="devMode" show-chevron icon="location_on">Standorte</ContextMenuItem>
                         <ContextMenuItem to="/users" show-chevron icon="group">Nutzer</ContextMenuItem>
                         <ContextMenuItem to="/media" show-chevron icon="folder">Dateien</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem to="/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
-                        <ContextMenuItem to="/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
-                        <ContextMenuItem to="/screens" show-chevron color="#84cc16" icon="desktop_windows">Screens</ContextMenuItem>
-                        <ContextMenuItem to="/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
-                        <ContextMenuItem show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
-                        <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem>
+                        <ContextMenuItem v-if="devMode" to="/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
+                        <ContextMenuItem v-if="devMode" to="/screens" show-chevron color="#84cc16" icon="desktop_windows">Screens</ContextMenuItem>
+                        <ContextMenuItem v-if="devMode" to="/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
+                        <ContextMenuItem v-if="devMode" show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
+                        <ContextMenuItem v-if="devMode" show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem to="/settings/" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
                     </ContextMenu>
@@ -27,7 +27,7 @@
 
             <HeDivider vertical class="h-8"/>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron icon="location_on"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -70,7 +70,7 @@
                 </template>
             </VDropdown>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#10b981" icon="confirmation_number" v-tooltip="'Events'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -79,7 +79,7 @@
                 </template>
             </VDropdown>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#84cc16" icon="desktop_windows" v-tooltip="'Screens'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -90,7 +90,7 @@
                 </template>
             </VDropdown>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#F59E0B" icon="note_stack" v-tooltip="'Inhalte'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -102,7 +102,7 @@
                 </template>
             </VDropdown>
             
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#FF6348" icon="package_2" v-tooltip="'Produkte'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -111,7 +111,7 @@
                 </template>
             </VDropdown>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#FF4757" icon="receipt" v-tooltip="'Rechnungen / Angebote'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -125,7 +125,7 @@
 
             <MediaUploadProgress />
 
-            <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-end" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron icon="notifications" v-tooltip="'Benachrichtigungen'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -152,6 +152,7 @@
 
 <script lang="ts" setup>
     const auth = useAuthStore()
+    const devMode = useDevMode()
     const NuxtLink = defineNuxtLink({})
 </script>
 

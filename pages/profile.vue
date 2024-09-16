@@ -248,7 +248,7 @@
     {
         changePasswordForm.patch('/api/user/password', {
             onSuccess() {
-                changePasswordPopup.value?.close()
+                changePasswordPopup.value.close()
                 toast.success('Passwort geändert')
             },
         })
@@ -292,7 +292,8 @@
 
         setup2faAppForm.put('/api/user/two-factor/totp/setup', {
             onSuccess(data: any) {
-                setup2faAppForm.defaults(data.value).reset()
+                setup2faAppForm.defaults(data).reset()
+                
             }
         })
     }
@@ -304,8 +305,8 @@
         setup2faAppForm.put('/api/user/two-factor/totp/enable', {
             onSuccess() {
                 auth.fetchSession()
-                setup2faAppPopup.value?.close()
-                tfaSuccessPopup.value?.open()
+                setup2faAppPopup.value.close()
+                tfaSuccessPopup.value.open()
                 toast.success('Auth-App aktiviert')
             }
         })
@@ -335,7 +336,7 @@
     {
         backupCodesForm.get('/api/user/two-factor/backup/show', {
             onSuccess(data: any) {
-                backupCodesForm.codes = data.value.codes || []
+                backupCodesForm.defaults(data).reset()
             }
         })
     }
@@ -344,7 +345,7 @@
     {
         backupCodesForm.post('/api/user/two-factor/backup/generate', {
             onSuccess(data: any) {
-                backupCodesForm.codes = data.value.codes || []
+                backupCodesForm.defaults(data).reset()
             }
         })
     }
@@ -366,7 +367,7 @@
     {
         deleteAccountForm.delete('/api/user', {
             onSuccess() {
-                deleteAccountPopup.value?.close()
+                deleteAccountPopup.value.close()
                 toast.success('Ihr Konto wird nun gelöscht')
                 auth.logout()
             },

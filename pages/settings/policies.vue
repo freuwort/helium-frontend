@@ -19,6 +19,13 @@
         <SettingsRow title="Nutzer können ihr Profilbanner selber ändern">
             <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_banner_upload" />
         </SettingsRow>
+        <HeDivider />
+        <SettingsRow title="Debug Modus">
+            <IodToggle type="switch" class="ml-auto" v-model="form.policy_debug_mode" />
+        </SettingsRow>
+        <SettingsRow title="Entwickler Modus">
+            <IodToggle type="switch" class="ml-auto" v-model="form.policy_developer_mode" />
+        </SettingsRow>
         <SettingsRow>
             <IodButton class="flex-1" corner="pill" label="Speichern" :loading="form.processing"/>
         </SettingsRow>
@@ -31,12 +38,14 @@
     const domain = useDomainStore()
 
     const form = useForm({
-        policy_allow_registration: domain?.settings?.policy_allow_registration ?? false,
-        policy_allow_password_reset: domain?.settings?.policy_allow_password_reset ?? true,
-        policy_allow_email_change: domain?.settings?.policy_allow_email_change ?? false,
-        policy_allow_username_change: domain?.settings?.policy_allow_username_change ?? false,
-        policy_allow_avatar_upload: domain?.settings?.policy_allow_avatar_upload ?? false,
-        policy_allow_banner_upload: domain?.settings?.policy_allow_banner_upload ?? false,
+        policy_allow_registration: domain.policy('allow_registration') ?? false,
+        policy_allow_password_reset: domain.policy('allow_password_reset') ?? true,
+        policy_allow_email_change: domain.policy('allow_email_change') ?? false,
+        policy_allow_username_change: domain.policy('allow_username_change') ?? false,
+        policy_allow_avatar_upload: domain.policy('allow_avatar_upload') ?? false,
+        policy_allow_banner_upload: domain.policy('allow_banner_upload') ?? false,
+        policy_debug_mode: domain.policy('debug_mode') ?? false,
+        policy_developer_mode: domain.policy('developer_mode') ?? false,
     })
 
 

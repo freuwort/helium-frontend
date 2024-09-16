@@ -1,17 +1,4 @@
 <template>
-    <form class="contents" @submit.prevent="triggerStatus()">
-        <SettingsTitle>Status Codes</SettingsTitle>
-        <SettingsRow title="Trigger status" description="Trigger a status code">
-            <IodInput class="flex-1" type="number" v-model="form.status" />
-        </SettingsRow>
-        <SettingsRow>
-            <IodButton class="flex-1" corner="pill" label="Trigger" :loading="form.processing" />
-        </SettingsRow>
-    </form>
-    
-    
-    
-    <SettingsSpacer />
     <SettingsTitle>Iod Components</SettingsTitle>
     <SettingsRow title="IodPopup" description="Open a test popup">
         <IodButtonGroup class="flex-1" corner="pill">
@@ -92,25 +79,6 @@
 </template>
 
 <script lang="ts" setup>
-    import { toast } from 'vue3-toastify'
-
-
-
-    const form = useForm({ status: 403 })
-
-    function triggerStatus() {
-        form.get('/api/debug/status/'+form.status, {
-            onSuccess(data: any) {
-                toast.success('Status triggered')
-            },
-            onError(error: any) {
-                toast.error(error?.message)
-            },
-        })
-    }
-
-
-
     const popupLeft = ref()
     const popupCenter = ref()
     const popupRight = ref()

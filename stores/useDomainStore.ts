@@ -29,9 +29,18 @@ export const useDomainStore = defineStore('domain', () => {
         }
     }
 
+    function policy(key: string)
+    {
+        if (!settings.value) return null
+        if (!settings.value['policy_'+key]) return null
+
+        return settings.value['policy_'+key]
+    }
+
     return {
         settings: settings as unknown as Settings,
         fetchSettings,
-        patchSettings
+        patchSettings,
+        policy,
     }
 })

@@ -43,8 +43,8 @@
 
     const splashscreen = useSplashscreenStore()
     const form = useForm({
-        email: 'admin@example.com',
-        password: 'password',
+        email: '',
+        password: '',
         remember: false,
     })
 

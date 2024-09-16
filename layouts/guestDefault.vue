@@ -1,10 +1,15 @@
 <template>
     <div class="page-layout">
         <header>
-            <div class="company-logo" v-if="domain.settings && domain.settings?.company_logo">
-                <img :src="domain.settings?.company_logo" :alt="domain.settings?.company_name" />
-            </div>
-            <h2>{{ domain.settings?.company_name || 'Helium Erstanmeldung' }}</h2>
+            <ProfileImage
+                v-if="domain.settings && domain.settings?.company_logo"
+                class="h-32"
+                aspect="2"
+                :alt="domain.settings?.company_name"
+                :src="domain.settings.company_logo"
+            />
+            <h2 v-else-if="domain.settings && domain.settings?.company_name">{{ domain.settings.company_name }}</h2>
+            <h2 v-else>Helium Erstanmeldung</h2>
         </header>
         <main>
             <slot />
@@ -61,23 +66,6 @@
         justify-content: center
         align-items: center
         gap: 1rem
-
-        .company-logo
-            width: 128px
-            height: 128px
-            display: flex
-            justify-content: center
-            align-items: center
-            overflow: hidden
-            border-radius: 50%
-            box-shadow: var(--shadow-s)
-            background-color: var(--color-background)
-            user-select: none
-
-        img
-            width: 100%
-            height: 100%
-            object-fit: contain
 
         h2
             margin: 0

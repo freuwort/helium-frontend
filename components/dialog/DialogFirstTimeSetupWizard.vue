@@ -39,7 +39,8 @@
 
                         <div class="main small-scrollbar">
                             <div class="flex flex-col gap-4">
-                                <input type="file" ref="logoInput" pattern="image/*" @change="submitDomainLogo">
+                                <ProfileImage class="h-32 mx-auto bg-background-soft" aspect="2" alt="Firmen Logo" tooltip="Logo hochladen" allow-upload :src="domain.settings.company_logo" :loading="logoProcessing" @upload="logoInput.click()"/>
+                                <input type="file" class="hidden" ref="logoInput" pattern="image/*" @change="submitDomainLogo(($event.target as any).files[0])">
                                 <IodInput label="Anzeigename" v-model="domainForm.company_name"/>
                                 <IodInput label="Eingetragener Name" v-model="domainForm.company_legalname"/>
                                 <IodInput label="Slogan oder Claim" v-model="domainForm.company_slogan"/>
@@ -194,8 +195,25 @@
 
 
 
-    // START: Domain step
+    // START: Domain logo step
     const logoInput = ref()
+    const logoProcessing = ref(false)
+
+    async function submitDomainLogo(file: any) {
+        if (!file) return
+
+        logoProcessing.value = true
+        await useAxios().postForm('/api/settings/logo', {file})
+        await domain.patchSettings('setup_completed_domain_logo', true)
+        await domain.fetchSettings()
+        logoInput.value.value = null
+        logoProcessing.value = false
+    }
+    // END: Domain logo step
+
+
+
+    // START: Domain step
     const domainForm = useForm({
         company_name: domain?.settings?.company_name ?? '',
         company_legalname: domain?.settings?.company_legalname ?? '',
@@ -206,17 +224,6 @@
         return !!domainForm.company_name && !!domainForm.company_legalname
     }
     
-    async function submitDomainLogo(e: any) {
-        const file = e.target.files[0]
-        if (!file) return
-
-        await useAxios().postForm('/api/settings/logo', {file})
-        logoInput.value.value = null
-
-        await domain.patchSettings('setup_completed_domain_logo', true)
-        await domain.fetchSettings()
-    }
-
     async function submitDomainSettings() {
         domainForm.patch('/api/settings', {
             async onSuccess() {
