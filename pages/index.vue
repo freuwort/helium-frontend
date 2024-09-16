@@ -7,11 +7,11 @@
                     <HeSpacer/>
                     <IodButton :is="NuxtLink" size="s" variant="text" to="/settings" icon-right="chevron_right" label="Einstellungen" />
                 </div>
-                <div class="flex gap-6">
+                <!-- <div class="flex gap-6">
                     <IodButton :is="NuxtLink" class="flex-1 !h-20" size="l" variant="contained" to="/users" background="var(--bg-indigo-600)" icon-left="group" label="Nutzer" />
                     <IodButton :is="NuxtLink" class="flex-1 !h-20" size="l" variant="contained" to="/roles" background="var(--bg-indigo-600)" icon-left="badge" label="Rolle" />
                     <IodButton :is="NuxtLink" class="flex-1 !h-20" size="l" variant="contained" to="/events" background="var(--bg-emerald-600)" icon-left="local_activity" label="Event" />
-                </div>
+                </div> -->
             </div>
         </HeCard>
     </NuxtLayout>
