@@ -136,7 +136,7 @@
         
 
 
-        <IodPopup ref="columnPopup" title="Spalten anpassen" blur="0" backdrop-color="#00000020" max-width="400px" placement="right">
+        <IodPopup ref="columnPopup" title="Spalten anpassen" blur="0" backdrop-color="#00000040" max-width="400px" placement="right">
             <div class="customization-wrapper">
                 <Container orientation="vertical" lock-axis="y" @drop="onDrop">
                     <Draggable v-for="columnSetting in columnSettings" :key="columnSetting.name">

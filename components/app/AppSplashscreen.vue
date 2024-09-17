@@ -1,7 +1,7 @@
 <template>
     <div class="splashscreen" :class="splashscreen.status">
         <div class="splashscreen-logo">
-            <img src="/images/app/logo.svg" alt="Logo">
+            <AppLogo />
             <IodLoader class="spinner" :thickness=".8"/>
         </div>
     </div>
@@ -39,7 +39,7 @@
 
         &.finished
             .splashscreen-logo
-                img
+                svg
                     transform: scale(.8)
 
                 .spinner
@@ -49,8 +49,9 @@
             width: 200px
             height: 200px
             position: relative
+            color: var(--color-text)
 
-            img
+            svg
                 position: absolute
                 top: 0
                 left: 0

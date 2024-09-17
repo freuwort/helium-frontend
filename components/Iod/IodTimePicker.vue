@@ -157,11 +157,12 @@
             height: 7rem
             font-family: var(--font-mono)
             font-size: 1.5rem
-            color: var(--color-background)
-            background-color: var(--color-text)
+            color: #ffffff
+            background-color: #1e293b
             background-image: url('/images/app/banner_pattern_light.png')
             background-size: auto 150%
             background-position: top center
+            border-bottom: 1px solid var(--color-border)
             user-select: none
             border-top-left-radius: inherit
             border-top-right-radius: inherit
@@ -178,7 +179,7 @@
             align-items: center
             padding: 1rem
             gap: 1rem
-            border-top: 1px solid var(--color-background-soft)
+            border-top: 1px solid var(--color-border)
             border-bottom-left-radius: inherit
             border-bottom-right-radius: inherit
 </style>

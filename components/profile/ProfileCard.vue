@@ -13,7 +13,7 @@
         </div>
 
         <div class="profile-image">
-            <img :src="avatar" :alt="title">
+            <img :src="avatar" :alt="title" v-if="avatar">
             <IodIconButton v-if="allowAvatarUpload" class="overlay-button" type="button" size="xl" corner="pill" icon="upload" v-tooltip="avatarTooltip" @click="$emit('upload:avatar')" />
         </div>
 
@@ -32,7 +32,7 @@
         },
         avatar: {
             type: String,
-            default: '/images/app/default/user_image.jpg',
+            default: null,
         },
         title: {
             type: String,

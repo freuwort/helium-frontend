@@ -3,7 +3,7 @@
         <div class="background"></div>
         <div class="inner">
             <div class="sidebar">
-                <img src="/images/app/logo_white.svg" alt="Helium Logo">
+                <AppLogo />
                 <h2>Die ersten Schritte<br> zu Ihrer Helium Cloud</h2>
                 <p>Lassen Sie uns starten,<br>Ihre Helium Cloud einzurichten!</p>
                 <p class="!mt-2">Alle Einstellungen lassen<br>sich später noch ändern.</p>
@@ -373,10 +373,11 @@
                 background-position: center 0
                 color: var(--color-background-soft)
 
-                > img
+                > svg
                     height: 2.5rem
                     margin-block: 1.5rem
                     margin-right: auto
+                    color: var(--color-background)
 
                 > h2
                     color: var(--color-background)

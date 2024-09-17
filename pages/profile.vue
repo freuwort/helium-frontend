@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Ihr Profil" color="#363E40">
+    <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Ihr Profil">
         <HeCard>
             <ProfileCard
                 class="rounded-t-2xl border-b"
@@ -12,13 +12,13 @@
 
             <HeFlex padding="1.5rem 1rem" gap="1rem" align-y="flex-start" class="flex-1 border-b">
                 <SettingsRow title="Sprache">
-                    <IodSelect class="flex-1" label="Sprache" v-model="form.language" :options="options_language" @update:modelValue="save()" />
+                    <IodSelect class="flex-1" label="Sprache" :modelValue="language" @update:modelValue="auth.setSettings('ui_language', $event, 'db')" :options="options_language"/>
                 </SettingsRow>
                 <SettingsRow title="Zeitzone">
-                    <IodSelect class="flex-1" label="Zeitzone" v-model="form.timezone" :options="options_timezone" @update:modelValue="save()" />
+                    <IodSelect class="flex-1" label="Zeitzone" :modelValue="timezone" @update:modelValue="auth.setSettings('ui_timezone', $event, 'db')" :options="options_timezone"/>
                 </SettingsRow>
                 <SettingsRow title="Theme">
-                    <IodSelect class="flex-1" label="Theme" v-model="form.theme" :options="options_theme" @update:modelValue="save()" />
+                    <IodSelect class="flex-1" label="Theme" :modelValue="theme" @update:modelValue="auth.setSettings('ui_theme', $event, 'db')" :options="options_theme"/>
                 </SettingsRow>
             </HeFlex>
             
@@ -199,11 +199,9 @@
 
 
     // START: Personal settings
-    const form = useForm({
-        language: auth.user?.settings?.language ?? 'de',
-        timezone: auth.user?.settings?.timezone ?? 'Europe/Berlin',
-        theme: auth.user?.settings?.theme ?? 'light',
-    })
+    const language = computed(() => auth.user?.settings?.ui_language ?? 'de')
+    const timezone = computed(() => auth.user?.settings?.ui_timezone ?? 'Europe/Berlin')
+    const theme = computed(() => auth.user?.settings?.ui_theme ?? 'light')
 
     const options_language = [
         { value: 'de', text: 'Deutsch' },
@@ -220,19 +218,8 @@
     const options_theme = [
         { value: 'light', text: 'Hell' },
         { value: 'dark', text: 'Dunkel' },
+        { value: 'system', text: 'System' },
     ]
-
-    function save()
-    {
-        if (form.language === auth.user?.settings.language && form.timezone === auth.user?.settings.timezone && form.theme === auth.user?.settings.theme) return
-
-        form.patch('/api/user/settings', {
-            onSuccess() {
-                toast.success('Einstellung gespeichert')
-                auth.fetchSession()
-            },
-        })
-    }
     // END: Personal settings
 
 
@@ -260,7 +247,7 @@
     // START: 2FA
     function setDefaultTwoFactorMethod(method: string)
     {
-        useForm({}).put(`/api/user/two-factor/set-default/${method}`, {
+        useForm({}).put(`/api/user/two-factor/default/${method}`, {
             onSuccess() {
                 auth.fetchSession()
             }

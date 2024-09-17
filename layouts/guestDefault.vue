@@ -53,11 +53,12 @@
         min-height: 100%
 
     header
-        background-color: var(--color-text)
+        background-color: #1e293b
         background-image: url('/images/app/banner_pattern_light.png')
         background-size: auto 100%
         background-position: top center
-        color: var(--color-background)
+        color: #ffffff
+        border-bottom: 1px solid var(--color-border)
         min-height: 400px
         padding-bottom: 4.5rem
         margin-bottom: -4.5rem

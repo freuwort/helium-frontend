@@ -1,9 +1,9 @@
 <template>
     <header>
-        <HeFlex horizontal class="main-bar">
+        <HeFlex horizontal class="main-bar border-b">
             <VDropdown placement="bottom-start" :distance="-1">
                 <AppHeaderItem @dblclick="navigateTo('/')" v-tooltip="'Home'">
-                    <img class="h-8" src="/images/app/logo.svg" alt="logo" />
+                    <AppLogo class="!w-8 !h-8" style="color: var(--color-text)"/>
                 </AppHeaderItem>
 
                 <template #popper>
@@ -66,6 +66,7 @@
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
+                        <ContextMenuItem to="/forms/submissions" show-chevron color="#06B6D4" icon="inbox">Einsendungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -139,6 +140,12 @@
                 <ProfileChip v-if="auth.user" :title="auth.user.name ?? auth.user.fullname ?? ''" :subtitle="auth.user.username ?? ''" :image="auth.user.avatar" align="right" v-tooltip="'Profil'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
+                        <div class="flex gap-1 px-1">
+                            <IodIconButton class="flex-1" :variant="theme === 'light'? 'contained' : 'text'" icon="light_mode" v-tooltip="'Theme: Hell'" @click="auth.setSettings('ui_theme', 'light', 'db')"/>
+                            <IodIconButton class="flex-1" :variant="theme === 'dark'? 'contained' : 'text'" icon="dark_mode" v-tooltip="'Theme: Dunkel'" @click="auth.setSettings('ui_theme', 'dark', 'db')"/>
+                            <IodIconButton class="flex-1" :variant="theme === 'system'? 'contained' : 'text'" icon="brightness_auto" v-tooltip="'Theme: System'" @click="auth.setSettings('ui_theme', 'system', 'db')"/>
+                        </div>
+                        <ContextMenuDivider />
                         <ContextMenuItem to="/profile" show-chevron icon="person">Profil</ContextMenuItem>
                         <ContextMenuItem is="button" show-chevron color="var(--color-error)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
                         <ContextMenuDivider />
@@ -153,7 +160,10 @@
 <script lang="ts" setup>
     const auth = useAuthStore()
     const devMode = useDevMode()
-    const NuxtLink = defineNuxtLink({})
+    
+    const theme = computed(() => {
+        return auth.user?.settings.ui_theme ?? 'system'
+    })
 </script>
 
 <style lang="sass" scoped>
@@ -162,7 +172,6 @@
 
     .main-bar
         background-color: var(--color-background)
-        border-bottom: 1px solid var(--color-background-soft)
         box-shadow: var(--shadow-s)
 
         .profile-chip

@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" pageTitle="Startseite">
+    <NuxtLayout name="auth-default" :scope pageTitle="Startseite">
         <HeCard>
             <div class="flex flex-col gap-6 p-6">
                 <div class="flex items-center">
@@ -22,6 +22,7 @@
         middleware: ['auth', '2fa-verified'],
     })
 
+    const scope = 'view_admin_home_show'
     const NuxtLink = defineNuxtLink({})
 </script>
 
