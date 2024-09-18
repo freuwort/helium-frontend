@@ -1,7 +1,7 @@
 <template>
     <IodPopup ref="popup" title="Importieren">
         <HeFlex is="form" padding="1.5rem" gap="1.5rem" @submit.prevent="startImport()">
-            <div class="flex items-center gap-2 p-2 bg-background-soft rounded-lg">
+            <div class="flex items-center gap-2 p-2 bg-background-soft rounded-full">
                 <IodButton
                     type="button"
                     class="!normal-case !tracking-normal !text-sm !h-8"
@@ -16,11 +16,27 @@
                     @click="select()"
                 />
                 <HeSpacer />
-                <IodToggle  class="!h-8 !min-h-8 w-32 !rounded-full bg-zinc-300 border border-zinc-400" prepend-label="Kopfzeile" v-model="hasHeader"/>
-                <IodInput class="!h-8 !min-h-8 w-32 !rounded-full !bg-zinc-300 border border-zinc-400" prefix="Trenner&nbsp;»&nbsp;" v-model="delimiter" />
+                <IodButton
+                    type="button"
+                    class="!normal-case !tracking-normal !text-sm !h-8"
+                    size="s"
+                    corner="pill"
+                    variant="text"
+                    border
+                    background="var(--bg-zinc-300)"
+                    label="Kopfzeile"
+                    :icon-right="hasHeader ? 'check_box' : 'check_box_outline_blank'"
+                    @click="hasHeader = !hasHeader"
+                />
+                <IodInput class="!h-8 !min-h-8 w-32 !rounded-full !bg-transparent !bg-zinc-300 border border-zinc-400 !text-zinc-900" prefix="Trenner&nbsp;»&nbsp;" v-model="delimiter" />
             </div>
 
             <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-4">
+                    <h6 class="flex-1">Wert in der Datenbank</h6>
+                    <span class="w-6"></span>
+                    <h6 class="flex-1">Spalte in der Datei</h6>
+                </div>
                 <div class="flex items-center gap-4" v-for="value in mapping">
                     <IodInput class="flex-1" :modelValue="value.label" readonly disabled/>
                     <IodIcon icon="double_arrow" />
@@ -28,7 +44,7 @@
                 </div>
             </div>
 
-            <IodButton class="w-full" type="submit" size="l" label="Importieren"/>
+            <IodButton class="ml-auto" type="submit" size="l" corner="pill" icon-right="send" label="Importieren"/>
         </HeFlex>
 
         <input class="hidden" ref="input" type="file" @change="selected()" accept=".csv">

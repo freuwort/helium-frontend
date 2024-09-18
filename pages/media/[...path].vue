@@ -28,11 +28,11 @@
                             </template>
                         </VDropdown>
 
-                        <HeDivider vertical class="h-6 mx-3 !border-slate-300" />
+                        <HeDivider vertical class="h-6 mx-3 focused" />
                     </template>
 
                     <template #right>
-                        <HeDivider vertical class="h-6 mx-3 !border-slate-300" />
+                        <HeDivider vertical class="h-6 mx-3 focused" />
                         <IodIconButton type="button" variant="text" corner="pill" icon="delete" size="s" color-preset="error" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
                     </template>
                 </MediaBreadcrumbs>

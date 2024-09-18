@@ -25,7 +25,7 @@
         </div>
         <div class="overlay" v-show="showContextMenu">
             <VDropdown placement="bottom">
-                <IodIconButton class="more-button" type="button" variant="filled" corner="pill" icon="more_vert" size="s" background="white" color="var(--color-text)" v-tooltip="'Mehr'"/>
+                <IodIconButton class="more-button" type="button" variant="filled" corner="pill" icon="more_vert" size="s" background="#00000099" color="#ffffff" v-tooltip="'Mehr'"/>
                 <template #popper>
                     <ContextMenu class="min-w-15">
                         <ContextMenuItem is="a" icon="open_in_new" :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">In neuem Tab öffnen</ContextMenuItem>
@@ -267,8 +267,8 @@
                     line-height: 1
                     font-weight: 500
                     padding: .15rem .6rem
-                    background: rgb(#000000, .6)
-                    color: var(--color-background)
+                    background: #00000099
+                    color: #ffffff
                     border-radius: var(--radius-xl)
                     backdrop-filter: blur(10px)
 

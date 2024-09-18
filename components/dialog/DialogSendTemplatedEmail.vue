@@ -4,7 +4,7 @@
             <div class="flex flex-col gap-2">
                 <IodInput prefix="Empfänger:&nbsp;" placeholder="vorausgewählt" readonly>
                     <template #right>
-                        <IodIconButton type="button" size="s" :icon="expanded ? 'expand_less' : 'expand_more'" variant="text" v-tooltip="'CC und BCC einblenden'" @click="expanded = !expanded"/>
+                        <IodIconButton type="button" size="s" corner="pill" :icon="expanded ? 'expand_less' : 'expand_more'" variant="text" v-tooltip="'CC und BCC einblenden'" @click="expanded = !expanded"/>
                     </template>
                 </IodInput>
                 <IodInput prefix="CC:&nbsp;" v-model="form.cc" v-show="expanded"/>
@@ -12,7 +12,7 @@
                 <IodInput prefix="Betreff:&nbsp;" v-model="form.subject">
                     <template #right>
                         <VDropdown placement="bottom-end">
-                            <IodIconButton type="button" size="s" icon="data_object" variant="text" v-tooltip="'Vorlage auswählen'"/>
+                            <IodIconButton type="button" size="s" corner="pill" icon="data_object" variant="text" v-tooltip="'Vorlage auswählen'"/>
                             
                             <template #popper>
                                 <ContextMenu class="min-w-64">
@@ -24,15 +24,15 @@
                 </IodInput>
                 <IodInput prefix="Anhänge:&nbsp;" :modelValue="form.attachments.join(', ')" placeholder="keine" readonly>
                     <template #right>
-                        <IodIconButton type="button" size="s" variant="text" icon="close" v-tooltip="'Anhänge entfernen'" @click="form.attachments = []" v-show="form.attachments.length"/>
-                        <IodIconButton type="button" size="s" variant="text" icon="attach_file" v-tooltip="'Anhänge auswählen'" @click="filePicker.open()"/>
+                        <IodIconButton type="button" size="s" variant="text" corner="pill" icon="close" v-tooltip="'Anhänge entfernen'" @click="form.attachments = []" v-show="form.attachments.length"/>
+                        <IodIconButton type="button" size="s" variant="text" corner="pill" icon="attach_file" v-tooltip="'Anhänge auswählen'" @click="filePicker.open()"/>
                     </template>
                 </IodInput>
             </div>
             
             <TextEditor v-model="form.message" label="Nachricht" />
             
-            <IodButton class="w-full" type="submit" size="l" label="senden"/>
+            <IodButton class="ml-auto" type="submit" size="l" corner="pill" icon-right="send" label="senden"/>
         </HeFlex>
     </IodPopup>
 

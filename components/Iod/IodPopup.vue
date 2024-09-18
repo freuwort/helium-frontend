@@ -187,11 +187,13 @@
             .popup-inner-wrapper
                 margin: 0 auto 0 0
                 transform: translateX(-100%)
+                border-right: 1px solid var(--color-border)
 
         &.popup-placement-right
             .popup-inner-wrapper
                 margin: 0 0 0 auto
                 transform: translateX(100%)
+                border-left: 1px solid var(--color-border)
 
         &.popup-placement-center
             overflow-y: hidden
@@ -208,6 +210,7 @@
 
                 .popup-content
                     background: var(--local-color-modal)
+                    border: 1px solid var(--color-border)
                     border-radius: var(--radius-l)
 
         &.open
