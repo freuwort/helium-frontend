@@ -3,16 +3,16 @@
         <HeFlex is="form" padding="1.5rem" gap=".5rem" @submit.prevent="share">
             <ErrorAlert :errors="form.errors" />
             
-            <IodButtonGroup>
-                <IodButton type="button" size="l" background="var(--color-text-soft)" :variant="form.inherit_access ? 'filled' : 'contained'" label="Wie Überordner" v-tooltip="'Alle Freigaben des überliegenden Ordners werden übernommen'" @click="form.inherit_access = true"/>
-                <IodButton type="button" size="l" background="var(--color-text-soft)" :variant="!form.inherit_access ? 'filled' : 'contained'" label="Angebasst" v-tooltip="'Freigaben können individuell angepasst werden'" @click="form.inherit_access = false"/>
-            </IodButtonGroup>
+            <div class="flex rounded-full p-1 gap-2 bg-background-soft">
+                <IodButton type="button" class="flex-1" corner="pill" :variant="form.inherit_access ? 'contained' : 'text'" label="Wie Überordner" v-tooltip="'Alle Freigaben des überliegenden Ordners werden übernommen'" @click="form.inherit_access = true"/>
+                <IodButton type="button" class="flex-1" corner="pill" :variant="!form.inherit_access ? 'contained' : 'text'" label="Angebasst" v-tooltip="'Freigaben können individuell angepasst werden'" @click="form.inherit_access = false"/>
+            </div>
 
             <HeDivider class="my-4"/>
 
             <template v-if="!form.inherit_access">
-                <VDropdown :shown="!!searchForm.search.length && !!searchForm.results.length" :triggers="[]" :auto-hide="false">
-                    <IodInput class="mb-2" type="search" placeholder="Nutzer / Rolle suchen" v-model="searchForm.search" @update:modelValue="search()" />
+                <VDropdown :shown="!!searchForm.search.length && !!searchForm.results.length" :triggers="[]" :auto-hide="false" placement="bottom-start">
+                    <IodInput type="search" placeholder="Nutzer / Rolle suchen" v-model="searchForm.search" @update:modelValue="search()" />
 
                     <template #popper>
                         <HeFlex align-y="flex-start" padding="1rem 0" class="min-w-80 max-h-80 small-scrollbar">
@@ -20,33 +20,32 @@
                         </HeFlex>
                     </template>
                 </VDropdown>
+                <div class="h-2"></div>
 
-                <ProfileChip is="div" class="h-12 !p-2 flex-none" title="Jeder mit dem Link" :subtitle="localizePermission(form.public_access)" icon="public">
-                    <HeFlex horizontal gap=".5rem">
-                        <IodIconButton type="button" size="s" icon="block" v-tooltip="localizePermission(null)" :variant="form.public_access === null ? 'filled' : 'contained'" color-preset="error" @click="form.public_access = null"/>
-                        <IodButtonGroup>
-                            <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="visibility" v-tooltip="localizePermission('read')" :variant="form.public_access === 'read' ? 'filled' : 'contained'" @click="form.public_access = 'read'"/>
-                            <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="edit" v-tooltip="localizePermission('write')" :variant="form.public_access === 'write' ? 'filled' : 'contained'" @click="form.public_access = 'write'"/>
-                            <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="shield_person" v-tooltip="localizePermission('admin')" :variant="form.public_access === 'admin' ? 'filled' : 'contained'" @click="form.public_access = 'admin'"/>
-                        </IodButtonGroup>
-                    </HeFlex>
+                <ProfileChip is="div" class="h-12 !rounded-full !p-2 bg-background-soft flex-none" title="Jeder mit dem Link" :subtitle="localizePermission(form.public_access)" icon="public">
+                    <div class="flex items-center gap-1">
+                        <IodIconButton type="button" size="s" corner="pill" icon="visibility" v-tooltip="localizePermission('read')" :variant="form.public_access === 'read' ? 'filled' : 'text'" @click="form.public_access = 'read'"/>
+                        <IodIconButton type="button" size="s" corner="pill" icon="edit" v-tooltip="localizePermission('write')" :variant="form.public_access === 'write' ? 'filled' : 'text'" @click="form.public_access = 'write'"/>
+                        <IodIconButton type="button" size="s" corner="pill" icon="shield_person" v-tooltip="localizePermission('admin')" :variant="form.public_access === 'admin' ? 'filled' : 'text'" @click="form.public_access = 'admin'"/>
+                        <HeDivider vertical class="h-6 mx-1 focused"/>
+                        <IodIconButton type="button" size="s" corner="pill" icon="block" v-tooltip="localizePermission(null)" :variant="form.public_access === null ? 'filled' : 'contained'" color-preset="error" @click="form.public_access = null"/>
+                    </div>
                 </ProfileChip>
 
-                <ProfileChip is="div" class="h-12 !p-2 flex-none" v-for="access in form.access" :title="localizeModelType(access.permissible_type) +' » ' + access.title" :subtitle="localizePermission(access.permission)" :image="access.image" :icon="access.icon" :color="access.color">
-                    <HeFlex horizontal gap=".5rem">
-                        <IodIconButton type="button" size="s" icon="close" v-tooltip="'Entfernen'" variant="contained" color-preset="error" @click.stop="removeShare(access)"/>
-                        <IodButtonGroup>
-                            <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="visibility" v-tooltip="localizePermission('read')" :variant="access.permission === 'read' ? 'filled' : 'contained'" @click="access.permission = 'read'"/>
-                            <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="edit" v-tooltip="localizePermission('write')" :variant="access.permission === 'write' ? 'filled' : 'contained'" @click="access.permission = 'write'"/>
-                            <IodIconButton type="button" size="s" background="var(--color-text-soft)" icon="shield_person" v-tooltip="localizePermission('admin')" :variant="access.permission === 'admin' ? 'filled' : 'contained'" @click="access.permission = 'admin'"/>
-                        </IodButtonGroup>
-                    </HeFlex>
+                <ProfileChip is="div" class="h-12 !rounded-full !p-2 bg-background-soft flex-none" v-for="access in form.access" :title="localizeModelType(access.permissible_type) +' » ' + access.title" :subtitle="localizePermission(access.permission)" :image="access.image" :icon="access.icon" :color="access.color">
+                    <div class="flex items-center gap-1">
+                        <IodIconButton type="button" size="s" corner="pill" icon="visibility" v-tooltip="localizePermission('read')" :variant="access.permission === 'read' ? 'filled' : 'text'" @click="access.permission = 'read'"/>
+                        <IodIconButton type="button" size="s" corner="pill" icon="edit" v-tooltip="localizePermission('write')" :variant="access.permission === 'write' ? 'filled' : 'text'" @click="access.permission = 'write'"/>
+                        <IodIconButton type="button" size="s" corner="pill" icon="shield_person" v-tooltip="localizePermission('admin')" :variant="access.permission === 'admin' ? 'filled' : 'text'" @click="access.permission = 'admin'"/>
+                        <HeDivider vertical class="h-6 mx-1 focused"/>
+                        <IodIconButton type="button" size="s" corner="pill" icon="close" v-tooltip="'Entfernen'" variant="contained" color-preset="error" @click.stop="removeShare(access)"/>
+                    </div>
                 </ProfileChip>
 
                 <HeDivider class="my-4"/>
             </template>
             
-            <IodButton type="submit" size="l" variant="filled" label="Freigabe übernehmen" :loading="form.processing" />
+            <IodButton class="ml-auto" type="submit" size="l" corner="pill" icon-right="send" label="Freigeben" :loading="form.processing"/>
         </HeFlex>
     </IodPopup>
 </template>
@@ -93,7 +92,10 @@
 
     function share() {
         form.patch('/api/media/share', {
-            onSuccess() { emits('saved') }
+            onSuccess() {
+                emits('saved')
+                popup.value.close()
+            }
         })
     }
 

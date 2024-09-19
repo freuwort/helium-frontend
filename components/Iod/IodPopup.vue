@@ -199,7 +199,7 @@
             overflow-y: hidden
 
             .popup-inner-wrapper
-                margin: 6rem auto
+                margin: 4rem auto
                 width: calc(100% - 2rem)
                 transform-origin: center center -200px
                 transform: rotateX(-10deg)

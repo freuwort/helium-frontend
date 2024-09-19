@@ -1,6 +1,6 @@
 <template>
     <IodPopup ref="popup" title="Importieren">
-        <HeFlex is="form" padding="1.5rem" gap="1.5rem" @submit.prevent="startImport()">
+        <HeFlex is="form" padding="1.5rem" gap=".5rem" @submit.prevent="startImport()">
             <div class="flex items-center gap-2 p-2 bg-background-soft rounded-full">
                 <IodButton
                     type="button"
@@ -11,38 +11,24 @@
                     icon-left="table_chart"
                     border
                     background="var(--bg-emerald-600)"
-                    :label="filename + ' (' + inputData.length + ')'"
-                    v-tooltip="'Datei: ' + filename + ' Zeilen: ' + inputData.length"
+                    :label="`${filename} (${inputData.length})`"
+                    v-tooltip="`Datei: ${filename} Zeilen: ${inputData.length}`"
                     @click="select()"
                 />
                 <HeSpacer />
-                <IodButton
-                    type="button"
-                    class="!normal-case !tracking-normal !text-sm !h-8"
-                    size="s"
-                    corner="pill"
-                    variant="text"
-                    border
-                    background="var(--bg-zinc-300)"
-                    label="Kopfzeile"
-                    :icon-right="hasHeader ? 'check_box' : 'check_box_outline_blank'"
-                    @click="hasHeader = !hasHeader"
-                />
-                <IodInput class="!h-8 !min-h-8 w-32 !rounded-full !bg-transparent !bg-zinc-300 border border-zinc-400 !text-zinc-900" prefix="Trenner&nbsp;»&nbsp;" v-model="delimiter" />
+                <IodToggle class="!h-8 !min-h-0 !rounded-full border !p-0 !px-4" style="border-color: var(--color-border-focused);" prepend-label="Kopfzeile" v-model="hasHeader"/>
+                <IodInput class="!h-8 !min-h-0 !w-32 !rounded-full border" style="border-color: var(--color-border-focused);" prefix="Trenner&nbsp;" v-model="delimiter"/>
             </div>
 
-            <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-4">
-                    <h6 class="flex-1">Wert in der Datenbank</h6>
-                    <span class="w-6"></span>
-                    <h6 class="flex-1">Spalte in der Datei</h6>
-                </div>
-                <div class="flex items-center gap-4" v-for="value in mapping">
-                    <IodInput class="flex-1" :modelValue="value.label" readonly disabled/>
-                    <IodIcon icon="double_arrow" />
-                    <IodSelect class="flex-1" label="Wert" :options="headerOptions" v-model="value.header"/>
-                </div>
+            <HeDivider class="my-4"/>
+
+            <div class="flex items-center gap-4" v-for="value in mapping">
+                <IodInput class="flex-1" :modelValue="value.label" readonly disabled/>
+                <IodIcon icon="double_arrow" />
+                <IodSelect class="flex-1" label="Wert" :options="headerOptions" v-model="value.header"/>
             </div>
+
+            <HeDivider class="my-4"/>
 
             <IodButton class="ml-auto" type="submit" size="l" corner="pill" icon-right="send" label="Importieren"/>
         </HeFlex>

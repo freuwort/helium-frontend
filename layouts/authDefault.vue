@@ -162,7 +162,7 @@
             border-bottom: 1px solid var(--color-border)
             min-height: 300px
             padding-bottom: 4.5rem
-            margin-bottom: -4.5rem
+            margin-bottom: calc(-4.5rem - 2px)
             display: flex
             flex-direction: column
             justify-content: center

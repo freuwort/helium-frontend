@@ -55,7 +55,7 @@
             aspect-ratio: 1
             object-fit: cover
             border-radius: 100vh
-            box-shadow: 0 0 0 2px var(--local-color-background)
+            // box-shadow: 0 0 0 2px var(--local-color-background)
             margin-left: var(--local-inset)
             background: var(--color-background)
             user-select: none

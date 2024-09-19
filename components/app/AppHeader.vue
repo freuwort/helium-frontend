@@ -141,9 +141,9 @@
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <div class="flex gap-1 px-1">
-                            <IodIconButton class="flex-1" :variant="theme === 'light'? 'contained' : 'text'" icon="light_mode" v-tooltip="'Theme: Hell'" @click="auth.setSettings('ui_theme', 'light', 'db')"/>
-                            <IodIconButton class="flex-1" :variant="theme === 'dark'? 'contained' : 'text'" icon="dark_mode" v-tooltip="'Theme: Dunkel'" @click="auth.setSettings('ui_theme', 'dark', 'db')"/>
-                            <IodIconButton class="flex-1" :variant="theme === 'system'? 'contained' : 'text'" icon="brightness_auto" v-tooltip="'Theme: System'" @click="auth.setSettings('ui_theme', 'system', 'db')"/>
+                            <IodIconButton class="flex-1" corner="pill" :variant="theme === 'light'? 'contained' : 'text'" icon="light_mode" v-tooltip="'Theme: Hell'" @click="auth.setSettings('ui_theme', 'light', 'db')"/>
+                            <IodIconButton class="flex-1" corner="pill" :variant="theme === 'dark'? 'contained' : 'text'" icon="dark_mode" v-tooltip="'Theme: Dunkel'" @click="auth.setSettings('ui_theme', 'dark', 'db')"/>
+                            <IodIconButton class="flex-1" corner="pill" :variant="theme === 'system'? 'contained' : 'text'" icon="brightness_auto" v-tooltip="'Theme: System'" @click="auth.setSettings('ui_theme', 'system', 'db')"/>
                         </div>
                         <ContextMenuDivider />
                         <ContextMenuItem to="/profile" show-chevron icon="person">Profil</ContextMenuItem>

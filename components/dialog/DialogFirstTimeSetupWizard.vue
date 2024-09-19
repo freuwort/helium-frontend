@@ -71,6 +71,7 @@
                                         :title="role.name"
                                         :subtitle="role.permissions.join(', ')"
                                         :icon="role.icon"
+                                        :color="role.color"
                                     />
                                 </div>
                                     
@@ -84,6 +85,7 @@
                                         :title="role.name"
                                         :subtitle="role.permissions.join(', ') || 'Keine Berechtigungen'"
                                         :icon="role.icon"
+                                        :color="role.color"
                                         :class="{ '!bg-blue-100 !border-blue-500 ml-4': selectedRoles.includes(role.name) }"
                                         @click="toggleRole(role.name)"
                                     />
@@ -239,19 +241,19 @@
 
     // START: Roles step
     const requiredRoles = ref([
-        {name: 'Admin', icon: 'shield', color: null, permissions: ['system.admin']},
+        {name: 'Admin', icon: 'shield', color: '#3b82f6', permissions: ['system.admin']},
     ])
 
     const optionalRoles = ref([
-        {name: 'Kunde', icon: 'shopping_cart', color: null, permissions: []},
-        {name: 'Lieferant', icon: 'shopping_cart', color: null, permissions: []},
-        {name: 'Personal', icon: 'work', color: null, permissions: []},
-        {name: 'Buchhaltung', icon: 'work', color: null, permissions: []},
-        {name: 'Verwaltung', icon: 'work', color: null, permissions: []},
-        {name: 'Einkauf', icon: 'work', color: null, permissions: []},
-        {name: 'Vertrieb', icon: 'work', color: null, permissions: []},
-        {name: 'Support', icon: 'work', color: null, permissions: []},
-        {name: 'Logistik', icon: 'work', color: null, permissions: []},
+        {name: 'Kunde', icon: 'shopping_cart', color: '#3b82f6', permissions: []},
+        {name: 'Lieferant', icon: 'shopping_cart', color: '#3b82f6', permissions: []},
+        {name: 'Personal', icon: 'work', color: '#3b82f6', permissions: []},
+        {name: 'Buchhaltung', icon: 'work', color: '#3b82f6', permissions: []},
+        {name: 'Verwaltung', icon: 'work', color: '#3b82f6', permissions: []},
+        {name: 'Einkauf', icon: 'work', color: '#3b82f6', permissions: []},
+        {name: 'Vertrieb', icon: 'work', color: '#3b82f6', permissions: []},
+        {name: 'Support', icon: 'work', color: '#3b82f6', permissions: []},
+        {name: 'Logistik', icon: 'work', color: '#3b82f6', permissions: []},
     ])
 
     const selectedRoles = ref([] as string[])

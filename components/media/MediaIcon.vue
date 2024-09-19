@@ -14,8 +14,8 @@
     })
 
     const dict = {
-        'file': { color: '#27272a', icon: 'widgets' },
-        'directory': { color: '#27272a', icon: 'category' },
+        'file': { color: '#a855f7', icon: 'widgets' },
+        'directory': { color: '#a855f7', icon: 'category' },
 
         'image': { color: '#0ea5e9', icon: 'landscape' },
         'image/svg+xml': { color: '#ec4899', icon: 'polyline' },

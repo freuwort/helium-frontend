@@ -10,7 +10,7 @@
                             <IodIconButton type="button" :variant="!!search ? 'filled' : 'text'" corner="pill" icon="search" size="s" v-tooltip="'Im Ordner suchen'" @dblclick="search = ''"/>
                             
                             <template #popper>
-                                <IodInput class="!bg-white" type="search" v-model="search" placeholder="Im Ordner suchen..."/>
+                                <IodInput class="!bg-transparent" type="search" v-model="search" placeholder="Im Ordner suchen..."/>
                             </template>
                         </VDropdown>
                         
