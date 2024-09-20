@@ -1,9 +1,9 @@
 <template>
     <div class="page-layout">
-        <header>
+        <header class="min-h-64 sm:min-h-72 md:min-h-80 lg:min-h-96">
             <ProfileImage
                 v-if="domain.settings && domain.settings?.company_logo"
-                class="h-32"
+                class="h-24 sm:h-28 md:h-32 lg:h-36"
                 aspect="2"
                 :alt="domain.settings?.company_name"
                 :src="domain.settings.company_logo"
@@ -16,12 +16,14 @@
         </main>
         <footer v-if="domain.settings?.company_legalname">
             <HeLimiter size="form">
-                <HeFlex horizontal gap="1rem">
+                <div class="flex flex-wrap gap-y-0 gap-x-2 py-4 px-4 sm:gap-x-4">
                     <span>© {{ $dayjs().year() }} {{ domain.settings?.company_legalname }}</span>
-                    <HeSpacer />
+                    <HeSpacer class="hidden sm:block"/>
+                    <small class="inline sm:hidden">·</small>
                     <a href="/legal" target="_blank">Impressum</a>
+                    <span class="inline sm:hidden">·</span>
                     <a href="/privacy" target="_blank">Datenschutz</a>
-                </HeFlex>
+                </div>
             </HeLimiter>
         </footer>
     </div>
@@ -59,7 +61,6 @@
         background-position: top center
         color: #ffffff
         border-bottom: 1px solid var(--color-border)
-        min-height: 400px
         padding-bottom: 4.5rem
         margin-bottom: -4.5rem
         display: flex

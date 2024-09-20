@@ -16,7 +16,7 @@
                         <ContextMenuItem to="/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
                         <ContextMenuItem v-if="devMode" to="/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
                         <ContextMenuItem v-if="devMode" to="/screens" show-chevron color="#84cc16" icon="desktop_windows">Screens</ContextMenuItem>
-                        <ContextMenuItem v-if="devMode" to="/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
+                        <ContextMenuItem to="/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
                         <ContextMenuItem v-if="devMode" show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
                         <ContextMenuItem v-if="devMode" show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem>
                         <ContextMenuDivider />
@@ -91,7 +91,7 @@
                 </template>
             </VDropdown>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron color="#F59E0B" icon="note_stack" v-tooltip="'Inhalte'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
