@@ -1,4 +1,14 @@
 export default defineNuxtConfig({
+    vite: {
+        css: {
+            preprocessorOptions: {
+                sass: {
+                    api: 'modern',
+                },
+            },
+        },
+    },
+
     css: [
         '~/assets/css/app.sass'
     ],
@@ -25,8 +35,6 @@ export default defineNuxtConfig({
         plugins: ['relativeTime'],
     },
 
-    compatibilityDate: '2024-07-16',
-
     runtimeConfig: {
         public: {
             backendUrl: `${process.env.BASE_PROTOCOL ?? 'http://'}${process.env.BACKEND_DOMAIN ?? 'localhost:8000'}`,
@@ -37,4 +45,6 @@ export default defineNuxtConfig({
             superAdminPermissions: ['system.super-admin'],
         },
     },
+    
+    compatibilityDate: '2024-07-16',
 })
