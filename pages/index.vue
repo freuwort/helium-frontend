@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
     definePageMeta({
-        middleware: ['auth', '2fa-verified'],
+        middleware: ['auth', '2fa-verified', 'enabled'],
     })
 
     const scope = 'view_admin_home_show'

@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
     definePageMeta({
-        middleware: ['auth', '2fa-verified'],
+        middleware: ['auth', '2fa-verified', 'enabled'],
     })
     
     const debugMode = useDebugMode()

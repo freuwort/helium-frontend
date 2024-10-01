@@ -44,6 +44,7 @@ type User = {
 
 type SessionInfo = {
     authenticated: boolean
+    enabled: boolean
     tfa_enabled: boolean
     tfa_verified: boolean
 }
@@ -56,6 +57,7 @@ export const useAuthStore = defineStore('auth', () => {
         routes: {
             authHome: '/',
             guestHome: '/login',
+            disabledHome: '/disabled',
             register: '/register',
             login: '/login',
             forgotPassword: '/forgot-password',
@@ -83,6 +85,7 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref<User | null>(null)
     const session = ref({
         authenticated: false,
+        enabled: false,
         tfa_enabled: false,
         tfa_verified: false,
     })

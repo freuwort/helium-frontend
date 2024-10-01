@@ -190,7 +190,7 @@
     import { toast } from 'vue3-toastify'
 
     definePageMeta({
-        middleware: ['auth', '2fa-verified'],
+        middleware: ['auth', '2fa-verified', 'enabled'],
     })
     
     const auth = useAuthStore()
