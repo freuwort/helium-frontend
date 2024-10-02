@@ -11,115 +11,68 @@
                     icon-left="table_chart"
                     border
                     background="var(--bg-emerald-600)"
-                    :label="`${filename} (${inputData.length})`"
-                    v-tooltip="`Datei: ${filename} Zeilen: ${inputData.length}`"
+                    :label="`${filename} (${importer.data.length})`"
+                    v-tooltip="`Datei: ${filename} Zeilen: ${importer.data.length}`"
                     @click="select()"
                 />
                 <HeSpacer />
-                <IodToggle class="!h-8 !min-h-0 !rounded-full border !p-0 !px-4" style="border-color: var(--color-border-focused);" prepend-label="Kopfzeile" v-model="hasHeader"/>
-                <IodInput class="!h-8 !min-h-0 !w-32 !rounded-full border" style="border-color: var(--color-border-focused);" prefix="Trenner&nbsp;" v-model="delimiter"/>
+                <IodToggle class="!h-8 !min-h-0 !rounded-full border !p-0 !px-4" style="border-color: var(--color-border-focused);" prepend-label="Kopfzeile" v-model="importer.hasHeader"/>
+                <IodInput class="!h-8 !min-h-0 !w-32 !rounded-full border" style="border-color: var(--color-border-focused);" prefix="Trenner&nbsp;" v-model="importer.delimiter"/>
             </div>
 
             <HeDivider class="my-4"/>
 
-            <div class="flex items-center gap-4" v-for="value in mapping">
-                <IodInput class="flex-1" :modelValue="value.label" readonly disabled/>
-                <IodIcon icon="double_arrow" />
-                <IodSelect class="flex-1" label="Wert" :options="headerOptions" v-model="value.header"/>
-            </div>
+            <template v-for="item in importer.fields">
+                <template v-if="(item instanceof FieldGroup)">
+                    <b class="text-lg mt-2">{{ item.label }}</b>
+                    <div class="flex items-center gap-4" v-for="field in item.fields">
+                        <span class="flex-1">{{ field.label }}</span>
+                        <IodIcon icon="double_arrow" />
+                        <IodSelect class="flex-1" label="Wert" :options="headerOptions" :modelValue="importer.getMapping(field.name)" @update:modelValue="importer.setMapping(field.name, $event)"/>
+                    </div>
+                </template>
+
+                <div class="flex items-center gap-4" v-else>
+                    <span class="flex-1">{{ item.label }}</span>
+                    <IodIcon icon="double_arrow" />
+                    <IodSelect class="flex-1" label="Wert" :options="headerOptions" :modelValue="importer.getMapping(item.name)" @update:modelValue="importer.setMapping(item.name, $event)"/>
+                </div>
+            </template>
 
             <HeDivider class="my-4"/>
 
             <IodButton class="ml-auto" type="submit" size="l" corner="pill" icon-right="send" label="Importieren"/>
         </HeFlex>
 
-        <input class="hidden" ref="input" type="file" @change="selected()" accept=".csv">
+        <input class="hidden" ref="input" type="file" @change="load()" accept=".csv">
     </IodPopup>
 </template>
 
 <script lang="ts" setup>
-    type ExpectedValue = {
-        label: string
-        name: string
-        header?: string
-        default?: any
-    }
+    import { CsvImport, FieldGroup, Field } from '~/classes/import/CsvImport.ts'
 
     const props = defineProps({
-        expectedValues: Object as PropType<ExpectedValue[]>,
+        fields: {
+            type: Array as FieldGroup[]|Field[],
+            default: () => []
+        }
     })
+
+
+
+    const emits = defineEmits(['import'])
+    defineExpose({select, open})
 
 
 
     const popup = ref()
     const input = ref()
     const filename = ref('')
-    const raw = ref('')
-    const delimiter = ref(';')
-    const hasHeader = ref(true)
-    const mapping = ref([] as ExpectedValue[])
-
-
-    const headers = computed(() => {
-        if(!raw.value) return []
-        
-        let lines = raw.value.split('\n')
-
-        if (!hasHeader.value)
-        {
-            return lines[0].split(delimiter.value).map((_, index) => (index+1).toString())
-        }
-
-        return lines[0].split(delimiter.value)
-    })
-
-
-    const headerOptions = computed(() => {
-        let options = headers.value.map((e) => ({text: e, value: e}))
-
-        options.unshift({text: 'Leer lassen', value: ''})
-
-        return options
-    })
-
-
-    const inputData = computed(() => {
-        let csv = raw.value
-        
-        if(!csv) return []
-
-        let lines = csv.split('\n').map(e => e.replaceAll('\r', '')).filter(e => e.length > 0)
-
-        if (hasHeader.value) lines = lines.slice(1)
-
-        return lines.map(line => {
-            let values = line.split(delimiter.value)
-
-            return headers.value.reduce((obj: any, header, index) => {
-                obj[header] = values[index] ?? ''
-                return obj
-            }, {})
-        })
-    })
-
-
-    const outputData = computed(() => {
-        let output = []
-
-        for (const line of inputData.value)
-        {
-            let obj = {} as any
-
-            for (const e of mapping.value)
-            {
-                obj[e.name] = line[e.header as string] ?? e.default
-            }
-
-            output.push(obj)
-        }
-
-        return output
-    })
+    const importer = ref(new CsvImport())
+    const headerOptions = computed(() => [
+        {text: 'Leer lassen', value: ''},
+        ...importer.value.headers.map((e) => ({text: e, value: e}))
+    ])
 
 
     
@@ -128,15 +81,14 @@
         input.value.click()
     }
 
-    function selected()
+    function load()
     {
         let file = input.value.files[0]
+        let reader = new FileReader()
 
         if(!file) return
 
         filename.value = file.name
-
-        let reader = new FileReader()
 
         reader.onload = (e) => {
             open(e.target?.result as string)
@@ -147,36 +99,21 @@
         input.value.value = null
     }
 
-    function open(csv: any)
+    function open(csv: string)
     {
-        raw.value = csv
-
-        buildMapping()
-        
+        importer.value.setData(csv)
         popup.value.open()
-    }
-
-    function buildMapping()
-    {
-        mapping.value = props.expectedValues?.map((e) => ({
-            label: e?.label,
-            name: e?.name,
-            default: e?.default,
-            header: '',
-        })) as ExpectedValue[]
     }
 
     function startImport()
     {
-        emits('import', outputData.value)
-
+        emits('import', importer.value.applyMapping())
         popup.value.close()
     }
 
 
 
-    const emits = defineEmits(['import'])
-    defineExpose({ select, open })
+    watch(props.fields, () => (importer.value.fields = props.fields || []), { immediate: true, deep: true })
 </script>
 
 <style lang="sass" scoped></style>

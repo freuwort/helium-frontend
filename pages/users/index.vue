@@ -19,13 +19,23 @@
                 <template #right>
                     <IodButton type="button" label="Neuer Nutzer" corner="pill" icon-right="add" @click="IPM.open()"/>
                 </template>
+
+                <template #wrapped-right>
+                    <IodIconButton type="button" size="s" corner="pill" variant="text" icon="cloud_upload" @click="importPopup.select()" v-tooltip="'Importieren'"/>
+                    <!-- <IodIconButton type="button" size="s" corner="pill" variant="text" icon="file_save" @click="true" v-tooltip="'Exportieren'"/> -->
+                    <!-- <IodIconButton type="button" size="s" corner="pill" variant="text" icon="stacked_email" @click="sendEmailPopup.open(IPM.keys)" v-tooltip="'Massenmail versenden'"/> -->
+                </template>
             </IodTable>
         </HeCard>
+
+        <DialogCsvImport ref="importPopup" :fields="importFields" @import="importUsers" />
     </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
     import type { FilterSetting } from '~/components/Iod/IodTable.vue'
+    import { FieldGroup, Field } from '~/classes/import/CsvImport.ts'
+    import { toast } from 'vue3-toastify'
     
     definePageMeta({
         middleware: 'auth',
@@ -162,6 +172,42 @@
             ],
         },
     ])
+
+
+
+    // START: Import
+    const importPopup = ref()
+    const importFields = ref([
+        new FieldGroup('Allgemeines', [
+            new Field('username', 'Nutzername'),
+            new Field('email', 'Email'),
+            new Field('password', 'Passwort'),
+            new Field('roles', 'Rollen'),
+        ]),
+        new FieldGroup('Vollständiger Name', [
+            new Field('user_name_salutation', 'Anrede'),
+            new Field('user_name_prefix', 'Titel'),
+            new Field('user_name_firstname', 'Vorname'),
+            new Field('user_name_middlename', 'Zweiter Vorname'),
+            new Field('user_name_lastname', 'Nachname'),
+            new Field('user_name_suffix', 'Suffix'),
+            new Field('user_name_legalname', 'Rechtlicher Name'),
+            new Field('user_name_nickname', 'Spitzname'),
+        ]),
+        new FieldGroup('Organisation', [
+            new Field('user_company_company', 'Organisation'),
+            new Field('user_company_department', 'Abteilung'),
+            new Field('user_company_title', 'Position'),
+        ]),
+    ])
+
+    async function importUsers(data: any[])
+    {
+        await useAxios().post('/api/users/import', {items: data})
+        toast.success('Nutzer wurden importiert')
+        IPM.fetch()
+    }
+    // END: Import
 </script>
 
 <style lang="sass" scoped></style>
