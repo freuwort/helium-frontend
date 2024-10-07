@@ -17,6 +17,7 @@ export class CsvImport
     public hasHeader: boolean = true
     public delimiter: string = ';'
     private _data: string[][] = []
+    private _raw: string|string[][] = ''
 
     constructor(fields: Field[]|FieldGroup[] = [])
     {
@@ -61,7 +62,7 @@ export class CsvImport
 
     public setData(data: string|string[][])
     {
-        this._data = typeof data === 'string' ? this.parse(data) : data     
+        this._data = typeof data === 'string' ? this.parse(data) : data
     }
 
 

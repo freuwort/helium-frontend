@@ -17,7 +17,7 @@
                 />
                 <HeSpacer />
                 <IodToggle class="!h-8 !min-h-0 !rounded-full border !p-0 !px-4" style="border-color: var(--color-border-focused);" prepend-label="Kopfzeile" v-model="importer.hasHeader"/>
-                <IodInput class="!h-8 !min-h-0 !w-32 !rounded-full border" style="border-color: var(--color-border-focused);" prefix="Trenner&nbsp;" v-model="importer.delimiter"/>
+                <IodInput class="!h-8 !min-h-0 !w-32 !rounded-full border" style="border-color: var(--color-border-focused);" prefix="Trenner&nbsp;" v-model="importer.delimiter" @update:modelValue="importer.setData(raw)"/>
             </div>
 
             <HeDivider class="my-4"/>
@@ -68,6 +68,7 @@
     const popup = ref()
     const input = ref()
     const filename = ref('')
+    const raw = ref('')
     const importer = ref(new CsvImport())
     const headerOptions = computed(() => [
         {text: 'Leer lassen', value: ''},
@@ -91,7 +92,8 @@
         filename.value = file.name
 
         reader.onload = (e) => {
-            open(e.target?.result as string)
+            raw.value = e.target?.result as string
+            open(raw.value)
         }
 
         reader.readAsText(file)
