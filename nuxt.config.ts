@@ -1,4 +1,15 @@
+import { MiddlewareManager } from "./classes/router/MiddlewareManager"
+import middlewareConfig from './middleware.config'
+
 export default defineNuxtConfig({
+    hooks: {
+        'pages:extend'(pages) {
+            new MiddlewareManager()
+            .setMapping(middlewareConfig.mapping)
+            .applyTo(pages)
+        },
+    },
+
     vite: {
         css: {
             preprocessorOptions: {
@@ -22,7 +33,7 @@ export default defineNuxtConfig({
     ],
 
     devtools: {
-        enabled: false,
+        enabled: true,
     },
 
     pinia: {
