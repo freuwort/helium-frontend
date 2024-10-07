@@ -34,12 +34,8 @@
 
 <script lang="ts" setup>
     import type { FilterSetting } from '~/components/Iod/IodTable.vue'
-    import { FieldGroup, Field } from '~/classes/import/CsvImport.ts'
+    import { FieldGroup, Field } from '~/classes/import/CsvImport'
     import { toast } from 'vue3-toastify'
-    
-    definePageMeta({
-        middleware: 'auth',
-    })
     
     const dayjs = useDayjs()
     const scope = 'view_admin_users_index'

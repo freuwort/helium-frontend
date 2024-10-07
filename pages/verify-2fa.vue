@@ -54,12 +54,6 @@
 <script lang="ts" setup>
     const auth = useAuthStore()
     const route = useRoute()
-
-
-
-    definePageMeta({
-        middleware: ['auth', '2fa-needed'],
-    })
     
     
 

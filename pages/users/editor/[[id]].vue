@@ -334,10 +334,6 @@
     import { toast } from 'vue3-toastify'
     import type { Country } from '~/types/units'
 
-    definePageMeta({
-        middleware: 'auth',
-    })
-
     const NuxtLink = defineNuxtLink({})
     const scope = 'view_admin_users_show'
 

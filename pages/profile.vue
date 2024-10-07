@@ -188,10 +188,6 @@
 
 <script lang="ts" setup>
     import { toast } from 'vue3-toastify'
-
-    definePageMeta({
-        middleware: ['auth', '2fa-verified', 'enabled'],
-    })
     
     const auth = useAuthStore()
     const scope = 'view_admin_profile_show'

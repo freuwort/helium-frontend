@@ -21,10 +21,6 @@
 </template>
 
 <script lang="ts" setup>
-    definePageMeta({
-        middleware: ['auth', '2fa-verified', 'enabled'],
-    })
-    
     const debugMode = useDebugMode()
     const scope = 'view_admin_settings_show'
 </script>

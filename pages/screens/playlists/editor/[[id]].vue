@@ -122,10 +122,6 @@
         to_time: string|null
         on_days: number[]
     }
-
-    definePageMeta({
-        middleware: 'auth',
-    })
     
     const NuxtLink = defineNuxtLink({})
     const scope = 'view_admin_screen_playlists_show'

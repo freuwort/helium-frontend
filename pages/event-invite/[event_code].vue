@@ -23,12 +23,6 @@
 </template>
 
 <script lang="ts" setup>
-    definePageMeta({
-        middleware: 'auth',
-    })
-
-
-
     const code = computed(() => (useRoute().params.event_code ?? null))
 
     const form = useForm({

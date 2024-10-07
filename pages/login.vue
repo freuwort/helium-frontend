@@ -32,12 +32,6 @@
     const auth = useAuthStore()
     const domain = useDomainStore()
     const route = useRoute()
-    
-
-
-    definePageMeta({
-        middleware: ['guest'],
-    })
 
 
 

@@ -33,12 +33,6 @@
 </template>
 
 <script lang="ts" setup>
-    definePageMeta({
-        middleware: ['guest'],
-    })
-
-    
-
     const form = ref({
         firstname: '',
         lastname: '',

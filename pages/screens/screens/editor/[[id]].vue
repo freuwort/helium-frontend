@@ -36,10 +36,6 @@
 
 <script lang="ts" setup>
     import { toast } from 'vue3-toastify'
-
-    definePageMeta({
-        middleware: 'auth',
-    })
     
     const NuxtLink = defineNuxtLink({})
     const scope = 'view_admin_screen_screens_show'

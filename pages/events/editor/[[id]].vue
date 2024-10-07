@@ -111,10 +111,6 @@
     import type { Country } from '~/types/units'
     import type { MediaItem } from '~/types/media'
     import { toast } from 'vue3-toastify'
-
-    definePageMeta({
-        middleware: 'auth',
-    })
     
     const NuxtLink = defineNuxtLink({})
     const scope = 'view_admin_events_show'

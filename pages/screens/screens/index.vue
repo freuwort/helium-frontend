@@ -26,10 +26,6 @@
 
 <script lang="ts" setup>
     import type { FilterSetting } from '~/components/Iod/IodTable.vue'
-
-    definePageMeta({
-        middleware: 'auth',
-    })
     
     const dayjs = useDayjs()
     const scope = 'view_admin_screen_screens_index'

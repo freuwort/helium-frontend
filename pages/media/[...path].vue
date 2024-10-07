@@ -115,10 +115,6 @@
     import type { MediaItem } from '~/types/media'
     import type { Pagination } from '~/types/general'
     import _ from 'lodash'
-
-    definePageMeta({
-        middleware: 'auth',
-    })
     
     const route = useRoute()
     const uploadManager = useUploadStore()

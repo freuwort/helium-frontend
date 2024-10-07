@@ -41,10 +41,6 @@
     import type { FilterSetting } from '~/components/Iod/IodTable.vue'
     import type { Template } from '~/components/dialog/DialogSendTemplatedEmail.vue'
     import { toast } from 'vue3-toastify'
-
-    definePageMeta({
-        middleware: 'auth',
-    })
     
     const dayjs = useDayjs()
     const NuxtLink = defineNuxtLink({})

@@ -27,12 +27,6 @@
     const auth = useAuthStore()
     const domain = useDomainStore()
     const route = useRoute()
-    
-
-
-    definePageMeta({
-        middleware: ['auth', '2fa-verified', 'disabled'],
-    })
 
 
 
