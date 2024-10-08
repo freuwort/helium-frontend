@@ -5,7 +5,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     const redirectQuery = computed(() => redirect.value ? `?redirect=${redirect.value}` : '')
 
     if(
-        !auth.session.enabled &&
+        auth.user?.enabled_at === null &&
         to.path !== auth.routes.disabledHome
     ){
         return navigateTo(auth.routes.disabledHome+redirectQuery.value, { replace: true })
