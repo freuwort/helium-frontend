@@ -151,14 +151,14 @@ export const useAuthStore = defineStore('auth', () => {
     {
         if (!user.value) return false
 
-        return user.value.permissions.some((permission) => runtimeConfig.public.adminPermissions.includes(permission))
+        return runtimeConfig.public.adminPermissions.some((permission) => user.value?.permissions.includes(permission))
     }
 
     function hasSuperAdminPermissions()
     {
         if (!user.value) return false
 
-        return user.value.permissions.some((permission) => runtimeConfig.public.superAdminPermissions.includes(permission))
+        return runtimeConfig.public.superAdminPermissions.some((permission) => user.value?.permissions.includes(permission))
     }
 
     function can(permissions: string|string[])
