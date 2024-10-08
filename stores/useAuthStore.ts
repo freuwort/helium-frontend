@@ -171,7 +171,7 @@ export const useAuthStore = defineStore('auth', () => {
         // Check for super user
         if (hasAdminPermissions()) return true
 
-        return user.value.permissions.every((permission) => permissions.includes(permission))
+        return permissions.every((permission) => user.value?.permissions.includes(permission))
     }
 
     function canAny(permissions: string|string[])
@@ -184,7 +184,7 @@ export const useAuthStore = defineStore('auth', () => {
         // Check for admin
         if (hasAdminPermissions()) return true
 
-        return user.value.permissions.some((permission) => permissions.includes(permission))
+        return permissions.some((permission) => user.value?.permissions.includes(permission))
     }
 
 
