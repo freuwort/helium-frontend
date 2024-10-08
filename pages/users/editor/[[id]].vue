@@ -21,35 +21,6 @@
                 <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
             </div>
 
-            <div class="flex items-center gap-4 p-4 border-b bg-background">
-                <IodButton
-                    type="button"
-                    size="s"
-                    corner="pill"
-                    variant="contained"
-                    :disabled="!form.id"
-                    :icon-left="form.model.email_verified_at ? 'check' : 'close'"
-                    :color-preset="form.model.email_verified_at ? 'success' : 'error'"
-                    :label="form.model.email_verified_at ? 'Email verifiziert' : 'Email nicht verifiziert'"
-                    v-tooltip="form.model.email_verified_at ? 'Verifizierung aufheben' : 'Verifizieren'"
-                    @click="verifyEmail(!form.model.email_verified_at)"
-                />
-                <IodButton
-                    type="button"
-                    size="s"
-                    corner="pill"
-                    variant="contained"
-                    :disabled="!form.id"
-                    :icon-left="form.model.enabled_at ? 'check' : 'close'"
-                    :color-preset="form.model.enabled_at ? 'success' : 'error'"
-                    :label="form.model.enabled_at ? 'Aktiviert' : 'Nicht aktiviert'"
-                    v-tooltip="form.model.enabled_at ? 'Deaktivieren' : 'Aktivieren'"
-                    @click="enable(!form.model.enabled_at)"
-                />
-                <HeSpacer />
-                <IodButton type="button" corner="pill" size="s" label="Passwort ändern" variant="filled" :disabled="!form.id" @click="changePasswordPopup.open()"/>
-            </div>
-
             <HeFlex padding="1.5rem 1rem" :gap="3">
                 <ErrorAlert :errors="form.errors" />
 
@@ -57,7 +28,67 @@
                 <input class="hidden" ref="mediaInput" type="file" @change="uploadMedia(($event.target as any).files[0])" />
 
                 <HeFlex :gap="1">
-                    <h5 class="m-0 font-medium">Konto</h5>
+                    <HeFlex horizontal>
+                        <h5 class="m-0 font-medium">Konto</h5>
+                        <HeSpacer />
+                        <VDropdown placement="bottom-end">
+                            <IodButton type="button" label="Aktionen" icon-right="expand_more" size="s" corner="pill" variant="contained"/>
+                            <template #popper>
+                                <ContextMenu class="min-w-80">
+                                    <ContextMenuLabel label="Freigaben"/>
+                                    <ContextMenuItem
+                                        is="button"
+                                        type="button"
+                                        :disabled="!form.id"
+                                        :color="form.model.email_verified_at ? 'var(--color-error)' : ''"
+                                        :icon="form.model.email_verified_at ? 'unsubscribe' : 'mark_email_read'"
+                                        :label="form.model.email_verified_at ? 'Email sperren' : 'Email freigeben'"
+                                        @click="verifyEmail(!form.model.email_verified_at)"
+                                    />
+                                    <ContextMenuItem
+                                        is="button"
+                                        type="button"
+                                        :disabled="!form.id"
+                                        :color="form.model.enabled_at ? 'var(--color-error)' : ''"
+                                        :icon="form.model.enabled_at ? 'do_not_disturb_on' : 'verified'"
+                                        :label="form.model.enabled_at ? 'Nutzer sperren' : 'Nutzer freigeben'"
+                                        @click="enableUser(!form.model.enabled_at)"
+                                    />
+                                    <ContextMenuDivider />
+                                    <ContextMenuLabel label="Passwort Optionen"/>
+                                    <ContextMenuItem
+                                        is="button"
+                                        type="button"
+                                        v-close-popper
+                                        :disabled="!form.id"
+                                        icon="vpn_key"
+                                        label="Passwort ändern"
+                                        @click="changePasswordPopup.open()"
+                                    />
+                                    <ContextMenuItem
+                                        is="button"
+                                        type="button"
+                                        :disabled="!form.id"
+                                        :color="form.model.requires_password_change ? 'var(--color-error)' : ''"
+                                        :icon="form.model.requires_password_change ? 'vpn_key_off' : 'vpn_key_alert'"
+                                        :label="form.model.requires_password_change ? 'Änderung nicht mehr erzwingen' : 'Änderung erzwingen'"
+                                        @click="requirePasswordChange(!form.model.requires_password_change)"
+                                    />
+                                    <ContextMenuDivider />
+                                    <ContextMenuLabel label="2FA Optionen"/>
+                                    <ContextMenuItem
+                                        is="button"
+                                        type="button"
+                                        :disabled="!form.id"
+                                        :color="form.model.requires_two_factor ? 'var(--color-error)' : ''"
+                                        :icon="form.model.requires_two_factor ? 'lock_open_right' : 'lock'"
+                                        :label="form.model.requires_two_factor ? '2FA nicht mehr erzwingen' : '2FA erzwingen'"
+                                        @click="requireTwoFactor(!form.model.requires_two_factor)"
+                                    />
+                                </ContextMenu>
+                            </template>
+                        </VDropdown>
+                    </HeFlex>
                     <IodInput label="Benutzername" v-model="form.model.username"/>
                     <IodInput label="Email" v-model="form.model.email"/>
                 </HeFlex>
@@ -355,6 +386,8 @@
             name: '',
             username: '',
             email: '',
+            requires_password_change: false,
+            requires_two_factor: false,
             email_verified_at: '',
             enabled_at: '',
             deleted_at: '',
@@ -673,13 +706,29 @@
 
     async function verifyEmail(status: boolean)
     {
+        form.model.email_verified_at = status
         await useAxios().patch(apiRoute('/api/users/:id/verify-email', { id: id.value }), { email_verified: status })
         fetch()
     }
 
-    async function enable(status: boolean)
+    async function enableUser(status: boolean)
     {
+        form.model.enabled_at = status
         await useAxios().patch(apiRoute('/api/users/:id/enable', { id: id.value }), { enabled: status })
+        fetch()
+    }
+
+    async function requirePasswordChange(status: boolean)
+    {
+        form.model.requires_password_change = status
+        await useAxios().patch(apiRoute('/api/users/:id/require-password-change', { id: id.value }), { requires_password_change: status })
+        fetch()
+    }
+
+    async function requireTwoFactor(status: boolean)
+    {
+        form.model.requires_two_factor = status
+        await useAxios().patch(apiRoute('/api/users/:id/require-two-factor', { id: id.value }), { requires_two_factor: status })
         fetch()
     }
     // END: Server routes
