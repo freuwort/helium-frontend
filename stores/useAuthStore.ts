@@ -28,6 +28,9 @@ type User = {
     department: string | null
     title: string | null
 
+    requires_password_change: boolean
+    requires_two_factor: boolean
+
     email_verified_at: string | null
     enabled_at: string | null
     deleted_at: string | null
@@ -58,6 +61,7 @@ export const useAuthStore = defineStore('auth', () => {
             guestHome: '/login',
             emailUnverifiedHome: '/email-unverified',
             disabledHome: '/disabled',
+            passwordChangeRequiredHome: '/password-change-required',
             register: '/register',
             login: '/login',
             forgotPassword: '/forgot-password',
@@ -68,6 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
             session: '/api/session',
             register: '/register',
             login: '/login',
+            changePassword: '/api/user/password',
             forgotPassword: '/forgot-password',
             verifyTfaTotp: '/verify-tfa-totp',
             verifyTfaSms: '/verify-tfa-sms',
