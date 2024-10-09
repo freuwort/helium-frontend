@@ -106,13 +106,15 @@
                         </div>
 
                         <div class="main small-scrollbar">
-                            <div class="flex flex-col gap-4">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <DialogCsvImport ref="importPopup" :fields="importFields" @import="submitUserImport" />
+                                <IodButton type="button" label="Benutzer importieren" variant="filled" corner="pill" size="l" :loading="importForm.processing" @click="importPopup.select()" />
                             </div>
                         </div>
 
                         <div class="footer">
                             <HeSpacer />
-                            <IodButton type="button" class="w-56" label="Weiter" variant="filled" corner="pill" @click="setPage(4)" />
+                            <IodButton type="button" class="w-56" label="Überspingen" variant="contained" corner="pill" @click="skipUserImport" />
                         </div>
                     </div>
 
@@ -153,6 +155,8 @@
 </template>
 
 <script lang="ts" setup>
+    import { FieldGroup, Field } from '~/classes/import/CsvImport'
+
     const domain = useDomainStore()
 
     const isOpen = ref(false)
@@ -289,6 +293,58 @@
 
 
 
+    // START: Import step
+    const importForm = useForm({ items: [] })
+    const importPopup = ref()
+    const importFields = ref([
+        new FieldGroup('Allgemeines', [
+            new Field('username', 'Nutzername'),
+            new Field('email', 'Email'),
+            new Field('password', 'Passwort'),
+            new Field('roles', 'Rollen'),
+        ]),
+        new FieldGroup('Vollständiger Name', [
+            new Field('user_name_salutation', 'Anrede'),
+            new Field('user_name_prefix', 'Titel'),
+            new Field('user_name_firstname', 'Vorname'),
+            new Field('user_name_middlename', 'Zweiter Vorname'),
+            new Field('user_name_lastname', 'Nachname'),
+            new Field('user_name_suffix', 'Suffix'),
+            new Field('user_name_legalname', 'Rechtlicher Name'),
+            new Field('user_name_nickname', 'Spitzname'),
+        ]),
+        new FieldGroup('Organisation', [
+            new Field('user_company_company', 'Organisation'),
+            new Field('user_company_department', 'Abteilung'),
+            new Field('user_company_title', 'Position'),
+        ]),
+    ])
+
+    async function submitUserImport(data: any[])
+    {
+        importForm
+        .transform((_) => {
+            return {items: data}
+        })
+        .post('/api/users/import', {
+            async onSuccess() {
+                setPage(4)
+                await domain.patchSettings('setup_completed_user_import', true)
+                await domain.fetchSettings()
+            }
+        })
+    }
+
+    async function skipUserImport()
+    {
+        setPage(4)
+        await domain.patchSettings('setup_completed_user_import', false)
+        await domain.fetchSettings()
+    }
+    // END: Import step
+
+
+
     // START: Finish step
     async function submitFinish() {
         close()
@@ -377,6 +433,7 @@
 
                 > svg
                     height: 2.5rem
+                    width: 2.5rem
                     margin-block: 1.5rem
                     margin-right: auto
                     color: var(--color-background)
