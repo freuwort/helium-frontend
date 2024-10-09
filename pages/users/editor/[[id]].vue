@@ -34,43 +34,35 @@
                         <VDropdown placement="bottom-end">
                             <IodButton type="button" label="Aktionen" icon-right="expand_more" size="s" corner="pill" variant="contained"/>
                             <template #popper>
-                                <ContextMenu class="min-w-80">
+                                <ContextMenu class="min-w-96">
                                     <ContextMenuLabel label="Freigaben"/>
-                                    <ContextMenuItem is="button" type="button" icon="mail" label="Email bestätigt" @click="verifyEmail(!form.model.email_verified_at)">
+                                    <ContextMenuItem is="button" type="button" icon="mark_email_read" label="Email bestätigen" @click="verifyEmail(!form.model.email_verified_at)">
                                         <template #right>
                                             <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.email_verified_at"/>
                                         </template>
                                     </ContextMenuItem>
-                                    <ContextMenuItem is="button" type="button" icon="verified_user" label="Nutzer freigegeben" @click="enableUser(!form.model.enabled_at)">
+                                    <ContextMenuItem is="button" type="button" icon="how_to_reg" label="Nutzer freigeben" @click="enableUser(!form.model.enabled_at)">
                                         <template #right>
                                             <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.enabled_at"/>
                                         </template>
                                     </ContextMenuItem>
 
                                     <ContextMenuDivider />
-                                    <ContextMenuLabel label="Passwort Optionen"/>
-                                    <ContextMenuItem
-                                        is="button"
-                                        type="button"
-                                        v-close-popper
-                                        :disabled="!form.id"
-                                        icon="vpn_key"
-                                        label="Passwort ändern"
-                                        @click="changePasswordPopup.open()"
-                                    />
-                                    <ContextMenuItem is="button" type="button" icon="vpn_key_alert" label="Änderung erzwingen" @click="requirePasswordChange(!form.model.requires_password_change)">
+                                    <ContextMenuLabel label="Sicherheit"/>
+                                    <ContextMenuItem is="button" type="button" icon="lock" label="Passwort ändern" @click="changePasswordPopup.open()" v-close-popper/>
+                                    <ContextMenuItem is="button" type="button" icon="lock_reset" label="Passwort-Änderung anfordern" @click="requirePasswordChange(!form.model.requires_password_change)">
                                         <template #right>
                                             <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.requires_password_change"/>
                                         </template>
                                     </ContextMenuItem>
-
-                                    <ContextMenuDivider />
-                                    <ContextMenuLabel label="2FA Optionen"/>
-                                    <ContextMenuItem is="button" type="button" icon="lock" label="2FA erzwingen" @click="requireTwoFactor(!form.model.requires_two_factor)">
+                                    <ContextMenuItem is="button" type="button" icon="shield_lock" label="2FA-Einrichtung anfordern" @click="requireTwoFactor(!form.model.requires_two_factor)">
                                         <template #right>
                                             <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.requires_two_factor"/>
                                         </template>
                                     </ContextMenuItem>
+
+                                    <!-- <ContextMenuDivider />
+                                    <ContextMenuItem is="button" type="button" icon="do_not_disturb_on" color="var(--color-error)" label="Nutzer sperren" v-close-popper/> -->
                                 </ContextMenu>
                             </template>
                         </VDropdown>
