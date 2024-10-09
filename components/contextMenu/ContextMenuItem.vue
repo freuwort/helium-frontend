@@ -4,6 +4,7 @@
         <HeFlex class="flex-1">
             <span class="label"><slot>{{ label }}</slot></span>
         </HeFlex>
+        <slot name="right"></slot>
         <IodIcon class="chevron-icon" v-if="showChevron">chevron_right</IodIcon>
     </HeFlex>
 </template>
