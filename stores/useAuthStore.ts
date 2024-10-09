@@ -68,7 +68,6 @@ export const useAuthStore = defineStore('auth', () => {
             verify2FA: '/verify-2fa',
         },
         apiRoutes: {
-            user: '/api/user',
             session: '/api/session',
             register: '/register',
             login: '/login',
