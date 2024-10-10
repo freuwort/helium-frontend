@@ -114,7 +114,7 @@
 
                         <div class="footer">
                             <HeSpacer />
-                            <IodButton type="button" class="w-56" label="Überspingen" variant="contained" corner="pill" @click="skipUserImport" />
+                            <IodButton type="button" class="w-56" label="Überspingen" variant="contained" corner="pill" :loading="importForm.processing" @click="skipUserImport" />
                         </div>
                     </div>
 
@@ -124,14 +124,32 @@
                             <small class="px-2">Schritt <b>4</b> von <b>4</b></small>
                         </div>
                         
-                        <div class="main small-scrollbar">
-                            <div class="flex flex-col gap-4">
+                        <div class="main">
+                            <div class="flex flex-col gap-4 w-full h-full">
+                                <IodInput label="Nutzer suchen" v-model="adminSearch"/>
+                                <div class="flex gap-2 flex-wrap" v-if="!!adminSelection.length">
+                                    <IodButton type="button" class="!normal-case !px-4" v-for="user in adminSelection" :label="(user.name as string)" size="xs" corner="pill" variant="contained" @click="deselectAdmin(user)" v-tooltip="'Abwählen'"/>
+                                </div>
+                                <div class="flex flex-col flex-1 overflow-y-auto small-scrollbar" v-if="!!adminResults.length && !!adminSearch">
+                                    <ProfileChip is="div" class="h-12 !p-2" v-for="user in adminResults" :title="(user.name as string)" :subtitle="(user.username as string)" :image="(user.avatar as string)" @click="selectAdmin(user)">
+                                        <div class="flex items-center gap-1">
+                                            <IodButton type="button" size="s" corner="pill" label="auswählen" variant="contained" @click.stop="selectAdmin(user)"/>
+                                        </div>
+                                    </ProfileChip>
+                                </div>
+                                <IodAlert as="placeholder" class="h-40" v-else-if="!adminResults.length && !!adminSearch">
+                                    <span>Keine Ergebnisse für "{{ adminSearch }}"</span>
+                                </IodAlert>
+                                <IodAlert as="placeholder" class="h-40" v-else>
+                                    <span>Suche nach Nutzern um Administratoren auszuwählen</span>
+                                </IodAlert>
                             </div>
                         </div>
 
                         <div class="footer">
                             <HeSpacer />
-                            <IodButton type="button" class="w-56" label="Weiter" variant="filled" corner="pill" @click="setPage(5)" />
+                            <IodButton type="submit" class="w-56" label="Auswahl bestätigen" variant="filled" corner="pill" @click="submitAdminSelection" v-if="!!adminSelection.length"/>
+                            <IodButton type="button" class="w-56" label="Überspringen" variant="contained" corner="pill" @click="skipAdminSelection" v-else/>
                         </div>
                     </div>
 
@@ -156,6 +174,7 @@
 
 <script lang="ts" setup>
     import { FieldGroup, Field } from '~/classes/import/CsvImport'
+    import type { BasicUser } from '~/types/user'
 
     const domain = useDomainStore()
 
@@ -165,8 +184,7 @@
 
     function setPage(p: number) {
         // Limit
-        if (p > 5) return
-        if (p < 0) return
+        if (p > 5 || p < 0) return
 
         // Skip steps if already completed
         if (p == 1 && domain.settings.setup_completed_domain_basics) return setPage(2)
@@ -342,6 +360,47 @@
         await domain.fetchSettings()
     }
     // END: Import step
+
+
+
+    // START: Select admins step
+    const adminSearch = ref('')
+    const adminResults = ref<BasicUser[]>([])
+    const adminSelection = ref<BasicUser[]>([])
+
+    watch(adminSearch, search)
+
+    async function search() {
+        if (!adminSearch.value) return
+        
+        let userResponse = await useAxios().get(apiRoute('/api/users/basic', {
+            filter: { search: adminSearch.value, exclude: adminSelection.value.map((e: any) => e.id) },
+            size: 20,
+        }))
+        
+        adminResults.value = userResponse.data.data
+    }
+
+    function selectAdmin(user: BasicUser) {
+        if (adminSelection.value.includes(user)) return
+        
+        adminSelection.value.push(user)
+    }
+
+    function deselectAdmin(user: BasicUser) {
+        adminSelection.value = adminSelection.value.filter(u => u.id !== user.id)
+    }
+
+    async function submitAdminSelection() {
+        
+    }
+
+    async function skipAdminSelection() {
+        setPage(5)
+        await domain.patchSettings('setup_completed_admin_selection', false)
+        await domain.fetchSettings()
+    }
+    // END: Select admins step
 
 
 
