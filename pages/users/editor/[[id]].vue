@@ -684,12 +684,7 @@
 
     function store()
     {
-        form
-        .transform(data => {
-            return { ...data, roles: data.roles.map((e: any) => e.id)
-            }
-        })
-        .post(apiRoute('/api/users'), {
+        form.post(apiRoute('/api/users'), {
             onSuccess(response: any)
             {
                 form.defaults(response.data).reset()
@@ -701,12 +696,7 @@
 
     function update()
     {
-        form
-        .transform(data => {
-            return { ...data, roles: data.roles.map((e: any) => e.id)
-            }
-        })
-        .patch(apiRoute('/api/users/:id', { id: id.value }), {
+        form.patch(apiRoute('/api/users/:id', { id: id.value }), {
             onSuccess(response: any)
             {
                 form.defaults(response.data).reset()
