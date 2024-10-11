@@ -392,7 +392,17 @@
     }
 
     async function submitAdminSelection() {
-        
+        useAxios()
+        .put('/api/users/roles', {
+            items: adminSelection.value.map((user: any) => user.id),
+            roles: ['Admin'],
+        })
+        .then(response => {
+            setPage(5)
+            domain.patchSettings('setup_completed_admin_selection', true)
+            domain.fetchSettings()
+        })
+        .catch(error => {})
     }
 
     async function skipAdminSelection() {
