@@ -78,7 +78,7 @@
 
                         <template #popper>
                             <HeFlex align-y="flex-start" padding="1rem 0" class="min-w-80 max-h-80 small-scrollbar">
-                                <ProfileChip class="h-12 !p-2 flex-none" corner="none" v-for="result in searchForm.results" :title="result.name" :icon="result.icon" :color="result.color" @click="addRole(result)"/>
+                                <ProfileChip class="h-12 !p-2 flex-none" corner="none" v-for="result in searchForm.results" :title="result.name" :icon="result.icon" :color="result.color" @click="assignRole(result)"/>
                             </HeFlex>
                         </template>
                     </VDropdown>
@@ -339,9 +339,10 @@
 </template>
 
 <script lang="ts" setup>
-    import { debounce, throttle } from 'lodash'
+    import { throttle } from 'lodash'
     import { toast } from 'vue3-toastify'
     import type { Country } from '~/types/units'
+    import type { BasicRole } from '~/types/role'
 
     const NuxtLink = defineNuxtLink({})
     const scope = 'view_admin_users_show'
@@ -473,19 +474,51 @@
         searchForm.results = (await useAxios().get(apiRoute('/api/roles/basic', {
             filter: {
                 search: searchForm.search,
-                exclude: form.roles.map((e: any) => e.id)
+                exclude: form.roles.map((item: BasicRole) => item.id)
             },
             size: 10,
         }))).data.data
     }
 
-    function addRole(role: any) {
-        form.roles.push(role)
+    function assignRole(roles: BasicRole|BasicRole[])
+    {
+        if (!Array.isArray(roles)) roles = [roles]
+
+        form.roles.push(...roles)
         searchForm.reset()
+
+        useAxios()
+        .put('/api/users/roles', {
+            items: [form.id],
+            roles: roles.map(item => item.name),
+        })
+        .then(response => {
+            toast.success(`Rollen wurden zugewiesen: ${roles.map(item => '"'+item.name+'"').join(', ')}`)
+        })
+        .catch(error => {
+            toast.error(error.response.data.message)
+        })
     }
 
-    function removeRole(role: any) {
-        form.roles = form.roles.filter((e: any) => e.id !== role.id)
+    function removeRole(roles: BasicRole|BasicRole[])
+    {
+        if (!Array.isArray(roles)) roles = [roles]
+
+        roles.forEach((role: BasicRole) => {
+            form.roles = form.roles.filter((item: BasicRole) => item.id !== role.id)
+        })
+
+        useAxios()
+        .delete(apiRoute('/api/users/roles', {
+            items: [form.id],
+            roles: roles.map(item => item.name),
+        }))
+        .then(response => {
+            toast.success(`Rollen wurden entfernt: ${roles.map(item => '"'+item.name+'"').join(', ')}`)
+        })
+        .catch(error => {
+            toast.error(error.response.data.message)
+        })
     }
 
 
