@@ -61,7 +61,7 @@ export const useAuthStore = defineStore('auth', () => {
             guestHome: '/login',
             emailUnverifiedHome: '/email-unverified',
             disabledHome: '/disabled',
-            passwordChangeRequiredHome: '/password-change-required',
+            requirePasswordChangeHome: '/change-password',
             requireTwoFactorSetupHome: '/setup-2fa',
             register: '/register',
             login: '/login',

@@ -6,8 +6,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
     if(
         auth.user?.requires_password_change &&
-        to.path !== auth.routes.passwordChangeRequiredHome
+        to.path !== auth.routes.requirePasswordChangeHome
     ){
-        return navigateTo(auth.routes.passwordChangeRequiredHome+redirectQuery.value, { replace: true })
+        return navigateTo(auth.routes.requirePasswordChangeHome+redirectQuery.value, { replace: true })
     }
 })
