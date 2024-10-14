@@ -2,9 +2,12 @@
     <IodPopup ref="popup" title="2FA einrichten" max-width="500px">
         <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="enableTotp" v-show="setup == 'totp'">
             <HeFlex class="bg-background-soft rounded-lg">
-                <img class="h-48 aspect-square mx-auto my-2 rounded bg-background" :src="totpSetupForm.qr" alt="QR-Code"/>
+                <div class="h-48 aspect-square flex items-center justify-center mx-auto my-2 rounded bg-background overflow-hidden">
+                    <img class="w-full h-full object-cover" :src="totpSetupForm.qr" alt="QR-Code" v-if="!totpSetupForm.processing"/>
+                    <IodLoader v-else/>
+                </div>
                 <HeDivider />
-                <IodInput type="text" label="Geheimnis" readonly :modelValue="totpSetupForm.secret">
+                <IodInput type="text" label="Geheimnis" readonly :modelValue="!totpSetupForm.processing ? totpSetupForm.secret : ''">
                     <template #right>
                         <IodIconButton type="button" icon="content_copy" variant="text" corner="pill" size="s" v-tooltip="'Geheimnis kopieren'"/>
                     </template>
@@ -74,6 +77,7 @@
     {
         setup.value = 'totp'
         popup.value.open()
+        totpSetupForm.reset()
 
         totpSetupForm.put('/api/user/two-factor/totp/setup', {
             onSuccess(data: any) {
@@ -114,6 +118,7 @@
     {
         setup.value = 'backup'
         popup.value.open()
+        backupCodesForm.reset()
 
         backupCodesForm.get('/api/user/two-factor/backup/show', {
             onSuccess(data: any) {
