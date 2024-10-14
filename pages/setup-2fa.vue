@@ -38,8 +38,10 @@
 
 
 
-    function success() {
+    async function success() {
         splashscreen.start()
+
+        await auth.fetchSession()
 
         navigateTo(redirect.value ?? auth.routes.authHome, {
             replace: true,
