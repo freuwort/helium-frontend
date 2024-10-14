@@ -3,7 +3,7 @@ export default {
         '/login':               ['guest'],
         '/register':            ['guest'],
         '/forgot-password':     ['guest'],
-        '/email-unverified':    ['auth', 'email-unverified'],
+        '/email-not-verified':  ['auth', 'email-not-verified'],
         '/verify-2fa':          ['auth', 'email-verified', '2fa-needed'],
         '/disabled':            ['auth', 'email-verified', '2fa-verified', 'disabled'],
         '/change-password':     ['auth', 'email-verified', '2fa-verified', 'enabled', 'require-password-change'],
