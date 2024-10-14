@@ -6,8 +6,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
     if(
         auth.user?.enabled_at === null &&
-        to.path !== auth.routes.disabledHome
+        to.path !== auth.routes.notEnabledHome
     ){
-        return navigateTo(auth.routes.disabledHome+redirectQuery.value, { replace: true })
+        return navigateTo(auth.routes.notEnabledHome+redirectQuery.value, { replace: true })
     }
 })
