@@ -11,6 +11,7 @@
 
 
             <HeFlex padding="1.5rem 1rem" gap="1rem" align-y="flex-start" class="flex-1 border-b">
+                <SettingsTitle>Allgemeine Einstellungen</SettingsTitle>
                 <SettingsRow title="Sprache">
                     <IodSelect class="flex-1" label="Sprache" :modelValue="language" @update:modelValue="auth.setSettings('ui_language', $event, 'db')" :options="options_language"/>
                 </SettingsRow>
@@ -24,6 +25,7 @@
             
             
             <HeFlex padding="1.5rem 1rem" gap="1rem" align-y="flex-start" class="flex-1 border-b">
+                <SettingsTitle>Kontosicherheit</SettingsTitle>
                 <SettingsRow title="Passwort ändern">
                     <IodButton class="flex-1" corner="pill" label="Passwort ändern" @click="changePasswordPopup.open()"/>
                 </SettingsRow>
@@ -44,6 +46,15 @@
 
                 <SettingsRow title="Backup Codes">
                     <IodButton class="flex-1" corner="pill" variant="contained" icon-left="key" label="Backup-Codes Anzeigen" @click="twoFactorSetup.showBackup()"/>
+                </SettingsRow>
+            </HeFlex>
+
+
+            <HeFlex padding="1.5rem 1rem" gap="1rem" align-y="flex-start" class="flex-1 border-b">
+                <SettingsTitle>Benachrichtigungen</SettingsTitle>
+                <SettingsRow title="Nutzerkonto freigeben" description="Erhalten Sie eine Benachrichtigung, wenn ein Nutzer auf eine Freigabe wartet." v-if="auth.can('system.enable.users')">
+                    <IodToggle class="flex-1" label="Email" border :modelValue="auth.getSettings('notification_email_user_verified', true, 'db')" @update:modelValue="auth.setSettings('notification_email_user_verified', $event, 'db')"/>
+                    <IodToggle class="flex-1" label="App" border :modelValue="auth.getSettings('notification_app_user_verified', true, 'db')" @update:modelValue="auth.setSettings('notification_app_user_verified', $event, 'db')"/>
                 </SettingsRow>
             </HeFlex>
                 
