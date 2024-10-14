@@ -7,6 +7,7 @@ export default {
         '/verify-2fa':                  ['auth', 'email-verified', '2fa-needed'],
         '/disabled':                    ['auth', 'email-verified', '2fa-verified', 'disabled'],
         '/password-change-required':    ['auth', 'email-verified', '2fa-verified', 'enabled', 'password-change-required'],
-        'DEFAULT':                      ['auth', 'email-verified', '2fa-verified', 'enabled', 'password-change-not-required'],
+        '/setup-2fa':                   ['auth', 'email-verified', '2fa-verified', 'enabled', 'password-change-not-required', 'require-two-factor-setup'],
+        'DEFAULT':                      ['auth', 'email-verified', '2fa-verified', 'enabled', 'password-change-not-required', 'dont-require-two-factor-setup'],
     },
 }
