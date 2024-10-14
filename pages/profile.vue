@@ -84,7 +84,7 @@
             </HeFlex>
         </IodPopup>
 
-        <DialogUserTfaSetup ref="twoFactorSetup"/>
+        <DialogSetupTwoFactor ref="twoFactorSetup"/>
     </NuxtLayout>
 </template>
 

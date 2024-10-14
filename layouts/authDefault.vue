@@ -17,7 +17,7 @@
             </HeLimiter>
         </main>
 
-        <DialogFirstTimeSetupWizard ref="ftsWizard"/>
+        <DialogSetupDomain ref="ftsWizard"/>
     </div>
 </template>
 
