@@ -1,5 +1,5 @@
 <template>
-    <IodPopup ref="popup" title="2FA einrichten" max-width="500px">
+    <IodPopup ref="popup" title="2FA einrichten" max-width="500px" @close="emit('close')">
         <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="enableTotp" v-show="setup == 'totp'">
             <HeFlex class="bg-background-soft rounded-lg">
                 <div class="h-48 aspect-square flex items-center justify-center mx-auto my-2 rounded bg-background overflow-hidden">
@@ -64,6 +64,8 @@
     const popup = ref()
     const setup = ref('totp')
 
+    const emit = defineEmits(['close', 'success'])
+
 
 
     // START: Setup TOTP
@@ -91,6 +93,7 @@
         totpSetupForm.put('/api/user/two-factor/totp/enable', {
             onSuccess() {
                 auth.fetchSession()
+                emit('success')
                 showSuccess()
             }
         })
