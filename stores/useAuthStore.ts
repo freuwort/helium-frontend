@@ -9,8 +9,6 @@ type User = {
 
     has_tfa_enabled: boolean
     has_tfa_totp_method_enabled: boolean
-    has_tfa_sms_method_enabled: boolean
-    has_tfa_email_method_enabled: boolean
     default_tfa_method: string | null
 
     salutation: string | null
@@ -75,8 +73,6 @@ export const useAuthStore = defineStore('auth', () => {
             changePassword: '/api/user/password',
             forgotPassword: '/forgot-password',
             verifyTfaTotp: '/verify-tfa-totp',
-            verifyTfaSms: '/verify-tfa-sms',
-            verifyTfaEmail: '/verify-tfa-email',
             verifyTfaBackup: '/verify-tfa-backup',
             logout: '/logout',
         }

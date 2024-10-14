@@ -14,27 +14,15 @@
                         <IodOtpInput :length="6" :dividers="[3]" v-model="form.code" @complete="submit" autofocus/>
                     </HeFlex>
     
-                    <HeFlex :gap="1" v-else-if="form.method === 'sms'">
-                        <span>Bitte geben Sie den 6-stelligen Code ein, den wir Ihnen per SMS gesendet haben</span>
-                        <IodOtpInput :length="6" :dividers="[3]" v-model="form.code" @complete="submit" autofocus/>
-                    </HeFlex>
-    
-                    <HeFlex :gap="1" v-else-if="form.method === 'email'">
-                        <span>Bitte geben Sie den 6-stelligen Code ein, den wir Ihnen per Email gesendet haben</span>
-                        <IodOtpInput :length="6" :dividers="[3]" v-model="form.code" @complete="submit" autofocus/>
-                    </HeFlex>
-    
                     <HeFlex :gap="1" v-else-if="form.method === 'backup'">
                         <span>Bitte geben Sie einen Ihrer 8-stelligen Backup-Codes ein</span>
                         <IodOtpInput :length="8" :charset="backupCodeCharset" v-model="form.code" @complete="submit" autofocus/>
                     </HeFlex>
                     
-                    <IodButton label="Anmeldung bestätigen" size="l" v-if="form.method" :loading="form.processing"/>
+                    <IodButton label="Anmeldung bestätigen" size="l" corner="pill" v-if="form.method" :loading="form.processing"/>
     
                     <HeFlex v-if="!form.method">
                         <ContextMenuItem is="button" class="radius-m" v-if="auth.user?.has_tfa_totp_method_enabled" icon="screen_lock_portrait" @click="form.method = 'totp'">Authenticator App</ContextMenuItem>
-                        <ContextMenuItem is="button" class="radius-m" v-if="auth.user?.has_tfa_sms_method_enabled" icon="sms" @click="form.method = 'sms'">SMS</ContextMenuItem>
-                        <ContextMenuItem is="button" class="radius-m" v-if="auth.user?.has_tfa_email_method_enabled" icon="email" @click="form.method = 'email'">Email</ContextMenuItem>
                         <ContextMenuItem is="button" class="radius-m" icon="key" @click="form.method = 'backup'">Backup-Code</ContextMenuItem>
                     </HeFlex>
     
@@ -86,8 +74,6 @@
         switch (form.method)
         {
             case 'totp': route = auth.apiRoutes.verifyTfaTotp; break
-            case 'sms': route = auth.apiRoutes.verifyTfaSms; break
-            case 'email': route = auth.apiRoutes.verifyTfaEmail; break
             case 'backup': route = auth.apiRoutes.verifyTfaBackup; break
         }
 
