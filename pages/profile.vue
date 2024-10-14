@@ -53,8 +53,8 @@
             <HeFlex padding="1.5rem 1rem" gap="1rem" align-y="flex-start" class="flex-1 border-b">
                 <SettingsTitle>Benachrichtigungen</SettingsTitle>
                 <SettingsRow title="Nutzerkonto freigeben" description="Erhalten Sie eine Benachrichtigung, wenn ein Nutzer auf eine Freigabe wartet." v-if="auth.can('system.enable.users')">
-                    <IodToggle class="flex-1 !rounded-full" label="Email" border :modelValue="auth.getSettings('notification_email_user_verified', true, 'db')" @update:modelValue="auth.setSettings('notification_email_user_verified', $event, 'db')"/>
-                    <IodToggle class="flex-1 !rounded-full" label="App" border :modelValue="auth.getSettings('notification_app_user_verified', true, 'db')" @update:modelValue="auth.setSettings('notification_app_user_verified', $event, 'db')"/>
+                    <IodToggle class="flex-1 !rounded-full" label="Email" border :modelValue="auth.getSettings('notification_mail_user_verified', true, 'db')" @update:modelValue="auth.setSettings('notification_mail_user_verified', $event, 'db')"/>
+                    <IodToggle class="flex-1 !rounded-full" label="App" border :modelValue="auth.getSettings('notification_database_user_verified', true, 'db')" @update:modelValue="auth.setSettings('notification_database_user_verified', $event, 'db')"/>
                 </SettingsRow>
             </HeFlex>
                 
