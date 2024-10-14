@@ -54,8 +54,8 @@
             pointer-events: none
             transition: all 80ms ease-in-out
 
-        &:hover,
-        &.active
+        &:hover:not(:disabled),
+        &.active:not(:disabled)
             &:after
                 opacity: .1
 
@@ -65,6 +65,17 @@
             .chevron-icon
                 color: inherit
                 transform: translateX(5px)
+
+        &:disabled
+            cursor: default
+            color: var(--color-text-soft-disabled)
+
+            &:after
+                opacity: 0
+
+            .label,
+            .chevron-icon
+                color: inherit
 
     .main-icon
         color: inherit

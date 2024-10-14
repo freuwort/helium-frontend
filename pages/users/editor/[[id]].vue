@@ -35,12 +35,16 @@
                             <IodButton type="button" label="Aktionen" icon-right="expand_more" size="s" corner="pill" variant="contained"/>
                             <template #popper>
                                 <ContextMenu class="min-w-96">
-                                    <ContextMenuLabel label="Freigaben"/>
+                                    <ContextMenuLabel label="Email"/>
+                                    <ContextMenuItem is="button" type="button" icon="send" label="Bestätigungsmail versenden" @click="sendVerificationEmail()" :disabled="!!form.model.email_verified_at" v-close-popper/>
                                     <ContextMenuItem is="button" type="button" icon="mark_email_read" label="Email bestätigen" @click="verifyEmail(!form.model.email_verified_at)">
                                         <template #right>
                                             <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.email_verified_at"/>
                                         </template>
                                     </ContextMenuItem>
+
+                                    <ContextMenuDivider />
+                                    <ContextMenuLabel label="Zugriff"/>
                                     <ContextMenuItem is="button" type="button" icon="how_to_reg" label="Nutzer freigeben" @click="enableUser(!form.model.enabled_at)">
                                         <template #right>
                                             <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.enabled_at"/>
@@ -703,6 +707,13 @@
                 toast.success('Nutzer wurde aktualisiert')
             },
         })
+    }
+
+    async function sendVerificationEmail()
+    {
+        await useAxios().post(apiRoute('/api/users/:id/send-verification-email', { id: id.value }))
+        toast.success('E-Mail wurde verschickt')
+        fetch()
     }
 
     async function verifyEmail(status: boolean)
