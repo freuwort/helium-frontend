@@ -72,6 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
             login: '/login',
             changePassword: '/api/user/password',
             forgotPassword: '/forgot-password',
+            resetPassword: '/reset-password',
             verifyTfaTotp: '/verify-tfa-totp',
             verifyTfaBackup: '/verify-tfa-backup',
             logout: '/logout',
