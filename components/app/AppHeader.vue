@@ -126,13 +126,10 @@
 
             <MediaUploadProgress />
 
-            <VDropdown placement="bottom-end" :skidding="-8" :distance="-1" v-if="devMode">
-                <AppHeaderItem show-chevron icon="notifications" v-tooltip="'Benachrichtigungen'"/>
+            <VDropdown placement="bottom" :skidding="-8" :distance="-1">
+                <AppHeaderItem icon="notifications" :badge="notifications.unread.length ?? null" v-tooltip="'Benachrichtigungen'"/>
                 <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem show-chevron icon="inbox">Alle Benachrichtigungen</ContextMenuItem>
-                        <ContextMenuDivider />
-                    </ContextMenu>
+                    <NotificationCenter />
                 </template>
             </VDropdown>
 
@@ -160,6 +157,7 @@
 <script lang="ts" setup>
     const auth = useAuthStore()
     const devMode = useDevMode()
+    const notifications = useNotificationStore()
     
     const theme = computed(() => {
         return auth.user?.settings.ui_theme ?? 'system'
