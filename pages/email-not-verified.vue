@@ -1,14 +1,21 @@
 <template>
-    <NuxtLayout name="guest-default" pageTitle="Bestätigen Sie Ihre Email">
+    <NuxtLayout name="guest-default" pageTitle="Email-Adresse nicht bestätigt">
         <HeLimiter size="form">
             <HeCard>
                 <div class="flex flex-col px-6 py-6 gap-6 sm:gap-8 sm:py-8">
                     <ErrorAlert :errors="form.errors"/>
-                    <h1 class="font-medium text-center m-0">Bestätigen Sie Ihre Email</h1>
+                    <h1 class="font-medium text-center m-0">Ihre Email-Adresse ist noch nicht bestätigt</h1>
                     
-                    <div>
-                        <p>Bitte bestätigen Sie Ihre Email-Adresse.</p>
-                    </div>
+                    <p>
+                        Wir haben Ihnen eine Bestätigungsmail zugesendet.<br>
+                        <b>Schauen Sie auch in Ihrem Spam- oder Junk-Ordner.</b>
+                    </p>
+
+                    <p>
+                        Wenn Sie keine Email erhaltet haben, können Sie die Bestätigungsmail erneut anfordern:
+                    </p>
+
+                    <IodButton :label="disabled ? `Erneut anfordern in ${timer}s` : 'Bestätigungsmail erneut anfordern'" corner="pill" variant="contained" :disabled :loading="form.processing" @click="resend"/>
     
                     <HeDivider />
     
@@ -23,50 +30,45 @@
 </template>
 
 <script lang="ts" setup>
+    import { toast } from 'vue3-toastify'
+
     const auth = useAuthStore()
-    const domain = useDomainStore()
     const route = useRoute()
 
 
 
-    const splashscreen = useSplashscreenStore()
-    const form = useForm({
-        email: '',
-        password: '',
-        remember: false,
-    })
+    const form = useForm({})
 
     const redirect = computed(() => route.query.redirect as string ?? null)
-    const redirectQuery = computed(() => redirect.value ? `?redirect=${redirect.value}` : '')
+    const disabled = computed(() => timer.value > 0 || tries.value > 10 || form.processing)
 
 
+    
+    // START: Timer
+    const timer = ref(0)
+    const tries = ref(0)
 
-    function submit()
+    onMounted(() => {
+        setInterval(() => { if (timer.value > 0){ timer.value-- } }, 1000)
+    })
+
+    function startTimer()
     {
-        // Prevent submit if form is processing
-        if (form.processing) return
+        tries.value++
+        timer.value = tries.value * 30
+    }
+    // END: Timer
 
-        // Prevent submit if already logged in
-        if (auth.session.authenticated) return
+    function resend()
+    {
+        if (disabled.value) return
 
-        form.post(auth.apiRoutes.login, { onSuccess })
+        form.post('/email/verification-notification', { onSuccess })
     }
     
-    async function onSuccess()
+    function onSuccess()
     {
-        splashscreen.start()
-    
-        await auth.fetchSession()
-        await domain.fetchSettings()
-    
-        if (auth.session.tfa_enabled && !auth.session.tfa_verified)
-        {
-            return navigateTo(auth.routes.verify2FA+redirectQuery.value)
-        }
-    
-        return navigateTo(redirect.value ?? auth.routes.authHome, {
-            replace: true,
-            external: !!redirect.value
-        })
+        startTimer()
+        toast.success('E-Mail wurde verschickt.')
     }
 </script>
