@@ -1,7 +1,12 @@
 <template>
     <form class="contents" @submit.prevent="save()">
         <SettingsTitle>Domänen Richtlinien</SettingsTitle>
-        <SettingsRow title="Nutzer können sich neu registrieren">
+        <SettingsRow>
+            <template #description>
+                <span class="font-heading color-text font-medium">Nutzer können sich neu registrieren</span>
+                <small><NuxtLink to="/settings/register">Stellen Sie ein, was Nutzer bei der Registrierung angeben können und sollen.</NuxtLink></small>
+            </template>
+
             <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_registration" />
         </SettingsRow>
         <SettingsRow title="Nutzer können ihr Passwort zurücksetzen">
