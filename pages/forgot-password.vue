@@ -18,14 +18,9 @@
                     </template>
 
                     <template v-else>
-                        <IodAlert color-preset="success">
-                            <div class="flex gap-4 align-center">
-                                <IodIcon icon="check_circle"/>
-                                <p>
-                                    Wir haben Ihnen einen Link zum Zurücksetzen Ihres Passworts an Ihre Email-Adresse gesendet!<br>
-                                    <b>Bitte schauen Sie auch in Ihrem Spam- oder Junk-Ordner.</b>
-                                </p>
-                            </div>
+                        <IodAlert type="success">
+                            Wir haben Ihnen einen Link zum Zurücksetzen Ihres Passworts an Ihre Email-Adresse gesendet!<br>
+                            <b>Bitte schauen Sie auch in Ihrem Spam- oder Junk-Ordner.</b>
                         </IodAlert>
                     </template>
     

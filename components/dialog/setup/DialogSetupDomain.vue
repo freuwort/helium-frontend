@@ -137,12 +137,8 @@
                                         </div>
                                     </ProfileChip>
                                 </div>
-                                <IodAlert as="placeholder" class="h-40" v-else-if="!adminResults.length && !!adminSearch">
-                                    <span>Keine Ergebnisse für "{{ adminSearch }}"</span>
-                                </IodAlert>
-                                <IodAlert as="placeholder" class="h-40" v-else>
-                                    <span>Suche nach Nutzern um Administratoren auszuwählen</span>
-                                </IodAlert>
+                                <IodAlert type="placeholder" class="h-40" :text='`Keine Ergebnisse für "${adminSearch}"`' v-else-if="!adminResults.length && !!adminSearch"/>
+                                <IodAlert type="placeholder" class="h-40" text="Suche nach Nutzern um Administratoren auszuwählen" v-else />
                             </div>
                         </div>
 

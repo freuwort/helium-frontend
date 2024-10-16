@@ -97,9 +97,7 @@
                         </Container>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Screens hinzugefügt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Screens hinzugefügt" v-else />
                 </HeFlex>
             </HeFlex>
         </HeCard>

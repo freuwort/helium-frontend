@@ -67,9 +67,7 @@
                         </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Adressen angelegt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Adressen angelegt" v-else />
                 </HeFlex>
 
 
@@ -96,9 +94,7 @@
                         </IodInput>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Medien hinzugefügt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Medien angelegt" v-else />
                 </HeFlex>
             </HeFlex>
         </HeCard>

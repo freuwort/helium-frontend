@@ -46,18 +46,18 @@
 
 
 
-        <IodAlert v-if="!items.length && !loading" class="h-72" as="placeholder">
-            <div class="flex item-center justify-center h-16 w-16">
-                <IodIcon icon="category" class="m-auto !text-5xl"/>
+        <IodAlert type="placeholder" class="h-72" v-if="!items.length && !loading">
+            <div class="flex item-center justify-center h-16 w-16 mx-auto">
+                <IodIcon icon="category" class="!text-5xl"/>
             </div>
-            <span>Keine Einträge gefunden</span>
+            Keine Einträge gefunden
         </IodAlert>
         
-        <IodAlert v-if="!items.length && loading" class="h-72" as="placeholder">
-            <div class="flex item-center justify-center h-16 w-16">
+        <IodAlert type="placeholder" class="h-72" v-if="!items.length && loading">
+            <div class="flex item-center justify-center h-16 w-16 mx-auto">
                 <IodLoader class="m-auto"/>
             </div>
-            <span>Lade Einträge</span>
+            Lade Einträge
         </IodAlert>
 
         <div class="table-inner-wrapper" v-show="items.length">

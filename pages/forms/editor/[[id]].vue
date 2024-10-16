@@ -67,9 +67,7 @@
                         </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Felder angelegt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Felder angelegt" v-else />
                 </HeFlex>
             </HeFlex>
         </HeCard>

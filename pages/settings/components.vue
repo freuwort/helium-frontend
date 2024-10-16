@@ -5,6 +5,15 @@
     </SettingsRow>
 
     <SettingsTitle>Iod Components</SettingsTitle>
+    <SettingsRow title="IodAlert"/>
+    <IodAlert>Default</IodAlert>
+    <IodAlert type="info">Info</IodAlert>
+    <IodAlert type="success">Success</IodAlert>
+    <IodAlert type="warning">Warning</IodAlert>
+    <IodAlert type="error">Error</IodAlert>
+    <IodAlert type="placeholder">Placeholder</IodAlert>
+    <SettingsSpacer />
+
     <SettingsRow title="IodPopup" description="Open a test popup">
         <IodButtonGroup class="flex-1" corner="pill">
             <IodButton variant="contained" @click="popupLeft.open()">Left</IodButton>

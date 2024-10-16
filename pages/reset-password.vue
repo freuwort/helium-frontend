@@ -16,14 +16,7 @@
                     </template>
 
                     <template v-else>
-                        <IodAlert color-preset="error">
-                            <div class="flex gap-4 align-center">
-                                <IodIcon icon="cancel"/>
-                                <p>
-                                    Dieser Link ist ungültig oder abgelaufen.
-                                </p>
-                            </div>
-                        </IodAlert>
+                        <IodAlert type="error" text="Dieser Link ist ungültig oder abgelaufen." />
                     </template>
     
                     <HeDivider />

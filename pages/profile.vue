@@ -83,9 +83,9 @@
                 <HeFlex gap="1rem">
                     <ErrorAlert :errors="deleteAccountForm.errors"/>
                     <IodAlert>
-                        <span>Sie sind dabei Ihr Konto zu löschen. Wenn Sie Ihr Konto löschen, werden ebenfalls all Ihre Daten gelöscht.</span>
-                        <b class="mb-1">Dies kann nicht rückgängig gemacht werden!</b>
-                        <span>Bestätigen Sie die Kontolöschung, indem Sie Ihr aktuelles Passwort eingeben.</span>
+                        Sie sind dabei Ihr Konto zu löschen. Wenn Sie Ihr Konto löschen, werden ebenfalls all Ihre Daten gelöscht.<br><br>
+                        <b>Eine Löschung kann nicht rückgängig gemacht werden!</b><br><br>
+                        Bestätigen Sie die Kontolöschung, indem Sie Ihr aktuelles Passwort eingeben.
                     </IodAlert>
                 </HeFlex>
                 <HeFlex gap="1rem">

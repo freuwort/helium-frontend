@@ -11,9 +11,7 @@
                 </Notification>
             </template>
         </div>
-        <IodAlert as="placeholder" class="h-20" v-if="!notifications.all.length">
-            <span>Keine Benachrichtigungen</span>
-        </IodAlert>
+        <IodAlert type="placeholder" class="h-20" text="Keine Benachrichtigungen" v-if="!notifications.all.length"/>
         <ContextMenuDivider class="mt-2"/>
         <ContextMenuItem icon="mark_chat_read" label="Alle als gelesen markieren" @click="notifications.markAllAsRead()"/>
     </ContextMenu>

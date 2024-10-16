@@ -15,12 +15,7 @@
 
 
                 <HeFlex :gap="1">
-                    <IodAlert color-preset="info">
-                        <div class="flex gap-4 align-center">
-                            <IodIcon icon="info"/>
-                            <p>Dieser Beitrag wartet auf die finale Überprüfung bevor die Änderungen angezeigt werden.</p>
-                        </div>
-                    </IodAlert>
+                    <IodAlert type="info" text="Dieser Beitrag wartet auf die finale Überprüfung bevor die Änderungen angezeigt werden." />
                     <IodInput label="Space" v-model="form.model.space_id"/>
                     
                     <h5 class="m-0 font-medium">Allgemeines</h5>

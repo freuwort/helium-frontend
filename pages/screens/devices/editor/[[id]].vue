@@ -110,9 +110,7 @@
                         </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Playlists hinzugefügt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Playlists hinzugefügt" v-else />
                 </HeFlex>
             </HeFlex>
         </HeCard>

@@ -60,9 +60,7 @@
                         </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Identifikationsnummern angelegt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Identifikationsnummern angelegt" v-else />
                 </HeFlex>
 
 
@@ -87,9 +85,7 @@
                         </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine rechtlichen Details angelegt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine rechtlichen Details angelegt" v-else />
                 </HeFlex>
 
 
@@ -117,9 +113,7 @@
                         </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Adressen angelegt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Adressen angelegt" v-else />
                 </HeFlex>
 
 
@@ -149,9 +143,7 @@
                         </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Bankverbindungen angelegt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Bankverbindungen angelegt" v-else />
                 </HeFlex>
 
 
@@ -176,9 +168,7 @@
                         </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Emails angelegt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Emails angelegt" v-else />
                 </HeFlex>
 
 
@@ -203,9 +193,7 @@
                         </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Telefonnummern angelegt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Telefonnummern angelegt" v-else />
                 </HeFlex>
 
 
@@ -232,9 +220,7 @@
                         </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Termine angelegt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Termine angelegt" v-else />
                 </HeFlex>
 
 
@@ -259,9 +245,7 @@
                         </HeCard>
                     </div>
 
-                    <IodAlert as="placeholder" class="h-40" v-else>
-                        <span>Es wurden noch keine Links angelegt</span>
-                    </IodAlert>
+                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Links angelegt" v-else />
                 </HeFlex>
             </HeFlex>
         </HeCard>
