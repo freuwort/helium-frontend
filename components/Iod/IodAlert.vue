@@ -1,39 +1,42 @@
 <template>
     <div class="iod-container iod-alert" :class="classes">
-        <h3 v-show="title">{{ title }}</h3>
-
         <div class="content">
-            <slot></slot>
+            <IodIcon :icon v-if="icon"/>
+            <div>
+                <slot>{{ text }}</slot>
+            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
+    type Type = 'success' | 'info' | 'warning' | 'error' | 'placeholder' | 'default'
+
+
+
     const props = defineProps({
-        title: {
-            type: String,
-            default: '',
+        type: {
+            type: String as PropType<Type>,
+            default: 'default',
         },
-        colorPreset: {
-            type: String,
-        },
-        as: {
-            type: String,
-            default: 'alert',
-        },
+        text: String,
     })
 
-    const classes = computed((): object => {
-        return [
-            `alert-color-preset-${props.colorPreset}`,
-            `alert-type-${props.as}`
-        ]
-    })
+    const icon = computed(() => { switch (props.type) {
+        case 'success': return 'check_circle'
+        case 'info': return 'info'
+        case 'warning': return 'warning'
+        case 'error': return 'report'
+        default: return null
+    }})
+
+    const classes = computed(() => ([
+        `alert-type-${props.type}`,
+    ]))
 </script>
 
 <style lang="sass" scoped>
     .iod-container.iod-alert
-        color: var(--color-text)
         border-radius: var(--radius-m)
         padding: 1rem
         display: flex
@@ -41,34 +44,8 @@
         gap: 1rem
         position: relative
 
-        &.alert-color-preset-success
-            color: var(--color-success)
-
-        &.alert-color-preset-info
-            color: var(--color-info)
-
-        &.alert-color-preset-warning
-            color: var(--color-warning)
-
-        &.alert-color-preset-error
-            color: var(--color-error)
-
-        &.alert-type-alert
-            height: auto
-
-        &.alert-type-placeholder
-            user-select: none
-            padding-block: 0
-            color: var(--color-text-disabled)
-
-            &::before
-                display: none
-
-            .content
-                align-items: center
-                justify-content: center
-
         &::before
+            display: none
             content: ''
             position: absolute
             top: 0
@@ -81,20 +58,45 @@
             background: currentColor
             opacity: .07
 
-        h3
-            position: relative
-            z-index: 1
-            margin: 0
-            color: inherit
-
         .content
             flex: 1
+            display: flex
+            align-items: center
+            gap: 1rem
             position: relative
             z-index: 1
             margin: 0
             color: inherit
-            display: flex
-            flex-direction: column
-            align-items: flex-start
 
+        &.alert-type-default::before,
+        &.alert-type-info::before,
+        &.alert-type-success::before,
+        &.alert-type-warning::before,
+        &.alert-type-error::before
+            display: block
+
+        &.alert-type-default
+            color: var(--color-text)
+
+        &.alert-type-success
+            color: var(--color-success)
+
+        &.alert-type-info
+            color: var(--color-info)
+
+        &.alert-type-warning
+            color: var(--color-warning)
+
+        &.alert-type-error
+            color: var(--color-error)
+
+        &.alert-type-placeholder
+            color: var(--color-text-soft-disabled)
+            user-select: none
+            padding-block: 0
+
+            .content
+                text-align: center
+                align-items: center
+                justify-content: center
 </style>
