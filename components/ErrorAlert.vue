@@ -1,18 +1,9 @@
 <template>
     <Transition name="slide">
-        <IodAlert color-preset="error" v-show="errors.length">
-            <div class="flex flex-col" v-for="error in errors">
-                <div class="flex gap-4 align-center">
-                    <IodIcon icon="error"/>
-                    <span class="flex-1">{{ error?.data?.message || error?.message }}</span>
-                </div>
-                
-                <ul v-if="error.statusCode === 422 && error?.data?.errors?.length > 1" class="m-0 pl-4">
-                    <li v-for="hint in error?.data?.errors">
-                        <small >{{ hint.join(' ') }}</small>
-                    </li>
-                </ul>
-            </div>
+        <IodAlert type="error" v-show="errors.length">
+            <template v-for="error in errors">
+                {{ error.message }}<br>
+            </template>
         </IodAlert>
     </Transition>
 </template>
