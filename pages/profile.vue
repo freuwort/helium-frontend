@@ -26,16 +26,11 @@
             
             <HeFlex padding="1.5rem 1rem" gap="1rem" align-y="flex-start" class="flex-1 border-b">
                 <SettingsTitle>Kontosicherheit</SettingsTitle>
-                <SettingsRow title="Passwort ändern">
+                <SettingsRow title="Passwort ändern" class="mb-4">
                     <IodButton class="flex-1" corner="pill" label="Passwort ändern" @click="changePasswordPopup.open()"/>
                 </SettingsRow>
-            </HeFlex>
 
-                
-            <HeFlex padding="1.5rem 1rem" gap="1rem" align-y="flex-start" class="flex-1 border-b">
-                <SettingsTitle>Zwei Faktor Authentifizierung</SettingsTitle>
-
-                <SettingsRow title="Authenticator App">
+                <SettingsRow title="Authenticator App einrichten">
                     <template v-if="auth.user?.has_tfa_totp_method_enabled">
                         <IodButton v-if="auth.user?.default_tfa_method === 'totp'" class="flex-1" corner="pill" label="Standard Methode" disabled v-tooltip="'Dies ist Ihre Standard-Methode'"/>
                         <IodButton v-else class="flex-1" variant="contained" corner="pill" label="Als Standard festlegen" v-tooltip="'Als Standard-Methode festlegen'" @click="setDefaultTwoFactorMethod('totp')"/>
@@ -43,19 +38,46 @@
                     </template>
                     <IodButton v-else class="flex-1" corner="pill" variant="contained" icon-left="screen_lock_portrait" label="App einrichten" @click="twoFactorSetup.setupTotp()"/>
                 </SettingsRow>
-
-                <SettingsRow title="Backup Codes">
+    
+                <SettingsRow title="Backup Codes" v-if="auth.user?.has_tfa_enabled">
                     <IodButton class="flex-1" corner="pill" variant="contained" icon-left="key" label="Backup-Codes Anzeigen" @click="twoFactorSetup.showBackup()"/>
                 </SettingsRow>
             </HeFlex>
 
 
-            <HeFlex padding="1.5rem 1rem" gap="1rem" align-y="flex-start" class="flex-1 border-b">
-                <SettingsTitle>Benachrichtigungen</SettingsTitle>
-                <SettingsRow title="Nutzerkonto freigeben" description="Erhalten Sie eine Benachrichtigung, wenn ein Nutzer auf eine Freigabe wartet." v-if="auth.can('system.enable.users')">
-                    <IodToggle class="flex-1 !rounded-full" label="Email" border :modelValue="auth.getSettings('notification_mail_user_verified', true, 'db')" @update:modelValue="auth.setSettings('notification_mail_user_verified', $event, 'db')"/>
-                    <IodToggle class="flex-1 !rounded-full" label="App" border :modelValue="auth.getSettings('notification_database_user_verified', true, 'db')" @update:modelValue="auth.setSettings('notification_database_user_verified', $event, 'db')"/>
-                </SettingsRow>
+            <HeFlex padding="1.5rem 1rem 1rem" gap=".5rem" align-y="flex-start" class="flex-1 border-b">
+                <div class="flex items-center mb-2">
+                    <SettingsTitle class="flex-1">Benachrichtigungen</SettingsTitle>
+                    <b class="w-20 text-center">In-App</b>
+                    <b class="w-20 text-center">Email</b>
+                </div>
+                <div class="flex items-center">
+                    <b class="flex-1">Systemupdates</b>
+                    <span class="w-20 text-center">
+                        <IodToggle :modelValue="auth.getSettings('notification_database_system_update', false, 'db')" @update:modelValue="auth.setSettings('notification_database_system_update', $event, 'db')"/>
+                    </span>
+                    <span class="w-20 text-center">
+                        <IodToggle :modelValue="auth.getSettings('notification_mail_system_update', false, 'db')" @update:modelValue="auth.setSettings('notification_mail_system_update', $event, 'db')"/>
+                    </span>
+                </div>
+                <div class="flex items-center">
+                    <b class="flex-1">Nutzer hat sich registriert</b>
+                    <span class="w-20 text-center">
+                        <IodToggle :modelValue="auth.getSettings('notification_database_user_registered', false, 'db')" @update:modelValue="auth.setSettings('notification_database_user_registered', $event, 'db')"/>
+                    </span>
+                    <span class="w-20 text-center">
+                        <IodToggle :modelValue="auth.getSettings('notification_mail_user_registered', false, 'db')" @update:modelValue="auth.setSettings('notification_mail_user_registered', $event, 'db')"/>
+                    </span>
+                </div>
+                <div class="flex items-center" v-if="auth.can('system.enable.users')">
+                    <b class="flex-1">Nutzer wartet auf eine Freigabe</b>
+                    <span class="w-20 text-center">
+                        <IodToggle :modelValue="auth.getSettings('notification_database_user_verified', true, 'db')" @update:modelValue="auth.setSettings('notification_database_user_verified', $event, 'db')"/>
+                    </span>
+                    <span class="w-20 text-center">
+                        <IodToggle :modelValue="auth.getSettings('notification_mail_user_verified', true, 'db')" @update:modelValue="auth.setSettings('notification_mail_user_verified', $event, 'db')"/>
+                    </span>
+                </div>
             </HeFlex>
                 
             <HeFlex padding="1.5rem 1rem" gap="1rem" align-y="flex-start" class="flex-1">

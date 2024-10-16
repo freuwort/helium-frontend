@@ -1,14 +1,16 @@
 <template>
     <div class="notification-wrapper" :class="{'unread': notification.read_at === null}" @click="toggle">
-        <div class="main-content flex flex-col">
-            <span class="message" v-if="$slots.default || message">
+        <IodIcon class="icon"><slot name="icon">{{ icon }}</slot></IodIcon>
+        <div class="indicator"></div>
+        <div class="content">
+            <div class="head">
                 <slot>{{ message }}</slot>
-            </span>
-            <small class="time" v-tooltip.bottom="dayjs(notification.created_at).format('DD.MM.YYYY HH:mm')">{{ dayjs(notification.created_at).fromNow()}}</small>
+                <small class="time">{{ dayjs(notification.created_at).fromNow()}}</small>
+            </div>
 
-        </div>
-        <div class="actions flex flex-wrap" v-if="$slots.actions" @click.stop>
-            <slot name="actions"/>
+            <div class="actions" v-if="$slots.actions" @click.stop>
+                <slot name="actions"/>
+            </div>
         </div>
     </div>
 </template>
@@ -23,6 +25,10 @@
         notification: {
             type: Object as PropType<Notification>,
             required: true,
+        },
+        icon: {
+            type: String,
+            default: 'info',
         },
         message: {
             type: String,
@@ -39,61 +45,97 @@
 <style lang="sass" scoped>
     .notification-wrapper
         display: flex
-        flex-direction: column
-        gap: .75rem
-        padding: .75rem
-        margin-inline: .25rem
-        border-radius: var(--radius-l)
+        min-height: 3rem
         position: relative
         transition: all 100ms
         overflow: hidden
+        color: var(--color-text-soft)
 
-        &::after
+        &.unread .indicator
+            opacity: 1
+
+        &:hover:not(:disabled),
+        &.active:not(:disabled)
+            &:after
+                opacity: .1
+
+        &:after
             content: ''
+            display: block
+            position: absolute
+            left: 0
+            right: 0
+            top: 0
+            bottom: 0
+            background-color: currentColor
+            opacity: 0
+            pointer-events: none
+            transition: all 80ms ease-in-out
+
+        .indicator
             position: absolute
             z-index: 0
-            top: 1rem
-            right: 1rem
-            height: .5rem
-            width: .5rem
+            top: 50%
+            right: .5rem
+            translate: 0 -50%
+            height: 8px
+            aspect-ratio: 1
             border-radius: 50%
             background: var(--color-error)
+            pointer-events: none
             transition: all 100ms
             opacity: 0
 
-        &::before
-            content: ''
-            position: absolute
-            z-index: 0
-            top: 0
-            right: 0
-            height: 5rem
-            width: 5rem
-            background: linear-gradient(45deg, #ff000000 50%, var(--color-error))
-            transition: all 100ms
-            opacity: 0
+            &::before
+                content: ''
+                position: absolute
+                z-index: 0
+                top: -4px
+                bottom: -4px
+                left: -4px
+                right: -4px
+                border-radius: inherit
+                background: inherit
+                opacity: 0
+                animation: pulse 3s linear infinite
 
-        &.unread::after
-            opacity: 1
-        &.unread::before
-            opacity: .2
+                @keyframes pulse
+                    0%
+                        opacity: .0
+                        scale: 0
 
-        &:hover
-            background: var(--color-background-soft)
+                    70%
+                        opacity: .4
 
-        .main-content
+                    100%
+                        opacity: .0
+                        scale: 1.5
+
+        .icon
+            color: inherit
+            font-size: 1.5rem
+            width: 4rem
+            position: relative
+            z-index: 1
+            aspect-ratio: unset !important
+
+        .content
+            flex: 1
             display: flex
             flex-direction: column
             align-items: flex-start
             position: relative
             z-index: 1
-            color: var(--color-text-soft)
             line-height: 1.5
+            padding-block: 1rem
+            padding-right: 2rem
+            gap: .75rem
 
-        .actions
-            position: relative
-            z-index: 1
-            margin-right: auto
-            margin-left: -.1rem
-            margin-bottom: -.1rem
+            .head .time
+                display: block
+
+            .actions
+                display: flex
+                align-items: center
+                flex-wrap: wrap
 </style>

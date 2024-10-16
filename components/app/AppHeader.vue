@@ -126,7 +126,7 @@
 
             <MediaUploadProgress />
 
-            <VDropdown placement="bottom" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
                 <AppHeaderItem icon="notifications" :badge="notifications.unread.length ?? null" v-tooltip="'Benachrichtigungen'"/>
                 <template #popper>
                     <NotificationCenter />

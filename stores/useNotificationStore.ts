@@ -20,10 +20,13 @@ export const useNotificationStore = defineStore('notifications', () => {
     {
         if (!Array.isArray(items)) items = [items]
 
-        notifications.value = items.map((n: Notification) => ({
-            ...n,
-            'read_at': action === 'read' ? new Date().toISOString() : null
-        })) as Notification[]
+        let readAt = action === 'read' ? new Date().toISOString() : null
+        let itemIds = items.map((n: Notification) => n.id)
+        
+        for (const notification of notifications.value)
+        {
+            if (itemIds.includes(notification.id)) notification.read_at = readAt
+        }
 
         try {
             await useAxios().patch(`/api/notifications/${action}`, { items: items.map((n: Notification) => n.id) })
