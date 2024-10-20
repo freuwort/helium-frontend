@@ -329,7 +329,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { throttle } from 'lodash'
+    import _ from 'lodash'
     import { toast } from 'vue3-toastify'
     import type { Country } from '~/types/units'
     import type { BasicRole } from '~/types/role'
@@ -458,7 +458,7 @@
         results: [],
     })
 
-    const throttledSearch = throttle(search, 400)
+    const throttledSearch = _.throttle(search, 400)
 
     async function search() {
         searchForm.results = (await useAxios().get(apiRoute('/api/roles/basic', {

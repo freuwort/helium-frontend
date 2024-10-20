@@ -1,7 +1,7 @@
 <template>
     <ErrorAlert :errors="form.errors" class="mb-8" />
 
-    <div class="flex flex-col gap-4 pb-8">
+    <div class="flex flex-col gap-4 pb-8" v-if="form.default_profile">
         <div class="flex items-center">
             <h3 class="flex-1 m-0 font-medium">Registrierung</h3>
         </div>
@@ -44,13 +44,13 @@
         </div>
     </div>
 
-    <div class="flex flex-col gap-4 pb-8">
+    <div class="flex flex-col gap-4">
         <div class="flex items-center">
             <h3 class="flex-1 m-0 font-medium">Profile</h3>
             <IodButton type="button" label="Neues Profil" icon-right="add" corner="pill" variant="contained" @click="addProfile()"/>
         </div>
     
-        <div class="flex flex-col">
+        <div class="flex flex-col" v-if="form.custom_profiles.length">
             <Container orientation="vertical" lock-axis="y" behaviour="contain" non-drag-area-selector=".no-drag" @drop="onDrop">
                 <Draggable v-for="profile in form.custom_profiles" :key="profile.id">
                     <div class="profile-container" :class="{'active': edit === profile.id}">
@@ -122,6 +122,8 @@
                 </Draggable>
             </Container>
         </div>
+
+        <IodAlert type="placeholder" class="h-20" text="Keine Profile angelegt" v-else/>
     </div>
 
     <div class="flex flex-col gap-4">
@@ -152,40 +154,17 @@
 
     const edit = ref('')
     const form = useForm({
-        default_profile: {
-            name: 'default',
-            fields: [
-                'email',
-                'password',
-            ],
-            auto_assign_roles: [],
-            compatible_with: [],
-            auto_approve: false,
-        },
-        custom_profiles: [
-            {
-                id: '1',
-                name: 'Mitarbeiter',
-                fields: [
-                    'user_name.first_name',
-                    'user_name.last_name',
-                ],
-                auto_assign_roles: [],
-                compatible_with: [],
-                auto_approve: false,
-            },
-            {
-                id: '2',
-                name: 'Kunde',
-                fields: [
-                    'user_company.company',
-                ],
-                auto_assign_roles: [],
-                compatible_with: [],
-                auto_approve: false,
-            },
-        ],
+        default_profile: null,
+        custom_profiles: [],
     })
+
+    const profileTemplate = {
+        name: '',
+        fields: [],
+        auto_assign_roles: [],
+        compatible_with: [],
+        auto_approve: false,
+    }
 
 
 
@@ -227,12 +206,9 @@
         let name = findNextAvailableName()
         
         form.custom_profiles.push({
+            ...profileTemplate,
             id: slugify(name),
-            name,
-            fields: [],
-            auto_assign_roles: [],
-            compatible_with: [],
-            auto_approve: false,
+            name: name,
         })
     }
 
@@ -269,12 +245,12 @@
 
 
     function load() {
-        let profiles = domain.settings.registration_profiles.map((profile: Profile) => ({
+        let profiles = domain.settings?.registration_profiles?.map((profile: Profile) => ({
             ...profile,
             id: slugify(profile.name),
-        }))
+        })) || []
 
-        form.default_profile = profiles.find((profile: Profile) => profile.name === 'default')
+        form.default_profile = profiles.find((profile: Profile) => profile.name === 'default') || {...profileTemplate, name: 'default', id: 'default', fields: ['email', 'password']}
         form.custom_profiles = profiles.filter((profile: Profile) => profile.name !== 'default')
     }
 
