@@ -18,7 +18,7 @@
                         <ContextMenuItem v-if="devMode" to="/screens" show-chevron color="#84cc16" icon="desktop_windows">Screens</ContextMenuItem>
                         <ContextMenuItem to="/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
                         <ContextMenuItem v-if="devMode" show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
-                        <ContextMenuItem v-if="devMode" show-chevron color="#FF4757" icon="receipt">Rechnungen / Angebote</ContextMenuItem>
+                        <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Buchhaltung</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem to="/settings/" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
                     </ContextMenu>
@@ -112,12 +112,15 @@
                 </template>
             </VDropdown>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
-                <AppHeaderItem show-chevron color="#FF4757" icon="receipt" v-tooltip="'Rechnungen / Angebote'"/>
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+                <AppHeaderItem show-chevron color="#FF4757" icon="receipt" v-tooltip="'Buchhaltung'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem show-chevron color="#FF4757" icon="article">Angebote</ContextMenuItem>
+                        <ContextMenuItem show-chevron color="#FF4757" icon="home_repair_service">Aufträge</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen</ContextMenuItem>
+                        <ContextMenuDivider />
+                        <ContextMenuItem show-chevron color="#FF4757" icon="credit_card_off">Rückerstattungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
