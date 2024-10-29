@@ -23,7 +23,7 @@ export function useAxios(options: Options = {})
     if (token.value) headers['X-XSRF-TOKEN'] = token.value as string
 
     // Add cookie header if on server
-    if (process.server)
+    if (import.meta.server)
     {
         headers = {
             ...headers,
