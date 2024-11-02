@@ -14,6 +14,7 @@
                 @upload:banner="selectMedia('banner')"
             />
 
+            <input class="hidden" ref="mediaInput" type="file" @change="uploadMedia(($event.target as any).files[0])" />
             
             <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-20 bg-background">
                 <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/users"/>
@@ -23,9 +24,6 @@
 
             <HeFlex padding="1.5rem 1rem" :gap="3">
                 <ErrorAlert :errors="form.errors" />
-
-
-                <input class="hidden" ref="mediaInput" type="file" @change="uploadMedia(($event.target as any).files[0])" />
 
                 <HeFlex :gap="1">
                     <HeFlex horizontal>
@@ -73,6 +71,7 @@
                     </HeFlex>
                     <IodInput label="Benutzername" v-model="form.model.username"/>
                     <IodInput label="Email" v-model="form.model.email"/>
+                    <IodInput label="Telefon" v-model="form.model.phone"/>
                 </HeFlex>
 
                 <HeFlex :gap="1">
@@ -104,57 +103,35 @@
 
 
 
+                <HeFlex :gap="1">
+                    <h5 class="m-0 font-medium">Identifikation</h5>
+                    <IodInput label="Kunden-Nr." v-model="form.user_info.customer_id"/>
+                    <IodInput label="Personal-Nr." v-model="form.user_info.employee_id"/>
+                    <IodInput label="Mitglieds-Nr." v-model="form.user_info.member_id"/>
+                </HeFlex>
 
                 <HeFlex :gap="1">
                     <h5 class="m-0 font-medium">Name</h5>
-                    <IodSelect label="Anrede" v-model="form.user_name.salutation" :options="salutation_options"/>
-                    <IodInput label="Präfix" v-model="form.user_name.prefix"/>
-                    <IodInput label="Vorname" v-model="form.user_name.firstname"/>
-                    <IodInput label="Zweiter Vorname" v-model="form.user_name.middlename"/>
-                    <IodInput label="Nachname" v-model="form.user_name.lastname"/>
-                    <IodInput label="Suffix" v-model="form.user_name.suffix"/>
-                    <IodInput label="Rechtsname" v-model="form.user_name.legalname"/>
-                    <IodInput label="Spitzname" v-model="form.user_name.nickname"/>
+                    <IodInput label="Anrede" v-model="form.user_info.salutation"/>
+                    <IodInput label="Präfix" v-model="form.user_info.prefix"/>
+                    <IodInput label="Vorname" v-model="form.user_info.firstname"/>
+                    <IodInput label="Zweiter Vorname" v-model="form.user_info.middlename"/>
+                    <IodInput label="Nachname" v-model="form.user_info.lastname"/>
+                    <IodInput label="Suffix" v-model="form.user_info.suffix"/>
+                    <IodInput label="Rechtsname" v-model="form.user_info.legalname"/>
+                    <IodInput label="Spitzname" v-model="form.user_info.nickname"/>
                 </HeFlex>
-
-
 
                 <HeFlex :gap="1">
                     <h5 class="m-0 font-medium">Arbeit</h5>
-                    <IodInput label="Firma" v-model="form.user_company.company"/>
-                    <IodInput label="Abteilung" v-model="form.user_company.department"/>
-                    <IodInput label="Titel" v-model="form.user_company.title"/>
+                    <IodInput label="Organisation" v-model="form.user_info.organisation"/>
+                    <IodInput label="Abteilung" v-model="form.user_info.department"/>
+                    <IodInput label="Titel" v-model="form.user_info.job_title"/>
                 </HeFlex>
 
 
 
-                <HeFlex :gap="1">
-                    <HeFlex horizontal>
-                        <h5 class="m-0 font-medium">Identifikationsnummern</h5>
-                        <HeSpacer />
-                        <IodButton type="button" label="Neue Ident. Nr." size="s" corner="pill" variant="contained" @click="addIdentifier()"/>
-                    </HeFlex>
-    
-                    <div class="entity-grid" v-if="form.identifiers.length">
-                        <HeCard class="entity-card" v-for="identifier, i in form.identifiers">
-                            <HeFlex class="entity-card-head" padding="1rem">
-                                <IodIcon icon="badge" />
-                                <IodButton type="button" label="Löschen" size="s" corner="pill" variant="contained" color-preset="error" @click="removeIdentifier(i)"/>
-                            </HeFlex>
-                            <HeFlex padding="1rem" gap="1rem">
-                                <IodSelect v-model="identifier.type" label="Ident. Nr. Typ" :options="identifier_types"/>
-                                <IodInput v-model="identifier.label" label="Label" />
-                                <IodInput v-model="identifier.value" label="Identifikationsnummer" />
-                            </HeFlex>
-                        </HeCard>
-                    </div>
-
-                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Identifikationsnummern angelegt" v-else />
-                </HeFlex>
-
-
-
-                <HeFlex :gap="1">
+                <!-- <HeFlex :gap="1">
                     <HeFlex horizontal>
                         <h5 class="m-0 font-medium">Adressen</h5>
                         <HeSpacer />
@@ -168,7 +145,6 @@
                                 <IodButton type="button" label="Löschen" size="s" corner="pill" variant="contained" color-preset="error" @click="removeAddress(i)"/>
                             </HeFlex>
                             <HeFlex padding="1rem" gap="1rem">
-                                <IodSelect v-model="address.type" label="Adress-Typ" :options="address_types"/>
                                 <IodInput v-model="address.address_line_1" label="Straße" />
                                 <IodInput v-model="address.postal_code" label="Postleitzahl" />
                                 <IodInput v-model="address.city" label="Stadt" />
@@ -178,139 +154,7 @@
                     </div>
 
                     <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Adressen angelegt" v-else />
-                </HeFlex>
-
-
-
-                <HeFlex :gap="1">
-                    <HeFlex horizontal>
-                        <h5 class="m-0 font-medium">Bankverbindungen</h5>
-                        <HeSpacer />
-                        <IodButton type="button" label="Neue Bankverbindung" size="s" corner="pill" variant="contained" @click="addBankConnection()"/>
-                    </HeFlex>
-
-                    <div class="entity-grid" v-if="form.bank_connections.length">
-                        <HeCard class="entity-card" v-for="bank, i in form.bank_connections">
-                            <HeFlex class="entity-card-head" padding="1rem">
-                                <IodIcon icon="account_balance" />
-                                <IodButton type="button" label="Löschen" size="s" corner="pill" variant="contained" color-preset="error" @click="removeBankConnection(i)"/>
-                            </HeFlex>
-                            <HeFlex padding="1rem" gap="1rem">
-                                <IodSelect v-model="bank.type" label="Verbindungs-Typ" :options="bank_connection_types"/>
-                                <IodInput v-model="bank.bank_name" label="Bankname" />
-                                <IodInput v-model="bank.branch" label="Filiale" />
-                                <IodInput v-model="bank.account_name" label="Kontoinhaber" />
-                                <IodInput v-model="bank.account_number" label="Kontonummer" />
-                                <IodInput v-model="bank.iban" label="IBAN" />
-                                <IodInput v-model="bank.swift_code" label="SWIFT / BIC" />
-                            </HeFlex>
-                        </HeCard>
-                    </div>
-
-                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Bankverbindungen angelegt" v-else />
-                </HeFlex>
-
-
-
-                <HeFlex :gap="1">
-                    <HeFlex horizontal>
-                        <h5 class="m-0 font-medium">Emails</h5>
-                        <HeSpacer />
-                        <IodButton type="button" label="Neue Email" size="s" corner="pill" variant="contained" @click="addEmail()"/>
-                    </HeFlex>
-
-                    <div class="entity-grid" v-if="form.emails.length">
-                        <HeCard class="entity-card" v-for="email, i in form.emails">
-                            <HeFlex class="entity-card-head" padding="1rem">
-                                <IodIcon icon="email" />
-                                <IodButton type="button" label="Löschen" size="s" corner="pill" variant="contained" color-preset="error" @click="removeEmail(i)"/>
-                            </HeFlex>
-                            <HeFlex padding="1rem" gap="1rem">
-                                <IodSelect v-model="email.type" label="Email-Typ" :options="email_types"/>
-                                <IodInput v-model="email.email" label="Email" />
-                            </HeFlex>
-                        </HeCard>
-                    </div>
-
-                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Emails angelegt" v-else />
-                </HeFlex>
-
-
-
-                <HeFlex :gap="1">
-                    <HeFlex horizontal>
-                        <h5 class="m-0 font-medium">Telefonnummern</h5>
-                        <HeSpacer />
-                        <IodButton type="button" label="Neue Telefonnummer" size="s" corner="pill" variant="contained" @click="addPhonenumber()"/>
-                    </HeFlex>
-
-                    <div class="entity-grid" v-if="form.phonenumbers.length">
-                        <HeCard class="entity-card" v-for="number, i in form.phonenumbers">
-                            <HeFlex class="entity-card-head" padding="1rem">
-                                <IodIcon icon="phone" />
-                                <IodButton type="button" label="Löschen" size="s" corner="pill" variant="contained" color-preset="error" @click="removePhonenumber(i)"/>
-                            </HeFlex>
-                            <HeFlex padding="1rem" gap="1rem">
-                                <IodSelect v-model="number.type" label="Nummer-Typ" :options="phonenumbers_types"/>
-                                <IodInput v-model="number.number" label="Nummer" />
-                            </HeFlex>
-                        </HeCard>
-                    </div>
-
-                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Telefonnummern angelegt" v-else />
-                </HeFlex>
-
-
-
-                <HeFlex :gap="1">
-                    <HeFlex horizontal>
-                        <h5 class="m-0 font-medium">Termine & Daten</h5>
-                        <HeSpacer />
-                        <IodButton type="button" label="Neuer Termin" size="s" corner="pill" variant="contained" @click="addDate()"/>
-                    </HeFlex>
-
-                    <div class="entity-grid" v-if="form.dates.length">
-                        <HeCard class="entity-card" v-for="date, i in form.dates">
-                            <HeFlex class="entity-card-head" padding="1rem">
-                                <IodIcon icon="event" />
-                                <IodButton type="button" label="Löschen" size="s" corner="pill" variant="contained" color-preset="error" @click="removeDate(i)"/>
-                            </HeFlex>
-                            <HeFlex padding="1rem" gap="1rem">
-                                <IodSelect v-model="date.type" label="Datum-Typ" :options="date_types"/>
-                                <IodInput v-model="date.date" label="Datum" type="date" />
-                                <IodToggle v-model="date.ignore_year" label="Jahr ignorieren" />
-                                <IodToggle v-model="date.repeats_annually" label="Jährlich wiederholen" />
-                            </HeFlex>
-                        </HeCard>
-                    </div>
-
-                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Termine angelegt" v-else />
-                </HeFlex>
-
-
-
-                <HeFlex :gap="1">
-                    <HeFlex horizontal>
-                        <h5 class="m-0 font-medium">Links</h5>
-                        <HeSpacer />
-                        <IodButton type="button" label="Neuer Link" size="s" corner="pill" variant="contained" @click="addLink()"/>
-                    </HeFlex>
-
-                    <div class="entity-grid" v-if="form.links.length">
-                        <HeCard class="entity-card" v-for="link, i in form.links">
-                            <HeFlex class="entity-card-head" padding="1rem">
-                                <IodIcon icon="link" />
-                                <IodButton type="button" label="Löschen" size="s" corner="pill" variant="contained" color-preset="error" @click="removeLink(i)"/>
-                            </HeFlex>
-                            <HeFlex padding="1rem" gap="1rem">
-                                <IodInput v-model="link.name" label="Label" />
-                                <IodInput v-model="link.url" label="URL" />
-                            </HeFlex>
-                        </HeCard>
-                    </div>
-
-                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Links angelegt" v-else />
-                </HeFlex>
+                </HeFlex> -->
             </HeFlex>
         </HeCard>
 
@@ -352,19 +196,21 @@
         model: {
             avatar: null,
             banner: null,
-            name: '',
             username: '',
             email: '',
+            phone: '',
             requires_password_change: false,
             requires_two_factor: false,
             email_verified_at: '',
+            phone_verified_at: '',
             enabled_at: '',
             deleted_at: '',
             created_at: '',
             updated_at: '',
         },
         roles: [],
-        user_name: {
+        user_info: {
+            name: '',
             salutation: '',
             prefix: '',
             firstname: '',
@@ -373,82 +219,18 @@
             suffix: '',
             legalname: '',
             nickname: '',
-        },
-        user_company: {
-            company: '',
+            organisation: '',
             department: '',
-            title: '',
+            job_title: '',
         },
-        identifiers: [],
-        addresses: [],
-        bank_connections: [],
-        emails: [],
-        phonenumbers: [],
-        dates: [],
-        links: [],
     })
 
     const fullname = computed(() => {
-        const name = form.user_name
+        const name = form.user_info
         return [name.prefix, name.firstname, name.middlename, name.lastname, name.suffix].filter(Boolean).join(' ')
     })
     
     const countries = ref([])
-
-    const salutation_options = [
-        { value: 'Herr', text: 'Herr' },
-        { value: 'Frau', text: 'Frau' },
-        { value: 'Divers', text: 'Divers' },
-    ]
-
-    const identifier_types = [
-        { value: 'customer_id', text: 'Kunden Nr.' },
-        { value: 'employee_id', text: 'Personal Nr.' },
-        { value: 'member_id', text: 'Mitglieds Nr.' },
-        { value: 'debtor_id', text: 'Debitoren Nr.' },
-        { value: 'creditor_id', text: 'Kreditoren Nr.' },
-        { value: 'other', text: 'Anders' },
-    ]
-
-    const address_types = [
-        { value: 'main', text: 'Hauptadresse' },
-        { value: 'home', text: 'Zuhause' },
-        { value: 'work', text: 'Arbeit' },
-        { value: 'billing', text: 'Rechnungsadresse' },
-        { value: 'shipping', text: 'Lieferadresse' },
-        { value: 'other', text: 'Anders' },
-    ]
-
-    const bank_connection_types = [
-        { value: 'checking', text: 'Girokonto' },
-        { value: 'savings', text: 'Sparbuch' },
-        { value: 'business', text: 'Geschäftskonto' },
-        { value: 'loan', text: 'Kreditkonto' },
-        { value: 'investment', text: 'Investmentkonto' },
-        { value: 'other', text: 'Anders' },
-    ]
-
-    const email_types = [
-        { value: 'main', text: 'Hauptemail' },
-        { value: 'home', text: 'Zuhause' },
-        { value: 'work', text: 'Arbeit' },
-        { value: 'other', text: 'Anders' },
-    ]
-    
-    const phonenumbers_types = [
-        { value: 'main', text: 'Hauptnummer' },
-        { value: 'home', text: 'Zuhause' },
-        { value: 'work', text: 'Arbeit' },
-        { value: 'mobile', text: 'Mobil' },
-        { value: 'fax', text: 'Fax' },
-        { value: 'other', text: 'Anders' },
-    ]
-
-    const date_types = [
-        { value: 'birthday', text: 'Geburtstag' },
-        { value: 'anniversary', text: 'Jahrestag' },
-        { value: 'other', text: 'Anders' },
-    ]
 
 
 
@@ -513,28 +295,10 @@
 
 
 
-    // START: Identifiers
-    function addIdentifier() {
-        form.identifiers.push({
-            id: null,
-            type: 'customer_id',
-            label: '',
-            value: '',
-        })
-    }
-
-    function removeIdentifier(index: number) {
-        form.identifiers.splice(index, 1)
-    }
-    // END: Identifiers
-
-
-
     // START: Addresses
     function addAddress() {
         form.addresses.push({
             id: null,
-            type: 'main',
             address_line_1: '',
             address_line_2: '',
             postal_code: '',
@@ -549,95 +313,6 @@
         form.addresses.splice(index, 1)
     }
     // END: Addresses
-
-
-
-    // START: Bank connections
-    function addBankConnection() {
-        form.bank_connections.push({
-            id: null,
-            type: 'checking',
-            bank_name: '',
-            branch: '',
-            account_name: '',
-            account_number: '',
-            swift_code: '',
-            iban: '',
-        })
-    }
-
-    function removeBankConnection(index: number) {
-        form.bank_connections.splice(index, 1)
-    }
-    // END: Bank connections
-
-
-
-    // START: Emails
-    function addEmail() {
-        form.emails.push({
-            id: null,
-            type: 'main',
-            email: '',
-            verified_at: null,
-        })
-    }
-
-    function removeEmail(index: number) {
-        form.emails.splice(index, 1)
-    }
-    // END: Emails
-
-
-
-    // START: Phonenumbers
-    function addPhonenumber() {
-        form.phonenumbers.push({
-            id: null,
-            type: 'main',
-            number: '',
-            verified_at: null,
-        })
-    }
-
-    function removePhonenumber(index: number) {
-        form.phonenumbers.splice(index, 1)
-    }
-    // END: Phonenumbers
-
-
-
-    // START: Dates
-    function addDate() {
-        form.dates.push({
-            id: null,
-            type: 'birthday',
-            date: null,
-            ignore_year: false,
-            repeats_annually: true,
-        })
-    }
-
-    function removeDate(index: number) {
-        form.dates.splice(index, 1)
-    }
-    // END: Dates
-
-
-
-    // START: Links
-    function addLink() {
-        form.links.push({
-            id: null,
-            name: 'Website',
-            url: '',
-        })
-    }
-
-    function removeLink(index: number) {
-        form.links.splice(index, 1)
-    }
-    // END: Links
 
 
 
@@ -667,6 +342,8 @@
         form.get(apiRoute('/api/users/:id', { id: id.value }), {
             onSuccess(response: any)
             {
+                console.log(response.data);
+                
                 form.defaults(response.data).reset()
             },
         })

@@ -13,10 +13,10 @@
                         <ContextMenuItem to="/users" show-chevron icon="group">Nutzer</ContextMenuItem>
                         <ContextMenuItem to="/media" show-chevron icon="folder">Dateien</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem to="/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
+                        <ContextMenuItem v-if="devMode"to="/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
                         <ContextMenuItem v-if="devMode" to="/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
                         <ContextMenuItem v-if="devMode" to="/screens" show-chevron color="#84cc16" icon="desktop_windows">Screens</ContextMenuItem>
-                        <ContextMenuItem to="/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
+                        <ContextMenuItem v-if="devMode"to="/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
                         <ContextMenuItem v-if="devMode" show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Buchhaltung</ContextMenuItem>
                         <ContextMenuDivider />
@@ -41,7 +41,6 @@
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/users" show-chevron icon="group">Nutzer</ContextMenuItem>
-                        <ContextMenuItem to="/companies" show-chevron icon="store">Unternehmen</ContextMenuItem>
                         <ContextMenuItem to="/roles" show-chevron icon="badge">Berechtigungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
@@ -61,7 +60,7 @@
 
             <HeDivider vertical class="h-8 ml-2"/>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#06B6D4" icon="edit_square" v-tooltip="'Formulare'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -91,7 +90,7 @@
                 </template>
             </VDropdown>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#F59E0B" icon="note_stack" v-tooltip="'Inhalte'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -116,6 +115,8 @@
                 <AppHeaderItem show-chevron color="#FF4757" icon="receipt" v-tooltip="'Buchhaltung'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
+                        <ContextMenuItem show-chevron color="#FF4757" icon="domain">Kontakte</ContextMenuItem>
+                        <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="#FF4757" icon="article">Angebote</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF4757" icon="home_repair_service">Aufträge</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen</ContextMenuItem>
@@ -137,7 +138,7 @@
             </VDropdown>
 
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
-                <ProfileChip v-if="auth.user" :title="auth.user.name ?? auth.user.fullname ?? ''" :subtitle="auth.user.username ?? ''" :image="auth.user.avatar" align="right" v-tooltip="'Profil'"/>
+                <ProfileChip v-if="auth.user" :title="auth.user.name ?? ''" :subtitle="auth.user.username ?? ''" :image="auth.user.avatar" align="right" v-tooltip="'Profil'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <div class="flex gap-1 px-1">
