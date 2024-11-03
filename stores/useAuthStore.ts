@@ -4,8 +4,8 @@ type User = {
     avatar: string
     banner: string | null
     email: string | null
+    phone: string | null
     username: string | null
-    ident_number: string | null
 
     has_tfa_enabled: boolean
     has_tfa_totp_method_enabled: boolean
@@ -22,15 +22,22 @@ type User = {
     nickname: string | null
     legalname: string | null
 
-    company: string | null
+    organisation: string | null
     department: string | null
-    title: string | null
+    job_title: string | null
+
+    customer_id: string | null
+    employee_id: string | null
+    member_id: string | null
 
     requires_password_change: boolean
     requires_two_factor: boolean
 
     email_verified_at: string | null
+    phone_verified_at: string | null
     enabled_at: string | null
+    blocked_at: string | null
+    block_reason: string | null
     deleted_at: string | null
     created_at: string | null
     updated_at: string | null
@@ -59,6 +66,7 @@ export const useAuthStore = defineStore('auth', () => {
             guestHome: '/login',
             emailNotVerifiedHome: '/email-not-verified',
             notEnabledHome: '/not-enabled',
+            blockedHome: '/blocked',
             requirePasswordChangeHome: '/change-password',
             requireTwoFactorSetupHome: '/setup-2fa',
             register: '/register',

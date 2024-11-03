@@ -1,12 +1,12 @@
 <template>
-    <NuxtLayout name="guest-default" pageTitle="Ihr Konto ist noch nicht freigegeben">
+    <NuxtLayout name="guest-default" pageTitle="Ihr Konto ist gesperrt">
         <HeLimiter size="form">
             <HeCard>
                 <div class="flex flex-col px-6 py-6 gap-6 sm:gap-8 sm:py-8">
-                    <h1 class="font-medium text-center m-0">Ihr Konto ist noch nicht freigegeben</h1>
+                    <h1 class="font-medium text-center m-0">Ihr Konto ist gesperrt</h1>
                     
                     <div>
-                        <p>Ihr Konto wurde noch nicht freigegeben.</p>
+                        <p>Grund: <b>{{ auth.user?.block_reason || 'Nicht angegeben' }}</b></p>
                         <p>Bitte wenden Sie sich an einen Administrator.</p>
                     </div>
     
