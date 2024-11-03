@@ -72,7 +72,7 @@
                     </div>
 
                     <div class="table-column" v-for="column in columns" :class="{
-                        'resizeable': column.resizeable,
+                        'resizable': column.resizable,
                         'resizing': getColumnSettings(column).resizing,
                         'sortable': column.sortable,
                         'sorted-field': sort.field === column.name,
@@ -171,7 +171,7 @@
         transform?: (value: any, item: any) => any,
         width?: number,
         sortable?: boolean,
-        resizeable?: boolean,
+        resizable?: boolean,
         hideable?: boolean,
         monospace?: boolean,
         default?: string | undefined,
@@ -724,7 +724,7 @@
                 position: relative
                 overflow: hidden
 
-                &.resizeable
+                &.resizable
                     .column-resize-handle
                         display: block
 

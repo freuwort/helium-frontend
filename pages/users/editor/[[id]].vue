@@ -373,8 +373,6 @@
         form.get(apiRoute('/api/users/:id', { id: id.value }), {
             onSuccess(response: any)
             {
-                console.log(response.data);
-                
                 form.defaults(response.data).reset()
             },
         })
