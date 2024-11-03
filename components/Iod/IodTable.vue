@@ -580,7 +580,7 @@
         }
         else
         {
-            data.text = value ?? column.default ?? null
+            data.text = value || column.default || null
         }
         
 

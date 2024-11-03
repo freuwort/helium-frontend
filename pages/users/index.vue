@@ -55,9 +55,13 @@
 
     const tableColumns = [
         { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizeable: true, hideable: true, default: '-', },
-        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => ({ text: item.fullname || '-', image: item.avatar, icon: 'person', }), },
+        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => ({ text: item.name || '-', image: item.avatar, icon: 'person', }), },
+        { name: 'customer_id', label: 'Kunden-Nr.', valuePath: 'customer_id', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', },
+        { name: 'employee_id', label: 'Personal-Nr.', valuePath: 'employee_id', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', },
+        { name: 'member_id', label: 'Mitglieds-Nr.', valuePath: 'member_id', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', },
         { name: 'username', label: 'Nutzername', valuePath: 'username', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', },
         { name: 'email', label: 'Email', valuePath: 'email', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', },
+        { name: 'phone', label: 'Telefon', valuePath: 'phone', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', },
         { name: 'roles', label: 'Rollen', valuePath: 'roles', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: any[]) => value?.map(e => e.name)?.join(', ') || null, },
         { name: 'is_admin', label: 'Berechtigungslevel', valuePath: 'is_admin', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: boolean | null, item: any) => {
             if (item.is_admin) return { text: 'Admin', icon: 'shield', color: 'var(--color-info)', }
@@ -65,6 +69,14 @@
             return { text: 'Basis', icon: 'key', color: 'var(--color-text-soft)', }
         }},
         { name: 'email_verified_at', label: 'Email bestätigt', valuePath: 'email_verified_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
+            return {
+                text: value ? dayjs(value).fromNow() : 'Ausstehend',
+                tooltip: value ? dayjs(value).format('DD.MM.YYYY HH:mm') : 'Ausstehend',
+                icon: value ? 'check' : 'close',
+                color: value ? 'var(--color-success)' : 'var(--color-error)',
+            }
+        }},
+        { name: 'phone_verified_at', label: 'Telefon bestätigt', valuePath: 'phone_verified_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
             return {
                 text: value ? dayjs(value).fromNow() : 'Ausstehend',
                 tooltip: value ? dayjs(value).format('DD.MM.YYYY HH:mm') : 'Ausstehend',
@@ -80,9 +92,18 @@
                 color: value ? 'var(--color-success)' : 'var(--color-error)',
             }
         }},
+        { name: 'blocked_at', label: 'Gesperrt', valuePath: 'blocked_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
+            return {
+                text: value ? dayjs(value).fromNow() : 'Nein',
+                tooltip: value ? dayjs(value).format('DD.MM.YYYY HH:mm') + ' - Grund: ' + (item.block_reason || 'Nicht angegeben') : 'Nein',
+                icon: value ? 'do_not_disturb_on' : '',
+                color: value ? 'var(--color-error)' : 'var(--color-info)',
+            }
+        }},
         { name: 'has_tfa_enabled', label: 'Zweiter Faktor', valuePath: 'has_tfa_enabled', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: boolean | null, item: any) => {
             return { text: value ? 'Aktiv' : 'Inaktiv', icon: value ? 'check' : 'close', color: value ? 'var(--color-success)' : 'var(--color-error)', }
         }},
+        { name: 'last_login_at', label: 'Zuletzt eingeloggt', valuePath: 'last_login_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: dayjs(value).format('DD.MM.YYYY HH:mm') }) : 'Nie' },
         { name: 'created_at', label: 'Registriert', valuePath: 'created_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: dayjs(value).format('DD.MM.YYYY HH:mm') }) : null },
     ]
 

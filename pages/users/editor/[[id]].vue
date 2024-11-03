@@ -25,6 +25,14 @@
             <HeFlex padding="1.5rem 1rem" :gap="3">
                 <ErrorAlert :errors="form.errors" />
 
+                <IodAlert type="error" v-if="form.model.blocked_at">
+                    <div class="mb-3">
+                        Dieser Nutzer wurde gesperrt.<br>
+                        Grund: <b>{{ form.model.block_reason || 'Nicht angegeben' }}</b>
+                    </div>
+                    <IodButton type="button" size="s" corner="l" label="Nutzer entsperren" color-preset="error" :loading="blockUserForm.processing" @click="unblockUser" />
+                </IodAlert>
+
                 <HeFlex :gap="1">
                     <HeFlex horizontal>
                         <h5 class="m-0 font-medium">Konto</h5>
@@ -33,23 +41,36 @@
                             <IodButton type="button" label="Aktionen" icon-right="expand_more" size="s" corner="pill" variant="contained"/>
                             <template #popper>
                                 <ContextMenu class="min-w-96">
-                                    <ContextMenuLabel label="Email"/>
-                                    <ContextMenuItem is="button" type="button" icon="send" label="Bestätigungsmail versenden" @click="sendVerificationEmail()" :disabled="!!form.model.email_verified_at" v-close-popper/>
-                                    <ContextMenuItem is="button" type="button" icon="mark_email_read" label="Email bestätigen" @click="verifyEmail(!form.model.email_verified_at)">
-                                        <template #right>
-                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.email_verified_at"/>
-                                        </template>
-                                    </ContextMenuItem>
-
-                                    <ContextMenuDivider />
                                     <ContextMenuLabel label="Zugriff"/>
-                                    <ContextMenuItem is="button" type="button" icon="how_to_reg" label="Nutzer freigeben" @click="enableUser(!form.model.enabled_at)">
+                                    <ContextMenuItem is="button" type="button" icon="verified" label="Nutzer freigeben" @click="enableUser(!form.model.enabled_at)">
                                         <template #right>
                                             <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.enabled_at"/>
                                         </template>
                                     </ContextMenuItem>
+                                    <ContextMenuItem is="button" type="button" icon="do_not_disturb_on" color="var(--color-error)" label="Nutzer sperren" @click="blockUserPopup.open()" v-show="!form.model.blocked_at" v-close-popper/>
+                                    <ContextMenuItem is="button" type="button" icon="do_not_disturb_off" color="var(--color-success)" label="Nutzer entsperren" @click="unblockUser()" v-show="form.model.blocked_at" v-close-popper/>
+                                    
+                                    <ContextMenuDivider />
+                                    
+                                    <ContextMenuLabel label="Email"/>
+                                    <ContextMenuItem is="button" type="button" icon="send" label="Bestätigungsmail versenden" @click="sendVerificationEmail()" :disabled="!!form.model.email_verified_at" v-close-popper/>
+                                    <ContextMenuItem is="button" type="button" icon="mail" label="Email-Adresse bestätigen" @click="verifyEmail(!form.model.email_verified_at)">
+                                        <template #right>
+                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.email_verified_at"/>
+                                        </template>
+                                    </ContextMenuItem>
+                                    
+                                    <ContextMenuDivider />
+                                    
+                                    <ContextMenuLabel label="Telefon"/>
+                                    <ContextMenuItem is="button" type="button" icon="phone" label="Telefonnummer bestätigen" @click="verifyPhone(!form.model.phone_verified_at)">
+                                        <template #right>
+                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.phone_verified_at"/>
+                                        </template>
+                                    </ContextMenuItem>
 
                                     <ContextMenuDivider />
+                                    
                                     <ContextMenuLabel label="Sicherheit"/>
                                     <ContextMenuItem is="button" type="button" icon="lock" label="Passwort ändern" @click="changePasswordPopup.open()" v-close-popper/>
                                     <ContextMenuItem is="button" type="button" icon="lock_reset" label="Passwort-Änderung anfordern" @click="requirePasswordChange(!form.model.requires_password_change)">
@@ -62,9 +83,6 @@
                                             <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.requires_two_factor"/>
                                         </template>
                                     </ContextMenuItem>
-
-                                    <!-- <ContextMenuDivider />
-                                    <ContextMenuItem is="button" type="button" icon="do_not_disturb_on" color="var(--color-error)" label="Nutzer sperren" v-close-popper/> -->
                                 </ContextMenu>
                             </template>
                         </VDropdown>
@@ -118,7 +136,7 @@
                     <IodInput label="Zweiter Vorname" v-model="form.user_info.middlename"/>
                     <IodInput label="Nachname" v-model="form.user_info.lastname"/>
                     <IodInput label="Suffix" v-model="form.user_info.suffix"/>
-                    <IodInput label="Rechtsname" v-model="form.user_info.legalname"/>
+                    <IodInput label="Rechtlicher Name" v-model="form.user_info.legalname"/>
                     <IodInput label="Spitzname" v-model="form.user_info.nickname"/>
                 </HeFlex>
 
@@ -169,6 +187,16 @@
                 <IodButton label="Passwort ändern" corner="pill" size="l" :loading="changePasswordForm.processing"/>
             </HeFlex>
         </IodPopup>
+
+        <IodPopup ref="blockUserPopup" title="Nutzer sperren" max-width="500px" @open="blockUserForm.reset">
+            <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="blockUser">
+                <ErrorAlert :errors="blockUserForm.errors"/>
+                <HeFlex gap="1rem">
+                    <IodInput v-model="blockUserForm.block_reason" label="Grund" type="text"/>
+                </HeFlex>
+                <IodButton label="Nutzer sperren" corner="pill" size="l" color-preset="error" :loading="blockUserForm.processing"/>
+            </HeFlex>
+        </IodPopup>
     </NuxtLayout>
 </template>
 
@@ -203,7 +231,10 @@
             requires_two_factor: false,
             email_verified_at: '',
             phone_verified_at: '',
+            last_login_at: '',
             enabled_at: '',
+            blocked_at: '',
+            block_reason: '',
             deleted_at: '',
             created_at: '',
             updated_at: '',
@@ -386,6 +417,13 @@
         fetch()
     }
 
+    async function verifyPhone(status: boolean)
+    {
+        form.model.phone_verified_at = status
+        await useAxios().patch(apiRoute('/api/users/:id/verify-phone', { id: id.value }), { phone_verified: status })
+        fetch()
+    }
+
     async function enableUser(status: boolean)
     {
         form.model.enabled_at = status
@@ -426,6 +464,30 @@
         })
     }
     // END: Change password
+
+    // START: Block user
+    const blockUserPopup = ref()
+    const blockUserForm = useForm({
+        blocked: true,
+        block_reason: '',
+    })
+
+    function blockUser()
+    {
+        blockUserForm.patch(apiRoute('/api/users/:id/block', { id: id.value }), {
+            onSuccess() {
+                blockUserPopup.value?.close()
+                fetch()
+            },
+        })
+    }
+
+    function unblockUser()
+    {
+        blockUserForm.blocked = false
+        blockUser()
+    }
+    // END: Block user
 
     
     

@@ -138,7 +138,7 @@
             </VDropdown>
 
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
-                <ProfileChip v-if="auth.user" :title="auth.user.name ?? ''" :subtitle="auth.user.username ?? ''" :image="auth.user.avatar" align="right" v-tooltip="'Profil'"/>
+                <ProfileChip v-if="auth.user" :title="auth.user.name || ''" :subtitle="auth.user.username || ''" :image="auth.user.avatar" align="right" v-tooltip="'Profil'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <div class="flex gap-1 px-1">
