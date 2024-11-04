@@ -1,7 +1,8 @@
-export type BaseUnit = {
+export type Unit = {
     code: string
     symbol: string
     name: string
+    type: string
 }
 
 export type Currency = {

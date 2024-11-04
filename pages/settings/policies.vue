@@ -1,9 +1,14 @@
 <template>
+    <div class="flex items-center min-h-10">
+        <h3 class="flex-1 m-0 font-medium">Domänen Richtlinien</h3>
+    </div>
+
+    <ErrorAlert :errors="form.errors" class="mb-8" />
+
     <form class="contents" @submit.prevent="save()">
-        <SettingsTitle>Domänen Richtlinien</SettingsTitle>
         <SettingsRow>
             <template #description>
-                <span class="font-heading color-text font-medium">Nutzer können sich neu registrieren</span>
+                <span class="font-heading color-text font-medium">Nutzer können sich registrieren</span>
                 <small><NuxtLink to="/settings/register">Stellen Sie ein, was Nutzer bei der Registrierung angeben können und sollen.</NuxtLink></small>
             </template>
 
@@ -31,9 +36,10 @@
         <SettingsRow title="Entwickler Modus">
             <IodToggle type="switch" class="ml-auto" v-model="form.policy_developer_mode" />
         </SettingsRow>
-        <SettingsRow>
-            <IodButton class="flex-1" corner="pill" label="Speichern" :loading="form.processing"/>
-        </SettingsRow>
+        <div class="flex items-center min-h-10">
+            <HeSpacer />
+            <IodButton corner="pill" label="Speichern" icon-right="save" :loading="form.processing"/>
+        </div>
     </form>
 </template>
 

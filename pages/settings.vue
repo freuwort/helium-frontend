@@ -3,10 +3,9 @@
         <HeCard>
             <HeFlex horizontal align-y="stretch">
                 <HeFlex padding="1rem 0" align-y="flex-start" class="w-80 border-r">
-                    <ContextMenuItem to="/settings/" icon="domain" label="System" :active="isRoute('settings')" />
-                    <ContextMenuItem to="/settings/legal" icon="gavel" label="Rechtliches" :active="isRoute('settings-legal')" />
-                    <ContextMenuItem to="/settings/units" icon="square_foot" label="Einheiten" :active="isRoute('settings-units')" />
+                    <ContextMenuItem to="/settings/" icon="domain" label="Domain" :active="isRoute('settings')" />
                     <ContextMenuItem to="/settings/policies" icon="policy" label="Richtlinien" :active="isRoute('settings-policies')" />
+                    <ContextMenuItem to="/settings/units" icon="square_foot" label="Einheiten" :active="isRoute('settings-units')" />
                     <ContextMenuItem to="/settings/register" icon="patient_list" label="Registrierung" :active="isRoute('settings-register')" />
                     <ContextMenuDivider v-if="debugMode"/>
                     <ContextMenuItem v-if="debugMode" to="/settings/debug" icon="bug_report" label="Debug" :active="isRoute('settings-debug')" />

@@ -1,11 +1,11 @@
 <template>
+    <div class="flex items-center min-h-10">
+        <h3 class="flex-1 m-0 font-medium">Registrierung</h3>
+    </div>
+
     <ErrorAlert :errors="form.errors" class="mb-8" />
 
     <div class="flex flex-col gap-4 pb-8" v-if="form.default_profile">
-        <div class="flex items-center">
-            <h3 class="flex-1 m-0 font-medium">Registrierung</h3>
-        </div>
-    
         <div class="profile-container">
             <div class="flex flex-col gap-4 p-4">
                 <h6 class="flex-1 m-0 font-medium">Felder</h6>
@@ -14,9 +14,7 @@
                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
 
                         <template #popper>
-                            <ContextMenu class="min-w-72">
-                                <ContextMenuItem v-for="option in fieldOptions" :key="option" icon="input" :label="option" @click="addProfileArrayItem(form.default_profile, 'fields', option)" />
-                            </ContextMenu>
+                            <ContextMenuBuilder :items="fieldOptions" default-icon="input" @click="addProfileArrayItem(form.default_profile, 'fields', $event)" class="min-w-64"/>
                         </template>
                     </VDropdown>
                     <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="field in form.default_profile.fields" :label="field" @click="removeProfileArrayItem(form.default_profile, 'fields', field)" v-tooltip="'Entfernen'" />
@@ -44,12 +42,12 @@
         </div>
     </div>
 
+    <div class="flex items-center min-h-10">
+        <h3 class="flex-1 m-0 font-medium">Profile</h3>
+        <IodButton type="button" label="Neues Profil" icon-right="add" corner="pill" variant="contained" @click="addProfile()"/>
+    </div>
+
     <div class="flex flex-col gap-4">
-        <div class="flex items-center">
-            <h3 class="flex-1 m-0 font-medium">Profile</h3>
-            <IodButton type="button" label="Neues Profil" icon-right="add" corner="pill" variant="contained" @click="addProfile()"/>
-        </div>
-    
         <div class="flex flex-col" v-if="form.custom_profiles.length">
             <Container orientation="vertical" lock-axis="y" behaviour="contain" non-drag-area-selector=".no-drag" @drop="onDrop">
                 <Draggable v-for="profile in form.custom_profiles" :key="profile.id">
@@ -73,11 +71,9 @@
                                 <div class="flex flex-wrap gap-2">
                                     <VDropdown placement="bottom-start">
                                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
-
+                                        
                                         <template #popper>
-                                            <ContextMenu class="min-w-72">
-                                                <ContextMenuItem v-for="option in fieldOptions" :key="option" icon="input" :label="option" @click="addProfileArrayItem(profile, 'fields', option)" />
-                                            </ContextMenu>
+                                            <ContextMenuBuilder :items="fieldOptions" default-icon="input" @click="addProfileArrayItem(profile, 'fields', $event)" class="min-w-64"/>
                                         </template>
                                     </VDropdown>
                                     <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="field in profile.fields" :label="field" @click="removeProfileArrayItem(profile, 'fields', field)" v-tooltip="'Entfernen'" />
@@ -126,11 +122,9 @@
         <IodAlert type="placeholder" class="h-20" text="Keine Profile angelegt" v-else/>
     </div>
 
-    <div class="flex flex-col gap-4">
-        <div class="flex items-center">
-            <h2 class="flex-1 m-0 font-medium"></h2>
-            <IodButton corner="pill" label="Speichern" :disabled="!isValid" :loading="form.processing" @click="save"/>
-        </div>
+    <div class="flex items-center min-h-10">
+        <HeSpacer />
+        <IodButton corner="pill" label="Speichern" icon-right="save" :disabled="!isValid" :loading="form.processing" @click="save"/>
     </div>
 </template>
 
@@ -173,15 +167,45 @@
     })
 
     const fieldOptions = computed(() => ([
-            'email',
-            'password',
-            'username',
-            'user_name.first_name',
-            'user_name.middle_name',
-            'user_name.last_name',
-            'user_company.company',
-            'user_company.department',
-            'user_company.title',
+        {type: 'label', label: 'Authentifizierung'},
+        {type: 'item', label: 'Email', icon: 'input', value: 'email'},
+        {type: 'item', label: 'Telefon', icon: 'input', value: 'phone'},
+        {type: 'item', label: 'Passwort', icon: 'input', value: 'password'},
+        {type: 'item', label: 'Nutzername', icon: 'input', value: 'username'},
+        {type: 'divider'},
+        {type: 'label', label: 'Datenfelder'},
+        {type: 'submenu', label: 'Namen', icon: 'person', items: [
+            {type: 'label', label: 'Namen'},
+            {type: 'item', label: 'Anrede', icon: 'input', value: 'salutation'},
+            {type: 'item', label: 'Präfix', icon: 'input', value: 'prefix'},
+            {type: 'item', label: 'Vorname', icon: 'input', value: 'firstname'},
+            {type: 'item', label: 'Zweiter Vorname', icon: 'input', value: 'middlename'},
+            {type: 'item', label: 'Nachname', icon: 'input', value: 'lastname'},
+            {type: 'item', label: 'Suffix', icon: 'input', value: 'suffix'},
+            {type: 'item', label: 'Spitzname', icon: 'input', value: 'nickname'},
+            {type: 'item', label: 'Rechtlicher Name', icon: 'input', value: 'legalname'},
+        ]},
+        {type: 'submenu', label: 'Adressen', icon: 'location_on', items: [
+            {type: 'label', label: 'Adressen'},
+            {type: 'item', label: 'Hauptadresse', icon: 'input', value: 'main_address'},
+            {type: 'item', label: 'Rechnungsadresse', icon: 'input', value: 'billing_address'},
+            {type: 'item', label: 'Lieferadresse', icon: 'input', value: 'shipping_address'},
+        ]},
+        {type: 'submenu', label: 'ID Nummern', icon: 'fingerprint', items: [
+            {type: 'label', label: 'ID Nummern'},
+            {type: 'item', label: 'Kunden-Nr.', icon: 'input', value: 'customer_id'},
+            {type: 'item', label: 'Personal-Nr.', icon: 'input', value: 'employee_id'},
+            {type: 'item', label: 'Mitglieds-Nr.', icon: 'input', value: 'member_id'},
+        ]},
+        {type: 'submenu', label: 'Organisation', icon: 'work', items: [
+            {type: 'label', label: 'Organisation'},
+            {type: 'item', label: 'Organisation', icon: 'input', value: 'organisation'},
+            {type: 'item', label: 'Abteilung', icon: 'input', value: 'department'},
+            {type: 'item', label: 'Position', icon: 'input', value: 'job_title'},
+        ]},
+        {type: 'divider'},
+        {type: 'label', label: 'Datenschutz'},
+        {type: 'item', label: 'Datenschutzerklärung', icon: 'input', value: 'gdpr'},
     ]))
 
     const roleOptions = computed(() => ([

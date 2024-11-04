@@ -1,15 +1,16 @@
 <template>
-    <SettingsTitle>
-        <div class="flex items-center">
-            <span class="flex-1">Debug</span>
-            <IodButton @click="fetch()" icon-left="refresh" corner="pill" label="Aktualisieren"/>
-        </div>
-    </SettingsTitle>
+    <div class="flex items-center min-h-10">
+        <h3 class="flex-1 m-0 font-medium">Debug</h3>
+        <IodButton @click="fetch()" icon-left="refresh" corner="pill" label="Aktualisieren"/>
+    </div>
 
-    <SettingsTitle is="h6" title="PHP Info"/>
     <iframe :src="form.phpinfo_url"></iframe>
+    <HeSpacer />
 
-    <SettingsTitle is="h6" title="Domain Settings"/>
+    <div class="flex items-center min-h-10">
+        <h3 class="flex-1 m-0 font-medium">Domain Settings</h3>
+    </div>
+
     <pre v-html="JSON.stringify(form.settings, null, 2)"></pre>
 </template>
 
