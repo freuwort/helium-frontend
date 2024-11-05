@@ -8,7 +8,7 @@
     <div class="flex flex-col gap-4 pb-8" v-if="form.default_profile">
         <div class="profile-container">
             <div class="flex flex-col gap-4 p-4">
-                <h6 class="flex-1 m-0 font-medium">Felder</h6>
+                <h6 class="flex-1 m-0 font-medium">Pflichtfelder</h6>
                 <div class="flex flex-wrap gap-2">
                     <VDropdown placement="bottom-start">
                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
@@ -21,14 +21,14 @@
                 </div>
             </div>
             <div class="flex flex-col gap-4 p-4 border-t border-inherit">
-                <h6 class="flex-1 m-0 font-medium">Rollen</h6>
+                <h6 class="flex-1 m-0 font-medium">Auto-Rollen</h6>
                 <div class="flex flex-wrap gap-2">
                     <VDropdown placement="bottom-start">
                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
 
                         <template #popper>
                             <ContextMenu class="min-w-72">
-                                <ContextMenuItem v-for="option in roleOptions" :key="option" icon="key" :label="option" @click="addProfileArrayItem(form.default_profile, 'auto_assign_roles', option)" />
+                                <ContextMenuItem is="button" v-for="option in roleOptions" :key="option" icon="key" :label="option" @click="addProfileArrayItem(form.default_profile, 'auto_assign_roles', option)" />
                             </ContextMenu>
                         </template>
                     </VDropdown>
@@ -67,7 +67,7 @@
 
                         <template v-if="edit === profile.id">
                             <div class="flex flex-col gap-4 p-4 border-t border-inherit">
-                                <h6 class="flex-1 m-0 font-medium">Felder</h6>
+                                <h6 class="flex-1 m-0 font-medium">Pflichtfelder</h6>
                                 <div class="flex flex-wrap gap-2">
                                     <VDropdown placement="bottom-start">
                                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
@@ -80,14 +80,14 @@
                                 </div>
                             </div>
                             <div class="flex flex-col gap-4 p-4 border-t border-inherit">
-                                <h6 class="flex-1 m-0 font-medium">Rollen</h6>
+                                <h6 class="flex-1 m-0 font-medium">Auto-Rollen</h6>
                                 <div class="flex flex-wrap gap-2">
                                     <VDropdown placement="bottom-start">
                                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
 
                                         <template #popper>
                                             <ContextMenu class="min-w-72">
-                                                <ContextMenuItem v-for="option in roleOptions" :key="option" icon="key" :label="option" @click="addProfileArrayItem(profile, 'auto_assign_roles', option)" />
+                                                <ContextMenuItem is="button" v-for="option in roleOptions" :key="option" icon="key" :label="option" @click="addProfileArrayItem(profile, 'auto_assign_roles', option)" />
                                             </ContextMenu>
                                         </template>
                                     </VDropdown>
@@ -95,18 +95,24 @@
                                 </div>
                             </div>
                             <div class="flex flex-col gap-4 p-4 border-t border-inherit">
-                                <h6 class="flex-1 m-0 font-medium">Erlaubte Profilkombinationen</h6>
+                                <h6 class="flex-1 m-0 font-medium">Gruppen</h6>
                                 <div class="flex flex-wrap gap-2">
                                     <VDropdown placement="bottom-start">
                                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
 
                                         <template #popper>
                                             <ContextMenu class="min-w-72">
-                                                <ContextMenuItem v-for="option in profileOptions" :key="option" icon="patient_list" :label="option" @click="addProfileArrayItem(profile, 'compatible_with', option)" />
+                                                <IodInput class="!h-12 !mx-2 !rounded-full" placeholder="Neue Gruppe" v-model="newGroup" @keydown.enter="addGroup(profile, newGroup)">
+                                                    <template #right>
+                                                        <IodIconButton class="!w-12" size="s" corner="pill" variant="contained" icon="add" @click="addGroup(profile, newGroup)" v-tooltip="'Gruppe anlegen'" />
+                                                    </template>
+                                                </IodInput>
+                                                <ContextMenuDivider v-show="!!groupOptions.length"/>
+                                                <ContextMenuItem is="button" v-for="option in groupOptions" :key="option" icon="workspaces" :label="option" @click="addProfileArrayItem(profile, 'groups', option)" />
                                             </ContextMenu>
                                         </template>
                                     </VDropdown>
-                                    <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in profile.compatible_with" :label="option" @click="removeProfileArrayItem(profile, 'compatible_with', option)" v-tooltip="'Entfernen'" />
+                                    <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in profile.groups" :label="option" @click="removeProfileArrayItem(profile, 'groups', option)" v-tooltip="'Entfernen'" />
                                 </div>
                             </div>
                             <div class="flex flex-col gap-4 p-4 border-t border-inherit">
@@ -138,9 +144,9 @@
     type Profile = {
         id?: string,
         name: string,
-        fields: string[],
-        auto_assign_roles: string[],
-        compatible_with: string[]
+        fields: Set<string>,
+        auto_assign_roles: Set<string>,
+        groups: Set<string>,
         auto_approve: boolean,
     }
 
@@ -152,19 +158,18 @@
         custom_profiles: [],
     })
 
-    const profileTemplate = {
-        name: '',
-        fields: [],
-        auto_assign_roles: [],
-        compatible_with: [],
-        auto_approve: false,
-    }
 
 
-
-    const profileOptions = computed(() => {
-        return form.custom_profiles.map((profile: Profile) => profile.name)
+    const newGroup = ref('')
+    const groupOptions = computed(() => {
+        return [...new Set(form.custom_profiles.map((profile: Profile) => [...profile.groups]).flat())]
     })
+    
+    function addGroup(profile: Profile, group: string) {
+        if (!group) return
+        addProfileArrayItem(profile, 'groups', group.trim().toLowerCase())
+        newGroup.value = ''
+    }
 
     const fieldOptions = computed(() => ([
         {type: 'label', label: 'Authentifizierung'},
@@ -230,9 +235,12 @@
         let name = findNextAvailableName()
         
         form.custom_profiles.push({
-            ...profileTemplate,
             id: slugify(name),
-            name: name,
+            name,
+            fields: new Set([]),
+            auto_assign_roles: new Set([]),
+            groups: new Set([]),
+            auto_approve: false,
         })
     }
 
@@ -241,12 +249,11 @@
     }
 
     function addProfileArrayItem(profile: Profile, key: string, item: string) {
-        if (profile[key].find((n: string) => n === item)) return
-        profile[key].push(item)
+        profile[key].add(item)
     }
 
     function removeProfileArrayItem(profile: Profile, key: string, item: string) {
-        profile[key] = profile[key].filter((n: string) => n !== item)
+        profile[key].delete(item)
     }
 
 
@@ -270,11 +277,22 @@
 
     function load() {
         let profiles = domain.settings?.registration_profiles?.map((profile: Profile) => ({
-            ...profile,
-            id: slugify(profile.name),
+            id: slugify(profile?.name || ''),
+            name: profile?.name || '',
+            fields: new Set(profile?.fields || []),
+            auto_assign_roles: new Set(profile?.auto_assign_roles || []),
+            groups: new Set(profile?.groups || []),
+            auto_approve: profile?.auto_approve || false,
         })) || []
 
-        form.default_profile = profiles.find((profile: Profile) => profile.name === 'default') || {...profileTemplate, name: 'default', id: 'default', fields: ['email', 'password']}
+        form.default_profile = profiles.find((profile: Profile) => profile.name === 'default') || {
+            id: 'default',
+            name: 'default',
+            fields: new Set(['email', 'password']),
+            auto_assign_roles: new Set([]),
+            groups: new Set([]),
+            auto_approve: false,
+        }
         form.custom_profiles = profiles.filter((profile: Profile) => profile.name !== 'default')
     }
 
@@ -283,7 +301,14 @@
 
         form
         .transform((data) => ({
-            registration_profiles: [ data.default_profile, ...data.custom_profiles ]
+            registration_profiles: [
+                data.default_profile, ...data.custom_profiles
+            ].map((profile: Profile) => ({
+                ...profile,
+                fields: Array.from(profile.fields),
+                auto_assign_roles: Array.from(profile.auto_assign_roles),
+                groups: Array.from(profile.groups),
+            }))
         }))
         .patch('/api/settings', {
             onSuccess() {
