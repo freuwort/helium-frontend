@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="flex flex-col gap-4 p-4 border-t border-inherit">
-                <h6 class="flex-1 m-0 font-medium">Automatiche Freischaltung</h6>
+                <h6 class="flex-1 m-0 font-medium">Automatiche Freigabe</h6>
                 <IodToggle type="switch" label="Nutzer nach der Registrierung automatisch freischalten" v-model="form.default_profile.auto_approve" style="--local-color-off: var(--color-text-soft-disabled); --local-color-on: var(--color-info);"/>
             </div>
         </div>
@@ -54,15 +54,26 @@
                     <div class="profile-container" :class="{'active': edit === profile.id}">
                         <div class="flex items-center gap-4 p-4" v-if="edit !== profile.id">
                             <IodIcon icon="drag_indicator" class="h-10" />
-                            <h6 class="flex-1 m-0 font-medium">{{ profile.name }}</h6>
-                            <IodIconButton type="button" corner="pill" variant="contained" v-tooltip="'Bearbeiten'" icon="edit" @click="edit = profile.id"/>
+                            <div class="flex flex-1 flex-col">
+                                <h6 class="font-medium m-0">{{ profile.name }}</h6>
+                                <small>Gruppen: {{ [...profile.groups].join(', ') || 'Keine Gruppe' }}</small>
+                            </div>
+                            <template v-if="profile.fields.size > 0 || profile.auto_assign_roles.size > 0 || profile.auto_approve">
+                                <div class="flex items-center px-1 rounded-full bg-background-soft">
+                                    <IodIcon icon="input" class="h-8 !text-lg" v-tooltip="'erfordert Pflichtfelder'" v-show="profile.fields.size > 0" />
+                                    <IodIcon icon="badge" class="h-8 !text-lg" v-tooltip="'weist automatisch Rollen zu'" v-show="profile.auto_assign_roles.size > 0"/>
+                                    <IodIcon icon="verified" class="h-8 !text-lg" v-tooltip="'automatische Freigabe'" v-show="profile.auto_approve"/>
+                                </div>
+                                <HeDivider vertical class="h-8" />
+                            </template>
+                            <IodIconButton type="button" corner="pill" size="s" variant="text" v-tooltip="'Bearbeiten'" icon="expand_more" @click="edit = profile.id"/>
                         </div>
                         <div class="flex items-center gap-4 p-4" v-else>
                             <IodIcon icon="drag_indicator" class="h-10" />
                             <IodInput class="!h-10 no-drag" placeholder="Profilname" v-model="profile.name" />
                             <HeSpacer />
-                            <IodIconButton type="button" corner="pill" variant="contained" v-tooltip="'Profil löschen'" icon="delete" @click="removeProfile(profile)"/>
-                            <IodIconButton type="button" corner="pill" v-tooltip="'Übernehmen'" icon="check" color-preset="info" @click="edit = ''"/>
+                            <IodIconButton type="button" corner="pill" size="s" color-preset="error" variant="contained" v-tooltip="'Profil löschen'" icon="delete" @click="removeProfile(profile)"/>
+                            <IodIconButton type="button" corner="pill" size="s" color-preset="info" variant="filled" v-tooltip="'Übernehmen'" icon="check" @click="edit = ''"/>
                         </div>
 
                         <template v-if="edit === profile.id">
@@ -116,7 +127,7 @@
                                 </div>
                             </div>
                             <div class="flex flex-col gap-4 p-4 border-t border-inherit">
-                                <h6 class="flex-1 m-0 font-medium">Automatiche Freischaltung</h6>
+                                <h6 class="flex-1 m-0 font-medium">Automatiche Freigabe</h6>
                                 <IodToggle type="switch" label="Nutzer nach der Registrierung automatisch freischalten" v-model="profile.auto_approve" style="--local-color-off: var(--color-text-soft-disabled); --local-color-on: var(--color-info);"/>
                             </div>
                         </template>

@@ -4,6 +4,8 @@ type Profile = {
     auto_assign_roles: string[]
     groups: string[]
     auto_approve: boolean
+    valid?: boolean
+    profiles?: string[]
 }
 
 
@@ -25,44 +27,44 @@ export function useRegisterProfiles() {
     const selectedProfiles = computed<Profile[]>(() => customProfiles.value.filter(profile => selection.value.has(profile.name)))
     const notSelectedProfiles = computed<Profile[]>(() => customProfiles.value.filter(profile => !selection.value.has(profile.name)))
     const defaultProfile = computed<Profile>(() => allProfiles.value.find(profile => profile.name === 'default') || {...templateProfile, name: 'default'})
-
-    function selectProfile(profile: Profile) {
-        selection.value.add(profile.name)
-    }
-
-    function deselectProfile(profile: Profile) {
-        selection.value.delete(profile.name)
-    }
     
-    function toggleProfile(profile: Profile) {
-        if (selection.value.has(profile.name)) {
-            deselectProfile(profile)
-        } else {
-            selectProfile(profile)
-        }
-    }
-
-    const commonGroups = computed(() => {
-        return findCommonItems(selectedProfiles.value.map(profile => profile.groups))
-    })
-
-    const useCommonGroups = computed(() => {
-        return !selectedProfiles.value.every(profile => profile.groups.length <= 0)
-    })
-
     const selectableProfiles = computed<Profile[]>(() => {
         if (!selection.value.size) {
             return customProfiles.value
         }
 
         if (useCommonGroups.value) {
-            return notSelectedProfiles.value.filter(profile => intersect(profile.groups, commonGroups.value).length)
+            return customProfiles.value.filter(profile => arrayIntersect(profile.groups, commonGroups.value).length || selection.value.has(profile.name))
         }
         
-        return []
+        return selectedProfiles.value
     })
 
-    const isValidSelection = computed(() => {
+    const compiledProfile = computed<Profile>(() => {
+        let profiles = [defaultProfile.value, ...selectedProfiles.value]
+
+        return {
+            name: '',
+            valid: isValid.value,
+            fields: arrayUnique(profiles.map(profile => profile.fields).flat()),
+            auto_assign_roles: arrayUnique(profiles.map(profile => profile.auto_assign_roles).flat()),
+            auto_approve: profiles.some(profile => profile.auto_approve),
+            groups: commonGroups.value,
+            profiles: selectedProfiles.value.map(profile => profile.name)
+        }
+    })
+
+
+
+    const commonGroups = computed(() => {
+        return arrayCommon(selectedProfiles.value.map(profile => profile.groups || []))
+    })
+
+    const useCommonGroups = computed(() => {
+        return !selectedProfiles.value.every(profile => profile.groups.length <= 0)
+    })
+
+    const isValid = computed<boolean>(() => {
         if (!useCommonGroups.value) {
             return selectedProfiles.value.filter(profile => !profile.groups.length).length <= 1
         }
@@ -70,26 +72,46 @@ export function useRegisterProfiles() {
         return commonGroups.value.length > 0
     })
 
-    const requiredFields = computed(() => {
-        return Array.from(new Set([defaultProfile.value, ...selectedProfiles.value].map(profile => profile.fields).flat()))
-    })
 
-    function showField(field: string) {
-        return requiredFields.value.includes(field)
+
+    function selectProfile(profile: Profile): void {
+        if (!isSelectable(profile)) return
+        selection.value.add(profile.name)
     }
 
+    function deselectProfile(profile: Profile): void {
+        selection.value.delete(profile.name)
+    }
     
+    function toggleProfile(profile: Profile): void {
+        selection.value.has(profile.name) ? deselectProfile(profile) : selectProfile(profile)
+    }
+
+    function hasField(field: string) {
+        return compiledProfile.value.fields.includes(field)
+    }
+
+    function isSelected(profile: Profile) {
+        return selectedProfiles.value.includes(profile)
+    }
+
+    function isSelectable(profile: Profile) {
+        return selectableProfiles.value.includes(profile) || selectedProfiles.value.includes(profile)
+    }
+
+
 
     return {
         defaultProfile,
+        compiledProfile,
         customProfiles,
         selectedProfiles,
         selectableProfiles,
-        isValidSelection,
         select: selectProfile,
         deselect: deselectProfile,
         toggle: toggleProfile,
-        requiredFields,
-        showField,
+        isSelected,
+        isSelectable,
+        hasField,
     }
 }
