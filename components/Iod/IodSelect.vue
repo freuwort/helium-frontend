@@ -3,6 +3,8 @@
     <IodineInput
       ref="inputComponent"
       :label="label"
+      :icon-left="iconLeft"
+      :icon-right="iconRight"
       :placeholder="placeholder"
       :autofocus="autofocus"
       :disabled="disabled"
@@ -107,6 +109,8 @@ const props = defineProps({
     default: () => null as SelectInputTypes,
   },
   label: { type: String, default: "" },
+  iconLeft: { type: String, default: "" },
+  iconRight: { type: String, default: "" },
   placeholder: { type: String, default: "" },
   border: { type: Boolean, default: false },
   indicatorStyle: { type: String, default: "side" as "side" | "box" },

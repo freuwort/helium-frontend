@@ -44,22 +44,25 @@
             <IodButton corner="pill" label="Speichern" icon-right="save" :loading="unitForm.processing"/>
         </div>
         <SettingsRow title="Standard Währung">
-            <IodSelect class="flex-1" label="Währung" v-model="unitForm.default_currency" :options="options_currency"/>
+            <IodSelect class="flex-1" icon-left="attach_money" label="Währung" v-model="unitForm.default_currency" :options="options_currency"/>
         </SettingsRow>
         <SettingsRow title="Standard Längeneinheit">
-            <IodSelect class="flex-1" label="Länge in" v-model="unitForm.default_unit_length" :options="options_unit_length"/>
+            <IodSelect class="flex-1" icon-left="straighten" label="Länge in" v-model="unitForm.default_unit_length" :options="options_unit_length"/>
         </SettingsRow>
-        <SettingsRow title="Standard Gewichtseinheit">
-            <IodSelect class="flex-1" label="Gewicht in" v-model="unitForm.default_unit_weight" :options="options_unit_weight"/>
+        <SettingsRow title="Standard Flächeeinheit">
+            <IodSelect class="flex-1" icon-left="square_foot" label="Fläche in" v-model="unitForm.default_unit_area" :options="options_unit_area"/>
         </SettingsRow>
         <SettingsRow title="Standard Volumeneinheit">
-            <IodSelect class="flex-1" label="Volumen in" v-model="unitForm.default_unit_volume" :options="options_unit_volume"/>
+            <IodSelect class="flex-1" icon-left="deployed_code" label="Volumen in" v-model="unitForm.default_unit_volume" :options="options_unit_volume"/>
+        </SettingsRow>
+        <SettingsRow title="Standard Gewichtseinheit">
+            <IodSelect class="flex-1" icon-left="weight" label="Gewicht in" v-model="unitForm.default_unit_weight" :options="options_unit_weight"/>
         </SettingsRow>
         <SettingsRow title="Standard Temperatureinheit">
-            <IodSelect class="flex-1" label="Temperatur in" v-model="unitForm.default_unit_temperature" :options="options_unit_temperature"/>
+            <IodSelect class="flex-1" icon-left="thermometer" label="Temperatur in" v-model="unitForm.default_unit_temperature" :options="options_unit_temperature"/>
         </SettingsRow>
         <SettingsRow title="Standard Geschwindigkeitseinheit">
-            <IodSelect class="flex-1" label="Geschwindigkeit in" v-model="unitForm.default_unit_speed" :options="options_unit_speed"/>
+            <IodSelect class="flex-1" icon-left="speed" label="Geschwindigkeit in" v-model="unitForm.default_unit_speed" :options="options_unit_speed"/>
         </SettingsRow>
     </form>
 </template>
@@ -80,14 +83,19 @@
         { value: 'ft', text: 'Fuß', },
     ])
 
-    const options_unit_weight = ref([
-        { value: 'kg', text: 'Kilogramm', },
-        { value: 'lb', text: 'Pfund', },
+    const options_unit_area = ref([
+        { value: 'sqm', text: 'Quadratmeter', },
+        { value: 'sqft', text: 'Quadratfuß', },
     ])
 
     const options_unit_volume = ref([
         { value: 'l', text: 'Liter', },
         { value: 'gal', text: 'Gallone', },
+    ])
+    
+    const options_unit_weight = ref([
+        { value: 'kg', text: 'Kilogramm', },
+        { value: 'lb', text: 'Pfund', },
     ])
 
     const options_unit_temperature = ref([
@@ -161,8 +169,9 @@
     const unitForm = useForm({
         default_currency: domain?.settings?.default_currency ?? 'EUR',
         default_unit_length: domain?.settings?.default_unit_length ?? 'm',
-        default_unit_weight: domain?.settings?.default_unit_weight ?? 'kg',
+        default_unit_area: domain?.settings?.default_unit_area ?? 'sqm',
         default_unit_volume: domain?.settings?.default_unit_volume ?? 'l',
+        default_unit_weight: domain?.settings?.default_unit_weight ?? 'kg',
         default_unit_temperature: domain?.settings?.default_unit_temperature ?? 'c',
         default_unit_speed: domain?.settings?.default_unit_speed ?? 'kmh',
     })

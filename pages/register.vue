@@ -52,8 +52,6 @@
                     </div>
     
                     <HeDivider />
-
-                    <pre>{{ profiles.compiledProfile }}</pre>
     
                     <div class="flex flex-col gap-y-2 sm:items-center sm:flex-row">
                         <NuxtLink :to="'/login'+redirectQuery">Zurück zur Anmeldung</NuxtLink>
