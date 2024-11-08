@@ -1,17 +1,21 @@
 <template>
-    <div class="flex items-center min-h-10">
-        <h3 class="flex-1 m-0 font-medium">Registrierung</h3>
+    <div class="flex items-center min-h-10 mb-6">
+        <h2 class="flex-1 m-0 font-medium text-2xl">Registrierung</h2>
         <IodButton corner="pill" label="Speichern" icon-right="save" :disabled="!isValid" :loading="form.processing" @click="save"/>
     </div>
 
     <ErrorAlert :errors="form.errors" class="mb-4" />
 
-    <div class="flex flex-col gap-4" v-if="form.default_profile">
+    <div class="flex items-center min-h-10">
+        <h3 class="flex-1 m-0 font-medium text-xl">Verpflichtende Angaben</h3>
+    </div>
+
+    <div class="flex flex-col gap-4 mb-6" v-if="form.default_profile">
         <div class="profile-container">
             <div class="flex flex-col gap-4 py-5 px-4">
-                <h3 class="flex-1 m-0 font-medium !text-base/4">Pflichtfelder</h3>
+                <h4 class="flex-1 m-0 font-medium !text-base/4">Pflichtfelder</h4>
                 <div class="flex flex-wrap gap-2">
-                    <VDropdown placement="bottom-start">
+                    <VDropdown placement="left-start">
                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
 
                         <template #popper>
@@ -22,15 +26,13 @@
                 </div>
             </div>
             <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
-                <h3 class="flex-1 m-0 font-medium !text-base/4">Auto-Rollen</h3>
+                <h4 class="flex-1 m-0 font-medium !text-base/4">Auto-Rollen</h4>
                 <div class="flex flex-wrap gap-2">
-                    <VDropdown placement="bottom-start">
+                    <VDropdown placement="left-start">
                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
 
                         <template #popper>
-                            <ContextMenu class="min-w-72">
-                                <ContextMenuItem is="button" v-for="option in roleOptions" :key="option" icon="key" :label="option" @click="addProfileArrayItem(form.default_profile, 'auto_assign_roles', option)" />
-                            </ContextMenu>
+                            <DialogSearchRoles @select="addProfileArrayItem(form.default_profile, 'auto_assign_roles', $event[0].name)" />
                         </template>
                     </VDropdown>
                     <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in form.default_profile.auto_assign_roles" :label="option" @click="removeProfileArrayItem(form.default_profile, 'auto_assign_roles', option)" v-tooltip="'Entfernen'" />
@@ -43,7 +45,7 @@
     </div>
 
     <div class="flex items-center min-h-10">
-        <h3 class="flex-1 m-0 font-medium">Profile</h3>
+        <h3 class="flex-1 m-0 font-medium text-xl">Optionale Profile</h3>
         <IodButton type="button" label="Neues Profil" icon-right="add" corner="pill" variant="contained" @click="addProfile()"/>
     </div>
 
@@ -56,8 +58,8 @@
                             <IodIcon icon="drag_indicator" class="h-10 !text-xl drag-handle" />
                             <HeDivider class="h-10" vertical />
                             <div class="flex flex-1 flex-col">
-                                <h3 class="flex-1 m-0 font-medium !text-lg/6">{{ profile.name }}</h3>
-                                <small>Gruppen: {{ [...profile.groups].join(', ') || 'Keine Gruppe' }}</small>
+                                <h4 class="flex-1 m-0 font-medium !text-lg/6">{{ profile.name }}</h4>
+                                <small>{{ profile.description || 'Keine Beschreibung' }} | Gruppen: {{ [...profile.groups].join(', ') || 'Keine Gruppe' }}</small>
                             </div>
                             <template v-if="profile.fields.size > 0 || profile.auto_assign_roles.size > 0 || profile.auto_enable">
                                 <div class="flex items-center ">
@@ -80,7 +82,7 @@
                             <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
                                 <h3 class="flex-1 m-0 font-medium !text-base/4">Pflichtfelder</h3>
                                 <div class="flex flex-wrap gap-2">
-                                    <VDropdown placement="bottom-start">
+                                    <VDropdown placement="left-start">
                                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
                                         
                                         <template #popper>
@@ -93,13 +95,11 @@
                             <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
                                 <h3 class="flex-1 m-0 font-medium !text-base/4">Auto-Rollen</h3>
                                 <div class="flex flex-wrap gap-2">
-                                    <VDropdown placement="bottom-start">
+                                    <VDropdown placement="left-start">
                                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
 
                                         <template #popper>
-                                            <ContextMenu class="min-w-72">
-                                                <ContextMenuItem is="button" v-for="option in roleOptions" :key="option" icon="key" :label="option" @click="addProfileArrayItem(profile, 'auto_assign_roles', option)" />
-                                            </ContextMenu>
+                                            <DialogSearchRoles @select="addProfileArrayItem(form.default_profile, 'auto_assign_roles', $event[0].name)" />
                                         </template>
                                     </VDropdown>
                                     <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in profile.auto_assign_roles" :label="option" @click="removeProfileArrayItem(profile, 'auto_assign_roles', option)" v-tooltip="'Entfernen'" />
@@ -108,14 +108,14 @@
                             <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
                                 <h3 class="flex-1 m-0 font-medium !text-base/4">Gruppen</h3>
                                 <div class="flex flex-wrap gap-2">
-                                    <VDropdown placement="bottom-start">
+                                    <VDropdown placement="left-start">
                                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
 
                                         <template #popper>
-                                            <ContextMenu class="min-w-72">
-                                                <IodInput class="!h-12 !mx-2 !rounded-full" placeholder="Neue Gruppe" v-model="newGroup" @keydown.enter="addGroup(profile, newGroup)">
+                                            <ContextMenu class="min-w-80">
+                                                <IodInput class="!h-16 !bg-transparent !my-[-1rem]" label="Neue Gruppe" v-model="newGroup" @keydown.enter="addGroup(profile, newGroup)">
                                                     <template #right>
-                                                        <IodIconButton class="!w-12" size="s" corner="pill" variant="contained" icon="add" @click="addGroup(profile, newGroup)" v-tooltip="'Gruppe anlegen'" />
+                                                        <IodIconButton variant="text" icon="add" @click="addGroup(profile, newGroup)" v-tooltip="'Gruppe anlegen'" />
                                                     </template>
                                                 </IodInput>
                                                 <ContextMenuDivider v-show="!!groupOptions.length"/>
@@ -236,12 +236,6 @@
         {type: 'divider'},
         {type: 'label', label: 'Datenschutz'},
         {type: 'item', label: 'Datenschutzerklärung', icon: 'input', value: 'gdpr'},
-    ]))
-
-    const roleOptions = computed(() => ([
-        'Admin',
-        'Personal',
-        'Kunde',
     ]))
 
 

@@ -1,5 +1,6 @@
 type Profile = {
     name: string
+    description: string
     fields: string[]
     auto_assign_roles: string[]
     groups: string[]
@@ -15,6 +16,7 @@ export function useRegisterProfiles() {
 
     const templateProfile = {
         name: '',
+        description: '',
         fields: [],
         auto_assign_roles: [],
         groups: [],
@@ -25,7 +27,6 @@ export function useRegisterProfiles() {
     const allProfiles = computed<Profile[]>(() => domain.settings?.registration_profiles || [])
     const customProfiles = computed<Profile[]>(() => allProfiles.value.filter(profile => profile.name !== 'default'))
     const selectedProfiles = computed<Profile[]>(() => customProfiles.value.filter(profile => selection.value.has(profile.name)))
-    const notSelectedProfiles = computed<Profile[]>(() => customProfiles.value.filter(profile => !selection.value.has(profile.name)))
     const defaultProfile = computed<Profile>(() => allProfiles.value.find(profile => profile.name === 'default') || {...templateProfile, name: 'default'})
     
     const selectableProfiles = computed<Profile[]>(() => {
@@ -45,11 +46,13 @@ export function useRegisterProfiles() {
 
         return {
             name: '',
-            valid: isValid.value,
+            description: '',
             fields: arrayUnique(profiles.map(profile => profile.fields).flat()),
             auto_assign_roles: arrayUnique(profiles.map(profile => profile.auto_assign_roles).flat()),
             auto_approve: profiles.some(profile => profile.auto_approve),
             groups: commonGroups.value,
+            
+            valid: isValid.value,
             profiles: selectedProfiles.value.map(profile => profile.name)
         }
     })
