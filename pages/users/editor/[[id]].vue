@@ -94,24 +94,23 @@
 
                 <HeFlex :gap="1">
                     <h5 class="m-0 font-medium">Berechtigungen</h5>
-                    <VDropdown :shown="!!searchForm.search.length && !!searchForm.results.length" :triggers="[]" :auto-hide="false">
-                        <IodInput type="search" placeholder="Rollen suchen" v-model="searchForm.search" @update:modelValue="throttledSearch()" />
+                    <div class="flex flex-wrap gap-2">
+                        <VDropdown placement="left">
+                            <IodIconButton type="button" class="!w-12" size="s" corner="pill" icon="add" v-tooltip="'Rollen hinzufügen'" />
 
-                        <template #popper>
-                            <HeFlex align-y="flex-start" padding="1rem 0" class="min-w-80 max-h-80 small-scrollbar">
-                                <ProfileChip class="h-12 !p-2 flex-none" corner="none" v-for="result in searchForm.results" :title="result.name" :icon="result.icon" :color="result.color" @click="assignRole(result)"/>
-                            </HeFlex>
-                        </template>
-                    </VDropdown>
-                    <div class="flex gap-2 flex-wrap">
+                            <template #popper>
+                                <DialogSearchRoles @select="assignRole($event[0])" />
+                            </template>
+                        </VDropdown>
+
                         <IodButton
                             v-for="role in form.roles"
                             size="s"
                             corner="pill"
                             type="button"
                             variant="contained"
+                            class="!normal-case !tracking-normal"
                             v-tooltip='`"${role.name}" Rolle entfernen`'
-                            :background="role.color"
                             :icon-left="role.icon"
                             :label="role.name"
                             @click="removeRole(role)"

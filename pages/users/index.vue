@@ -94,7 +94,7 @@
             color: value ? 'var(--color-success)' : 'var(--color-error)',
         })).build(),
         tableColumnBuilder.new().name('blocked_at').label('Gesperrt').transform((value: string | null, item: any) => ({
-            text: value ? dayjs(value).fromNow() : 'Nein',
+            text: value ? dayjs(value).fromNow() : 'Aktiv',
             tooltip: value ? `${dayjs(value).format('DD.MM.YYYY HH:mm')} - Grund: ${item.block_reason || 'Nicht angegeben'}` : 'Nein',
             icon: value ? 'do_not_disturb_on' : '',
             color: value ? 'var(--color-error)' : 'var(--color-info)',
