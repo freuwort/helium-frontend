@@ -115,7 +115,7 @@
                 <AppHeaderItem show-chevron color="#FF4757" icon="receipt" v-tooltip="'Buchhaltung'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem show-chevron color="#FF4757" icon="domain">Kontakte</ContextMenuItem>
+                        <ContextMenuItem to="/accounting/contacts" show-chevron color="#FF4757" icon="domain">Kontakte</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem show-chevron color="#FF4757" icon="article">Angebote</ContextMenuItem>
                         <ContextMenuItem show-chevron color="#FF4757" icon="home_repair_service">Aufträge</ContextMenuItem>
