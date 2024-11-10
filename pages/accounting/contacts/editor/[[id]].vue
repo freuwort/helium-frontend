@@ -25,6 +25,14 @@
                     <IodInput label="Kundennummer" v-model="form.customer_id" v-show="form.type === 'customer'"/>
                     <IodInput label="Lieferantennummer" v-model="form.supplier_id" v-show="form.type === 'supplier'"/>
                     <IodInput label="Mitarbeiternummer" v-model="form.employee_id" v-show="form.type === 'employee'"/>
+
+                    <VDropdown>
+                        <IodButton type="button" label="Hauptadresse auswählen" size="s" corner="pill" variant="contained"/>
+
+                        <template #popper>
+                            <IodAddressPicker v-model="form.main_address"/>
+                        </template>
+                    </VDropdown>
                 </HeFlex>
 
 
@@ -128,7 +136,7 @@
     // START: Server routes
     function fetch()
     {
-        form.get(apiRoute('/api/users/:id', { id: id.value }), {
+        form.get(apiRoute('/api/accounting/contacts/:id', { id: id.value }), {
             onSuccess(response: any)
             {
                 form.defaults(response.data).reset()
@@ -138,23 +146,23 @@
 
     function store()
     {
-        form.post(apiRoute('/api/users'), {
+        form.post(apiRoute('/api/accounting/contacts'), {
             onSuccess(response: any)
             {
                 form.defaults(response.data).reset()
-                toast.success('Nutzer wurde erstellt')
-                navigateTo(apiRoute('/users/editor/:id', { id: response.data?.id }))
+                toast.success('Kontakt wurde erstellt')
+                navigateTo(apiRoute('/accounting/contacts/editor/:id', { id: response.data?.id }))
             },
         })
     }
 
     function update()
     {
-        form.patch(apiRoute('/api/users/:id', { id: id.value }), {
+        form.patch(apiRoute('/api/accounting/contacts/:id', { id: id.value }), {
             onSuccess(response: any)
             {
                 form.defaults(response.data).reset()
-                toast.success('Nutzer wurde aktualisiert')
+                toast.success('Kontakt wurde aktualisiert')
             },
         })
     }

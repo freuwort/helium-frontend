@@ -57,59 +57,14 @@
     const tableColumnBuilder = new TableColumnBuilder()
     const tableColumns = [
         tableColumnBuilder.new().name('id').label('ID').width(70).build(),
-        tableColumnBuilder.new().name('name').label('Name').transform((value: string | null, item: any) => ({
-            text: value || '-',
-            tooltip: value || '-',
-            image: item.avatar,
-            icon: 'person',
-        })).build(),
+        tableColumnBuilder.new().name('type').label('Typ').build(),
+        tableColumnBuilder.new().name('name').label('Name').build(),
+        tableColumnBuilder.new().name('vat_id').label('USt-IdNr.').build(),
+        tableColumnBuilder.new().name('tax_id').label('Steuernummer').build(),
         tableColumnBuilder.new().name('customer_id').label('Kunden-Nr.').build(),
+        tableColumnBuilder.new().name('supplier_id').label('Lieferanten-Nr.').build(),
         tableColumnBuilder.new().name('employee_id').label('Personal-Nr.').build(),
-        tableColumnBuilder.new().name('member_id').label('Mitglieds-Nr.').build(),
-        tableColumnBuilder.new().name('username').label('Nutzername').build(),
-        tableColumnBuilder.new().name('email').label('Email').build(),
-        tableColumnBuilder.new().name('phone').label('Telefon').build(),
-        tableColumnBuilder.new().name('roles').label('Rollen').transform((value: any[]) => value?.map(e => e.name)?.join(', ') || null).build(),
-        tableColumnBuilder.new().name('is_admin').label('Berechtigungslevel').sortable(false).transform((value: boolean | null, item: any) => {
-            if (item?.is_admin) return { text: 'Admin', icon: 'shield', color: 'var(--color-info)', }
-            if (item?.has_elevated_permissions) return { text: 'Erweitert', icon: 'check_circle', color: 'var(--color-info)', }
-            return { text: 'Basis', icon: 'key', color: 'var(--color-text-soft)', }
-        }).build(),
-        tableColumnBuilder.new().name('email_verified_at').label('Email bestätigt').transform((value: string | null) => ({
-            text: value ? dayjs(value).fromNow() : 'Ausstehend',
-            tooltip: value ? dayjs(value).format('DD.MM.YYYY HH:mm') : 'Ausstehend',
-            icon: value ? 'check' : 'close',
-            color: value ? 'var(--color-success)' : 'var(--color-error)',
-        })).build(),
-        tableColumnBuilder.new().name('phone_verified_at').label('Telefon bestätigt').transform((value: string | null, item: any) => ({
-            text: value ? dayjs(value).fromNow() : 'Ausstehend',
-            tooltip: value ? dayjs(value).format('DD.MM.YYYY HH:mm') : 'Ausstehend',
-            icon: value ? 'check' : 'close',
-            color: value ? 'var(--color-success)' : 'var(--color-error)',
-        })).build(),
-        tableColumnBuilder.new().name('enabled_at').label('Freigegeben').transform((value: string | null, item: any) => ({
-            text: value ? dayjs(value).fromNow() : 'Ausstehend',
-            tooltip: value ? dayjs(value).format('DD.MM.YYYY HH:mm') : 'Ausstehend',
-            icon: value ? 'check' : 'close',
-            color: value ? 'var(--color-success)' : 'var(--color-error)',
-        })).build(),
-        tableColumnBuilder.new().name('blocked_at').label('Gesperrt').transform((value: string | null, item: any) => ({
-            text: value ? dayjs(value).fromNow() : 'Nein',
-            tooltip: value ? `${dayjs(value).format('DD.MM.YYYY HH:mm')} - Grund: ${item.block_reason || 'Nicht angegeben'}` : 'Nein',
-            icon: value ? 'do_not_disturb_on' : '',
-            color: value ? 'var(--color-error)' : 'var(--color-info)',
-        })).build(),
-        tableColumnBuilder.new().name('has_tfa_enabled').label('Zweiter Faktor').transform((value: boolean | null, item: any) => ({
-            text: value ? 'Aktiv' : 'Inaktiv',
-            tooltip: value ? 'Aktiv' : 'Inaktiv',
-            icon: value ? 'check' : 'close',
-            color: value ? 'var(--color-success)' : 'var(--color-error)',
-        })).build(),
-        tableColumnBuilder.new().name('last_login_at').label('Zuletzt eingeloggt').transform((value: string | null) => ({
-            text: value ? dayjs(value).fromNow() : 'Nie',
-            tooltip: value ? dayjs(value).format('DD.MM.YYYY HH:mm') : 'Nie',
-        })).build(),
-        tableColumnBuilder.new().name('created_at').label('Registriert').transform((value: string | null) => ({
+        tableColumnBuilder.new().name('created_at').label('Erstellt').transform((value: string | null) => ({
             text: value ? dayjs(value).fromNow() : '-',
             tooltip: value ? dayjs(value).format('DD.MM.YYYY HH:mm') : '-',
         })).build(),

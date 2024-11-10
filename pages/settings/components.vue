@@ -53,6 +53,12 @@
         </div>
     </SettingsRow>
 
+    <SettingsRow title="IodAddressPicker" description="Show an address picker">
+        <div class="flex flex-col">
+            <IodAddressPicker v-model="address"/>
+        </div>
+    </SettingsRow>
+
     <IodPopup ref="popupLeft" title="Left Popup" blur="0" placement="left"><span class="p-6">Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur</span></IodPopup>
     <IodPopup ref="popupCenter" title="Center Popup" blur="0" placement="center"><span class="p-6">Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur</span></IodPopup>
     <IodPopup ref="popupRight" title="Right Popup" blur="0" placement="right"><span class="p-6">Lorem ipsum dolor sit amet consectetur adipisicing elit consequuntur</span></IodPopup>
@@ -112,6 +118,7 @@
 
     const time = ref(null)
     const date = ref(null)
+    const address = ref(null)
 
 
 
