@@ -34,6 +34,7 @@
 
 <script lang="ts" setup>
     import type { FilterSetting } from '~/components/Iod/IodTable.vue'
+    import type { BasicAddress } from '~/types/address'
     import { FieldGroup, Field } from '~/classes/import/CsvImport'
     import TableColumnBuilder from '~/classes/Builder/TableColumnBuilder'
     import { toast } from 'vue3-toastify'
@@ -69,6 +70,9 @@
         tableColumnBuilder.new().name('username').label('Nutzername').build(),
         tableColumnBuilder.new().name('email').label('Email').build(),
         tableColumnBuilder.new().name('phone').label('Telefon').build(),
+        tableColumnBuilder.new().name('main_address').label('Hauptadresse').sortable(false).transform((value: any) => stringFromAddress(value) || null).build(),
+        tableColumnBuilder.new().name('billing_address').label('Rechnungsadresse').sortable(false).transform((value: any) => stringFromAddress(value) || null).build(),
+        tableColumnBuilder.new().name('shipping_address').label('Lieferadresse').sortable(false).transform((value: any) => stringFromAddress(value) || null).build(),
         tableColumnBuilder.new().name('roles').label('Rollen').transform((value: any[]) => value?.map(e => e.name)?.join(', ') || null).build(),
         tableColumnBuilder.new().name('is_admin').label('Berechtigungslevel').sortable(false).transform((value: boolean | null, item: any) => {
             if (item?.is_admin) return { text: 'Admin', icon: 'shield', color: 'var(--color-info)', }

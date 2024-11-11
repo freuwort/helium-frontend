@@ -142,6 +142,16 @@
                         <IodInput type="text" label="Hauptadresse" icon-right="location_on" :modelValue="stringFromAddress(form.main_address)" readonly/>
                         <template #popper><IodAddressPicker v-model="form.main_address"/></template>
                     </VDropdown>
+
+                    <VDropdown>
+                        <IodInput type="text" label="Rechnungsadresse" icon-right="location_on" :modelValue="stringFromAddress(form.billing_address)" readonly/>
+                        <template #popper><IodAddressPicker v-model="form.billing_address"/></template>
+                    </VDropdown>
+
+                    <VDropdown>
+                        <IodInput type="text" label="Lieferadresse" icon-right="location_on" :modelValue="stringFromAddress(form.shipping_address)" readonly/>
+                        <template #popper><IodAddressPicker v-model="form.shipping_address"/></template>
+                    </VDropdown>
                 </HeFlex>
 
                 <HeFlex :gap="1">
