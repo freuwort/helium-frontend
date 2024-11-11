@@ -6,6 +6,7 @@
                 <slot>{{ text }}</slot>
             </div>
         </div>
+        <div class="border" v-if="border"></div>
     </div>
 </template>
 
@@ -19,16 +20,24 @@
             type: String as PropType<Type>,
             default: 'default',
         },
+        border: {
+            type: Boolean,
+            default: false,
+        },
+        icon: String,
         text: String,
     })
 
-    const icon = computed(() => { switch (props.type) {
-        case 'success': return 'check_circle'
-        case 'info': return 'info'
-        case 'warning': return 'warning'
-        case 'error': return 'report'
-        default: return null
-    }})
+    const icon = computed(() => {
+        if (props.icon) return props.icon
+        switch (props.type) {
+            case 'success': return 'check_circle'
+            case 'info': return 'info'
+            case 'warning': return 'warning'
+            case 'error': return 'report'
+            default: return null
+        }
+})
 
     const classes = computed(() => ([
         `alert-type-${props.type}`,
@@ -37,8 +46,8 @@
 
 <style lang="sass" scoped>
     .iod-container.iod-alert
-        border-radius: var(--radius-m)
-        padding: 1rem
+        border-radius: var(--radius-l)
+        padding: .75rem 1rem
         display: flex
         flex-direction: column
         gap: 1rem
@@ -63,10 +72,20 @@
             display: flex
             align-items: center
             gap: 1rem
+            line-height: 1.5
             position: relative
             z-index: 1
             margin: 0
             color: inherit
+
+        .border
+            position: absolute
+            top: 0
+            left: 0
+            right: 0
+            bottom: 0
+            border-radius: inherit
+            border: 1px solid currentColor
 
         &.alert-type-default::before,
         &.alert-type-info::before,

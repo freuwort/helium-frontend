@@ -49,6 +49,10 @@
             type: String,
             default: '',
         },
+        normalCase: {
+            type: Boolean,
+            default: false,
+        },
         label: {
             type: String,
             default: '',
@@ -101,6 +105,7 @@
             `button-variant-${props.variant}`,
             `button-color-preset-${props.colorPreset}`,
             {
+                'button-normal-case': props.normalCase,
                 'disabled': props.disabled,
                 'loading': props.loading,
             }
@@ -266,6 +271,12 @@
 
         &.button-shadow-l
             box-shadow: var(--shadow-l)
+
+
+
+        &.button-normal-case
+            text-transform: none
+            letter-spacing: 0
 
 
 

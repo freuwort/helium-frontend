@@ -1,26 +1,20 @@
 <template>
     <NuxtLayout name="guest-default" pageTitle="Registrieren">
-        <HeLimiter size="form">
-            <HeCard is="form" @submit.prevent="submit">
-                <div class="flex flex-col px-6 py-6 gap-6 sm:gap-8 sm:py-8">
-                    <ErrorAlert :errors="form.errors"/>
-
-                    <div class="flex items-center min-h-10">
-                        <h1 class="flex-1 font-medium m-0">Registrieren</h1>
-                        <span class="font-mono">Schritt {{ currentStepIndex+1 }}/{{ totalSteps }}</span>
-                    </div>
-
-                    <HeDivider />
-
-                    <div class="flex flex-col gap-4" v-show="currentStep === 'profiles'">
-                        <div class="flex items-center gap-4 px-2 pb-2">
-                            <IodIcon icon="stacks" />
-                            <p><b class="color-text">Anmeldeprofile</b><br>Wählen Sie die Optionen aus, die auf Sie zutreffen.</p>
-                        </div>
-                        <div class="bordered-container flex-1 flex items-center gap-4 p-2 select-none" v-for="profile in profiles.customProfiles.value" :key="profile.name" @click="profiles.toggle(profile)" :class="{
-                            'active': profiles.isSelected(profile),
-                            'disabled': !profiles.isSelectable(profile),
-                        }">
+        <form class="contents" @submit.prevent="submit">
+            <div class="flex flex-col items-start min-h-10">
+                <IodButton size="xs" variant="text" corner="pill" icon-left="west" label="Zurück zur Anmeldung" normal-case :is="NuxtLink" :to="'/auth/login'+redirectQuery" />
+                <h1 class="font-medium m-0">Registrieren</h1>
+            </div>
+            
+            <ErrorAlert :errors="form.errors"/>
+    
+            <template v-if="sent === false">
+                <TransitionGroup :name="'slide-'+direction" tag="div" class="relative">
+                    <div class="step" v-if="currentStep === 'profiles'" key="profiles">
+                        <IodAlert icon="stacks">
+                            <p><b>Anmeldeprofile</b><br>Wählen Sie die Optionen aus, die auf Sie zutreffen.</p>
+                        </IodAlert>
+                        <div class="bordered-container flex-1 flex items-center gap-4 p-2 select-none" v-for="profile in profiles.customProfiles.value" :key="profile.name" @click="profiles.toggle(profile)" :class="{ 'active': profiles.isSelected(profile), 'disabled': !profiles.isSelectable(profile), }">
                             <IodToggle readonly :modelValue="profiles.isSelected(profile)" style="--local-color-on: var(--color-info)"/>
                             <div class="flex flex-1 flex-col">
                                 <h4 class="flex-1 m-0 font-medium !text-lg/6">{{ profile.name }}</h4>
@@ -28,23 +22,21 @@
                             </div>
                         </div>
                     </div>
-    
-                    <div class="flex flex-col gap-4" v-show="currentStep === 'credentials'">
-                        <div class="flex items-center gap-4 px-2 pb-2">
-                            <IodIcon icon="shield" />
-                            <p><b class="color-text">Ihre Logindaten</b><br>Bitte wählen Sie Ihre Logindaten.</p>
-                        </div>
+        
+                    <div class="step" v-if="currentStep === 'credentials'" key="credentials">
+                        <IodAlert icon="shield">
+                            <p><b>Ihre Logindaten</b><br>Bitte wählen Sie Ihre Logindaten.</p>
+                        </IodAlert>
                         <IodInput type="email" label="Email" v-model="form.email" v-show="profiles.hasField('email')"/>
                         <IodInput type="text" label="Telefon" v-model="form.phone" v-show="profiles.hasField('phone')"/>
                         <IodInput type="text" label="Nutzername" v-model="form.username" v-show="profiles.hasField('username')"/>
                         <IodInput type="password" label="Passwort" show-score :score-function="useZxcvbn()" v-model="form.password" v-show="profiles.hasField('password')"/>
                     </div>
-
-                    <div class="flex flex-col gap-4" v-show="currentStep === 'personal'">
-                        <div class="flex items-center gap-4 px-2 pb-2">
-                            <IodIcon icon="person" />
-                            <p><b class="color-text">Persönliche Angaben</b><br>Geben Sie Informationen über sich an.</p>
-                        </div>
+        
+                    <div class="step" v-if="currentStep === 'personal'" key="personal">
+                        <IodAlert icon="person">
+                            <p><b>Persönliche Angaben</b><br>Geben Sie Informationen über sich an.</p>
+                        </IodAlert>
                         <IodInput type="text" label="Anrede" v-model="form.salutation" v-show="profiles.hasField('salutation')"/>
                         <IodInput type="text" label="Titel" v-model="form.prefix" v-show="profiles.hasField('prefix')"/>
                         <IodInput type="text" label="Vorname" v-model="form.firstname" v-show="profiles.hasField('firstname')"/>
@@ -55,24 +47,39 @@
                         <IodInput type="text" label="Rechtlicher Name" v-model="form.legalname" v-show="profiles.hasField('legalname')"/>
                         <IodInput type="text" label="Personal-Nr." v-model="form.employee_id" v-show="profiles.hasField('employee_id')"/>
                         <IodInput type="text" label="Mitglieds-Nr." v-model="form.member_id" v-show="profiles.hasField('member_id')"/>
+    
+                        <VDropdown v-show="profiles.hasField('main_address')">
+                            <IodInput type="text" label="Hauptadresse" icon-right="location_on" :modelValue="stringFromAddress(form.main_address)" readonly/>
+                            <template #popper><IodAddressPicker v-model="form.main_address"/></template>
+                        </VDropdown>
+    
+                        <VDropdown v-show="profiles.hasField('billing_address')">
+                            <IodInput type="text" label="Rechnungsadresse" icon-right="location_on" :modelValue="stringFromAddress(form.billing_address)" readonly/>
+                            <template #popper><IodAddressPicker v-model="form.billing_address"/></template>
+                        </VDropdown>
+    
+                        <VDropdown v-show="profiles.hasField('shipping_address')">
+                            <IodInput type="text" label="Versandadresse" icon-right="location_on" :modelValue="stringFromAddress(form.shipping_address)" readonly/>
+                            <template #popper><IodAddressPicker v-model="form.shipping_address"/></template>
+                        </VDropdown>
                     </div>
-
-                    <div class="flex flex-col gap-4" v-show="currentStep === 'company'">
-                        <div class="flex items-center gap-4 px-2 pb-2">
-                            <IodIcon icon="store" />
-                            <p><b class="color-text">Angaben zum Unternehmen</b><br>Geben Sie hier Daten zu Ihrem Unternehmen an.</p>
-                        </div>
+        
+                    <div class="step" v-if="currentStep === 'company'" key="company">
+                        <IodAlert icon="store">
+                            <p><b>Angaben zum Unternehmen</b><br>Geben Sie hier Daten zu Ihrem Unternehmen an.</p>
+                        </IodAlert>
                         <IodInput type="text" label="Name des Unternehmen / Organisation" v-model="form.organisation" v-show="profiles.hasField('organisation')"/>
                         <IodInput type="text" label="Abteilung" v-model="form.department" v-show="profiles.hasField('department')"/>
                         <IodInput type="text" label="Position" v-model="form.job_title" v-show="profiles.hasField('job_title')"/>
                         <IodInput type="text" label="Kunden-Nr." v-model="form.customer_id" v-show="profiles.hasField('customer_id')"/>
                     </div>
-
-                    <div class="flex flex-col gap-4" v-show="currentStep === 'final'">
-                        <div class="flex items-center gap-4 px-2 pb-2">
-                            <IodIcon icon="pageview" />
-                            <p><b class="color-text">Angaben überprüfen</b><br>Überprüfen Sie Ihre Angaben</p>
-                        </div>
+        
+                    <div class="step" v-if="currentStep === 'final'" key="final">
+                        <IodAlert icon="send">
+                            <b>Registrierung abschließen</b><br>
+                            Schicken Sie Ihre Registrierung ab.
+                        </IodAlert>
+    
                         <div class="bordered-container flex-1 flex items-center gap-4 p-2 select-none" @click="form.gdpr = !form.gdpr" :class="{'active': form.gdpr,}">
                             <IodToggle v-model="form.gdpr" style="--local-color-on: var(--color-info)" @click.stop/>
                             <p>
@@ -81,23 +88,25 @@
                             </p>
                         </div>
                     </div>
-
-                    <div class="flex items-center gap-4 pt-2">
-                        <IodButton type="button" label="Zurück" corner="pill" variant="contained" @click="prevStep()" v-if="currentStepIndex > 0"/>
-                        <HeSpacer />
-                        <IodButton label="Neues Konto registrieren" corner="pill" :disabled="!isValid" :loading="form.processing" v-if="currentStep === 'final'"/>
-                        <IodButton label="Weiter" corner="pill" variant="filled" @click="nextStep()" v-else/>
-                    </div>
-    
-                    <HeDivider />
-    
-                    <div class="flex flex-col gap-y-2 sm:items-center sm:flex-row">
-                        <NuxtLink :to="'/login'+redirectQuery">Zurück zur Anmeldung</NuxtLink>
-                        <HeSpacer class="hidden sm:block"/>
-                    </div>
+                </TransitionGroup>
+        
+        
+                <div class="flex items-center gap-4 pt-2">
+                    <IodButton type="button" class="w-40" label="Zurück" corner="pill" variant="contained" :loading="form.processing" @click="prevStep()" :disabled="currentStepIndex <= 0"/>
+                    <span class="flex-1 text-center font-mono">{{ currentStepIndex+1 }}/{{ totalSteps }}</span>
+                    <IodButton type="button" class="w-40" label="Weiter" corner="pill" variant="filled" :loading="form.processing" @click="nextStep()" v-if="currentStep !== 'final'"/>
+                    <IodButton type="submit" class="w-40" label="Registrieren" corner="pill" :loading="form.processing" :disabled="!isValid" v-if="currentStep === 'final'"/>
                 </div>
-            </HeCard>
-        </HeLimiter>
+            </template>
+
+            <IodAlert type="success" v-else>
+                <b>Sie haben sich erfolgreich registriert!<br><br></b>
+                <template v-if="profiles.hasField('email')">
+                    <span>Wir haben Ihnen einen Link zum Aktivieren Ihres Kontos an Ihre Email-Adresse gesendet!<br><br></span>
+                    <b>Bitte schauen Sie auch in Ihrem Spam- oder Junk-Ordner.</b>
+                </template>
+            </IodAlert>
+        </form>
     </NuxtLayout>
 </template>
 
@@ -105,6 +114,7 @@
     const auth = useAuthStore()
     const profiles = useRegisterProfiles()
     const route = useRoute()
+    const NuxtLink = defineNuxtLink({})
 
     // START: Stepper
     const steps = computed<string[]>(() => {
@@ -147,6 +157,7 @@
     })
 
     const currentStep = ref('')
+    const direction = ref('')
     const currentStepIndex = computed(() => steps.value.indexOf(currentStep.value))
     const totalSteps = computed(() => steps.value.length)
 
@@ -161,12 +172,14 @@
     {
         if (currentStepIndex.value + 1 >= totalSteps.value) return
         currentStep.value = steps.value[currentStepIndex.value + 1]
+        direction.value = 'forwards'
     }
 
     function prevStep()
     {
         if (currentStepIndex.value - 1 < 0) return
         currentStep.value = steps.value[currentStepIndex.value - 1]
+        direction.value = 'backwards'
     }
     // END: Stepper
     
@@ -186,6 +199,10 @@
         nickname: '',
         legalname: '',
 
+        main_address: null,
+        billing_address: null,
+        shipping_address: null,
+
         organisation: '',
         department: '',
         job_title: '',
@@ -194,6 +211,7 @@
         employee_id: '',
         member_id: '',
     })
+    const sent = ref(false)
 
     const redirect = computed(() => route.query.redirect as string ?? null)
     const redirectQuery = computed(() => redirect.value ? `?redirect=${redirect.value}` : '')
@@ -219,19 +237,37 @@
         }))
         .post(auth.apiRoutes.register, {
             onSuccess: () => {
-                console.log('Form success')
+                sent.value = true
             }
         })
-
-        // // Attempt register
-        // const { error } = await auth.register(form.value)
-
-        // // Navigate to dashboard if successful
-        // if (!error.value) navigateTo(auth.routes.authHome)
     }
 </script>
 
 <style lang="sass" scoped>
+    .slide-forwards-enter-active,
+    .slide-backwards-enter-active,
+    .slide-forwards-leave-active,
+    .slide-backwards-leave-active,
+    .slide-forwards-move,
+    .slide-backwards-move
+        transition: all 300ms ease
+
+    .slide-forwards-leave-active,
+    .slide-backwards-leave-active
+        position: absolute !important
+
+    .slide-forwards-enter-from,
+    .slide-backwards-leave-to
+        transform: translateX(2rem)
+        opacity: 0
+
+    .slide-forwards-leave-to,
+    .slide-backwards-enter-from
+        transform: translateX(-2rem)
+        opacity: 0
+
+
+
     .bordered-container
         background: var(--color-background)
         border: 2px solid var(--color-border)
@@ -253,4 +289,24 @@
         &:disabled
             border-color: var(--color-border-disabled)
             opacity: .5
+
+    .step
+        width: 100%
+        display: flex
+        flex-direction: column
+        gap: 1rem
+
+    .step-description
+        display: flex
+        align-items: center
+        gap: 1rem
+        padding: .75rem 1rem
+        background: var(--color-background-soft)
+        border-radius: var(--radius-l)
+
+        > p
+            line-height: 1.5
+
+        > p b
+            color: var(--color-text)
 </style>

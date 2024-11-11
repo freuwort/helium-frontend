@@ -6,12 +6,18 @@
             <span>{{ [internalValue.state, internalValue.country_code].join(' ') }}</span>
         </div>
         <div class="body">
-            <IodInput label="Straße und Hausnummer" v-model="internalValue.address_line_1" />
-            <IodInput label="Zusatz" v-model="internalValue.address_line_2" />
-            <IodInput label="Stadt" v-model="internalValue.city" />
-            <IodInput label="Postleitzahl" v-model="internalValue.postal_code" />
-            <IodInput label="Bundesland" v-model="internalValue.state" />
-            <!-- <IodSelect class="!h-10" label="Land" v-model="internalValue.country_code" :options="countries.map((e: Country) => ({text: e.name, value: e.code}))"/> -->
+            <div class="flex flex-col gap-2">
+                <IodInput label="Straße und Hausnummer" v-model="internalValue.address_line_1" />
+                <!-- <IodInput label="Zusatz" v-model="internalValue.address_line_2" /> -->
+            </div>
+            <div class="flex flex-col gap-2">
+                <IodInput label="Postleitzahl" v-model="internalValue.postal_code" />
+                <IodInput label="Stadt" v-model="internalValue.city" />
+            </div>
+            <!-- <div class="flex flex-col gap-2">
+                <IodInput label="Bundesland" v-model="internalValue.state" />
+                <IodSelect class="!h-10" label="Land" v-model="internalValue.country_code" :options="countries.map((e: Country) => ({text: e.name, value: e.code}))"/>
+            </div> -->
         </div>
         <div class="footer">
             <IodButton class="flex-1" corner="pill" variant="contained" label="löschen" @click="setAddress('reset')"/>
@@ -116,7 +122,7 @@
             display: flex
             flex-direction: column
             overflow: hidden
-            gap: .5rem
+            gap: 1rem
             padding: 1rem
 
         .footer

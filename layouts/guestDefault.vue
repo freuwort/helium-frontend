@@ -11,18 +11,23 @@
             <h2 v-else-if="domain.settings && domain.settings?.company_name">{{ domain.settings.company_name }}</h2>
             <h2 v-else>Helium Erstanmeldung</h2>
         </header>
+
         <main>
-            <slot />
+            <HeLimiter size="form">
+                <HeCard class="flex flex-col px-6 py-6 gap-6 sm:gap-8 sm:py-8">
+                    <slot />
+                </HeCard>
+            </HeLimiter>
         </main>
+        
         <footer v-if="domain.settings?.company_legalname">
             <HeLimiter size="form">
                 <div class="flex flex-wrap gap-y-0 gap-x-2 py-4 px-4 sm:gap-x-4">
                     <span>© {{ $dayjs().year() }} {{ domain.settings?.company_legalname }}</span>
                     <HeSpacer class="hidden sm:block"/>
-                    <small class="inline sm:hidden">·</small>
                     <a href="/legal" target="_blank">Impressum</a>
-                    <span class="inline sm:hidden">·</span>
                     <a href="/privacy" target="_blank">Datenschutz</a>
+                    <a href="/privacy" target="_blank">AGB</a>
                 </div>
             </HeLimiter>
         </footer>

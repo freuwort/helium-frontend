@@ -1,39 +1,30 @@
 <template>
     <NuxtLayout name="guest-default" pageTitle="Passwort wiederherstellen">
-        <HeLimiter size="form">
-            <HeCard is="form" @submit.prevent="submit">
-                <HeFlex gap="2rem" padding="2rem">
-                    <ErrorAlert :errors="form.errors"/>
-                    <h1 class="font-medium text-center m-0">Passwort wiederherstellen</h1>
-
-                    <template v-if="validLink === true">
-                        <p>
-                            Geben Sie ein neues Passwort ein.
-                        </p>
-        
-                        <IodInput type="password" label="Passwort" v-model="form.password"/>
-                        <IodButton label="Passwort zurücksetzen" size="l" corner="pill" :disabled :loading="form.processing"/>
-                    </template>
-
-                    <template v-else>
-                        <IodAlert type="error" text="Dieser Link ist ungültig oder abgelaufen." />
-                    </template>
+        <form class="contents" @submit.prevent="submit">
+            <div class="flex flex-col items-start min-h-10">
+                <IodButton size="xs" variant="text" corner="pill" icon-left="west" label="Zurück zur Anmeldung" normal-case :is="NuxtLink" :to="'/auth/login'+redirectQuery" />
+                <h1 class="font-medium m-0">Passwort wiederherstellen</h1>
+            </div>
     
-                    <HeDivider />
+            <ErrorAlert :errors="form.errors"/>
     
-                    <HeFlex :gap="1" horizontal>
-                        <NuxtLink to="/login">Zurück zur Anmeldung</NuxtLink>
-                        <HeSpacer />
-                    </HeFlex>
-                </HeFlex>
-            </HeCard>
-        </HeLimiter>
+            <div class="flex flex-col gap-4" v-if="validLink === true">
+                <IodAlert text="Geben Sie ein neues Passwort ein."/>
+                <IodInput type="password" label="Passwort" v-model="form.password"/>
+                <IodButton label="Passwort zurücksetzen" size="l" corner="pill" :disabled :loading="form.processing"/>
+            </div>
+    
+            <template v-else>
+                <IodAlert type="error" text="Dieser Link ist ungültig oder abgelaufen." />
+            </template>
+        </form>
     </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
     const auth = useAuthStore()
     const route = useRoute()
+    const NuxtLink = defineNuxtLink({})
 
 
 
