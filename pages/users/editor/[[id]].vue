@@ -7,9 +7,9 @@
                 allow-banner-upload
                 class="rounded-t-2xl border-b"
                 :title="fullname"
-                :avatar="form.model.avatar"
-                :banner="form.model.banner"
-                :subtitle="form.model.username"
+                :avatar="form.avatar"
+                :banner="form.banner"
+                :subtitle="form.username"
                 @upload:avatar="selectMedia('avatar')"
                 @upload:banner="selectMedia('banner')"
             />
@@ -25,10 +25,10 @@
             <HeFlex padding="1.5rem 1rem" :gap="3">
                 <ErrorAlert :errors="form.errors" />
 
-                <IodAlert type="error" v-if="form.model.blocked_at">
+                <IodAlert type="error" v-if="form.blocked_at">
                     <div class="mb-3">
                         Dieser Nutzer wurde gesperrt.<br>
-                        Grund: <b>{{ form.model.block_reason || 'Nicht angegeben' }}</b>
+                        Grund: <b>{{ form.block_reason || 'Nicht angegeben' }}</b>
                     </div>
                     <IodButton type="button" size="s" corner="l" label="Nutzer entsperren" color-preset="error" :loading="blockUserForm.processing" @click="unblockUser" />
                 </IodAlert>
@@ -42,30 +42,30 @@
                             <template #popper>
                                 <ContextMenu class="min-w-96">
                                     <ContextMenuLabel label="Zugriff"/>
-                                    <ContextMenuItem is="button" type="button" icon="verified" label="Nutzer freigeben" @click="enableUser(!form.model.enabled_at)">
+                                    <ContextMenuItem is="button" type="button" icon="verified" label="Nutzer freigeben" @click="enableUser(!form.enabled_at)">
                                         <template #right>
-                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.enabled_at"/>
+                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.enabled_at"/>
                                         </template>
                                     </ContextMenuItem>
-                                    <ContextMenuItem is="button" type="button" icon="do_not_disturb_on" color="var(--color-error)" label="Nutzer sperren" @click="blockUserPopup.open()" v-show="!form.model.blocked_at" v-close-popper/>
-                                    <ContextMenuItem is="button" type="button" icon="do_not_disturb_off" color="var(--color-success)" label="Nutzer entsperren" @click="unblockUser()" v-show="form.model.blocked_at" v-close-popper/>
+                                    <ContextMenuItem is="button" type="button" icon="do_not_disturb_on" color="var(--color-error)" label="Nutzer sperren" @click="blockUserPopup.open()" v-show="!form.blocked_at" v-close-popper/>
+                                    <ContextMenuItem is="button" type="button" icon="do_not_disturb_off" color="var(--color-success)" label="Nutzer entsperren" @click="unblockUser()" v-show="form.blocked_at" v-close-popper/>
                                     
                                     <ContextMenuDivider />
                                     
                                     <ContextMenuLabel label="Email"/>
-                                    <ContextMenuItem is="button" type="button" icon="send" label="Bestätigungsmail versenden" @click="sendVerificationEmail()" :disabled="!!form.model.email_verified_at" v-close-popper/>
-                                    <ContextMenuItem is="button" type="button" icon="mail" label="Email-Adresse bestätigen" @click="verifyEmail(!form.model.email_verified_at)">
+                                    <ContextMenuItem is="button" type="button" icon="send" label="Bestätigungsmail versenden" @click="sendVerificationEmail()" :disabled="!!form.email_verified_at" v-close-popper/>
+                                    <ContextMenuItem is="button" type="button" icon="mail" label="Email-Adresse bestätigen" @click="verifyEmail(!form.email_verified_at)">
                                         <template #right>
-                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.email_verified_at"/>
+                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.email_verified_at"/>
                                         </template>
                                     </ContextMenuItem>
                                     
                                     <ContextMenuDivider />
                                     
                                     <ContextMenuLabel label="Telefon"/>
-                                    <ContextMenuItem is="button" type="button" icon="phone" label="Telefonnummer bestätigen" @click="verifyPhone(!form.model.phone_verified_at)">
+                                    <ContextMenuItem is="button" type="button" icon="phone" label="Telefonnummer bestätigen" @click="verifyPhone(!form.phone_verified_at)">
                                         <template #right>
-                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.phone_verified_at"/>
+                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.phone_verified_at"/>
                                         </template>
                                     </ContextMenuItem>
 
@@ -73,23 +73,23 @@
                                     
                                     <ContextMenuLabel label="Sicherheit"/>
                                     <ContextMenuItem is="button" type="button" icon="lock" label="Passwort ändern" @click="changePasswordPopup.open()" v-close-popper/>
-                                    <ContextMenuItem is="button" type="button" icon="lock_reset" label="Passwort-Änderung anfordern" @click="requirePasswordChange(!form.model.requires_password_change)">
+                                    <ContextMenuItem is="button" type="button" icon="lock_reset" label="Passwort-Änderung anfordern" @click="requirePasswordChange(!form.requires_password_change)">
                                         <template #right>
-                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.requires_password_change"/>
+                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.requires_password_change"/>
                                         </template>
                                     </ContextMenuItem>
-                                    <ContextMenuItem is="button" type="button" icon="shield_lock" label="2FA-Einrichtung anfordern" @click="requireTwoFactor(!form.model.requires_two_factor)">
+                                    <ContextMenuItem is="button" type="button" icon="shield_lock" label="2FA-Einrichtung anfordern" @click="requireTwoFactor(!form.requires_two_factor)">
                                         <template #right>
-                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.model.requires_two_factor"/>
+                                            <IodToggle type="switch" class="!p-0 !pr-4" style="--local-color-on: var(--color-success)" :modelValue="!!form.requires_two_factor"/>
                                         </template>
                                     </ContextMenuItem>
                                 </ContextMenu>
                             </template>
                         </VDropdown>
                     </HeFlex>
-                    <IodInput label="Benutzername" v-model="form.model.username"/>
-                    <IodInput label="Email" v-model="form.model.email"/>
-                    <IodInput label="Telefon" v-model="form.model.phone"/>
+                    <IodInput label="Benutzername" v-model="form.username"/>
+                    <IodInput label="Email" v-model="form.email"/>
+                    <IodInput label="Telefon" v-model="form.phone"/>
                 </HeFlex>
 
                 <HeFlex :gap="1">
@@ -122,56 +122,34 @@
 
                 <HeFlex :gap="1">
                     <h5 class="m-0 font-medium">Identifikation</h5>
-                    <IodInput label="Kunden-Nr." v-model="form.user_info.customer_id"/>
-                    <IodInput label="Personal-Nr." v-model="form.user_info.employee_id"/>
-                    <IodInput label="Mitglieds-Nr." v-model="form.user_info.member_id"/>
+                    <IodInput label="Kunden-Nr." v-model="form.customer_id"/>
+                    <IodInput label="Personal-Nr." v-model="form.employee_id"/>
+                    <IodInput label="Mitglieds-Nr." v-model="form.member_id"/>
                 </HeFlex>
 
                 <HeFlex :gap="1">
                     <h5 class="m-0 font-medium">Name</h5>
-                    <IodInput label="Anrede" v-model="form.user_info.salutation"/>
-                    <IodInput label="Präfix" v-model="form.user_info.prefix"/>
-                    <IodInput label="Vorname" v-model="form.user_info.firstname"/>
-                    <IodInput label="Zweiter Vorname" v-model="form.user_info.middlename"/>
-                    <IodInput label="Nachname" v-model="form.user_info.lastname"/>
-                    <IodInput label="Suffix" v-model="form.user_info.suffix"/>
-                    <IodInput label="Rechtlicher Name" v-model="form.user_info.legalname"/>
-                    <IodInput label="Spitzname" v-model="form.user_info.nickname"/>
+                    <IodInput label="Anrede" v-model="form.salutation"/>
+                    <IodInput label="Präfix" v-model="form.prefix"/>
+                    <IodInput label="Vorname" v-model="form.firstname"/>
+                    <IodInput label="Zweiter Vorname" v-model="form.middlename"/>
+                    <IodInput label="Nachname" v-model="form.lastname"/>
+                    <IodInput label="Suffix" v-model="form.suffix"/>
+                    <IodInput label="Rechtlicher Name" v-model="form.legalname"/>
+                    <IodInput label="Spitzname" v-model="form.nickname"/>
+
+                    <VDropdown>
+                        <IodInput type="text" label="Hauptadresse" icon-right="location_on" :modelValue="stringFromAddress(form.main_address)" readonly/>
+                        <template #popper><IodAddressPicker v-model="form.main_address"/></template>
+                    </VDropdown>
                 </HeFlex>
 
                 <HeFlex :gap="1">
                     <h5 class="m-0 font-medium">Arbeit</h5>
-                    <IodInput label="Organisation" v-model="form.user_info.organisation"/>
-                    <IodInput label="Abteilung" v-model="form.user_info.department"/>
-                    <IodInput label="Titel" v-model="form.user_info.job_title"/>
+                    <IodInput label="Organisation" v-model="form.organisation"/>
+                    <IodInput label="Abteilung" v-model="form.department"/>
+                    <IodInput label="Titel" v-model="form.job_title"/>
                 </HeFlex>
-
-
-
-                <!-- <HeFlex :gap="1">
-                    <HeFlex horizontal>
-                        <h5 class="m-0 font-medium">Adressen</h5>
-                        <HeSpacer />
-                        <IodButton type="button" label="Neue Adresse" size="s" corner="pill" variant="contained" @click="addAddress()"/>
-                    </HeFlex>
-    
-                    <div class="entity-grid" v-if="form.addresses.length">
-                        <HeCard class="entity-card" v-for="address, i in form.addresses">
-                            <HeFlex class="entity-card-head" padding="1rem">
-                                <IodIcon icon="location_on" />
-                                <IodButton type="button" label="Löschen" size="s" corner="pill" variant="contained" color-preset="error" @click="removeAddress(i)"/>
-                            </HeFlex>
-                            <HeFlex padding="1rem" gap="1rem">
-                                <IodInput v-model="address.address_line_1" label="Straße" />
-                                <IodInput v-model="address.postal_code" label="Postleitzahl" />
-                                <IodInput v-model="address.city" label="Stadt" />
-                                <IodSelect v-model="address.country_code" label="Land" :options="countries.map((e: Country) => ({text: e.name, value: e.code}))"/>
-                            </HeFlex>
-                        </HeCard>
-                    </div>
-
-                    <IodAlert type="placeholder" class="h-40" text="Es wurden noch keine Adressen angelegt" v-else />
-                </HeFlex> -->
             </HeFlex>
         </HeCard>
 
@@ -220,44 +198,49 @@
 
     const form = useForm({
         id: id.value,
-        model: {
-            avatar: null,
-            banner: null,
-            username: '',
-            email: '',
-            phone: '',
-            requires_password_change: false,
-            requires_two_factor: false,
-            email_verified_at: '',
-            phone_verified_at: '',
-            last_login_at: '',
-            enabled_at: '',
-            blocked_at: '',
-            block_reason: '',
-            deleted_at: '',
-            created_at: '',
-            updated_at: '',
-        },
+        avatar: null,
+        banner: null,
+        username: '',
+        email: '',
+        phone: '',
+
+        requires_password_change: false,
+        requires_two_factor: false,
+        email_verified_at: '',
+        phone_verified_at: '',
+        last_login_at: '',
+        enabled_at: '',
+        blocked_at: '',
+        block_reason: '',
+        deleted_at: '',
+        created_at: '',
+        updated_at: '',
+
+        name: '',
+        salutation: '',
+        prefix: '',
+        firstname: '',
+        middlename: '',
+        lastname: '',
+        suffix: '',
+        legalname: '',
+        nickname: '',
+
+        organisation: '',
+        department: '',
+        job_title: '',
+
+        customer_id: '',
+        employee_id: '',
+        member_id: '',
+
+        notes: '',
+        
         roles: [],
-        user_info: {
-            name: '',
-            salutation: '',
-            prefix: '',
-            firstname: '',
-            middlename: '',
-            lastname: '',
-            suffix: '',
-            legalname: '',
-            nickname: '',
-            organisation: '',
-            department: '',
-            job_title: '',
-        },
     })
 
     const fullname = computed(() => {
-        const name = form.user_info
-        return [name.prefix, name.firstname, name.middlename, name.lastname, name.suffix].filter(Boolean).join(' ')
+        return [form.prefix, form.firstname, form.middlename, form.lastname, form.suffix].filter(i => i).join(' ')
     })
     
     const countries = ref([])
@@ -265,29 +248,11 @@
 
 
     // START: Roles
-    const searchForm = useForm({
-        search: '',
-        results: [],
-    })
-
-    const throttledSearch = _.throttle(search, 400)
-
-    async function search() {
-        searchForm.results = (await useAxios().get(apiRoute('/api/roles/basic', {
-            filter: {
-                search: searchForm.search,
-                exclude: form.roles.map((item: BasicRole) => item.id)
-            },
-            size: 10,
-        }))).data.data
-    }
-
     function assignRole(roles: BasicRole|BasicRole[])
     {
         if (!Array.isArray(roles)) roles = [roles]
 
         form.roles.push(...roles)
-        searchForm.reset()
 
         useAxios()
         .put('/api/users/roles', {
@@ -322,6 +287,7 @@
             toast.error(error.response.data.message)
         })
     }
+    // END: Roles
 
 
 
@@ -409,35 +375,35 @@
 
     async function verifyEmail(status: boolean)
     {
-        form.model.email_verified_at = status
+        form.email_verified_at = status
         await useAxios().patch(apiRoute('/api/users/:id/verify-email', { id: id.value }), { email_verified: status })
         fetch()
     }
 
     async function verifyPhone(status: boolean)
     {
-        form.model.phone_verified_at = status
+        form.phone_verified_at = status
         await useAxios().patch(apiRoute('/api/users/:id/verify-phone', { id: id.value }), { phone_verified: status })
         fetch()
     }
 
     async function enableUser(status: boolean)
     {
-        form.model.enabled_at = status
+        form.enabled_at = status
         await useAxios().patch(apiRoute('/api/users/:id/enable', { id: id.value }), { enabled: status })
         fetch()
     }
 
     async function requirePasswordChange(status: boolean)
     {
-        form.model.requires_password_change = status
+        form.requires_password_change = status
         await useAxios().patch(apiRoute('/api/users/:id/require-password-change', { id: id.value }), { requires_password_change: status })
         fetch()
     }
 
     async function requireTwoFactor(status: boolean)
     {
-        form.model.requires_two_factor = status
+        form.requires_two_factor = status
         await useAxios().patch(apiRoute('/api/users/:id/require-two-factor', { id: id.value }), { requires_two_factor: status })
         fetch()
     }
