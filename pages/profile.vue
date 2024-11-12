@@ -51,16 +51,7 @@
                     <b class="w-20 text-center">In-App</b>
                     <b class="w-20 text-center">Email</b>
                 </div>
-                <div class="flex items-center">
-                    <b class="flex-1">Systemupdates</b>
-                    <span class="w-20 text-center">
-                        <IodToggle :modelValue="auth.getSettings('notification_database_system_update', false, 'db')" @update:modelValue="auth.setSettings('notification_database_system_update', $event, 'db')"/>
-                    </span>
-                    <span class="w-20 text-center">
-                        <IodToggle :modelValue="auth.getSettings('notification_mail_system_update', false, 'db')" @update:modelValue="auth.setSettings('notification_mail_system_update', $event, 'db')"/>
-                    </span>
-                </div>
-                <div class="flex items-center">
+                <div class="flex items-center" v-if="auth.can('system.view.users')">
                     <b class="flex-1">Nutzer hat sich registriert</b>
                     <span class="w-20 text-center">
                         <IodToggle :modelValue="auth.getSettings('notification_database_user_registered', false, 'db')" @update:modelValue="auth.setSettings('notification_database_user_registered', $event, 'db')"/>
@@ -69,7 +60,7 @@
                         <IodToggle :modelValue="auth.getSettings('notification_mail_user_registered', false, 'db')" @update:modelValue="auth.setSettings('notification_mail_user_registered', $event, 'db')"/>
                     </span>
                 </div>
-                <div class="flex items-center" v-if="auth.can('system.enable.users')">
+                <div class="flex items-center" v-if="auth.can(['system.view.users', 'system.enable.users'])">
                     <b class="flex-1">Nutzer wartet auf eine Freigabe</b>
                     <span class="w-20 text-center">
                         <IodToggle :modelValue="auth.getSettings('notification_database_user_verified', true, 'db')" @update:modelValue="auth.setSettings('notification_database_user_verified', $event, 'db')"/>
