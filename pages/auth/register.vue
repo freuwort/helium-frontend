@@ -142,6 +142,9 @@
             'legalname',
             'employee_id',
             'member_id',
+            'main_address',
+            'billing_address',
+            'shipping_address',
         ]).length > 0) steps.push('personal')
 
         if (arrayIntersect(profiles.compiledProfile.value.fields, [
