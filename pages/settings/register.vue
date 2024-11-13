@@ -99,7 +99,7 @@
                                         <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
 
                                         <template #popper>
-                                            <DialogSearchRoles @select="addProfileArrayItem(form.default_profile, 'auto_assign_roles', $event[0].name)" />
+                                            <DialogSearchRoles @select="addProfileArrayItem(profile, 'auto_assign_roles', $event[0].name)" />
                                         </template>
                                     </VDropdown>
                                     <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in profile.auto_assign_roles" :label="option" @click="removeProfileArrayItem(profile, 'auto_assign_roles', option)" v-tooltip="'Entfernen'" />
