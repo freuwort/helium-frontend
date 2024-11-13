@@ -9,15 +9,14 @@
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/" show-chevron icon="home">Startseite</ContextMenuItem>
-                        <ContextMenuItem v-if="devMode" show-chevron icon="location_on">Standorte</ContextMenuItem>
                         <ContextMenuItem to="/users" show-chevron icon="group">Nutzer</ContextMenuItem>
                         <ContextMenuItem to="/media" show-chevron icon="folder">Dateien</ContextMenuItem>
                         <ContextMenuDivider />
-                        <ContextMenuItem v-if="devMode"to="/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
+                        <!-- <ContextMenuItem v-if="devMode" to="/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
                         <ContextMenuItem v-if="devMode" to="/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
                         <ContextMenuItem v-if="devMode" to="/screens" show-chevron color="#84cc16" icon="desktop_windows">Screens</ContextMenuItem>
-                        <ContextMenuItem v-if="devMode"to="/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
-                        <ContextMenuItem v-if="devMode" show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
+                        <ContextMenuItem v-if="devMode" to="/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
+                        <ContextMenuItem v-if="devMode" show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem> -->
                         <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Buchhaltung</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem to="/settings/" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
@@ -26,15 +25,6 @@
             </VDropdown>
 
             <HeDivider vertical class="h-8"/>
-
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
-                <AppHeaderItem show-chevron icon="location_on"/>
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem show-chevron icon="location_on">Standorte</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown>
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron icon="group" v-tooltip="'Nutzer / Unternehmen / Berechtigungen'"/>
@@ -60,7 +50,7 @@
 
             <HeDivider vertical class="h-8 ml-2"/>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
+            <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#06B6D4" icon="edit_square" v-tooltip="'Formulare'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -109,7 +99,7 @@
                         <ContextMenuItem show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
                     </ContextMenu>
                 </template>
-            </VDropdown>
+            </VDropdown> -->
 
             <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron color="#FF4757" icon="receipt" v-tooltip="'Buchhaltung'"/>
@@ -147,7 +137,7 @@
                             <IodIconButton class="flex-1" corner="pill" :variant="theme === 'system'? 'contained' : 'text'" icon="brightness_auto" v-tooltip="'Theme: System'" @click="auth.setSettings('ui_theme', 'system', 'db')"/>
                         </div>
                         <ContextMenuDivider />
-                        <ContextMenuItem to="/profile" show-chevron icon="person">Profil</ContextMenuItem>
+                        <ContextMenuItem to="/auth/profile" show-chevron icon="person">Profil</ContextMenuItem>
                         <ContextMenuItem is="button" show-chevron color="var(--color-error)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
                         <ContextMenuDivider />
                         <ContextMenuItem to="/settings" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
