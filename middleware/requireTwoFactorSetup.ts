@@ -1,15 +1,13 @@
 export default defineNuxtRouteMiddleware((to, from) => {
     const auth = useAuthStore()
+    const authHome = auth.routes.authHome
+    const intendedQuery = to.query?.intended ? `?intended=${to.query.intended}` : ''
 
-    const redirect = computed(() => to.query.redirect as string ?? null)
+    function destinationDiffersFrom(route: string) {
+        return to.path !== route
+    }
 
-    if(
-        (!auth.user?.requires_two_factor || auth.user?.has_tfa_enabled) &&
-        to.path !== auth.routes.authHome
-    ){
-        return navigateTo(redirect.value ?? auth.routes.authHome, {
-            replace: true,
-            external: !!redirect.value,
-        })
+    if (destinationDiffersFrom(authHome) && (!auth.user?.requires_two_factor || auth.user?.has_tfa_enabled)) {
+        return navigateTo(authHome+intendedQuery, { replace: true })
     }
 })

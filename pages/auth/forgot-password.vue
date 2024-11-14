@@ -2,7 +2,7 @@
     <NuxtLayout name="guest-default" pageTitle="Passwort vergessen?">
         <form class="contents" @submit.prevent="submit">
             <div class="flex flex-col items-start min-h-10">
-                <IodButton size="xs" variant="text" corner="pill" icon-left="west" label="Zurück zur Anmeldung" normal-case :is="NuxtLink" :to="'/auth/login'+redirectQuery" />
+                <IodButton size="xs" variant="text" corner="pill" icon-left="west" label="Zurück zur Anmeldung" normal-case :is="NuxtLink" :to="auth.routes.login+intendedQuery" />
                 <h1 class="font-medium m-0">Passwort vergessen</h1>
             </div>
     
@@ -28,10 +28,8 @@
 
 <script lang="ts" setup>
     const auth = useAuthStore()
-    const route = useRoute()
+    const intendedQuery = useIntended()
     const NuxtLink = defineNuxtLink({})
-
-
 
     const sent = ref(false)
     const form = useForm({
@@ -40,20 +38,13 @@
 
     const disabled = computed(() => form.processing || !form.email)
 
-    const redirect = computed(() => route.query.redirect as string ?? null)
-    const redirectQuery = computed(() => redirect.value ? `?redirect=${redirect.value}` : '')
-
-
-
-    function submit()
-    {
+    function submit() {
         if (disabled.value) return
 
         form.post(auth.apiRoutes.forgotPassword, { onSuccess })
     }
     
-    function onSuccess()
-    {
+    function onSuccess() {
         sent.value = true
         form.reset()
     }

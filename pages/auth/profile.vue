@@ -8,7 +8,7 @@
             :subtitle="(auth.user?.username as string)"
         /> -->
         <div class="flex flex-col items-start min-h-10">
-            <IodButton size="xs" variant="text" corner="pill" icon-left="west" label="Zurück" normal-case :is="NuxtLink" :to="'/'" />
+            <IodButton size="xs" variant="text" corner="pill" icon-left="west" label="Zurück" normal-case :is="NuxtLink" :to="route.query.return ?? auth.routes.home" />
             <h1 class="font-medium m-0">Ihr Profil</h1>
         </div>
         <HeDivider />
@@ -111,9 +111,10 @@
 
 <script lang="ts" setup>
     import { toast } from 'vue3-toastify'
+    const auth = useAuthStore()
+    const route = useRoute()
     const NuxtLink = defineNuxtLink({})
     
-    const auth = useAuthStore()
     const scope = 'view_admin_profile_show'
 
 

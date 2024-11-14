@@ -2,7 +2,7 @@
     <NuxtLayout name="guest-default" pageTitle="Passwort wiederherstellen">
         <form class="contents" @submit.prevent="submit">
             <div class="flex flex-col items-start min-h-10">
-                <IodButton size="xs" variant="text" corner="pill" icon-left="west" label="Zurück zur Anmeldung" normal-case :is="NuxtLink" :to="'/auth/login'+redirectQuery" />
+                <IodButton size="xs" variant="text" corner="pill" icon-left="west" label="Zurück zur Anmeldung" normal-case :is="NuxtLink" :to="auth.routes.login+intendedQuery" />
                 <h1 class="font-medium m-0">Passwort wiederherstellen</h1>
             </div>
     
@@ -22,11 +22,11 @@
 </template>
 
 <script lang="ts" setup>
-    const auth = useAuthStore()
     const route = useRoute()
+    const auth = useAuthStore()
+    const intendedQuery = useIntended()
+    const splashscreen = useSplashscreenStore()
     const NuxtLink = defineNuxtLink({})
-
-
 
     const form = useForm({
         password: '',
@@ -37,31 +37,21 @@
     const validLink = computed(() => !!linkEmail.value && !!linkToken.value)
     const disabled = computed(() => form.processing || !validLink.value)
 
-    const redirect = computed(() => route.query.redirect as string ?? null)
-    const redirectQuery = computed(() => redirect.value ? `?redirect=${redirect.value}` : '')
-
-
-
-    function submit()
-    {
+    function submit() {
         if (disabled.value) return
 
         form
-        .transform((data) => {
-            return {
-                ...data,
-                email: linkEmail.value,
-                token: linkToken.value
-            }
-        })
+        .transform(data => ({
+            ...data,
+            email: linkEmail.value,
+            token: linkToken.value
+        }))
         .post(auth.apiRoutes.resetPassword, { onSuccess })
     }
     
-    function onSuccess()
-    {
-        navigateTo(redirect.value ?? auth.routes.authHome, {
-            replace: true,
-            external: !!redirect.value
-        })
+    async function onSuccess() {
+        splashscreen.start()
+        await auth.fetchSession()
+        return navigateTo(auth.routes.authHome+intendedQuery, { replace: true })
     }
 </script>

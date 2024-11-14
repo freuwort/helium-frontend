@@ -2,7 +2,7 @@
     <NuxtLayout name="guest-default" pageTitle="Registrieren">
         <form class="contents" @submit.prevent="submit">
             <div class="flex flex-col items-start min-h-10">
-                <IodButton size="xs" variant="text" corner="pill" icon-left="west" label="Zurück zur Anmeldung" normal-case :is="NuxtLink" :to="'/auth/login'+redirectQuery" />
+                <IodButton size="xs" variant="text" corner="pill" icon-left="west" label="Zurück zur Anmeldung" normal-case :is="NuxtLink" :to="auth.routes.login+intendedQuery" />
                 <h1 class="font-medium m-0">Registrieren</h1>
             </div>
             
@@ -113,7 +113,7 @@
 <script lang="ts" setup>
     const auth = useAuthStore()
     const profiles = useRegisterProfiles()
-    const route = useRoute()
+    const intendedQuery = useIntended()
     const NuxtLink = defineNuxtLink({})
 
     // START: Stepper
@@ -171,15 +171,13 @@
         currentStep.value = steps.value[0]
     }, { immediate: true })
 
-    function nextStep()
-    {
+    function nextStep() {
         if (currentStepIndex.value + 1 >= totalSteps.value) return
         currentStep.value = steps.value[currentStepIndex.value + 1]
         direction.value = 'forwards'
     }
 
-    function prevStep()
-    {
+    function prevStep() {
         if (currentStepIndex.value - 1 < 0) return
         currentStep.value = steps.value[currentStepIndex.value - 1]
         direction.value = 'backwards'
@@ -216,9 +214,6 @@
     })
     const sent = ref(false)
 
-    const redirect = computed(() => route.query.redirect as string ?? null)
-    const redirectQuery = computed(() => redirect.value ? `?redirect=${redirect.value}` : '')
-
     const isValid = computed(() => {
         if (auth.session.authenticated) return false
         if (profiles.compiledProfile.value?.valid !== true) return false
@@ -229,8 +224,7 @@
         return true
     })
 
-    async function submit()
-    {
+    async function submit() {
         if (!isValid.value) return
 
         form
@@ -238,11 +232,12 @@
             ...data,
             profiles: profiles.compiledProfile.value?.profiles || [],
         }))
-        .post(auth.apiRoutes.register, {
-            onSuccess: () => {
-                sent.value = true
-            }
-        })
+        .post(auth.apiRoutes.register, { onSuccess })
+    }
+
+    function onSuccess() {
+        sent.value = true
+        form.reset()
     }
 </script>
 

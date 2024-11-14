@@ -17,9 +17,9 @@
             <HeDivider />
     
             <div class="flex flex-col gap-y-2 sm:items-center sm:flex-row">
-                <NuxtLink :to="'/auth/forgot-password'+redirectQuery">Passwort vergessen</NuxtLink>
+                <NuxtLink :to="auth.routes.forgotPassword+intendedQuery">Passwort vergessen</NuxtLink>
                 <HeSpacer class="hidden sm:block"/>
-                <NuxtLink :to="'/auth/register'+redirectQuery">Neues Konto erstellen</NuxtLink>
+                <NuxtLink :to="auth.routes.register+intendedQuery">Neues Konto erstellen</NuxtLink>
             </div>
         </form>
     </NuxtLayout>
@@ -27,49 +27,24 @@
 
 <script lang="ts" setup>
     const auth = useAuthStore()
-    const domain = useDomainStore()
-    const route = useRoute()
-
-
-
     const splashscreen = useSplashscreenStore()
+    const intendedQuery = useIntended()
+
     const form = useForm({
         email: '',
         password: '',
         remember: false,
     })
 
-    const redirect = computed(() => route.query.redirect as string ?? null)
-    const redirectQuery = computed(() => redirect.value ? `?redirect=${redirect.value}` : '')
-
-
-
-    function submit()
-    {
-        // Prevent submit if form is processing
+    function submit() {
         if (form.processing) return
-
-        // Prevent submit if already logged in
-        if (auth.session.authenticated) return
 
         form.post(auth.apiRoutes.login, { onSuccess })
     }
     
-    async function onSuccess()
-    {
+    async function onSuccess() {
         splashscreen.start()
-    
         await auth.fetchSession()
-        await domain.fetchSettings()
-    
-        if (auth.session.tfa_enabled && !auth.session.tfa_verified)
-        {
-            return navigateTo(auth.routes.verify2FA+redirectQuery.value)
-        }
-    
-        return navigateTo(redirect.value ?? auth.routes.authHome, {
-            replace: true,
-            external: !!redirect.value
-        })
+        return navigateTo(auth.routes.authHome+intendedQuery, { replace: true })
     }
 </script>
