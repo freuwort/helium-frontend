@@ -20,14 +20,14 @@
             </HeLimiter>
         </main>
         
-        <footer v-if="domain.settings?.company_legalname">
+        <footer v-if="showFooter">
             <HeLimiter size="form">
                 <div class="flex flex-wrap gap-y-0 gap-x-2 py-4 px-4 sm:gap-x-4">
-                    <span>© {{ $dayjs().year() }} {{ domain.settings?.company_legalname }}</span>
+                    <span v-if="domain.settings?.company_legalname">© {{ $dayjs().year() }} {{ domain.settings?.company_legalname }}</span>
                     <HeSpacer class="hidden sm:block"/>
-                    <a href="/legal" target="_blank">Impressum</a>
-                    <a href="/privacy" target="_blank">Datenschutz</a>
-                    <a href="/privacy" target="_blank">AGB</a>
+                    <NuxtLink v-if="domain.settings?.legal_notice" :to="domain.settings?.legal_notice" target="_blank">Impressum</NuxtLink>
+                    <NuxtLink v-if="domain.settings?.legal_privacy" :to="domain.settings?.legal_privacy" target="_blank">Datenschutz</NuxtLink>
+                    <NuxtLink v-if="domain.settings?.legal_terms" :to="domain.settings?.legal_terms" target="_blank">AGB</NuxtLink>
                 </div>
             </HeLimiter>
         </footer>
@@ -51,6 +51,13 @@
         // Hide splashscreen if it is still idle
         if (!splashscreen.isIdle) splashscreen.finish()
     })
+
+    const showFooter = computed(() =>
+        domain.settings?.company_legalname ||
+        domain.settings?.legal_notice ||
+        domain.settings?.legal_privacy ||
+        domain.settings?.legal_terms
+    )
 </script>
 
 <style scoped lang="sass">
