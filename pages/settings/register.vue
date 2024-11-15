@@ -234,8 +234,9 @@
             {type: 'item', label: 'Position', icon: 'input', value: 'job_title'},
         ]},
         {type: 'divider'},
-        {type: 'label', label: 'Datenschutz'},
+        {type: 'label', label: 'Rechtliches'},
         {type: 'item', label: 'Datenschutzerklärung', icon: 'input', value: 'gdpr'},
+        {type: 'item', label: 'AGBs', icon: 'input', value: 'terms'},
     ]))
 
 
