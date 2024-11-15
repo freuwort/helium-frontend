@@ -8,7 +8,7 @@
             
             <ErrorAlert :errors="form.errors"/>
     
-            <template v-if="sent === false">
+            <template v-if="isRegistrationEnabled && isConfigValid && !sent">
                 <TransitionGroup :name="'slide-'+direction" tag="div" class="relative">
                     <div class="step" v-if="currentStep === 'profiles'" key="profiles">
                         <IodAlert icon="stacks">
@@ -80,13 +80,17 @@
                             Schicken Sie Ihre Registrierung ab.
                         </IodAlert>
     
-                        <div class="bordered-container flex-1 flex items-center gap-4 p-2 select-none" @click="form.gdpr = !form.gdpr" :class="{'active': form.gdpr,}">
-                            <IodToggle v-model="form.gdpr" style="--local-color-on: var(--color-info)" @click.stop/>
-                            <p>
-                                Ich habe die <a target="_blank" href="/privacy" @click.stop>Datenschutzerklärung</a>
-                                und die <a target="_blank" href="/terms" @click.stop>AGBs</a> gelesen und akzeptiere diese
-                            </p>
-                        </div>
+                        <IodToggle v-model="form.gdpr" v-if="profiles.hasField('gdpr') && domain.settings?.legal_privacy">
+                            <template #label>
+                                Ich habe die <a class="underline" :href="domain.settings.legal_privacy" target="_blank">Datenschutzerklärung</a> gelesen und akzeptiere diese.
+                            </template>
+                        </IodToggle>
+
+                        <IodToggle v-model="form.terms" v-if="profiles.hasField('terms') && domain.settings?.legal_terms">
+                            <template #label>
+                                Ich habe die <a class="underline" :href="domain.settings.legal_terms" target="_blank">AGBs</a> gelesen und akzeptiere diese.
+                            </template>
+                        </IodToggle>
                     </div>
                 </TransitionGroup>
         
@@ -95,11 +99,21 @@
                     <IodButton type="button" class="w-40" label="Zurück" corner="pill" variant="contained" :loading="form.processing" @click="prevStep()" :disabled="currentStepIndex <= 0"/>
                     <span class="flex-1 text-center font-mono">{{ currentStepIndex+1 }}/{{ totalSteps }}</span>
                     <IodButton type="button" class="w-40" label="Weiter" corner="pill" variant="filled" :loading="form.processing" @click="nextStep()" v-if="currentStep !== 'final'"/>
-                    <IodButton type="submit" class="w-40" label="Registrieren" corner="pill" :loading="form.processing" :disabled="!isValid" v-if="currentStep === 'final'"/>
+                    <IodButton type="submit" class="w-40" label="Registrieren" corner="pill" :loading="form.processing" :disabled="!isEverythingValid" v-if="currentStep === 'final'"/>
                 </div>
             </template>
 
-            <IodAlert type="success" v-else>
+            <IodAlert type="error" v-if="!isRegistrationEnabled">
+                <b>Die Registrierung wurde nicht freigegeben.</b><br>
+                Versuchen Sie es zu einem späteren Zeitpunkt erneut.
+            </IodAlert>
+            
+            <IodAlert type="error" v-else-if="!isConfigValid">
+                <b>Die Registrierung wurde nicht korrekt konfiguriert.</b><br>
+                Versuchen Sie es zu einem späteren Zeitpunkt erneut oder melden Sie sich bei einem Administrator.
+            </IodAlert>
+
+            <IodAlert type="success" v-else-if="sent">
                 <b>Sie haben sich erfolgreich registriert!<br><br></b>
                 <template v-if="profiles.hasField('email')">
                     <span>Wir haben Ihnen einen Link zum Aktivieren Ihres Kontos an Ihre Email-Adresse gesendet!<br><br></span>
@@ -112,6 +126,7 @@
 
 <script lang="ts" setup>
     const auth = useAuthStore()
+    const domain = useDomainStore()
     const profiles = useRegisterProfiles()
     const intendedQuery = useIntended()
     const NuxtLink = defineNuxtLink({})
@@ -183,6 +198,35 @@
         direction.value = 'backwards'
     }
     // END: Stepper
+
+    // START: Validate registration page
+    const isRegistrationEnabled = computed(() => {
+        return !!domain.policy('allow_registration')
+    })
+
+    const isConfigValid = computed(() => {
+        if (profiles.hasField('gdpr') && !domain.settings?.legal_privacy) return false
+        if (profiles.hasField('terms') && !domain.settings?.legal_terms) return false
+
+        return true
+    })
+
+    const isFormValid = computed(() => {
+        if (auth.session.authenticated) return false
+        if (profiles.compiledProfile.value?.valid !== true) return false
+
+        let requiredFields = profiles.compiledProfile.value?.fields ?? []
+        if (!requiredFields.every(field => (form.data() as {[key: string]: any})[field])) return false
+
+        return true
+    })
+
+    const isEverythingValid = computed(() => {
+        return isRegistrationEnabled.value && isConfigValid.value && isFormValid.value
+    })
+    // END: Validate registration page
+
+
     
     const form = useForm({
         email: '',
@@ -190,6 +234,7 @@
         username: '',
         password: '',
         gdpr: false,
+        terms: false,
 
         salutation: '',
         prefix: '',
@@ -214,18 +259,8 @@
     })
     const sent = ref(false)
 
-    const isValid = computed(() => {
-        if (auth.session.authenticated) return false
-        if (profiles.compiledProfile.value?.valid !== true) return false
-
-        let requiredFields = profiles.compiledProfile.value?.fields ?? []
-        if (!requiredFields.every(field => (form.data() as {[key: string]: any})[field])) return false
-
-        return true
-    })
-
     async function submit() {
-        if (!isValid.value) return
+        if (!isEverythingValid.value) return
 
         form
         .transform(data => ({
