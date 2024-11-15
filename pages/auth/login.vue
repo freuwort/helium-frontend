@@ -19,7 +19,7 @@
             <div class="flex flex-col gap-y-2 sm:items-center sm:flex-row">
                 <NuxtLink :to="auth.routes.forgotPassword+intendedQuery">Passwort vergessen</NuxtLink>
                 <HeSpacer class="hidden sm:block"/>
-                <NuxtLink :to="auth.routes.register+intendedQuery">Neues Konto erstellen</NuxtLink>
+                <NuxtLink v-if="domain.policy('allow_registration')" :to="auth.routes.register+intendedQuery">Neues Konto erstellen</NuxtLink>
             </div>
         </form>
     </NuxtLayout>
@@ -27,6 +27,7 @@
 
 <script lang="ts" setup>
     const auth = useAuthStore()
+    const domain = useDomainStore()
     const splashscreen = useSplashscreenStore()
     const intendedQuery = useIntended()
 
