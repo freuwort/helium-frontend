@@ -68,6 +68,13 @@
                 </span>
             </div>
         </div>
+        <HeDivider />
+
+
+        <div class="flex flex-col gap-4">
+            <SettingsTitle>Abmelden</SettingsTitle>
+            <IodButton corner="pill" variant="contained" color-preset="error" label="Abmelden" @click="auth.logout(route.query.return ?? auth.routes.authHome)"/>
+        </div>
 
             
         <!-- <div class="flex flex-col gap-4">
