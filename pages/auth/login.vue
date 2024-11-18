@@ -6,7 +6,7 @@
             <h1 class="font-medium text-center m-0">Anmelden</h1>
     
             <div class="flex flex-col gap-4">
-                <IodInput type="text" label="Email oder Nutzername" v-model="form.email"/>
+                <IodInput type="text" label="Email oder Nutzername" v-model="form.login"/>
                 <IodInput type="password" label="Passwort" v-model="form.password"/>
                 <IodToggle type="checkbox" label="Angemeldet bleiben" v-model="form.remember"/>
             </div>
@@ -32,7 +32,7 @@
     const intendedQuery = useIntended()
 
     const form = useForm({
-        email: '',
+        login: '',
         password: '',
         remember: false,
     })
