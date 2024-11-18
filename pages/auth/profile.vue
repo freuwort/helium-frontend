@@ -8,7 +8,7 @@
             :subtitle="(auth.user?.username as string)"
         /> -->
         <div class="flex flex-col items-start min-h-10">
-            <IodButton size="xs" variant="text" corner="pill" icon-left="west" label="Zurück" normal-case :is="NuxtLink" :to="route.query.return ?? auth.routes.home" />
+            <IodButton size="xs" variant="text" corner="pill" icon-left="west" label="Zurück" normal-case :is="NuxtLink" :to="route.query.return ?? auth.routes.authHome" />
             <h1 class="font-medium m-0">Ihr Profil</h1>
         </div>
         <HeDivider />
