@@ -10,37 +10,37 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
 
     // Not logged in
-    if (destinationDiffersFrom(login) && !auth.session.authenticated) {
-        return navigateTo(login+intendedQuery, { replace: true })
+    if (!auth.session.authenticated) {
+        if (destinationDiffersFrom(login)) return navigateTo(login+intendedQuery)
     }
 
     // Email not verified
-    if (destinationDiffersFrom(emailNotVerifiedHome) && auth.user?.email_verified_at === null) {
-        return navigateTo(emailNotVerifiedHome+intendedQuery, { replace: true })
+    else if (auth.user?.email_verified_at === null) {
+        if (destinationDiffersFrom(emailNotVerifiedHome)) return navigateTo(emailNotVerifiedHome+intendedQuery)
     }
 
     // 2FA not verified
-    if (destinationDiffersFrom(verify2FA) && auth.session.tfa_enabled && !auth.session.tfa_verified) {
-        return navigateTo(verify2FA+intendedQuery, { replace: true })
+    else if (auth.session.tfa_enabled && !auth.session.tfa_verified) {
+        if (destinationDiffersFrom(verify2FA)) return navigateTo(verify2FA+intendedQuery)
     }
 
     // Not enabled
-    if (destinationDiffersFrom(notEnabledHome) && auth.user?.enabled_at === null) {
-        return navigateTo(notEnabledHome+intendedQuery, { replace: true })
+    else if (auth.user?.enabled_at === null) {
+        if (destinationDiffersFrom(notEnabledHome)) return navigateTo(notEnabledHome+intendedQuery)
     }
 
     // Blocked
-    if (destinationDiffersFrom(blockedHome) && auth.user?.blocked_at !== null) {
-        return navigateTo(blockedHome+intendedQuery, { replace: true })
+    else if (auth.user?.blocked_at !== null) {
+        if (destinationDiffersFrom(blockedHome)) return navigateTo(blockedHome+intendedQuery)
     }
 
     // Requires password change
-    if (destinationDiffersFrom(requirePasswordChangeHome) && auth.user?.requires_password_change) {
-        return navigateTo(requirePasswordChangeHome+intendedQuery, { replace: true })
+    else if (auth.user?.requires_password_change) {
+        if (destinationDiffersFrom(requirePasswordChangeHome)) return navigateTo(requirePasswordChangeHome+intendedQuery)
     }
 
     // Requires 2FA setup
-    if (destinationDiffersFrom(requireTwoFactorSetupHome) && auth.user?.requires_two_factor && !auth.user?.has_tfa_enabled) {
-        return navigateTo(requireTwoFactorSetupHome+intendedQuery, { replace: true })
+    else if (auth.user?.requires_two_factor && !auth.user?.has_tfa_enabled) {
+        if (destinationDiffersFrom(requireTwoFactorSetupHome)) return navigateTo(requireTwoFactorSetupHome+intendedQuery)
     }
 })
