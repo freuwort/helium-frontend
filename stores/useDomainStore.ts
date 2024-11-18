@@ -10,9 +10,7 @@ export const useDomainStore = defineStore('domain', () => {
         try {
             settings.value = (await useAxios().get('/api/domain/settings')).data
         }
-        catch (error) {
-            console.log('Could not fetch domain settings!')
-        }
+        catch (error) { throw error }
     }
 
     async function patchSettings(keys: Settings|string, value: any = null)

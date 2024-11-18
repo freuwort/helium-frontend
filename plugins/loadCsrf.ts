@@ -6,7 +6,7 @@ export default defineNuxtPlugin({
             await useAxios().get('/sanctum/csrf-cookie')
         }
         catch(error) {
-            console.log('Could not load CSRF token!')
+            throw createError({ statusCode: 500, statusMessage: 'Could not load CSRF token! Is the API service running?' })
         }
     }
 })

@@ -3,6 +3,8 @@ export default defineNuxtPlugin({
     dependsOn: ['load-session'],
     async setup()
     {
+        if (!useAuthStore().session.authenticated) return
+        
         const notifications = useNotificationStore()
         await notifications.fetchNotifications()
     }

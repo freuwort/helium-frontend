@@ -4,6 +4,10 @@ export default defineNuxtPlugin({
     async setup()
     {
         const domain = useDomainStore()
-        await domain.fetchSettings()
+
+        try {
+            await domain.fetchSettings()
+        }
+        catch (error) {}
     }
 })

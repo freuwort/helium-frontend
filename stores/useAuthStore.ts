@@ -109,9 +109,7 @@ export const useAuthStore = defineStore('auth', () => {
             user.value = data.user
             session.value = data.session
         }
-        catch (error) {
-            console.log('Could not fetch session!')
-        }
+        catch (error) { throw error }
     }
 
 
