@@ -24,6 +24,7 @@
 <script lang="ts" setup>
     const route = useRoute()
     const auth = useAuthStore()
+    const domain = useDomainStore()
     const intendedQuery = useIntended()
     const splashscreen = useSplashscreenStore()
     const NuxtLink = defineNuxtLink({})

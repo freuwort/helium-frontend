@@ -112,6 +112,7 @@
 <script lang="ts" setup>
     import { toast } from 'vue3-toastify'
     const auth = useAuthStore()
+    const domain = useDomainStore()
     const route = useRoute()
     const NuxtLink = defineNuxtLink({})
     
@@ -182,6 +183,7 @@
         useForm({}).delete(`/api/user/two-factor/destroy/${method}`, {
             onSuccess() {
                 auth.fetchSession()
+                domain.fetchSettings()
                 toast.success('2FA-Methode gelöscht')
             }
         })

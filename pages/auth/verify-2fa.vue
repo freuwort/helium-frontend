@@ -33,6 +33,7 @@
 
 <script lang="ts" setup>
     const auth = useAuthStore()
+    const domain = useDomainStore()
     const intendedQuery = useIntended()
     const splashscreen = useSplashscreenStore()
 
@@ -62,7 +63,7 @@
         splashscreen.start()
         await auth.fetchSession()
         await domain.fetchSettings()
-        return navigateTo(auth.routes.authHome+intendedQuery, { replace: true })
+        return navigateTo(auth.routes.authHome+intendedQuery)
     }
 
     async function onError() {

@@ -17,6 +17,7 @@
 
 <script lang="ts" setup>
     const auth = useAuthStore()
+    const domain = useDomainStore()
     const intendedQuery = useIntended()
     const splashscreen = useSplashscreenStore()
 
