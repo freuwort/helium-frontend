@@ -252,8 +252,6 @@
     const fullname = computed(() => {
         return [form.prefix, form.firstname, form.middlename, form.lastname, form.suffix].filter(i => i).join(' ')
     })
-    
-    const countries = ref([])
 
 
 
@@ -466,11 +464,6 @@
     
     // Fetch model
     if (id.value) fetch()
-    
-    onMounted(async () => {
-        // Fetch additional data
-        countries.value = (await useAxios().get('/api/domain/units')).data.countries
-    })
 </script>
 
 <style lang="sass" scoped>
