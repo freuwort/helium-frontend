@@ -2,27 +2,27 @@ import PermissionConfig from '~/permission.config'
 
 export default defineNuxtRouteMiddleware((to, from) => {
     const auth = useAuthStore()
-    const runtimeConfig = useRuntimeConfig()
     
+    let destination = to.name as string
     let permissions = [] as string[]
-    let returnTo = null as string | null
+    let redirect = '' as string
     
     for (const [key, value] of Object.entries(PermissionConfig)) {
-        const regex = new RegExp(`^${key}$`)
+        const routeWildcard = new RegExp(`^${key}$`)
     
-        if (!regex.test(to.name as string)) continue
-        
-        permissions = value?.permissions ?? []
-        returnTo = value?.alternativeRedirect ?? null
+        if (routeWildcard.test(destination)) {
+            permissions = value?.permissions ?? []
+            redirect = value?.redirect ?? ''
+        }
     }
 
-    if (returnTo === 'WEBSITE') returnTo = runtimeConfig.public.websiteUrl
-    if (returnTo === 'ADMIN') returnTo = runtimeConfig.public.frontendUrl
-    if (!isPathOrUrl(returnTo)) returnTo = null
+    redirect = routeReplaceTemplates(redirect)
 
-    if (!auth.can(Array.from(permissions))) {
-        return returnTo ?
-            navigateTo(returnTo, { replace: true, external: true }) :
-            abortNavigation({ statusCode: 403, message: 'Forbidden' })
+    if (permissions.length && !auth.can(permissions)) {
+        if (routeIsValid(redirect)) {
+            return navigateTo(redirect, { external: routeIsExternal(redirect) })
+        }
+
+        return navigateTo(auth.routes.profile)
     }
 })

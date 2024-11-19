@@ -64,6 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
         routes: {
             authHome: '/',
             guestHome: '/auth/login',
+            profile: '/auth/profile',
             emailNotVerifiedHome: '/auth/email-not-verified',
             notEnabledHome: '/auth/not-enabled',
             blockedHome: '/auth/blocked',
