@@ -20,8 +20,7 @@
                             <template #popper>
                                 <ContextMenu class="min-w-80">
                                     <ContextMenuItem :is="NuxtLink" to="/media/domain" show-chevron icon="home_storage">Hauptspeicher</ContextMenuItem>
-                                    <ContextMenuItem :is="NuxtLink" to="/media/profiles" show-chevron icon="switch_account">Profil Dateien</ContextMenuItem>
-                                    <ContextMenuItem :is="NuxtLink" to="/media/forms" show-chevron icon="edit_square">Formular Dateien</ContextMenuItem>
+                                    <!-- <ContextMenuItem :is="NuxtLink" to="/media/forms" show-chevron icon="edit_square">Formular Dateien</ContextMenuItem> -->
                                     <ContextMenuDivider />
                                     <ContextMenuItem icon="scan" v-close-popper @click="discover">Ordner scannen</ContextMenuItem>
                                 </ContextMenu>

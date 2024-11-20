@@ -41,9 +41,8 @@
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/media/domain" show-chevron icon="home_storage">Hauptspeicher</ContextMenuItem>
-                        <ContextMenuDivider />
-                        <ContextMenuItem to="/media/profiles" show-chevron icon="switch_account">Profil Dateien</ContextMenuItem>
-                        <ContextMenuItem to="/media/forms" show-chevron icon="edit_square">Formular Dateien</ContextMenuItem>
+                        <!-- <ContextMenuDivider />
+                        <ContextMenuItem to="/media/forms" show-chevron icon="edit_square">Formular Dateien</ContextMenuItem> -->
                     </ContextMenu>
                 </template>
             </VDropdown>
