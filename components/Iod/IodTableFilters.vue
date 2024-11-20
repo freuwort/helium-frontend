@@ -1,35 +1,29 @@
 <template>
-    <VDropdown placement="bottom-end" v-if="filterSettings && filterSettings.length">
-        <IodIconButton type="button" variant="text" corner="pill" size="s" icon="filter_alt" v-tooltip="'Filter'"/>
-        
-        <template #popper>
-            <div class="flex flex-col py-2 w-80 max-h-96 small-scrollbar">
-                <template v-for="row in filterSettings">
-                    <VDropdown placement="right-start" v-if="row.type == 'select'">
-                        <button type="button" class="row-button">
-                            <span class="text flex-1">
-                                {{ row.label }}:
-                                <b v-tooltip="displayValues(row, filter)">{{ displayValues(row, filter) || '---' }}</b>
-                            </span>
-                            <IodIcon icon="chevron_right"/>
-                        </button>
+    <div class="flex flex-col py-2 w-80 max-h-96 small-scrollbar" v-if="filterSettings && filterSettings.length">
+        <template v-for="row in filterSettings">
+            <VDropdown placement="right-start" v-if="row.type == 'select'">
+                <button type="button" class="row-button">
+                    <span class="text flex-1">
+                        {{ row.label }}:
+                        <b v-tooltip="displayValues(row, filter)">{{ displayValues(row, filter) || '---' }}</b>
+                    </span>
+                    <IodIcon icon="chevron_right"/>
+                </button>
 
-                        <template #popper>
-                            <div class="flex flex-col py-2 w-80 max-h-96 small-scrollbar">
-                                <IodToggle
-                                    class="w-full h-10"
-                                    v-for="option in row.values"
-                                    :label="option.text"
-                                    :modelValue="isFilterSet(row, filter, option.value)"
-                                    @update:modelValue="setFilter(row, filter, option.value, $event)"
-                                />
-                            </div>
-                        </template>
-                    </VDropdown>
+                <template #popper>
+                    <div class="flex flex-col py-2 w-80 max-h-96 small-scrollbar">
+                        <IodToggle
+                            class="w-full h-10"
+                            v-for="option in row.values"
+                            :label="option.text"
+                            :modelValue="isFilterSet(row, filter, option.value)"
+                            @update:modelValue="setFilter(row, filter, option.value, $event)"
+                        />
+                    </div>
                 </template>
-            </div>
+            </VDropdown>
         </template>
-    </VDropdown>
+    </div>
 </template>
 
 <script lang="ts" setup>

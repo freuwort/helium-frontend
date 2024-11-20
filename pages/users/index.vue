@@ -17,7 +17,7 @@
                 @request:refresh="IPM.fetch()"
             >
                 <template #right>
-                    <IodButton type="button" label="Neuer Nutzer" corner="pill" icon-right="add" @click="IPM.open()"/>
+                    <IodButton :is="NuxtLink" label="Neuer Nutzer" corner="pill" icon-right="add" to="/users/editor"/>
                 </template>
 
                 <template #wrapped-right>
@@ -34,12 +34,12 @@
 
 <script lang="ts" setup>
     import type { FilterSetting } from '~/components/Iod/IodTable.vue'
-    import type { BasicAddress } from '~/types/address'
     import { FieldGroup, Field } from '~/classes/import/CsvImport'
     import TableColumnBuilder from '~/classes/Builder/TableColumnBuilder'
     import { toast } from 'vue3-toastify'
     
     const dayjs = useDayjs()
+    const NuxtLink = defineNuxtLink({})
     const scope = 'view_admin_users_index'
 
 
@@ -51,7 +51,8 @@
             fetch: '/api/users',
             duplicate: '/api/users/:id/duplicate',
             delete: '/api/users',
-            editor: '/users/editor/:id',
+            restore: '/api/users/restore',
+            forceDelete: '/api/users/force',
         },
     })
     
@@ -128,7 +129,7 @@
             multiple: false,
             triggerOnRowClick: true,
             isAvailable: () => true,
-            run: (items: (number | string)[]) => IPM.open(items[0]),
+            run: (items: (number | string)[]) => navigateTo(`/users/editor/${items[0]}`), //IPM.open(items[0]),
         },
         // {
         //     icon: 'content_copy',
@@ -149,6 +150,26 @@
             triggerOnRowClick: false,
             isAvailable: () => true,
             run: (items: (number | string)[]) => IPM.delete(items),
+        },
+        {
+            icon: 'delete_forever',
+            text: 'Endgültig löschen',
+            color: 'var(--color-error)',
+            individual: false,
+            multiple: true,
+            triggerOnRowClick: false,
+            isAvailable: () => true,
+            run: (items: (number | string)[]) => IPM.forceDelete(items),
+        },
+        {
+            icon: 'restore_from_trash',
+            text: 'Wiederherstellen',
+            color: 'var(--color-text)',
+            individual: false,
+            multiple: true,
+            triggerOnRowClick: false,
+            isAvailable: () => true,
+            run: (items: (number | string)[]) => IPM.restore(items),
         },
     ]
 
@@ -200,6 +221,15 @@
                 { value: 'active', text: 'Aktiv' },
             ],
         },
+        {
+            name: 'deleted',
+            label: 'Gelöscht',
+            type: 'select',
+            multiple: false,
+            values: [
+                { value: 'deleted', text: 'Ja' },
+            ],
+        }
     ])
 
 

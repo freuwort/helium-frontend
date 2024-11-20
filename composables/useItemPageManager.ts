@@ -48,6 +48,8 @@ type IPMOptions = {
         editor?: string | null,
         duplicate?: string | null,
         delete?: string | null,
+        restore?: string | null,
+        forceDelete?: string | null,
     },
     view?: {
         layout?: string,
@@ -59,6 +61,7 @@ type IPMOptions = {
 type DeleteOptions = {
     needsConfirmation?: boolean,
     message?: string,
+    force?: boolean,
 }
 
 
@@ -96,6 +99,8 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
                 editor: options?.routes?.editor ?? null,
                 duplicate: options?.routes?.duplicate ?? null,
                 delete: options?.routes?.delete ?? null,
+                restore: options?.routes?.restore ?? null,
+                forceDelete: options?.routes?.forceDelete ?? null,
             },
             view: {
                 layout: 'list',
@@ -266,8 +271,12 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
                 if (!confirm(options.message)) return
             }
 
+            let route = options.force
+                ? apiRoute(this.options.routes?.delete as string)
+                : apiRoute(this.options.routes?.forceDelete as string)
+
             // Delete the items
-            useForm(data).delete(apiRoute(this.options.routes?.delete as string), {
+            useForm(data).delete(apiRoute(route), {
                 onSuccess: () => {
                     this.deselectAll()
                     $fetch()
@@ -281,6 +290,30 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
                 return string.replace('{{count}}', ids.length.toString())
             }
         },
+
+        restore(ids: Key[] = []) {
+            let data = {
+                ids: ids ?? this.selection ?? [],
+            }
+
+            // If ids is not an array, convert it to an array and remove any empty values
+            if (typeof data.ids !== 'object') data.ids = [data.ids].filter(id => id)
+
+            // If ids is empty, return
+            if (!data.ids.length) return
+
+            // Restore the items
+            useForm(data).patch(apiRoute(this.options.routes?.restore as string), {
+                onSuccess: () => {
+                    this.deselectAll()
+                    $fetch()
+                },
+            })
+        },
+
+        forceDelete(ids: Key[] = [], message: string = 'Are you sure you want to permanently delete the selected items?', options: DeleteOptions = {}) {
+            this.delete(ids, message, options)
+        }
     })
 
 

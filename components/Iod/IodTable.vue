@@ -8,13 +8,8 @@
                     <slot name="wrapped-left"/>
                 </div>
 
-                <IodInput
-                    class="table-search-input !rounded-full"
-                    placeholder="Suchen"
-                    v-model="filter.search"
-                >
+                <IodInput class="table-search-input !rounded-full" placeholder="Suchen" v-model="filter.search">
                     <template #right>
-                        <IodTableFilters :filter="filter" :filterSettings="filterSettings" />
                         <IodIconButton type="button" corner="pill" variant="text" size="s" icon="refresh" @click="$emit('request:refresh')" v-tooltip="'Aktualisieren'"/>
                     </template>
                 </IodInput>
@@ -30,13 +25,17 @@
             </div>
 
             <div class="fixture-row">
-                <div class="h-8 flex items-center gap-1 px-1 bg-background-soft rounded-full">
-                    <IodButton class="filter-tag" size="xs" corner="pill" variant="text" :label="`Filter`" icon-left="filter_alt" v-tooltip="'Filter/Auswahl löschen'" @click="setPagination({ page: 0 }); deselectAll(); filter = {}" />
-                    <IodButton class="filter-tag" size="xs" corner="pill" variant="text" :label='`Seite: ${pagination.page}`' v-if="pagination" v-show="pagination.page > 1" @click="setPagination({ page: 0 })"/>
-                    <IodButton class="filter-tag" size="xs" corner="pill" variant="text" :label='`Auswahl: ${selection.length}`' v-show="selection.length" @click="deselectAll()" v-tooltip="'Alles abwählen'"/>
-                    <IodButton class="filter-tag" size="xs" corner="pill" variant="text" :label='`Suche: "${filter.search}"`' v-show="filter.search" @click="filter.search = ''"/>
-                    <IodButton class="filter-tag" size="xs" corner="pill" variant="text" :label="`${item.label}: ${item.value}`" @click="delete filter[item.key]" v-for="item in displayFilter"/>
-                </div>
+                <IodButtonGroup corner="pill" class="bg-background-soft overflow-hidden whitespace-nowrap">
+                    <VDropdown placement="bottom-start">
+                        <IodButton type="button" normal-case size="s" corner="none" variant="text" label="Filter" icon-left="filter_alt" v-tooltip="'Filter'" />
+                        <template #popper><IodTableFilters :filter="filter" :filterSettings="filterSettings" /></template>
+                    </VDropdown>
+    
+                    <IodButton type="button" normal-case size="s" variant="text" :label='`Seite: ${pagination.page}`' v-if="pagination" v-show="pagination.page > 1" @click="setPagination({ page: 0 })"/>
+                    <IodButton type="button" normal-case size="s" variant="text" :label='`Auswahl: ${selection.length}`' v-show="selection.length" @click="deselectAll()" v-tooltip="'Alles abwählen'"/>
+                    <IodButton type="button" normal-case size="s" variant="text" :label='`Suche: "${filter.search}"`' v-show="filter.search" @click="filter.search = ''"/>
+                    <IodButton type="button" normal-case size="s" variant="text" :label="`${item.label}: ${item.value}`" @click="delete filter[item.key]" v-for="item in displayFilter"/>
+                </IodButtonGroup>
                 <div class="spacer"></div>
             </div>
 
@@ -646,11 +645,6 @@
                 flex-wrap: wrap
                 gap: 1rem
                 position: relative
-
-                .filter-tag
-                    padding-inline: .75rem !important
-                    text-transform: unset !important
-                    letter-spacing: unset !important
 
             .iod-loader
                 position: absolute !important
