@@ -247,6 +247,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
         {
             // Construct options
             options = {
+                ...options,
                 needsConfirmation: options?.needsConfirmation ?? true,
                 message: replaceVariable(message ?? options?.message),
             }

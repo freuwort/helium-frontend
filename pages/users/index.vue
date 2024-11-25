@@ -65,6 +65,7 @@
             image: item.avatar,
             icon: 'person',
         })).build(),
+        tableColumnBuilder.new().name('organisation').label('Organisation').build(),
         tableColumnBuilder.new().name('customer_id').label('Kunden-Nr.').build(),
         tableColumnBuilder.new().name('employee_id').label('Personal-Nr.').build(),
         tableColumnBuilder.new().name('member_id').label('Mitglieds-Nr.').build(),
