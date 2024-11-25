@@ -272,8 +272,8 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
             }
 
             let route = options.force
-                ? apiRoute(this.options.routes?.delete as string)
-                : apiRoute(this.options.routes?.forceDelete as string)
+                ? apiRoute(this.options.routes?.forceDelete as string)
+                : apiRoute(this.options.routes?.delete as string)
 
             // Delete the items
             useForm(data).delete(apiRoute(route), {
@@ -312,7 +312,7 @@ export function useItemPageManager(options: Partial<IPMOptions> = {})
         },
 
         forceDelete(ids: Key[] = [], message: string = 'Are you sure you want to permanently delete the selected items?', options: DeleteOptions = {}) {
-            this.delete(ids, message, options)
+            this.delete(ids, message, {...options, force: true})
         }
     })
 
