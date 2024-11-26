@@ -34,13 +34,18 @@
                 Mit diesen Backup-Codes können Sie sich in Ihren Account einloggen, wenn andere 2FA-Methoden nicht funktionieren.<br>
                 <b>Bitte legen Sie diese an einem sicheren Ort ab.</b>
             </p>
-            <HeFlex class="bg-background-soft rounded-lg">
-                <code class="flex justify-center flex-wrap gap-4 bg-background-soft p-4 py-8 rounded-lg">
+            <HeFlex class="bg-background-soft rounded-2xl">
+                <HeFlex horizontal padding="1rem" class="border-b">
+                    <IodButton type="button" icon-left="refresh" label="Neue Codes generieren" size="s" corner="pill" variant="text" normal-case :loading="backupCodesForm.processing" @click="regenerateBackup"/>
+                    <HeSpacer />
+                </HeFlex>
+                <code class="flex justify-center flex-wrap gap-4 p-4 py-8 bg-transparent">
                     <span v-for="code in backupCodesForm.codes" :key="code">{{ code }}<br></span>
                 </code>
-                <HeFlex :padding="1" class="border-t">
-                    <IodButton label="Neue Codes generieren" corner="pill" variant="contained" :loading="backupCodesForm.processing" @click="regenerateBackup"/>
-                </HeFlex>
+            </HeFlex>
+            <HeFlex horizontal gap="1rem">
+                <IodButton type="button" class="flex-1" corner="pill" variant="contained" label="Schließen" @click="popup.close()"/>
+                <IodButton type="button" class="flex-1" corner="pill" variant="filled" label="Codes kopieren" @click="copyBackup()"/>
             </HeFlex>
         </HeFlex>
 
@@ -51,14 +56,15 @@
                 <b>Sie sollten nun Ihre Backup-Codes speichern und sicher aufbewahren.</b>
             </p>
             <HeFlex horizontal gap="1rem">
-                <IodButton class="flex-1" corner="pill" variant="contained" label="Schließen" @click="popup.close()"/>
-                <IodButton class="flex-1" corner="pill" variant="filled" label="Codes Anzeigen" @click="showBackup()"/>
+                <IodButton type="button" class="flex-1" corner="pill" variant="contained" label="Schließen" @click="popup.close()"/>
+                <IodButton type="button" class="flex-1" corner="pill" variant="filled" label="Codes Anzeigen" @click="showBackup()"/>
             </HeFlex>
         </HeFlex>
     </IodPopup>
 </template>
 
 <script lang="ts" setup>
+    import { toast } from 'vue3-toastify'
     const auth = useAuthStore()
 
     const popup = ref()
@@ -137,6 +143,12 @@
                 backupCodesForm.defaults(data).reset()
             }
         })
+    }
+
+    function copyBackup()
+    {
+        navigator.clipboard.writeText(backupCodesForm.codes.join('\n'))
+        toast.success('Codes wurden kopiert!')
     }
     // END: Setup backup codes
 
