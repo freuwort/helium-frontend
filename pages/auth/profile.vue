@@ -69,13 +69,11 @@
             </div>
         </div>
         <HeDivider />
-
-
-        <div class="flex flex-col gap-4">
-            <SettingsTitle>Abmelden</SettingsTitle>
-            <IodButton corner="pill" variant="contained" color-preset="error" label="Abmelden" @click="auth.logout(route.query.return ?? auth.routes.authHome)"/>
-        </div>
-
+        
+        <IodButton corner="pill" variant="contained" color-preset="error" icon-left="logout" label="Ausloggen" @click="auth.logout((route.query.return ?? auth.routes.authHome) as string)"/>
+        <HeDivider />
+        
+        <IodButton corner="pill" variant="filled" size="l" icon-left="west" label="Zurück" :is="NuxtLink" :to="route.query.return ?? auth.routes.authHome" />
             
         <!-- <div class="flex flex-col gap-4">
             <SettingsTitle>Kontolöschung</SettingsTitle>

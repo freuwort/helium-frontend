@@ -115,7 +115,7 @@ export const useAuthStore = defineStore('auth', () => {
 
 
 
-    async function logout(intendedQuery?: string)
+    async function logout(intendedQuery: string = '')
     {
         splashscreen.start()
 
@@ -126,7 +126,12 @@ export const useAuthStore = defineStore('auth', () => {
         session.value.tfa_enabled = false
         session.value.tfa_verified = false
 
-        return navigateTo(routes.value.guestHome+(intendedQuery ?? ''), { replace: true })
+        let external = routeIsExternal(intendedQuery)
+        let destination = external
+            ? intendedQuery
+            : routes.value.guestHome+intendedQuery
+        
+        return navigateTo(destination, {replace: true, external})
     }
 
 
