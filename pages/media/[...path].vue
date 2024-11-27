@@ -4,8 +4,6 @@
             <div class="header">
                 <MediaBreadcrumbs class="flex-1" :path="path" root-path="/media" @navigate="navigateTo($event)" @drop="onDrop($event.event, $event.path)">
                     <template #left>
-                        <IodIconButton type="button" variant="text" corner="pill" icon="refresh" size="s" @click="fetch" v-tooltip="'Aktualisieren'"/>
-                        
                         <VDropdown placement="right">
                             <IodIconButton type="button" :variant="!!search ? 'filled' : 'text'" corner="pill" icon="search" size="s" v-tooltip="'Im Ordner suchen'" @dblclick="search = ''"/>
                             
@@ -13,26 +11,25 @@
                                 <IodInput class="!bg-transparent" type="search" v-model="search" placeholder="Im Ordner suchen..."/>
                             </template>
                         </VDropdown>
-                        
-                        <VDropdown placement="bottom">
-                            <IodIconButton type="button" variant="text" corner="pill" icon="topic" size="s" v-tooltip="'Ordner auswählen'"/>
-        
-                            <template #popper>
-                                <ContextMenu class="min-w-80">
-                                    <ContextMenuItem :is="NuxtLink" to="/media/domain" show-chevron icon="home_storage">Hauptspeicher</ContextMenuItem>
-                                    <!-- <ContextMenuItem :is="NuxtLink" to="/media/forms" show-chevron icon="edit_square">Formular Dateien</ContextMenuItem> -->
-                                    <ContextMenuDivider />
-                                    <ContextMenuItem icon="scan" v-close-popper @click="discover">Ordner scannen</ContextMenuItem>
-                                </ContextMenu>
-                            </template>
-                        </VDropdown>
-
                         <HeDivider vertical class="h-6 mx-3 focused" />
                     </template>
 
                     <template #right>
                         <HeDivider vertical class="h-6 mx-3 focused" />
-                        <IodIconButton type="button" variant="text" corner="pill" icon="delete" size="s" color-preset="error" v-tooltip="'Löschen'" :disabled="!selection.length" @click="deleteItems(selection)"/>
+                        <VDropdown placement="bottom-start">
+                            <IodButton type="button" class="!px-3 !gap-x-2" variant="text" corner="pill" size="s" label="Aktionen" icon-right="bolt" normal-case />
+        
+                            <template #popper>
+                                <ContextMenu class="min-w-80">
+                                    <ContextMenuItem is="button" icon="refresh" v-close-popper @click="fetch">Ordner Aktualisieren</ContextMenuItem>
+                                    <ContextMenuItem is="button" icon="scan" v-close-popper @click="discover">Ordner Scannen</ContextMenuItem>
+                                    <ContextMenuDivider />
+                                    <ContextMenuLabel :label="`Auswahl – ${ selection.length }`"/>
+                                    <ContextMenuItem is="button" icon="deselect" v-close-popper @click="deselectAll" :disabled="!selection.length">Auswahl abwählen</ContextMenuItem>
+                                    <ContextMenuItem is="button" icon="delete" v-close-popper color="var(--color-error)" :disabled="!selection.length" @click="deleteItems(selection)">Auswahl löschen</ContextMenuItem>
+                                </ContextMenu>
+                            </template>
+                        </VDropdown>
                     </template>
                 </MediaBreadcrumbs>
 
@@ -321,7 +318,7 @@
 
     // START: Discovery
     function discover() {
-        useAxios().patch('/api/media/discover', { path: path.value })
+        useAxios().patch('/api/media/repair', { action: 'discover', path: path.value })
     }
     // END: Discovery
 
