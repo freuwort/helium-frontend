@@ -1,5 +1,5 @@
 <template>
-    <div class="page-layout">
+    <div class="page-layout sm:min-h-full">
         <header class="min-h-64 sm:min-h-72 md:min-h-80 lg:min-h-96">
             <ProfileImage
                 v-if="domain.settings && domain.settings?.company_logo"
@@ -12,16 +12,16 @@
             <h2 v-else>Helium Erstanmeldung</h2>
         </header>
 
-        <main>
-            <HeLimiter size="form">
-                <HeCard class="flex flex-col px-6 py-6 gap-6 sm:gap-8 sm:py-8" :class="props.pageClass">
+        <main class="sm:flex-1">
+            <HeLimiter size="form" class="!max-w-full !px-0 sm:!max-w-[550px] sm:!px-4">
+                <HeCard class="flex flex-col px-6 py-6 gap-6 !rounded-none sm:gap-8 sm:py-8 sm:!rounded-2xl" :class="props.pageClass">
                     <slot />
                 </HeCard>
             </HeLimiter>
         </main>
         
         <footer v-if="showFooter">
-            <HeLimiter size="form">
+            <HeLimiter size="form" class="!max-w-full !px-0 sm:!max-w-[550px] sm:!px-4">
                 <div class="flex flex-wrap gap-y-0 gap-x-2 py-4 px-4 sm:gap-x-4">
                     <span v-if="domain.settings?.company_legalname">© {{ $dayjs().year() }} {{ domain.settings?.company_legalname }}</span>
                     <HeSpacer class="hidden sm:block"/>
@@ -64,7 +64,6 @@
     .page-layout
         display: flex
         flex-direction: column
-        min-height: 100%
 
     header
         background-color: #1e293b
@@ -87,9 +86,6 @@
             font-weight: 500
             text-align: center
             color: inherit
-
-    main
-        flex: 1
 
     footer
         min-height: 4rem
