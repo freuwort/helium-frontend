@@ -14,7 +14,7 @@
 
         <main>
             <HeLimiter size="form">
-                <HeCard class="flex flex-col px-6 py-6 gap-6 sm:gap-8 sm:py-8">
+                <HeCard class="flex flex-col px-6 py-6 gap-6 sm:gap-8 sm:py-8" :class="props.pageClass">
                     <slot />
                 </HeCard>
             </HeLimiter>
