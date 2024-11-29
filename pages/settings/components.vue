@@ -14,6 +14,13 @@
     <IodAlert type="placeholder">Placeholder</IodAlert>
     <SettingsSpacer />
 
+    <SettingsRow title="User Search">
+        <DialogSearchUsers class="rounded-xl border"/>
+    </SettingsRow>
+    <SettingsRow title="Role Search">
+        <DialogSearchRoles class="rounded-xl border"/>
+    </SettingsRow>
+
     <SettingsRow title="IodPopup" description="Open a test popup">
         <IodButtonGroup class="flex-1" corner="pill">
             <IodButton variant="contained" @click="popupLeft.open()">Left</IodButton>

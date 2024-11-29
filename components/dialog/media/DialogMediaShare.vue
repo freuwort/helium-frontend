@@ -11,16 +11,23 @@
             <HeDivider class="my-4"/>
 
             <template v-if="!form.inherit_access">
-                <VDropdown :shown="!!searchForm.search.length && !!searchForm.results.length" :triggers="[]" :auto-hide="false" placement="bottom-start">
-                    <IodInput type="search" placeholder="Nutzer / Rolle suchen" v-model="searchForm.search" @update:modelValue="search()" />
+                <div class="flex items-center gap-4 pb-2" id="dialog-media-share">
+                    <VDropdown placement="left-start" container="#dialog-media-share">
+                        <IodButton type="button" size="s" corner="pill" variant="contained" icon-left="add" label="Rollen hinzufügen" normal-case/>
 
-                    <template #popper>
-                        <HeFlex align-y="flex-start" padding="1rem 0" class="min-w-80 max-h-80 small-scrollbar">
-                            <ProfileChip class="h-12 !p-2 flex-none" corner="none" v-for="result in searchForm.results" :title="result.title" :subtitle="localizeModelType(result.permissible_type)" :image="result.image" :icon="result.icon" :color="result.color" @click="addShare(result)"/>
-                        </HeFlex>
-                    </template>
-                </VDropdown>
-                <div class="h-2"></div>
+                        <template #popper>
+                            <DialogSearchRoles @select="addShare({ permissible_id: $event[0].id, permissible_type: 'role', title: $event[0].name, image: null, icon: $event[0].icon, color: $event[0].color })" />
+                        </template>
+                    </VDropdown>
+
+                    <VDropdown placement="left-start" container="#dialog-media-share">
+                        <IodButton type="button" size="s" corner="pill" variant="contained" icon-left="add" label="Nutzer hinzufügen" normal-case/>
+
+                        <template #popper>
+                            <DialogSearchUsers @select="addShare({ permissible_id: $event[0].id, permissible_type: 'user', title: $event[0].name, image: $event[0].avatar, icon: null, color: null })" />
+                        </template>
+                    </VDropdown>
+                </div>
 
                 <ProfileChip is="div" class="h-12 !rounded-full !p-2 bg-background-soft flex-none" title="Jeder mit dem Link" :subtitle="localizePermission(form.public_access)" icon="public">
                     <div class="flex items-center gap-1">
@@ -63,8 +70,7 @@
         path: '',
     })
 
-    function open(item: MediaItem)
-    {
+    function open(item: MediaItem) {
         form
         .defaults({
             access: item.access
@@ -85,8 +91,6 @@
         })
         .reset()
 
-        searchForm.reset()
-
         popup.value.open()
     }
 
@@ -99,54 +103,8 @@
         })
     }
 
-
-
-    const searchForm = useForm({
-        search: '',
-        results: [],
-    })
-
-    async function search() {
-        let results = []
-
-        let userResponse = await useAxios().get(apiRoute('/api/users/basic', {
-            filter: { search: searchForm.search },
-            size: 10,
-        }))
-        
-        results.push(...userResponse.data.data.map((user: any) => ({
-            permissible_id: user.id,
-            permissible_type: 'user',
-            title: user.name,
-            image: user.avatar,
-            icon: null,
-            color: null,
-        })))
-        
-        let roleResponse = await useAxios().get(apiRoute('/api/roles/basic', {
-            filter: { search: searchForm.search },
-            size: 10,
-        }))
-
-        results.push(...roleResponse.data.data.map((role: any) => ({
-            permissible_id: role.id,
-            permissible_type: 'role',
-            title: role.name,
-            image: null,
-            icon: role.icon,
-            color: role.color,
-        })))
-
-        searchForm.results = results
-    }
-
     function addShare(access: any) {
-        form.access.push({
-            ...access,
-            permission: 'read'
-        })
-
-        searchForm.reset()
+        form.access.push({ ...access, permission: 'read' })
     }
 
     function removeShare(access: any) {
