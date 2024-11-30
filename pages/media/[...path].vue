@@ -16,8 +16,8 @@
 
                     <template #right>
                         <HeDivider vertical class="h-6 mx-3 focused" />
-                        <VDropdown placement="bottom-start">
-                            <IodButton type="button" class="!px-3 !gap-x-2" variant="text" corner="pill" size="s" label="Aktionen" icon-right="bolt" normal-case />
+                        <VDropdown placement="bottom">
+                            <IodButton type="button" class="!px-3 !gap-x-2" variant="text" corner="pill" size="s" label="Aktionen" icon-right="expand_more" normal-case />
         
                             <template #popper>
                                 <ContextMenu class="min-w-80">
