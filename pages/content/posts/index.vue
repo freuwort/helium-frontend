@@ -44,11 +44,11 @@
     })
 
     const tableColumns = [
-        { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizeable: true, hideable: true, default: '-'},
-        { name: 'space.name', label: 'Space', valuePath: 'space.name', sortable: false, width: 200, resizeable: true, hideable: true, default: '-'},
-        { name: 'draft.name', label: 'Name', valuePath: 'draft.name', sortable: false, width: 200, resizeable: true, hideable: true, default: '-'},
-        { name: 'draft.slug', label: 'Slug', valuePath: 'draft.slug', sortable: false, width: 200, resizeable: true, hideable: true, default: '-'},
-        { name: 'owner', label: 'Besitzer', valuePath: 'owner', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
+        { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizable: true, hideable: true, default: '-'},
+        { name: 'space.name', label: 'Space', valuePath: 'space.name', sortable: false, width: 200, resizable: true, hideable: true, default: '-'},
+        { name: 'draft.name', label: 'Name', valuePath: 'draft.name', sortable: false, width: 200, resizable: true, hideable: true, default: '-'},
+        { name: 'draft.slug', label: 'Slug', valuePath: 'draft.slug', sortable: false, width: 200, resizable: true, hideable: true, default: '-'},
+        { name: 'owner', label: 'Besitzer', valuePath: 'owner', sortable: false, width: 200, resizable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
             if (!value) return '-'
             return {
                 text: item.owner.name || '-',
@@ -57,22 +57,22 @@
                 icon: 'person',
             }
         }},
-        { name: 'hidden', label: 'Wird angezeigt', valuePath: 'hidden', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: boolean) => {
+        { name: 'hidden', label: 'Wird angezeigt', valuePath: 'hidden', sortable: true, width: 200, resizable: true, hideable: true, default: '-', transform: (value: boolean) => {
             return {
                 text: value ? 'Versteckt' : 'Angezeigt',
                 color: value ? 'var(--color-error)' : 'var(--color-success)',
                 icon: value ? 'visibility_off' : 'visibility',
             }
         }},
-        { name: 'draft.review_ready', label: 'Überprüfung', valuePath: 'draft.review_ready', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: boolean) => {
+        { name: 'draft.review_ready', label: 'Überprüfung', valuePath: 'draft.review_ready', sortable: false, width: 200, resizable: true, hideable: true, default: '-', transform: (value: boolean) => {
             return {
                 text: value ? 'Ausstehend' : 'Nicht bereit',
                 color: value ? 'var(--color-warning)' : 'var(--color-error)',
                 icon: value ? 'pace' : 'block',
             }
         }},
-        { name: 'draft.created_at', label: 'Erstellt', valuePath: 'draft.created_at', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
-        { name: 'draft.updated_at', label: 'Zuletzt geändert', valuePath: 'draft.updated_at', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) => value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
+        { name: 'draft.created_at', label: 'Erstellt', valuePath: 'draft.created_at', sortable: false, width: 200, resizable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
+        { name: 'draft.updated_at', label: 'Zuletzt geändert', valuePath: 'draft.updated_at', sortable: false, width: 200, resizable: true, hideable: true, default: '-', transform: (value: string | null) => value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
     ]
 
     const tableActions = [

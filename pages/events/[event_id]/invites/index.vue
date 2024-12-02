@@ -63,7 +63,7 @@
     })
 
     const tableColumns = [
-        { name: 'event', label: 'Event', valuePath: 'event', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
+        { name: 'event', label: 'Event', valuePath: 'event', sortable: true, width: 200, resizable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
             if (!value) return '-'
             return {
                 text: item.event.name || '-',
@@ -72,13 +72,13 @@
                 color: '#10b981',
             }
         }},
-        { name: 'type', label: 'Einladungstyp', valuePath: 'type', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
-        { name: 'needs_claim', label: 'Braucht Anmeldung', valuePath: 'needs_claim', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => value ? 'Ja' : 'Nein' },
-        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
-        { name: 'email', label: 'Email', valuePath: 'email', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
-        { name: 'phone', label: 'Telefon', valuePath: 'phone', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
-        { name: 'status', label: 'Status', valuePath: 'status', sortable: true, width: 200, resizeable: true, hideable: true, default: 'pending' },
-        { name: 'user_id', label: 'Zugewiesener Nutzer', valuePath: 'user_id', sortable: false, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
+        { name: 'type', label: 'Einladungstyp', valuePath: 'type', sortable: true, width: 200, resizable: true, hideable: true, default: '-'},
+        { name: 'needs_claim', label: 'Braucht Anmeldung', valuePath: 'needs_claim', sortable: true, width: 200, resizable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => value ? 'Ja' : 'Nein' },
+        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizable: true, hideable: true, default: '-'},
+        { name: 'email', label: 'Email', valuePath: 'email', sortable: true, width: 200, resizable: true, hideable: true, default: '-'},
+        { name: 'phone', label: 'Telefon', valuePath: 'phone', sortable: true, width: 200, resizable: true, hideable: true, default: '-' },
+        { name: 'status', label: 'Status', valuePath: 'status', sortable: true, width: 200, resizable: true, hideable: true, default: 'pending' },
+        { name: 'user_id', label: 'Zugewiesener Nutzer', valuePath: 'user_id', sortable: false, width: 200, resizable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
             if (!value) return '-'
             return {
                 text: item.user.name || '-',
@@ -87,7 +87,7 @@
                 icon: 'person',
             }
         }},
-        { name: 'form', label: 'Zugewiesenes Formular', valuePath: 'form', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
+        { name: 'form', label: 'Zugewiesenes Formular', valuePath: 'form', sortable: true, width: 200, resizable: true, hideable: true, default: '-', transform: (value: string | null, item: any) => {
             if (!value) return '-'
             return {
                 text: item.form.name || '-',
@@ -96,8 +96,8 @@
                 color: '#06B6D4',
             }
         }},
-        { name: 'created_at', label: 'Erstellt', valuePath: 'created_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
-        { name: 'updated_at', label: 'Zuletzt geändert', valuePath: 'updated_at', sortable: true, width: 200, resizeable: true, hideable: true, default: '-', transform: (value: string | null) => value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
+        { name: 'created_at', label: 'Erstellt', valuePath: 'created_at', sortable: true, width: 200, resizable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
+        { name: 'updated_at', label: 'Zuletzt geändert', valuePath: 'updated_at', sortable: true, width: 200, resizable: true, hideable: true, default: '-', transform: (value: string | null) => value ? ({ text: dayjs(value).fromNow(), tooltip: toLocalDate(value, 'DD.MM.YYYY HH:mm') }) : null },
     ]
 
     const tableActions = [

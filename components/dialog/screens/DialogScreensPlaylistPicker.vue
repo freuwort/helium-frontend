@@ -53,9 +53,9 @@
     })
 
     const tableColumns = [
-        { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizeable: true, hideable: true, default: '-', },
-        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
-        { name: 'type', label: 'Typ', valuePath: 'type', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
+        { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizable: true, hideable: true, default: '-', },
+        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizable: true, hideable: true, default: '-'},
+        { name: 'type', label: 'Typ', valuePath: 'type', sortable: true, width: 200, resizable: true, hideable: true, default: '-' },
     ]
     
     let callback = ((data: any) => {}) as Function

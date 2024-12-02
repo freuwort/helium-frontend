@@ -68,7 +68,7 @@
 
         &:disabled
             cursor: default
-            color: var(--color-text-soft-disabled)
+            color: var(--color-text-soft-disabled) !important
 
             &:after
                 opacity: 0

@@ -17,13 +17,7 @@
                 @request:refresh="IPM.fetch()"
             >
                 <template #right>
-                    <IodButton :is="NuxtLink" label="Neuer Nutzer" corner="pill" icon-right="add" to="/users/editor"/>
-                </template>
-
-                <template #wrapped-right>
-                    <IodIconButton type="button" size="s" corner="pill" variant="text" icon="cloud_upload" @click="importPopup.select()" v-tooltip="'Importieren'"/>
-                    <!-- <IodIconButton type="button" size="s" corner="pill" variant="text" icon="file_save" @click="true" v-tooltip="'Exportieren'"/> -->
-                    <!-- <IodIconButton type="button" size="s" corner="pill" variant="text" icon="stacked_email" @click="sendEmailPopup.open(IPM.keys)" v-tooltip="'Massenmail versenden'"/> -->
+                    <IodButton :is="NuxtLink" corner="pill" variant="filled" label="Neuer Nutzer" icon-right="add" to="/users/editor"/>
                 </template>
             </IodTable>
         </HeCard>
@@ -75,7 +69,7 @@
         tableColumnBuilder.new().name('main_address').label('Hauptadresse').sortable(false).transform((value: any) => stringFromAddress(value) || null).build(),
         tableColumnBuilder.new().name('billing_address').label('Rechnungsadresse').sortable(false).transform((value: any) => stringFromAddress(value) || null).build(),
         tableColumnBuilder.new().name('shipping_address').label('Lieferadresse').sortable(false).transform((value: any) => stringFromAddress(value) || null).build(),
-        tableColumnBuilder.new().name('roles').label('Rollen').transform((value: any[]) => value?.map(e => e.name)?.join(', ') || null).build(),
+        tableColumnBuilder.new().name('roles').label('Rollen').sortable(false).transform((value: any[]) => value?.map(e => e.name)?.join(', ') || null).build(),
         tableColumnBuilder.new().name('is_admin').label('Berechtigungslevel').sortable(false).transform((value: boolean | null, item: any) => {
             if (item?.is_admin) return { text: 'Admin', icon: 'shield', color: 'var(--color-info)', }
             if (item?.has_elevated_permissions) return { text: 'Erweitert', icon: 'check_circle', color: 'var(--color-info)', }
@@ -123,54 +117,66 @@
 
     const tableActions = [
         {
+            icon: 'refresh',
+            text: 'Aktualisieren',
+            scope: ['global'],
+            run: () => IPM.fetch(),
+        },
+        {
+            icon: 'output_circle',
+            text: 'Importieren',
+            scope: ['global'],
+            run: () => importPopup.value.select(),
+        },
+        // {
+        //     icon: 'input_circle',
+        //     text: 'Exportieren',
+        //     scope: ['global'],
+        //     run: () => importPopup.value.select(),
+        // },
+        // {
+        //     icon: 'send',
+        //     text: 'Nachricht versenden',
+        //     scope: ['global'],
+        //     run: (context: string, items: any) => sendEmailPopup.open(items),
+        // },
+        {
             icon: 'edit',
             text: 'Bearbeiten',
-            color: 'var(--color-text)',
-            individual: true,
-            multiple: false,
-            triggerOnRowClick: true,
-            isAvailable: () => true,
-            run: (items: (number | string)[]) => navigateTo(`/users/editor/${items[0]}`), //IPM.open(items[0]),
+            scope: ['individual', 'row'],
+            run: (context: string, items: any) => navigateTo(`/users/editor/${items[0]}`),
         },
         // {
         //     icon: 'content_copy',
         //     text: 'Duplizieren',
-        //     color: 'var(--color-text)',
-        //     individual: true,
-        //     multiple: false,
-        //     triggerOnRowClick: false,
-        //     isAvailable: () => true,
-        //     run: (items: (number | string)[]) => IPM.duplicate(items[0]),
+        //     scope: ['individual'],
+        //     run: (context: string, items: (number | string)[]) => IPM.duplicate(items[0]),
         // },
+        {
+            icon: 'deselect',
+            text: 'Auswahl abwählen',
+            scope: ['selection'],
+            run: (context: string, items: any) => IPM.deselectAll(),
+        },
         {
             icon: 'delete',
             text: 'Löschen',
             color: 'var(--color-error)',
-            individual: true,
-            multiple: true,
-            triggerOnRowClick: false,
-            isAvailable: () => true,
-            run: (items: (number | string)[]) => IPM.delete(items),
+            scope: ['selection', 'individual'],
+            run: (context: string, items: any) => IPM.delete(items),
+        },
+        {
+            icon: 'restore_from_trash',
+            text: 'Wiederherstellen',
+            scope: ['selection'],
+            run: (context: string, items: any) => IPM.restore(items),
         },
         {
             icon: 'delete_forever',
             text: 'Endgültig löschen',
             color: 'var(--color-error)',
-            individual: false,
-            multiple: true,
-            triggerOnRowClick: false,
-            isAvailable: () => true,
-            run: (items: (number | string)[]) => IPM.forceDelete(items),
-        },
-        {
-            icon: 'restore_from_trash',
-            text: 'Wiederherstellen',
-            color: 'var(--color-text)',
-            individual: false,
-            multiple: true,
-            triggerOnRowClick: false,
-            isAvailable: () => true,
-            run: (items: (number | string)[]) => IPM.restore(items),
+            scope: ['selection'],
+            run: (context: string, items: any) => IPM.forceDelete(items),
         },
     ]
 

@@ -53,11 +53,11 @@
     })
 
     const tableColumns = [
-        { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizeable: true, hideable: true, default: '-', },
-        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizeable: true, hideable: true, default: '-'},
-        { name: 'width', label: 'Breite', valuePath: 'width', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
-        { name: 'height', label: 'Höhe', valuePath: 'height', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
-        { name: 'duration', label: 'Dauer', valuePath: 'duration', sortable: true, width: 200, resizeable: true, hideable: true, default: '-' },
+        { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizable: true, hideable: true, default: '-', },
+        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizable: true, hideable: true, default: '-'},
+        { name: 'width', label: 'Breite', valuePath: 'width', sortable: true, width: 200, resizable: true, hideable: true, default: '-' },
+        { name: 'height', label: 'Höhe', valuePath: 'height', sortable: true, width: 200, resizable: true, hideable: true, default: '-' },
+        { name: 'duration', label: 'Dauer', valuePath: 'duration', sortable: true, width: 200, resizable: true, hideable: true, default: '-' },
     ]
     
     let callback = ((data: any) => {}) as Function
