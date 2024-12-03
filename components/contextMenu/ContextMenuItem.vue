@@ -66,6 +66,9 @@
                 color: inherit
                 transform: translateX(5px)
 
+        &:focus
+            outline: 3px solid var(--color-info)
+
         &:disabled
             cursor: default
             color: var(--color-text-soft-disabled) !important

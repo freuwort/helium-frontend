@@ -78,6 +78,9 @@
         &:hover
             background-color: var(--color-background-soft)
 
+        &:focus
+            outline: 3px solid var(--color-info)
+
         &.corner-none
             border-radius: 0
 

@@ -1,42 +1,31 @@
 <template>
     <header>
         <HeFlex horizontal class="main-bar border-b">
-            <VDropdown placement="bottom-start" :distance="-1">
-                <AppHeaderItem @dblclick="navigateTo('/')" v-tooltip="'Home'">
-                    <AppLogo class="!w-8 !h-8" style="color: var(--color-text)"/>
-                </AppHeaderItem>
-
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/" show-chevron icon="home">Startseite</ContextMenuItem>
-                        <ContextMenuItem to="/users" show-chevron icon="group">Nutzer</ContextMenuItem>
-                        <ContextMenuItem to="/media" show-chevron icon="folder">Dateien</ContextMenuItem>
-                        <!-- <ContextMenuDivider />
-                        <ContextMenuItem v-if="devMode" to="/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
-                        <ContextMenuItem v-if="devMode" to="/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
-                        <ContextMenuItem v-if="devMode" to="/screens" show-chevron color="#84cc16" icon="desktop_windows">Screens</ContextMenuItem>
-                        <ContextMenuItem v-if="devMode" to="/content" show-chevron color="#F59E0B" icon="note_stack">Inhalte</ContextMenuItem>
-                        <ContextMenuItem v-if="devMode" show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
-                        <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Buchhaltung</ContextMenuItem> -->
-                        <ContextMenuDivider />
-                        <ContextMenuItem to="/settings/" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown>
+            <AppHeaderItem :is="NuxtLink" to="/" v-tooltip="'Übersicht'">
+                <AppLogo class="!w-8 !h-8" style="color: var(--color-text)"/>
+            </AppHeaderItem>
 
             <HeDivider vertical class="h-8"/>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron icon="group" v-tooltip="'Nutzer / Unternehmen / Berechtigungen'"/>
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="auth.can('system.view.roles')">
+                <AppHeaderItem show-chevron icon="encrypted" v-tooltip="'Berechtigungen'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/users" show-chevron icon="group">Nutzer</ContextMenuItem>
-                        <ContextMenuItem to="/roles" show-chevron icon="badge">Berechtigungen</ContextMenuItem>
+                        <ContextMenuItem to="/roles" show-chevron icon="encrypted">Berechtigungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="auth.can('system.view.users')">
+                <AppHeaderItem show-chevron icon="group" v-tooltip="'Nutzer'"/>
+                <template #popper>
+                    <ContextMenu class="min-w-80">
+                        <ContextMenuItem to="/users" show-chevron icon="group">Nutzer</ContextMenuItem>
+                    </ContextMenu>
+                </template>
+            </VDropdown>
+
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="auth.can('system.access.media')">
                 <AppHeaderItem show-chevron icon="folder" v-tooltip="'Dateien'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -117,14 +106,21 @@
             
             <HeSpacer />
 
-            <MediaUploadProgress />
+            <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
+                <AppHeaderItem icon="cloud_upload" :badge="uploadManager.status.uploading || null" v-tooltip="`Uploads – ${uploadManager.statusText || 'Keine Uploads'}`"/>
+                <template #popper>
+                    <MediaUploadCard class="min-w-[26rem]"/>
+                </template>
+            </VDropdown>
 
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
                 <AppHeaderItem icon="notifications" :badge="notifications.unread.length ?? null" v-tooltip="'Benachrichtigungen'"/>
                 <template #popper>
-                    <NotificationCenter />
+                    <NotificationCenter class="min-w-[26rem]"/>
                 </template>
             </VDropdown>
+
+            <HeDivider vertical class="h-8"/>
 
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
                 <ProfileChip v-if="auth.user" :title="auth.user.name || ''" :subtitle="auth.user.username || ''" :image="auth.user.avatar" align="right" v-tooltip="'Profil'"/>
@@ -138,8 +134,10 @@
                         <ContextMenuDivider />
                         <ContextMenuItem to="/auth/profile" show-chevron icon="person">Profil</ContextMenuItem>
                         <ContextMenuItem is="button" show-chevron color="var(--color-error)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
-                        <ContextMenuDivider />
-                        <ContextMenuItem to="/settings" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
+                        <template v-if="auth.can('system.admin')">
+                            <ContextMenuDivider />
+                            <ContextMenuItem to="/settings" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
+                        </template>
                     </ContextMenu>
                 </template>
             </VDropdown>
@@ -150,6 +148,8 @@
 <script lang="ts" setup>
     const auth = useAuthStore()
     const devMode = useDevMode()
+    const NuxtLink = defineNuxtLink({})
+    const uploadManager = useUploadStore()
     const notifications = useNotificationStore()
     
     const theme = computed(() => {
@@ -164,9 +164,10 @@
     .main-bar
         background-color: var(--color-background)
         box-shadow: var(--shadow-s)
+        padding: .5rem !important
+        gap: .5rem !important
 
         .profile-chip
             height: 3rem
             padding-block: .5rem
-            margin-inline: .5rem
 </style>

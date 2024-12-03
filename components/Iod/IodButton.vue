@@ -157,7 +157,7 @@
                 opacity: 0.1
 
         &:focus
-            outline: 2px solid #000000cc
+            outline: 3px solid var(--color-info)
 
             .overlay
                 opacity: 0.17

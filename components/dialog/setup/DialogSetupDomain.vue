@@ -9,7 +9,9 @@
                 <p class="!mt-2">Alle Einstellungen lassen<br>sich später noch ändern.</p>
                 <HeSpacer />
                 <small class="flex items-center h-14 py-2">
-                    <NuxtLink to="https://docs.helium.cloud/de/first-time-setup" target="_blank">Hilfe</NuxtLink><HeSpacer /><span>v2.0.0</span>
+                    <!-- <NuxtLink to="#" target="_blank">Hilfe</NuxtLink> -->
+                    <HeSpacer />
+                    <span>v2.0.0</span>
                 </small>
             </div>
 

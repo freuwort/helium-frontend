@@ -1,15 +1,15 @@
 <template>
-    <ContextMenu class="min-w-[26rem] !pb-0">
+    <ContextMenu class="!pb-0">
         <div class="flex items-center gap-1 px-1">
-            <IodButton class="flex-1 !normal-case !tracking-normal" corner="pill" :variant="filter === 'unread'? 'contained' : 'text'" :label="`Ungelesen (${notifications.unread.length})`" @click="filter = 'unread'"/>
-            <IodButton class="flex-1 !normal-case !tracking-normal" corner="pill" :variant="filter === 'all'? 'contained' : 'text'" :label="`Alle (${notifications.all.length})`" @click="filter = 'all'"/>
+            <IodButton type="button" class="flex-1 !normal-case !tracking-normal" corner="pill" :variant="filter === 'unread'? 'contained' : 'text'" :label="`Ungelesen (${notifications.unread.length})`" @click="filter = 'unread'"/>
+            <IodButton type="button" class="flex-1 !normal-case !tracking-normal" corner="pill" :variant="filter === 'all'? 'contained' : 'text'" :label="`Alle (${notifications.all.length})`" @click="filter = 'all'"/>
             <HeDivider vertical class="h-8"/>
             <VDropdown placement="bottom-end">
                 <IodIconButton corner="pill" variant="text" icon="more_vert" v-tooltip="'Mehr Optionen'"/>
                 <template #popper>
                     <ContextMenu>
-                        <ContextMenuItem @click="notifications.markAllAsRead()" v-close-popper icon="mark_chat_read">Alle als gelesen markieren</ContextMenuItem>
-                        <ContextMenuItem @click="notifications.fetchNotifications()" v-close-popper icon="refresh">Aktualisieren</ContextMenuItem>
+                        <ContextMenuItem is="button" @click="notifications.markAllAsRead()" v-close-popper icon="mark_chat_read">Alle als gelesen markieren</ContextMenuItem>
+                        <ContextMenuItem is="button" @click="notifications.fetchNotifications()" v-close-popper icon="refresh">Aktualisieren</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>

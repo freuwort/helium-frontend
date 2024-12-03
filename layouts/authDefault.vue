@@ -1,5 +1,8 @@
 <template>
     <div class="page-layout">
+        <!-- Accessibility links -->
+        <AppNavigationSkip href="#content" label="Navigation überspringen" icon="east"/>
+
         <AppHeader />
 
         <div class="hero" ref="hero" :style="heroStyle">
@@ -11,7 +14,7 @@
             </div>
         </div>
 
-        <main>
+        <main id="content">
             <HeLimiter :size="limiter.size">
                 <slot />
             </HeLimiter>
@@ -149,8 +152,8 @@
 
         header
             position: sticky
-            top: 0
             z-index: 1000
+            top: 0
 
         .hero
             position: relative

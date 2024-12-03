@@ -1,5 +1,5 @@
 <template>
-    <component :is="is" type="button" class="header-item" :style="{ color }">
+    <component :is="is" type="button" class="header-item" :class="{ 'show-chevron': showChevron }" :style="{ color }">
         <IodIcon class="app-icon"><slot>{{ icon }}</slot></IodIcon>
         <IodIcon class="chevron" v-if="showChevron">expand_more</IodIcon>
         <span class="badge" :class="{'simple': simpleBadge}" v-if="badge">{{ badge }}</span>
@@ -31,7 +31,7 @@
 
 <style lang="sass" scoped>
     .header-item
-        min-height: 4rem
+        min-height: 3rem
         display: flex
         align-items: center
         justify-content: center
@@ -39,25 +39,45 @@
         color: var(--color-text-soft)
         user-select: none
         position: relative
+        border-radius: .5rem
+
+        &:hover:not(:disabled)
+            background-color: var(--color-background-soft)
+
+            .chevron
+                transform: translateY(3px)
+
+        &:focus
+            outline: 3px solid var(--color-info)
+
+        &:disabled
+            color: var(--color-text-soft-disabled) !important
+
+        &.show-chevron
+            padding-right: .6rem
 
         .app-icon
+            position: relative
+            z-index: 1
             font-size: 1.75rem
             color: inherit
             height: 100%
 
         .chevron
             position: absolute
-            right: 0
+            z-index: 2
+            right: .05rem
             font-size: 1rem
-            color: var(--color-text-soft)
+            color: var(--color-text-soft-disabled)
             transition: transform 80ms ease-in-out
 
         .badge
-            display: flex
-            align-items: center
             position: absolute
+            z-index: 3
             top: .5rem
             right: .5rem
+            display: flex
+            align-items: center
             height: 1.1rem
             line-height: 100%
             padding-inline: .4rem
@@ -73,8 +93,4 @@
                 height: .5rem
                 width: .5rem
                 padding: 0
-
-        &:hover
-            .chevron
-                transform: translateY(3px)
 </style>

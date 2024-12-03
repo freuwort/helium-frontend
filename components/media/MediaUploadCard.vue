@@ -1,30 +1,29 @@
 <template>
-    <Transition name="slide">
-        <div class="upload-card" key="card">
+    <div class="upload-card" key="card">
+        <template v-if="uploadManager.uploads.length">
             <TransitionGroup name="fade">
-                
                 <div class="header" key="header">
                     <span class="flex-1">{{ uploadManager.statusText || 'Keine Uploads' }} </span>
                     <IodIconButton type="button" variant="text" corner="pill" size="s" icon="cancel" @click="uploadManager.clearAll()" />
                 </div>
-
+    
                 <ContextMenuDivider class="!my-2"/>
-
+    
                 <div class="content small-scrollbar" key="content">
                     <TransitionGroup name="fade">
                         <div class="upload" v-for="upload in uploadManager.uploads" :key="upload.id" :data-status="upload.status">
                             <span class="flex-1">{{ upload.name }} ({{ upload.progress }}%)</span>
                             <div class="h-9 w-9 flex items-center justify-center relative">
-                                <IodIconButton class="relative z-10" type="button" variant="text" corner="pill" size="s" icon="close" @click="uploadManager.cancel(upload.id)" />
+                                <IodIconButton type="button" class="relative z-10" variant="text" corner="pill" size="s" icon="close" @click="uploadManager.cancel(upload.id)" />
                                 <IodProgress class="absolute pointer-events-none" :thickness="3" v-show="upload.status === 'uploading'" :progress="upload.progress"/>
                             </div>
                         </div>
                     </TransitionGroup>
                 </div>
-                
             </TransitionGroup>
-        </div>
-    </Transition>
+        </template>
+        <IodAlert type="placeholder" class="h-20" text="Keine Uploads" v-else/>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -42,20 +41,6 @@
         opacity: 0
 
     .fade-leave-active
-        position: absolute
-
-
-
-    .slide-move,
-    .slide-enter-active,
-    .slide-leave-active
-        transition: all 200ms ease-in-out !important
-
-    .slide-enter-from,
-    .slide-leave-to
-        transform: translateY(100%)
-
-    .slide-leave-active
         position: absolute
 
 

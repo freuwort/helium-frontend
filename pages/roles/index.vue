@@ -70,7 +70,7 @@
             icon: 'edit',
             text: 'Bearbeiten',
             scope: ['individual', 'row'],
-            run: (context: string, items: any) => navigateTo(`/users/editor/${items[0]}`),
+            run: (context: string, items: any) => navigateTo(`/roles/editor/${items[0]}`),
         },
         // {
         //     icon: 'content_copy',

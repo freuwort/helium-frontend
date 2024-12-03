@@ -117,5 +117,13 @@ export const useUploadStore = defineStore('upload_manager', () => {
 
 
 
-    return { uploads, totalProgress, status, statusText, upload, cancel, clearAll }
+    return {
+        uploads,
+        totalProgress,
+        status,
+        statusText,
+        upload,
+        cancel,
+        clearAll,
+    }
 })
