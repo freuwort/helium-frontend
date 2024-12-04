@@ -1,16 +1,7 @@
 <template>
-    <HeCard
-        is="div"
-        class="media-item"
-        :class="classes"
-        @dragover.prevent="onDraggingOver"
-        @dragstart="onStartDraggingOver"
-        @dragend="onStopDraggingOver"
-        @dragleave="onStopDraggingOver"
-        @drop.prevent="onDrop"
-    >
+    <div tabindex="0" class="media-item" :class="classes">
         <div class="media-preview">
-            <img class="media-thumbnail bg-zinc-800" v-if="item.thumbnail" :src="item.thumbnail" :alt="item.name">
+            <img class="media-thumbnail bg-zinc-800" draggable="false" v-if="item.thumbnail" :src="item.thumbnail" :alt="item.name">
             <div class="media-icon-wrapper" v-else>
                 <MediaIcon :mime="(item.mime_type as string)"/>
             </div>
@@ -19,13 +10,13 @@
             </div>
         </div>
         <div class="media-info">
-            <NuxtLink v-if="isDirectory" class="title" v-tooltip="item.name" :to="`/media/${item.src_path}`">{{ item.name }}</NuxtLink>
-            <a v-if="!isDirectory" class="title" v-tooltip="item.name" href="#" @click.prevent="emits('edit', item)" >{{ item.name }}</a>
+            <NuxtLink v-if="isDirectory" class="title" tabindex="-1" v-tooltip="item.name" :to="`/media/${item.src_path}`">{{ item.name }}</NuxtLink>
+            <a v-if="!isDirectory" class="title" tabindex="-1" v-tooltip="item.name" href="#" @click.prevent="emits('edit', item)" >{{ item.name }}</a>
             <IodProfileArray class="profiles" :data="profiles" @dblclick.stop="emits('share', item)"/>
         </div>
         <div class="overlay" v-show="showContextMenu">
             <VDropdown placement="bottom">
-                <IodIconButton class="more-button" type="button" variant="filled" corner="pill" icon="more_vert" size="s" background="#00000099" color="#ffffff" v-tooltip="'Mehr'"/>
+                <IodIconButton class="more-button" tabindex="-1" type="button" variant="filled" corner="pill" icon="more_vert" size="s" background="#00000099" color="#ffffff" v-tooltip="'Mehr'"/>
                 <template #popper>
                     <ContextMenu class="min-w-15">
                         <ContextMenuItem is="a" icon="open_in_new" :href="(item.cdn_path as string)" target="_blank" rel="noopener noreferrer">In neuem Tab öffnen</ContextMenuItem>
@@ -40,22 +31,20 @@
                 </template>
             </VDropdown>
         </div>
-    </HeCard>
+    </div>
 </template>
 
 <script lang="ts" setup>
     import type { MediaItem } from '~/types/media'
-
-
 
     const props = defineProps({
         item: {
             type: Object as PropType<MediaItem>,
             required: true
         },
-        selected: {
-            type: Boolean,
-            default: false
+        selection: {
+            type: Array as PropType<string[]>,
+            default: () => []
         },
         disabled: {
             type: Boolean,
@@ -70,36 +59,34 @@
             default: false
         },
     })
-
-    const dragOver = ref(false)
+    
     const isDirectory = computed(() => props.item.mime_type === 'directory')
+    const selected = computed(() => props.selection.includes(props.item.src_path))
+    const disabled = computed(() => {
+        if (props.disabled) return true
+        if (props.dragging && selected.value) return true
+        if (props.dragging && !isDirectory.value) return true
+        return false
+    })
 
     const classes = computed(() => {
         return [
             isDirectory.value ? 'is-directory' : 'is-file',
             {
-                'selected': props.selected,
-                'ghost': ghost.value,
-                'disabled': props.disabled,
+                'disabled': disabled.value,
+                'selected': selected.value,
                 'dragging': props.dragging,
-                'dragover': dragOver.value,
             },
         ]
     })
 
-    // Ghost items are items that are not selectable, draggable or dropable
-    const ghost = computed(() => {
-        // @case: disabled
-        if (props.disabled) return true
+    const metaTags = computed(() => {
+        let items = []
 
-        // @case: selected and dragging
-        if (props.selected && props.dragging) return true
-
-        // @case: dragging and not a directory
-        if (props.dragging && !isDirectory.value) return true
-
-        // @case: not ghost
-        return false
+        if (props.item.meta.extension) items.push(props.item.meta.extension)
+        if (props.item.meta.size) items.push(humanFileSize(props.item.meta.size as number))
+        
+        return items
     })
 
     const profiles = computed(() => {
@@ -141,49 +128,6 @@
         return profiles
     })
 
-    const nameTooltip = computed(() => {
-        return props.item.name + (isDirectory.value ? '' : ' - ' + humanFileSize(props.item.meta.size as number))
-    })
-
-    const metaTags = computed(() => {
-        let items = []
-
-        if (props.item.meta.extension) items.push(props.item.meta.extension)
-        if (props.item.meta.size) items.push(humanFileSize(props.item.meta.size as number))
-        
-        return items
-    })
-
-
-
-    function onStartDraggingOver()
-    {
-        dragOver.value = false
-    }
-
-    function onDraggingOver()
-    {
-        dragOver.value = true
-    }
-
-    function onStopDraggingOver()
-    {
-        dragOver.value = false
-    }
-
-    function onDrop(event: DragEvent)
-    {
-        dragOver.value = false
-
-        if (ghost.value)
-        {
-            event.stopPropagation()
-            return
-        }
-
-        emits('drop', event)
-    }
-
 
 
     const emits = defineEmits(['select', 'download', 'edit', 'share', 'rename', 'drop', 'delete'])
@@ -199,7 +143,8 @@
         border-radius: var(--radius-l)
         transition: all 50ms ease
         overflow: hidden
-        border-color: var(--local-border-color) !important
+        background: var(--color-background)
+        border: 1px solid var(--local-border-color) !important
 
         &::after
             content: ''
@@ -215,21 +160,24 @@
             opacity: 0
             transition: opacity 50ms ease
 
-        &.ghost
+        &.disabled
             opacity: .5
 
-        &.selected:not(.ghost),
-        &.dragover:not(.ghost)
+        &.selected
             --local-border-color: var(--color-info)
 
             &::after
                 opacity: .1
 
-        &:hover:not(.ghost)
-            box-shadow: var(--shadow-m)
+        &:focus
+            outline: 3px solid var(--color-info)
 
-            .more-button
-                opacity: 1
+        &:not(.disabled)
+            &:hover
+                box-shadow: var(--shadow-s) !important
+
+                .more-button
+                    opacity: 1
 
         .media-preview
             position: relative

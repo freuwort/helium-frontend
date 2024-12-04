@@ -3,18 +3,9 @@
         <slot name="left" />
         <template v-for="(item, i) in items">
             <span v-show="i !== 0">/</span>
-            <IodButton
-                type="button"
-                :class="{ 'first': i === 0 }"
-                :icon-left="i === 0 ? 'home_storage' : ''"
-                size="s"
-                variant="text"
-                corner="pill"
-                @click="emits('navigate', item.navigate_path)"
-                @dragover.prevent
-                @drop.prevent="onDrop($event, item.src_path)"
-                :label="item.text"
-            />
+            <MediaDropzone class="rounded-full" :enabled="i !== items.length - 1" @drop.stop="onDrop($event, item.src_path)">
+                <IodButton type="button" :class="{ 'first': i === 0 }" :icon-left="i === 0 ? 'home_storage' : ''" :label="item.text" size="s" variant="text" corner="pill" @click="emits('navigate', item.navigate_path)" />
+            </MediaDropzone>
         </template>
         <HeSpacer />
         <slot name="right" />

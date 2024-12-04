@@ -47,40 +47,43 @@
             </div>
 
             
-            <div class="entity-grid" v-if="items.length">
-                <MediaItem
-                    class="!shadow-none"
-                    v-for="item in items"
-                    :key="item.id"
-                    :item="item"
-                    :selected="selection.includes(item.src_path)"
-                    :dragging="dragging"
-                    :draggable="true"
-                    show-context-menu
-                    @dragstart="onDragStart($event, item)"
-                    @drop="onDrop($event, item.src_path)"
-                    @click="select($event, item.src_path)"
-                    @dblclick="item.mime_type === 'directory' ? navigateTo(`/media/${item.src_path}`) : propertyPopup.open(item)"
-                    @edit="propertyPopup.open(item)"
-                    @share="sharePopup.open(item)"
-                    @rename="renamePopup.open(item)"
-                    @delete="deleteItems([item.src_path])"
-                />
-            </div>
-
-            <IodAlert type="placeholder" class="h-72" v-if="!items.length && !loading">
-                <div class="flex item-center justify-center h-16 w-16 mx-auto">
-                    <IodIcon icon="home_storage" class="!text-5xl"/>
+            <MediaDropzone @drop.stop="onDrop($event, path)" :accept="['Files']">
+                <div class="entity-grid" v-if="items.length">
+                    <MediaDropzone class="rounded-lg" v-for="item in items" :key="item.id" :enabled="!(dragging && selection.includes(item.src_path)) && item.mime_type === 'directory'" @dragover.stop @drop.stop="onDrop($event, item.src_path)">
+                        <MediaItem
+                            :item="item"
+                            :selection="selection"
+                            :dragging="dragging"
+                            show-context-menu
+                            draggable="true"
+                            @dragstart="onDragStart($event, item)"
+                            @click="select($event, item.src_path)"
+                            @dblclick="navigateOrOpen(item)"
+                            @edit="propertyPopup.open(item)"
+                            @share="sharePopup.open(item)"
+                            @rename="renamePopup.open(item)"
+                            @keyup.enter.exact="navigateOrOpen(item)"
+                            @keyup.enter.ctrl.exact="renamePopup.open(item)"
+                            @keyup.enter.shift.exact="sharePopup.open(item)"
+                            @delete="deleteItems([item.src_path])"
+                        />
+                    </MediaDropzone>
                 </div>
-                Keine Dateien gefunden
-            </IodAlert>
-            
-            <IodAlert type="placeholder" class="h-72" v-if="!items.length &&loading">
-                <div class="flex item-center justify-center h-16 w-16 mx-auto">
-                    <IodLoader class="m-auto"/>
-                </div>
-                Lade Dateien
-            </IodAlert>
+    
+                <IodAlert type="placeholder" class="h-72 pointer-events-none" v-if="!items.length && !loading">
+                    <div class="flex item-center justify-center h-16 w-16 mx-auto">
+                        <IodIcon icon="home_storage" class="!text-5xl"/>
+                    </div>
+                    Keine Dateien gefunden
+                </IodAlert>
+                
+                <IodAlert type="placeholder" class="h-72 pointer-events-none" v-if="!items.length &&loading">
+                    <div class="flex item-center justify-center h-16 w-16 mx-auto">
+                        <IodLoader class="m-auto"/>
+                    </div>
+                    Lade Dateien
+                </IodAlert>
+            </MediaDropzone>
 
             <div class="footer">
                 <IodPagination v-model="pagination"/>
@@ -114,7 +117,6 @@
     
     const route = useRoute()
     const uploadManager = useUploadStore()
-    const NuxtLink = defineNuxtLink({})
     const scope = 'view_admin_media_index'
 
 
@@ -164,8 +166,7 @@
     
             items.value = data.data
         }
-        catch (error)
-        {}
+        catch (error) {}
 
         loading.value = false
     }
@@ -180,24 +181,31 @@
 
 
 
+    // START: Misc
+    function navigateOrOpen(item: MediaItem) {
+        if (item.mime_type === 'directory') {
+            return navigateTo(`/media/${item.src_path}`)
+        }
+
+        propertyPopup.value.open(item)
+    }
+
+
+
     // START: Selection
     const selection = ref<string[]>([])
 
     function select(event: MouseEvent, path: string)
     {
-        if (event.ctrlKey)
-        {
-            if (selection.value.includes(path))
-            {
+        if (event.ctrlKey) {
+            if (selection.value.includes(path)) {
                 selection.value = selection.value.filter(p => p !== path)
             }
-            else
-            {
+            else {
                 selection.value.push(path)
             }
         }
-        else if (event.shiftKey)
-        {
+        else if (event.shiftKey) {
             const index = items.value.findIndex(i => i.src_path === path)
             const start = items.value.findIndex(i => i.src_path === selection.value[0])
             const end = index
@@ -208,8 +216,7 @@
 
             selection.value = range.map(i => i.src_path)
         }
-        else
-        {
+        else {
             selection.value = [path]
         }
     }
@@ -226,30 +233,58 @@
     const dragging = ref(false)
 
     function onDragStart(event: DragEvent, item: MediaItem) {
-        if (!selection.value.includes(item.src_path))
-        {
+        if (!selection.value.includes(item.src_path)) {
             selection.value = [item.src_path]
         }
-        
+
+        if (!event.dataTransfer) {
+            return
+        }
+
+        event.dataTransfer.setData('text/plain', selection.value
+            .map((p: string) => encodeURIComponent(p))
+            .join(','))
+
         dragging.value = true
     }
 
-    function onDragEnd(event: DragEvent) {
+    function onDragStop(event: DragEvent) {
         dragging.value = false
     }
 
     function onDrop(event: DragEvent, path: string) {
+        event.preventDefault()
+
         dragging.value = false
 
-        event.ctrlKey ? copy(selection.value, path) : move(selection.value, path)
+        if (!event.dataTransfer) {
+            return
+        }
+
+        if (event.dataTransfer.files.length) {
+            upload(event.dataTransfer.files, path)
+            return
+        }
+
+        let data = event.dataTransfer
+            .getData('text/plain')
+            .split(',')
+            .map((p: string) => decodeURIComponent(p))
+
+        if (event.ctrlKey) {
+            copy(data, path)
+            return
+        }
+
+        move(data, path)
     }
 
     onMounted(() => {
-        window.addEventListener('dragend', onDragEnd)
+        window.addEventListener('dragend', onDragStop)
     })
 
     onBeforeUnmount(() => {
-        window.removeEventListener('dragend', onDragEnd)
+        window.removeEventListener('dragend', onDragStop)
     })
     // END: Drag & Drop
 
@@ -258,12 +293,12 @@
     // START: Upload
     const uploadInput = ref()
 
-    async function upload(files: any) {
+    async function upload(files: any, path_: string = path.value) {
         // Check if files are available
         if (!files.length) return
 
         // Upload files
-        await uploadManager.upload(path.value, files)
+        await uploadManager.upload(path_, files)
 
         // Reset input
         if (uploadInput.value) uploadInput.value.value = ''
@@ -337,8 +372,6 @@
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr))
         gap: 1rem
         padding: 1rem
-
-
 
     .header
         position: sticky

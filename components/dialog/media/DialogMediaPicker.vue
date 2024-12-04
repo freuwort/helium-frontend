@@ -38,7 +38,6 @@
                         :key="item.id"
                         :selected="selection.includes(item)"
                         :item="item"
-                        :draggable="true"
                         @click="select($event, item)"
                         @dblclick="navigateOrForceSelect($event, item)"
                     />
