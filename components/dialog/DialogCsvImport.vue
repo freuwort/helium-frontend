@@ -1,6 +1,6 @@
 <template>
     <IodPopup ref="popup" title="Importieren">
-        <HeFlex is="form" padding="1.5rem" gap=".5rem" @submit.prevent="startImport()">
+        <HeFlex is="form" padding="1.5rem" gap=".5rem" @submit.prevent="startImport()" id="dialog-csv-import">
             <div class="flex items-center gap-2 p-2 bg-background-soft rounded-full">
                 <IodButton
                     type="button"
@@ -27,15 +27,57 @@
                     <b class="text-lg mt-2">{{ item.label }}</b>
                     <div class="flex items-center gap-4" v-for="field in item.fields">
                         <span class="flex-1">{{ field.label }}</span>
-                        <IodIcon icon="double_arrow" />
-                        <IodSelect class="flex-1" label="Wert" :options="headerOptions" :modelValue="importer.getMapping(field.name)" @update:modelValue="importer.setMapping(field.name, $event)"/>
+                        <IodIcon icon="chevron_right"/>
+                        <div class="flex-1">
+                            <VDropdown placement="bottom-start" container="#dialog-csv-import">
+                                <IodButton
+                                    normal-case
+                                    type="button"
+                                    size="s"
+                                    corner="pill"
+                                    color-preset="info"
+                                    icon-right="arrow_drop_down"
+                                    :border="!importer.getMapping(field.name)"
+                                    :variant="importer.getMapping(field.name) ? 'filled' : 'text'"
+                                    :label="importer.getMapping(field.name) || 'Spalte auswählen'"
+                                />
+                                <template #popper>
+                                    <ContextMenu class="min-w-72 max-h-96">
+                                        <ContextMenuItem is="button" icon="do_not_disturb_on" v-close-popper @click="importer.setMapping(field.name, '')">Auswahl entfernen</ContextMenuItem>
+                                        <ContextMenuDivider />
+                                        <ContextMenuItem is="button" v-for="header in headerOptions" :key="header.value" icon="label" v-close-popper @click="importer.setMapping(field.name, header.value)">{{ header.text }}</ContextMenuItem>
+                                    </ContextMenu>
+                                </template>
+                            </VDropdown>
+                        </div>
                     </div>
                 </template>
 
-                <div class="flex items-center gap-4" v-else>
+                <div class="flex items-center gap-4" v-else-if="(item instanceof Field)">
                     <span class="flex-1">{{ item.label }}</span>
-                    <IodIcon icon="double_arrow" />
-                    <IodSelect class="flex-1" label="Wert" :options="headerOptions" :modelValue="importer.getMapping(item.name)" @update:modelValue="importer.setMapping(item.name, $event)"/>
+                    <IodIcon icon="arrow_forward"/>
+                    <div class="flex-1">
+                        <VDropdown placement="bottom-start" container="#dialog-csv-import">
+                            <IodButton
+                                normal-case
+                                type="button"
+                                size="s"
+                                corner="pill"
+                                color-preset="info"
+                                icon-right="arrow_drop_down"
+                                :border="!importer.getMapping(item.name)"
+                                :variant="importer.getMapping(item.name) ? 'filled' : 'text'"
+                                :label="importer.getMapping(item.name) || 'Spalte auswählen'"
+                            />
+                            <template #popper>
+                                <ContextMenu class="min-w-72">
+                                    <ContextMenuItem is="button" icon="do_not_disturb_on" v-close-popper @click="importer.setMapping(item.name, '')">Auswahl entfernen</ContextMenuItem>
+                                    <ContextMenuDivider />
+                                    <ContextMenuItem is="button" v-for="header in headerOptions" :key="header.value" icon="label" v-close-popper @click="importer.setMapping(item.name, header.value)">{{ header.text }}</ContextMenuItem>
+                                </ContextMenu>
+                            </template>
+                        </VDropdown>
+                    </div>
                 </div>
             </template>
 
@@ -49,11 +91,11 @@
 </template>
 
 <script lang="ts" setup>
-    import { CsvImport, FieldGroup, Field } from '~/classes/import/CsvImport.ts'
+    import { CsvImport, FieldGroup, Field } from '~/classes/import/CsvImport'
 
     const props = defineProps({
         fields: {
-            type: Array as FieldGroup[]|Field[],
+            type: Array as PropType<FieldGroup[]|Field[]>,
             default: () => []
         }
     })
@@ -70,10 +112,7 @@
     const filename = ref('')
     const raw = ref('')
     const importer = ref(new CsvImport())
-    const headerOptions = computed(() => [
-        {text: 'Leer lassen', value: ''},
-        ...importer.value.headers.map((e) => ({text: e, value: e}))
-    ])
+    const headerOptions = computed(() => importer.value.headers.map((e) => ({text: e, value: e})))
 
 
     
