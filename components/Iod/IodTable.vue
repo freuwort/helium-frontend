@@ -12,7 +12,7 @@
                         <template #popper><IodTableFilters :filter="filter" :filterSettings="filterSettings" /></template>
                     </VDropdown>
                     <HeDivider vertical class="h-6 focused" />
-                    <IodInput class="search-input !h-10 !bg-transparent !rounded-none" icon-left="search" placeholder="Suchen" v-model="filter.search"/>
+                    <IodInput class="search-input " icon-left="search" placeholder="Suchen" v-model="filter.search"/>
                 </div>
 
                 <div class="spacer"></div>
@@ -659,6 +659,10 @@
                 position: relative
 
             .search-input
+                width: 16rem
+                height: 2.5rem !important
+                background: transparent !important
+                border-radius: none !important
                 --local-padding: .25rem
 
             .iod-loader

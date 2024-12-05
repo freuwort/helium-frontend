@@ -1,5 +1,5 @@
 <template>
-    <div class="iod-container iod-breadcrumbs" :class="{ 'slot-left': $slots.left, 'slot-right': $slots.right }">
+    <div class="iod-container iod-breadcrumbs small-scrollbar" :class="{ 'slot-left': $slots.left, 'slot-right': $slots.right }">
         <slot name="left" />
         <template v-for="(item, i) in items">
             <span v-show="i !== 0">/</span>
@@ -64,7 +64,10 @@
         border-radius: 2.5rem
         background: var(--color-background-soft)
         user-select: none
-        padding: .25rem
+        padding-inline: .25rem
+        overflow-x: auto
+        overflow-y: hidden
+        white-space: nowrap
 
         &.slot-left
             padding-left: .75rem

@@ -6,8 +6,8 @@
             <IodInput label="Name" ref="input" v-model="form.name" />
 
             <HeFlex horizontal gap="1rem">
-                <IodButton class="flex-1" type="button" variant="contained" label="Abbrechen" @click="popup.close()" :loading="form.processing" />
-                <IodButton class="flex-1" type="submit" variant="filled" label="Umbenennen" :loading="form.processing" />
+                <IodButton type="button" class="flex-1" corner="pill" variant="contained" label="Abbrechen" @click="popup.close()" :loading="form.processing" />
+                <IodButton type="submit" class="flex-1" corner="pill" variant="filled" label="Umbenennen" :loading="form.processing" />
             </HeFlex>
         </HeFlex>
     </IodPopup>
