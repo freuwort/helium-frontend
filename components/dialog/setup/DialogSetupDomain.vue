@@ -1,5 +1,5 @@
 <template>
-    <div class="fts-wizard" :class="{ 'open': isOpen }">
+    <div class="fts-wizard" :class="{ 'open': isOpen }" :inert="!isOpen">
         <div class="background"></div>
         <div class="inner">
             <div class="sidebar">

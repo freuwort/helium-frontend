@@ -1,6 +1,6 @@
 <template>
     <Teleport to="body">
-        <FocusTrap :active="isOpen" @deactivate="close()">
+        <FocusTrap :active="isOpen" @deactivate="close()" :inert="!isOpen" initial-focus=".first-focus">
             <div class="iod-container iod-popup popup-outer-wrapper scrollbar" :class="classes" :style="styles" @click.self.exact="closeOnBackdropClick()">
                 <div class="popup-inner-wrapper">
                     <div class="popup-content small-scrollbar">

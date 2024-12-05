@@ -29,14 +29,16 @@
         form.path = item.src_path
         form.name = item.name
         
-        popup.value.open()
-        input.value.focus()
-
         // Get selection range
         let start = 0
         let end = item.mime_type === 'directory' ? item.name.length : item.name.lastIndexOf('.')
 
-        nextTick(() => input.value.input?.setSelectionRange(start, end))
+        popup.value.open()
+
+        nextTick(() => {
+            input.value.focus()
+            input.value.input?.setSelectionRange(start, end)
+        })
     }
 
     async function rename() {
