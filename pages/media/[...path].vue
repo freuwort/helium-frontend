@@ -165,7 +165,7 @@
         pagination.value = { ...pagination.value, ...value }
     }
 
-    watch(() => [path, search, pagination.value.size, pagination.value.page], throttledFetch, { deep: true })
+    watch(() => [path, search, pagination.value.size, pagination.value.page], throttledFetch, { immediate: true, deep: true })
     // END: Fetch
 
 
