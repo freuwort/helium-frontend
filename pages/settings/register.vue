@@ -1,145 +1,156 @@
 <template>
-    <div class="flex items-center min-h-10 mb-6">
-        <h2 class="flex-1 m-0 font-medium text-2xl">Registrierung</h2>
-        <IodButton corner="pill" label="Speichern" icon-right="save" :disabled="!isValid" :loading="form.processing" @click="save"/>
+    <div class="flex items-center flex-wrap gap-4 min-h-10 mb-6">
+        <h2 class="flex-1 m-0 font-medium text-2xl">Nutzer Registrierungen</h2>
+        <IodButton corner="pill" color-preset="error" label="Deaktivieren" icon-right="unpublished" normal-case @click="setStatus(false)" v-if="form.policy_allow_registration"/>
     </div>
 
     <ErrorAlert :errors="form.errors" class="mb-4" />
 
-    <div class="flex items-center min-h-10">
-        <h3 class="flex-1 m-0 font-medium text-xl">Verpflichtende Angaben</h3>
-    </div>
-
-    <div class="flex flex-col gap-4 mb-6" v-if="form.default_profile">
-        <div class="profile-container">
-            <div class="flex flex-col gap-4 py-5 px-4">
-                <h4 class="flex-1 m-0 font-medium !text-base/4">Pflichtfelder</h4>
-                <div class="flex flex-wrap gap-2">
-                    <VDropdown placement="left-start">
-                        <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
-
-                        <template #popper>
-                            <ContextMenuBuilder :items="fieldOptions" default-icon="input" @click="addProfileArrayItem(form.default_profile, 'fields', $event)" class="min-w-64"/>
-                        </template>
-                    </VDropdown>
-                    <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="field in form.default_profile.fields" :label="field" @click="removeProfileArrayItem(form.default_profile, 'fields', field)" v-tooltip="'Entfernen'" />
+    <template v-if="form.policy_allow_registration">
+        <div class="flex items-center min-h-10">
+            <h3 class="flex-1 m-0 font-medium text-xl">Verpflichtende Angaben</h3>
+        </div>
+    
+        <div class="flex flex-col gap-4 mb-6" v-if="form.default_profile">
+            <div class="profile-container">
+                <div class="flex flex-col gap-4 py-5 px-4">
+                    <h4 class="flex-1 m-0 font-medium !text-base/4">Pflichtfelder</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <VDropdown placement="left-start">
+                            <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
+    
+                            <template #popper>
+                                <ContextMenuBuilder :items="fieldOptions" default-icon="input" @click="addProfileArrayItem(form.default_profile, 'fields', $event)" class="min-w-64"/>
+                            </template>
+                        </VDropdown>
+                        <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="field in form.default_profile.fields" :label="field" @click="removeProfileArrayItem(form.default_profile, 'fields', field)" v-tooltip="'Entfernen'" />
+                    </div>
                 </div>
-            </div>
-            <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
-                <h4 class="flex-1 m-0 font-medium !text-base/4">Auto-Rollen</h4>
-                <div class="flex flex-wrap gap-2">
-                    <VDropdown placement="left-start">
-                        <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
-
-                        <template #popper>
-                            <DialogSearchRoles @select="addProfileArrayItem(form.default_profile, 'auto_assign_roles', $event[0].name)" />
-                        </template>
-                    </VDropdown>
-                    <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in form.default_profile.auto_assign_roles" :label="option" @click="removeProfileArrayItem(form.default_profile, 'auto_assign_roles', option)" v-tooltip="'Entfernen'" />
+                <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
+                    <h4 class="flex-1 m-0 font-medium !text-base/4">Auto-Rollen</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <VDropdown placement="left-start">
+                            <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
+    
+                            <template #popper>
+                                <DialogSearchRoles @select="addProfileArrayItem(form.default_profile, 'auto_assign_roles', $event[0].name)" />
+                            </template>
+                        </VDropdown>
+                        <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in form.default_profile.auto_assign_roles" :label="option" @click="removeProfileArrayItem(form.default_profile, 'auto_assign_roles', option)" v-tooltip="'Entfernen'" />
+                    </div>
                 </div>
-            </div>
-            <div class="flex flex-col gap-4 p-4 border-t border-inherit">
-                <IodToggle type="switch" label="Nutzer nach der Registrierung automatisch freischalten" v-model="form.default_profile.auto_enable" style="--local-color-off: var(--color-text-soft-disabled); --local-color-on: var(--color-info);"/>
+                <div class="flex flex-col gap-4 p-4 border-t border-inherit">
+                    <IodToggle type="switch" label="Nutzer nach der Registrierung automatisch freischalten" v-model="form.default_profile.auto_enable" style="--local-color-off: var(--color-text-soft-disabled); --local-color-on: var(--color-info);"/>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="flex items-center min-h-10">
-        <h3 class="flex-1 m-0 font-medium text-xl">Optionale Profile</h3>
-        <IodButton type="button" label="Neues Profil" icon-right="add" corner="pill" variant="contained" @click="addProfile()"/>
-    </div>
-
-    <div class="flex flex-col gap-4">
-        <div class="flex flex-col" v-if="form.custom_profiles.length">
-            <Container orientation="vertical" lock-axis="y" behaviour="contain" drag-handle-selector=".drag-handle" @drop="onDrop">
-                <Draggable v-for="profile in form.custom_profiles" :key="profile.id">
-                    <div class="profile-container" :class="{'active': edit === profile.id}">
-                        <div class="flex items-center gap-4 p-4 border-inherit">
-                            <IodIcon icon="drag_indicator" class="h-10 !text-xl drag-handle" />
-                            <HeDivider class="h-10" vertical />
-                            <div class="flex flex-1 flex-col">
-                                <h4 class="flex-1 m-0 font-medium !text-lg/6">{{ profile.name }}</h4>
-                                <small>{{ profile.description || 'Keine Beschreibung' }} | Gruppen: {{ [...profile.groups].join(', ') || 'Keine Gruppe' }}</small>
+    
+        <div class="flex items-center min-h-10">
+            <h3 class="flex-1 m-0 font-medium text-xl">Optionale Profile</h3>
+            <IodButton type="button" label="Neues Profil" icon-right="add" corner="pill" variant="contained" @click="addProfile()"/>
+        </div>
+    
+        <div class="flex flex-col gap-4 mb-6">
+            <div class="flex flex-col" v-if="form.custom_profiles.length">
+                <Container orientation="vertical" lock-axis="y" behaviour="contain" drag-handle-selector=".drag-handle" @drop="onDrop">
+                    <Draggable v-for="profile in form.custom_profiles" :key="profile.id">
+                        <div class="profile-container" :class="{'active': edit === profile.id}">
+                            <div class="flex items-center gap-4 p-4 border-inherit">
+                                <IodIcon icon="drag_indicator" class="h-10 !text-xl drag-handle" />
+                                <HeDivider class="h-10" vertical />
+                                <div class="flex flex-1 flex-col">
+                                    <h4 class="flex-1 m-0 font-medium !text-lg/6">{{ profile.name }}</h4>
+                                    <small>{{ profile.description || 'Keine Beschreibung' }} | Gruppen: {{ [...profile.groups].join(', ') || 'Keine Gruppe' }}</small>
+                                </div>
+                                <template v-if="profile.fields.size > 0 || profile.auto_assign_roles.size > 0 || profile.auto_enable">
+                                    <div class="flex items-center ">
+                                        <IodIcon icon="input" class="h-10 !text-xl" v-tooltip="'erfordert Pflichtfelder'" v-show="profile.fields.size > 0" />
+                                        <IodIcon icon="badge" class="h-10 !text-xl" v-tooltip="'weist automatisch Rollen zu'" v-show="profile.auto_assign_roles.size > 0"/>
+                                        <IodIcon icon="verified" class="h-10 !text-xl" v-tooltip="'automatische Freigabe'" v-show="profile.auto_enable"/>
+                                    </div>
+                                </template>
+                                <HeDivider class="h-10" vertical />
+                                <IodIconButton type="button" corner="pill" size="s" variant="text" v-tooltip="'Bearbeiten'" :icon="edit == profile.id ? 'expand_less' : 'expand_more'" @click="edit = edit == profile.id ? '' : profile.id"/>
                             </div>
-                            <template v-if="profile.fields.size > 0 || profile.auto_assign_roles.size > 0 || profile.auto_enable">
-                                <div class="flex items-center ">
-                                    <IodIcon icon="input" class="h-10 !text-xl" v-tooltip="'erfordert Pflichtfelder'" v-show="profile.fields.size > 0" />
-                                    <IodIcon icon="badge" class="h-10 !text-xl" v-tooltip="'weist automatisch Rollen zu'" v-show="profile.auto_assign_roles.size > 0"/>
-                                    <IodIcon icon="verified" class="h-10 !text-xl" v-tooltip="'automatische Freigabe'" v-show="profile.auto_enable"/>
+                            
+                            <template v-if="edit === profile.id">
+                                <div class="flex h-16 border-t-2 border-inherit">
+                                    <IodInput class="!h-full !bg-transparent !rounded-none w-72" label="Profilname" v-model="profile.name" />
+                                    <HeDivider class="!h-full !border-inherit" vertical />
+                                    <IodInput class="!h-full !bg-transparent !rounded-none flex-1" label="Beschreibung" v-model="profile.description" />
+                                </div>
+    
+                                <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
+                                    <h3 class="flex-1 m-0 font-medium !text-base/4">Pflichtfelder</h3>
+                                    <div class="flex flex-wrap gap-2">
+                                        <VDropdown placement="left-start">
+                                            <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
+                                            
+                                            <template #popper>
+                                                <ContextMenuBuilder :items="fieldOptions" default-icon="input" @click="addProfileArrayItem(profile, 'fields', $event)" class="min-w-64"/>
+                                            </template>
+                                        </VDropdown>
+                                        <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="field in profile.fields" :label="field" @click="removeProfileArrayItem(profile, 'fields', field)" v-tooltip="'Entfernen'" />
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
+                                    <h3 class="flex-1 m-0 font-medium !text-base/4">Auto-Rollen</h3>
+                                    <div class="flex flex-wrap gap-2">
+                                        <VDropdown placement="left-start">
+                                            <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
+    
+                                            <template #popper>
+                                                <DialogSearchRoles @select="addProfileArrayItem(profile, 'auto_assign_roles', $event[0].name)" />
+                                            </template>
+                                        </VDropdown>
+                                        <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in profile.auto_assign_roles" :label="option" @click="removeProfileArrayItem(profile, 'auto_assign_roles', option)" v-tooltip="'Entfernen'" />
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
+                                    <h3 class="flex-1 m-0 font-medium !text-base/4">Gruppen</h3>
+                                    <div class="flex flex-wrap gap-2">
+                                        <VDropdown placement="left-start">
+                                            <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
+    
+                                            <template #popper>
+                                                <ContextMenu class="min-w-80">
+                                                    <IodInput class="!h-16 !bg-transparent !my-[-1rem]" label="Neue Gruppe" v-model="newGroup" @keydown.enter="addGroup(profile, newGroup)">
+                                                        <template #right>
+                                                            <IodIconButton variant="text" icon="add" @click="addGroup(profile, newGroup)" v-tooltip="'Gruppe anlegen'" />
+                                                        </template>
+                                                    </IodInput>
+                                                    <ContextMenuDivider v-show="!!groupOptions.length"/>
+                                                    <ContextMenuItem is="button" v-for="option in groupOptions" :key="option" icon="workspaces" :label="option" @click="addProfileArrayItem(profile, 'groups', option)" />
+                                                </ContextMenu>
+                                            </template>
+                                        </VDropdown>
+                                        <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in profile.groups" :label="option" @click="removeProfileArrayItem(profile, 'groups', option)" v-tooltip="'Entfernen'" />
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-2 p-4 border-t border-inherit">
+                                    <IodToggle type="switch" class="!px-0 !py-1 !min-h-0" label="Nutzer nach der Registrierung automatisch freischalten" v-model="profile.auto_enable" style="--local-color-off: var(--color-text-soft-disabled); --local-color-on: var(--color-info);"/>
+                                </div>
+                                <div class="flex gap-2 p-4 border-t border-inherit">
+                                    <IodButton type="button" corner="pill" size="s" color-preset="error" variant="contained" label="Profil löschen" icon-left="delete" @click="removeProfile(profile)"/>
                                 </div>
                             </template>
-                            <HeDivider class="h-10" vertical />
-                            <IodIconButton type="button" corner="pill" size="s" variant="text" v-tooltip="'Bearbeiten'" :icon="edit == profile.id ? 'expand_less' : 'expand_more'" @click="edit = edit == profile.id ? '' : profile.id"/>
                         </div>
-                        
-                        <template v-if="edit === profile.id">
-                            <div class="flex h-16 border-t-2 border-inherit">
-                                <IodInput class="!h-full !bg-transparent !rounded-none w-72" label="Profilname" v-model="profile.name" />
-                                <HeDivider class="!h-full !border-inherit" vertical />
-                                <IodInput class="!h-full !bg-transparent !rounded-none flex-1" label="Beschreibung" v-model="profile.description" />
-                            </div>
-
-                            <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
-                                <h3 class="flex-1 m-0 font-medium !text-base/4">Pflichtfelder</h3>
-                                <div class="flex flex-wrap gap-2">
-                                    <VDropdown placement="left-start">
-                                        <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
-                                        
-                                        <template #popper>
-                                            <ContextMenuBuilder :items="fieldOptions" default-icon="input" @click="addProfileArrayItem(profile, 'fields', $event)" class="min-w-64"/>
-                                        </template>
-                                    </VDropdown>
-                                    <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="field in profile.fields" :label="field" @click="removeProfileArrayItem(profile, 'fields', field)" v-tooltip="'Entfernen'" />
-                                </div>
-                            </div>
-                            <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
-                                <h3 class="flex-1 m-0 font-medium !text-base/4">Auto-Rollen</h3>
-                                <div class="flex flex-wrap gap-2">
-                                    <VDropdown placement="left-start">
-                                        <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
-
-                                        <template #popper>
-                                            <DialogSearchRoles @select="addProfileArrayItem(profile, 'auto_assign_roles', $event[0].name)" />
-                                        </template>
-                                    </VDropdown>
-                                    <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in profile.auto_assign_roles" :label="option" @click="removeProfileArrayItem(profile, 'auto_assign_roles', option)" v-tooltip="'Entfernen'" />
-                                </div>
-                            </div>
-                            <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
-                                <h3 class="flex-1 m-0 font-medium !text-base/4">Gruppen</h3>
-                                <div class="flex flex-wrap gap-2">
-                                    <VDropdown placement="left-start">
-                                        <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
-
-                                        <template #popper>
-                                            <ContextMenu class="min-w-80">
-                                                <IodInput class="!h-16 !bg-transparent !my-[-1rem]" label="Neue Gruppe" v-model="newGroup" @keydown.enter="addGroup(profile, newGroup)">
-                                                    <template #right>
-                                                        <IodIconButton variant="text" icon="add" @click="addGroup(profile, newGroup)" v-tooltip="'Gruppe anlegen'" />
-                                                    </template>
-                                                </IodInput>
-                                                <ContextMenuDivider v-show="!!groupOptions.length"/>
-                                                <ContextMenuItem is="button" v-for="option in groupOptions" :key="option" icon="workspaces" :label="option" @click="addProfileArrayItem(profile, 'groups', option)" />
-                                            </ContextMenu>
-                                        </template>
-                                    </VDropdown>
-                                    <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in profile.groups" :label="option" @click="removeProfileArrayItem(profile, 'groups', option)" v-tooltip="'Entfernen'" />
-                                </div>
-                            </div>
-                            <div class="flex flex-col gap-2 p-4 border-t border-inherit">
-                                <IodToggle type="switch" class="!px-0 !py-1 !min-h-0" label="Nutzer nach der Registrierung automatisch freischalten" v-model="profile.auto_enable" style="--local-color-off: var(--color-text-soft-disabled); --local-color-on: var(--color-info);"/>
-                            </div>
-                            <div class="flex gap-2 p-4 border-t border-inherit">
-                                <IodButton type="button" corner="pill" size="s" color-preset="error" variant="contained" label="Profil löschen" icon-left="delete" @click="removeProfile(profile)"/>
-                            </div>
-                        </template>
-                    </div>
-                </Draggable>
-            </Container>
+                    </Draggable>
+                </Container>
+            </div>
+    
+            <IodAlert type="placeholder" class="h-20 border-2" text="Keine Profile angelegt" v-else/>
         </div>
 
-        <IodAlert type="placeholder" class="h-20" text="Keine Profile angelegt" v-else/>
-    </div>
+        <div class="flex items-center flex-wrap gap-4 min-h-10 mb-6">
+            <h2 class="flex-1 m-0 font-medium text-2xl"></h2>
+            <IodButton corner="pill" label="Speichern" icon-right="save" :disabled="!isValid" :loading="form.processing" @click="save" />
+        </div>
+    </template>
+    <IodAlert type="placeholder" class="h-40 border-2" v-else>
+        <span>Nutzer können sich derzeit nicht selber registrieren</span><br>
+        <IodButton class="mt-6" corner="pill" color-preset="success" icon-left="check" label="Registrierungen erlauben" normal-case @click="setStatus(true)" />
+    </IodAlert>
 </template>
 
 <script lang="ts" setup>
@@ -163,6 +174,7 @@
 
     const edit = ref('')
     const form = useForm({
+        policy_allow_registration: false,
         default_profile: null,
         custom_profiles: [],
     })
@@ -289,6 +301,7 @@
     function load() {
         let profiles = domain.settings?.registration_profiles?.map((profile: Profile) => newProfile(profile)) || []
 
+        form.policy_allow_registration = domain.settings?.policy_allow_registration ?? false
         form.default_profile = profiles.find((profile: Profile) => profile.name === 'default') || newProfile({name: 'default'})
         form.custom_profiles = profiles.filter((profile: Profile) => profile.name !== 'default')
     }
@@ -310,6 +323,17 @@
         .patch('/api/settings', {
             onSuccess() {
                 toast.success('Einstellungen gespeichert')
+                domain.fetchSettings()
+            }
+        })
+    }
+
+    function setStatus(status: boolean) {
+        form.policy_allow_registration = status
+        form.transform((data) => ({ policy_allow_registration: data.policy_allow_registration }))
+        .patch('/api/settings', {
+            onSuccess() {
+                status ? toast.success('Registrierungen aktiviert') : toast.info('Registrierungen deaktiviert')
                 domain.fetchSettings()
             }
         })
