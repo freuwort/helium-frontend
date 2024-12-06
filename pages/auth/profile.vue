@@ -2,9 +2,23 @@
     <NuxtLayout name="guest-default" :scope pageClass="!p-0 !gap-0 !overflow-hidden" pageTitle="Profil Einstellungen">
         <TransitionGroup :name="'slide-'+direction" tag="div" class="relative">
             <div class="page" v-if="page === 'overview'" key="overview">
-                <div class="flex items-center px-4 min-h-[4.5rem]">
+                <ProfileCard
+                    v-if="auth.user"
+                    class="rounded-t-2xl border-b"
+                    :allow-avatar-upload="domain.policy('allow_avatar_upload')"
+                    :allow-banner-upload="domain.policy('allow_banner_upload')"
+                    :title="auth.user.name || ''"
+                    :avatar="auth.user.avatar || ''"
+                    :banner="auth.user.banner || ''"
+                    :subtitle="auth.user.username || auth.user.email || ''"
+                    @upload:avatar="selectMedia('avatar')"
+                    @upload:banner="selectMedia('banner')"
+                />
+                <div class="flex items-center px-4 min-h-[4.5rem]" v-else>
                     <h1 class="font-medium text-2xl m-0">Ihr Profil</h1>
                 </div>
+                
+                <input class="hidden" ref="mediaInput" type="file" pattern="image/*" @change="uploadMedia(($event.target as any).files[0])" />
     
                 <ContextMenu>
                     <ContextMenuItem is="button" icon="person" show-chevron @click="navigateForward('account')">Konto Informationen</ContextMenuItem>
@@ -24,8 +38,11 @@
                 
                 <ContextMenu>
                     <ContextMenuItem is="button" icon="west" @click="navigateBackward('overview')">Zurück</ContextMenuItem>
+                    <ContextMenuDivider v-if="domain.policy('allow_name_change') || domain.policy('allow_username_change')"/>
+                    <ContextMenuItem is="button" icon="signature" @click="changeNamePopup.open()" v-if="domain.policy('allow_name_change')">Namen ändern</ContextMenuItem>
+                    <ContextMenuItem is="button" icon="identity_platform" @click="changeUsernamePopup.open()" v-if="domain.policy('allow_username_change')">Benutzernamen ändern</ContextMenuItem>
                     <ContextMenuDivider />
-                    <ContextMenuItem is="button" icon="logout" color="var(--color-error)" @click="auth.logout(logoutDestination)">Ausloggen</ContextMenuItem>
+                    <ContextMenuItem is="button" icon="logout" color="var(--color-error)" @click="auth.logout(logoutDestination || '')">Ausloggen</ContextMenuItem>
                 </ContextMenu>
             </div>
     
@@ -165,6 +182,27 @@
 
 
 
+        <IodPopup ref="changeNamePopup" title="Namen ändern" max-width="500px" @open="changeNameForm.reset">
+            <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="changeName">
+                <ErrorAlert :errors="changeNameForm.errors"/>
+                <HeFlex gap="1rem">
+                    <IodInput label="Vorname" v-model="changeNameForm.firstname"/>
+                    <IodInput label="Nachname" v-model="changeNameForm.lastname"/>
+                </HeFlex>
+                <IodButton label="Namen ändern" corner="pill" size="l" :loading="changeNameForm.processing"/>
+            </HeFlex>
+        </IodPopup>
+
+        <IodPopup ref="changeUsernamePopup" title="Benutzernamen ändern" max-width="500px" @open="changeUsernameForm.reset">
+            <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="changeUsername">
+                <ErrorAlert :errors="changeUsernameForm.errors"/>
+                <HeFlex gap="1rem">
+                    <IodInput label="Benutzername" v-model="changeUsernameForm.username"/>
+                </HeFlex>
+                <IodButton label="Benutzernamen ändern" corner="pill" size="l" :loading="changeUsernameForm.processing"/>
+            </HeFlex>
+        </IodPopup>
+
         <IodPopup ref="changePasswordPopup" title="Passwort ändern" max-width="500px" @open="changePasswordForm.reset">
             <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="changePassword">
                 <ErrorAlert :errors="changePasswordForm.errors"/>
@@ -217,8 +255,8 @@
         return auth.routes.authHome
     })
 
-    const logoutDestination = computed(() => {
-        if (route.query?.return?.startsWith(runtimeConfig.public.websiteUrl)) {
+    const logoutDestination = computed<string|null>(() => {
+        if ((route.query?.return as string)?.startsWith(runtimeConfig.public.websiteUrl)) {
             return runtimeConfig.public.websiteUrl
         }
         
@@ -227,6 +265,7 @@
 
 
 
+    // START: Navigation
     const page = ref('overview')
     const direction = ref('forwards')
 
@@ -239,32 +278,83 @@
         page.value = p
         direction.value = 'backwards'
     }
+    // END: Navigation
 
 
 
-    // START: Personal settings
-    const language = computed(() => auth.user?.settings?.ui_language ?? 'de')
-    const timezone = computed(() => auth.user?.settings?.ui_timezone ?? 'Europe/Berlin')
+    // START: Appearence
     const theme = computed(() => auth.user?.settings?.ui_theme ?? 'light')
+    // END: Appearence
 
-    const options_language = [
-        { value: 'de', text: 'Deutsch' },
-        { value: 'en', text: 'Englisch' },
-    ]
 
-    const options_timezone = [
-        { value: 'America/Los_Angeles', text: 'Los Angeles' },
-        { value: 'America/New_York', text: 'New York' },
-        { value: 'Europe/Berlin', text: 'Berlin' },
-        { value: 'Pacific/Auckland', text: 'New Zealand' },
-    ]
 
-    const options_theme = [
-        { value: 'light', text: 'Hell' },
-        { value: 'dark', text: 'Dunkel' },
-        { value: 'system', text: 'System' },
-    ]
-    // END: Personal settings
+    // START: Media
+    type MediaType = 'avatar' | 'banner'
+    const mediaInput = ref()
+    const mediaType = ref<MediaType>('avatar')
+
+    function selectMedia(type: MediaType){
+        mediaType.value = type
+        mediaInput.value.click()
+    }
+
+    async function uploadMedia(file: any) {
+        if (!file) return
+        await useAxios().postForm(apiRoute('/api/user/:media', { media: mediaType.value }), {file})
+        await auth.fetchSession()
+        await domain.fetchSettings()
+        toast.success('Profil gespeichert')
+        mediaInput.value.value = null
+    }
+    // END: Media
+
+
+
+    // START: Change name
+    const changeNamePopup = ref()
+    const changeNameForm = useForm({
+        firstname: auth.user?.firstname || '',
+        lastname: auth.user?.lastname || '',
+    })
+
+    function changeName() {
+        changeNameForm.patch('/api/user/name', {
+            async onSuccess() {
+                toast.success('Namen geändert')
+                changeNamePopup.value.close()
+                
+                await auth.fetchSession()
+                changeNameForm.defaults({
+                    firstname: auth.user?.firstname || '',
+                    lastname: auth.user?.lastname || '',
+                })
+            },
+        })
+    }
+    // END: Change name
+
+
+
+    // START: Change username
+    const changeUsernamePopup = ref()
+    const changeUsernameForm = useForm({
+        username: auth.user?.username || '',
+    })
+
+    function changeUsername() {
+        changeUsernameForm.patch('/api/user/username', {
+            async onSuccess() {
+                toast.success('Benutzername geändert')
+                changeUsernamePopup.value.close()
+
+                await auth.fetchSession()
+                changeUsernameForm.defaults({
+                    username: auth.user?.username || ''
+                })
+            }
+        })
+    }
+    // END: Change username
 
 
 
@@ -275,12 +365,11 @@
         new_password: '',
     })
 
-    function changePassword()
-    {
+    function changePassword() {
         changePasswordForm.patch('/api/user/password', {
             onSuccess() {
-                changePasswordPopup.value.close()
                 toast.success('Passwort geändert')
+                changePasswordPopup.value.close()
             },
         })
     }
@@ -291,8 +380,7 @@
     // START: 2FA
     const twoFactorSetup = ref()
 
-    function setDefaultTwoFactorMethod(method: string)
-    {
+    function setDefaultTwoFactorMethod(method: string) {
         useForm({}).put(`/api/user/two-factor/default/${method}`, {
             onSuccess() {
                 auth.fetchSession()
@@ -300,8 +388,7 @@
         })
     }
 
-    function destroyTwoFactorMethod(method: string)
-    {
+    function destroyTwoFactorMethod(method: string) {
         useForm({}).delete(`/api/user/two-factor/destroy/${method}`, {
             onSuccess() {
                 auth.fetchSession()
@@ -320,13 +407,12 @@
         password: '',
     })
 
-    function deleteAccount()
-    {
+    function deleteAccount() {
         deleteAccountForm.delete('/api/user', {
             onSuccess() {
-                deleteAccountPopup.value.close()
-                toast.success('Ihr Konto wird nun gelöscht')
                 auth.logout()
+                toast.success('Ihr Konto wird nun gelöscht')
+                deleteAccountPopup.value.close()
             },
         })
     }
