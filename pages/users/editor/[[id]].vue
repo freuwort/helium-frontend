@@ -118,6 +118,31 @@
                     </div>
                 </HeFlex>
 
+                <HeFlex :gap="1">
+                    <HeFlex horizontal>
+                        <h5 class="m-0 font-medium">API Zugriff</h5>
+                        <HeSpacer />
+                        <IodButton type="button" label="Token hinzufügen" icon-right="add" size="s" corner="pill" variant="contained" @click="createTokenPopup.open()"/>
+                    </HeFlex>
+
+                    <div class="flex flex-col select-none" v-if="form.tokens.length">
+                        <div class="flex items-center gap-4 px-3 h-12 bg-background-soft rounded-lg">
+                            <span class="flex-1">Name</span>
+                            <span class="w-48">Erstellt</span>
+                            <span class="w-48">Ablaufdatum</span>
+                            <span class="w-8"></span>
+                        </div>
+                        <div class="flex items-center gap-4 px-3 h-12" v-for="token in form.tokens">
+                            <span class="flex-1">{{ token.name }}</span>
+                            <span class="w-48" v-tooltip="token.created_at ? dayjs(token.created_at).format('DD.MM.YYYY HH:mm') : '---'">{{ token.created_at ? dayjs(token.created_at).fromNow() : '---' }}</span>
+                            <span class="w-48" v-tooltip="token.expires_at ? dayjs(token.expires_at).format('DD.MM.YYYY HH:mm') : '---'">{{ token.expires_at ? dayjs(token.expires_at).fromNow() : 'nie' }}</span>
+                            <IodIconButton type="button" v-tooltip="'Token löschen'" icon="delete" size="s" corner="pill" variant="contained" color-preset="error" @click="deleteToken(token)"/>
+                        </div>
+                    </div>
+
+                    <IodAlert type="placeholder" class="h-40 border-2" text="Es wurden noch keine API-Tokens angelegt" v-else />
+                </HeFlex>
+
 
 
                 <HeFlex :gap="1">
@@ -184,6 +209,25 @@
                 <IodButton label="Nutzer sperren" corner="pill" size="l" color-preset="error" :loading="blockUserForm.processing"/>
             </HeFlex>
         </IodPopup>
+
+        <IodPopup ref="createTokenPopup" title="API-Token erstellen" max-width="500px" @open="createTokenForm.reset">
+            <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="createToken" v-if="!createTokenForm.token">
+                <ErrorAlert :errors="createTokenForm.errors"/>
+                <HeFlex gap="1rem">
+                    <IodInput v-model="createTokenForm.name" label="Anzeigename"/>
+                </HeFlex>
+                <IodButton label="API-Token erstellen" corner="pill" size="l" :loading="createTokenForm.processing"/>
+            </HeFlex>
+
+            <HeFlex gap="2.5rem" padding="1.5rem" v-else>
+                <IodInput v-model="createTokenForm.token" label="API-Token" readonly>
+                    <template #right>
+                        <IodIconButton type="button" corner="pill" size="s" variant="text" icon="content_copy" v-tooltip="'Token in die Zwischenablage kopieren'" @click="copyToClipboard(createTokenForm.token)"/>
+                    </template>
+                </IodInput>
+                <IodButton type="button" label="Schließen" corner="pill" size="l" variant="contained" @click="createTokenPopup.close()"/>
+            </HeFlex>
+        </IodPopup>
     </NuxtLayout>
 </template>
 
@@ -192,6 +236,7 @@
     import { toast } from 'vue3-toastify'
     import type { Country } from '~/types/units'
     import type { BasicRole } from '~/types/role'
+import dayjs from '#build/dayjs.imports.mjs';
 
     const NuxtLink = defineNuxtLink({})
     const scope = 'view_admin_users_show'
@@ -247,11 +292,18 @@
         notes: '',
         
         roles: [],
+
+        tokens: [],
     })
 
     const fullname = computed(() => {
         return [form.prefix, form.firstname, form.middlename, form.lastname, form.suffix].filter(i => i).join(' ')
     })
+
+    function copyToClipboard(text: string) {
+        navigator.clipboard.writeText(text)
+        toast.success('In die Zwischenablage kopiert!')
+    }
 
 
 
@@ -299,27 +351,6 @@
 
 
 
-    // START: Addresses
-    function addAddress() {
-        form.addresses.push({
-            id: null,
-            address_line_1: '',
-            address_line_2: '',
-            postal_code: '',
-            city: '',
-            state: '',
-            country_code: '',
-            notes: '',
-        })
-    }
-
-    function removeAddress(index: number) {
-        form.addresses.splice(index, 1)
-    }
-    // END: Addresses
-
-
-
     // START: Media
     type MediaType = 'avatar' | 'banner'
     const mediaInput = ref()
@@ -341,8 +372,7 @@
 
 
     // START: Server routes
-    function fetch()
-    {
+    function fetch() {
         form.get(apiRoute('/api/users/:id', { id: id.value }), {
             onSuccess(response: any)
             {
@@ -351,8 +381,7 @@
         })
     }
 
-    function store()
-    {
+    function store() {
         form.post(apiRoute('/api/users'), {
             onSuccess(response: any)
             {
@@ -363,8 +392,7 @@
         })
     }
 
-    function update()
-    {
+    function update() {
         form.patch(apiRoute('/api/users/:id', { id: id.value }), {
             onSuccess(response: any)
             {
@@ -374,43 +402,37 @@
         })
     }
 
-    async function sendVerificationEmail()
-    {
+    async function sendVerificationEmail() {
         await useAxios().post(apiRoute('/api/users/:id/send-verification-email', { id: id.value }))
         toast.success('E-Mail wurde verschickt')
         fetch()
     }
 
-    async function verifyEmail(status: boolean)
-    {
+    async function verifyEmail(status: boolean) {
         form.email_verified_at = status
         await useAxios().patch(apiRoute('/api/users/:id/verify-email', { id: id.value }), { email_verified: status })
         fetch()
     }
 
-    async function verifyPhone(status: boolean)
-    {
+    async function verifyPhone(status: boolean) {
         form.phone_verified_at = status
         await useAxios().patch(apiRoute('/api/users/:id/verify-phone', { id: id.value }), { phone_verified: status })
         fetch()
     }
 
-    async function enableUser(status: boolean)
-    {
+    async function enableUser(status: boolean) {
         form.enabled_at = status
         await useAxios().patch(apiRoute('/api/users/:id/enable', { id: id.value }), { enabled: status })
         fetch()
     }
 
-    async function requirePasswordChange(status: boolean)
-    {
+    async function requirePasswordChange(status: boolean) {
         form.requires_password_change = status
         await useAxios().patch(apiRoute('/api/users/:id/require-password-change', { id: id.value }), { requires_password_change: status })
         fetch()
     }
 
-    async function requireTwoFactor(status: boolean)
-    {
+    async function requireTwoFactor(status: boolean) {
         form.requires_two_factor = status
         await useAxios().patch(apiRoute('/api/users/:id/require-two-factor', { id: id.value }), { requires_two_factor: status })
         fetch()
@@ -425,8 +447,7 @@
         password: '',
     })
 
-    function changePassword()
-    {
+    function changePassword() {
         changePasswordForm.patch(apiRoute('/api/users/:id/password', { id: id.value }), {
             onSuccess() {
                 changePasswordPopup.value?.close()
@@ -443,8 +464,7 @@
         block_reason: '',
     })
 
-    function blockUser()
-    {
+    function blockUser() {
         blockUserForm.patch(apiRoute('/api/users/:id/block', { id: id.value }), {
             onSuccess() {
                 blockUserPopup.value?.close()
@@ -453,12 +473,39 @@
         })
     }
 
-    function unblockUser()
-    {
+    function unblockUser() {
         blockUserForm.blocked = false
         blockUser()
     }
     // END: Block user
+
+    // START: Create token
+    const createTokenPopup = ref()
+    const createTokenForm = useForm({
+        name: '',
+        token: '',
+    })
+
+    function createToken() {
+        createTokenForm.post(apiRoute('/api/users/:id/token', { id: id.value }), {
+            onSuccess(data: any) {
+                createTokenForm.reset()
+                createTokenForm.token = data.token
+                fetch()
+                toast.success('Token erstellt')
+            },
+        })
+    }
+
+    function deleteToken(token: any) {
+        useForm({}).delete(apiRoute('/api/users/:id/token/:token', { id: id.value, token: token.id }), {
+            onSuccess() {
+                fetch()
+                toast.success('Token gelöscht')
+            },
+        })
+    }
+    // END: Create token
 
     
     
