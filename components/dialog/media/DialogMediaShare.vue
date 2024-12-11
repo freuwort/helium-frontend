@@ -5,7 +5,7 @@
             
             <div class="flex rounded-full p-1 gap-2 bg-background-soft">
                 <IodButton type="button" class="flex-1" corner="pill" :variant="form.inherit_access ? 'contained' : 'text'" label="Wie Überordner" v-tooltip="'Alle Freigaben des überliegenden Ordners werden übernommen'" @click="form.inherit_access = true"/>
-                <IodButton type="button" class="flex-1" corner="pill" :variant="!form.inherit_access ? 'contained' : 'text'" label="Angebasst" v-tooltip="'Freigaben können individuell angepasst werden'" @click="form.inherit_access = false"/>
+                <IodButton type="button" class="flex-1" corner="pill" :variant="!form.inherit_access ? 'contained' : 'text'" label="Angepasst" v-tooltip="'Freigaben können individuell angepasst werden'" @click="form.inherit_access = false"/>
             </div>
 
             <HeDivider class="my-4"/>
