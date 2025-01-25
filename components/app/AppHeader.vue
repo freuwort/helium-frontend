@@ -36,6 +36,15 @@
                 </template>
             </VDropdown>
 
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="auth.can('system.view.devices')">
+                <AppHeaderItem show-chevron icon="devices" v-tooltip="'Geräte'"/>
+                <template #popper>
+                    <ContextMenu class="min-w-80">
+                        <ContextMenuItem to="/devices" show-chevron icon="devices">Geräte</ContextMenuItem>
+                    </ContextMenu>
+                </template>
+            </VDropdown>
+
             <!-- <HeDivider vertical class="h-8 ml-2"/> -->
 
             <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
