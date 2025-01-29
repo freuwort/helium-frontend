@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -15,7 +15,7 @@
     "@nuxtjs/tailwindcss": "^6.12.0",
     "@vue/test-utils": "^2.4.4",
     "dayjs-nuxt": "^2.1.9",
-    "happy-dom": "^13.7.3",
+    "happy-dom": "^16.7.3",
     "nuxt": "^3.14.159",
     "playwright-core": "^1.42.1",
     "sass": "^1.69.6",
