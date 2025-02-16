@@ -42,6 +42,7 @@
 
 <script lang="ts" setup>
     import { toast } from 'vue3-toastify'
+    import TableColumnBuilder from '~/classes/Builder/TableColumnBuilder'
     import type { FilterSetting } from '~/components/Iod/IodTable.vue'
     
     const dayjs = useDayjs()
@@ -59,16 +60,30 @@
         },
     })
 
+    const tableColumnBuilder = new TableColumnBuilder()
     const tableColumns = [
-        { name: 'id', label: 'ID', valuePath: 'id', sortable: true, width: 70, resizable: true, hideable: true, default: '-', },
-        { name: 'type', label: 'Typ', valuePath: 'type', sortable: true, width: 200, resizable: true, hideable: true, default: '-', },
-        { name: 'name', label: 'Name', valuePath: 'name', sortable: true, width: 200, resizable: true, hideable: true, default: '-', },
-        { name: 'os_platform', label: 'Betriebssystem', valuePath: 'os_platform', sortable: true, width: 200, resizable: true, hideable: true, default: '-', },
-        { name: 'os_arch', label: 'Architektur', valuePath: 'os_arch', sortable: true, width: 200, resizable: true, hideable: true, default: '-', },
-        { name: 'os_release', label: 'OS Version', valuePath: 'os_release', sortable: true, width: 200, resizable: true, hideable: true, default: '-', },
-        { name: 'app_version', label: 'Software Version', valuePath: 'app_version', sortable: true, width: 200, resizable: true, hideable: true, default: '-', },
-        { name: 'created_at', label: 'Erstellt', valuePath: 'created_at', sortable: true, width: 200, resizable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: dayjs(value).format('DD.MM.YYYY HH:mm') }) : null, },
-        { name: 'updated_at', label: 'Aktualisiert', valuePath: 'updated_at', sortable: true, width: 200, resizable: true, hideable: true, default: '-', transform: (value: string | null) =>  value ? ({ text: dayjs(value).fromNow(), tooltip: dayjs(value).format('DD.MM.YYYY HH:mm') }) : null, },
+        tableColumnBuilder.new().name('id').label('ID').width(70).build(),
+        tableColumnBuilder.new().name('type').label('Typ').transform((value: string | null) => { switch (value) {
+            case 'POS': return { text: 'Kassensystem', icon: 'point_of_sale', color: '#FF4757' }
+            case 'KIOSK': return { text: 'Info-Anzeige', icon: 'desktop_windows', color: '#84cc16' }
+            default: return '-'
+        }}).build(),
+        tableColumnBuilder.new().name('name').label('Name').build(),
+        tableColumnBuilder.new().name('address').label('Standort').sortable(false).transform((value: any) => stringFromAddress(value) || null).build(),
+        tableColumnBuilder.new().name('os_platform').label('Betriebssystem').transform((value: any, item: any) => ({
+            text: stringFromOS(item) || '-',
+            icon: 'deployed_code',
+            color: 'var(--color-info)',
+        })).build(),
+        tableColumnBuilder.new().name('app_version').label('Software Version').build(),
+        tableColumnBuilder.new().name('created_at').label('Erstellt').transform((value: string | null) => ({
+            text: value ? dayjs(value).fromNow() : 'Nie',
+            tooltip: value ? dayjs(value).format('DD.MM.YYYY HH:mm') : 'Nie',
+        })).build(),
+        tableColumnBuilder.new().name('updated_at').label('Aktualisiert').transform((value: string | null) => ({
+            text: value ? dayjs(value).fromNow() : '-',
+            tooltip: value ? dayjs(value).format('DD.MM.YYYY HH:mm') : '-',
+        })).build(),
     ]
 
     const tableActions = [
