@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Screen Editor" color="#84cc16">
+    <NuxtLayout name="auth-default" limiter="full" :scope pageTitle="Screen Editor" color="#84cc16">
         <HeCard is="form" @submit.prevent="save">
             <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-20 bg-background">
                 <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/screens/screens"/>
@@ -28,6 +28,8 @@
                             <IodIconButton type="button" icon="crop_rotate" variant="contained" @click="flipCanvas()"/>
                         </IodButtonGroup>
                     </div>
+
+                    <ArtboardEditor :content="content" :width="500" :height="500"/>
                 </HeFlex>
             </HeFlex>
         </HeCard>
@@ -39,6 +41,65 @@
     
     const NuxtLink = defineNuxtLink({})
     const scope = 'view_admin_screen_screens_show'
+
+
+
+    // START: Content test
+    const content = ref([
+        {
+            elementId: 'c5e7eabe-ccc7-4b69-9ba1-90c70193f436',
+            elementName: 'Element 1',
+            elementType: 'span',
+            position: 'fixed',
+            zIndex: 1,
+            top: '0px',
+            left: '0px',
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#000',
+            slot: [
+                {
+                    elementId: 'c5e7eabe-ccc7-4b69-9ba1-90c70193f438',
+                    elementName: 'Element 1.1',
+                    elementType: 'img',
+                    position: 'absolute',
+                    zIndex: 1,
+                    top: '0px',
+                    left: '0px',
+                    width: '100%',
+                    height: '100%',
+                    src: '#000',
+                },
+                {
+                    elementId: 'c5e7eabe-ccc7-4b69-9ba1-90c70193f439',
+                    elementName: 'Element 1.2',
+                    elementType: 'span',
+                    position: 'absolute',
+                    zIndex: 1,
+                    top: '0px',
+                    left: '0px',
+                    width: '100%',
+                    height: '100%',
+                    src: '#000',
+                    slot: [
+                        {
+                            elementId: 'c5e7eabe-ccc7-4b69-9ba1-90c70193f440',
+                            elementName: 'Element 1.2.1',
+                            elementType: 'img',
+                            position: 'absolute',
+                            zIndex: 1,
+                            top: '0px',
+                            left: '0px',
+                            width: '100%',
+                            height: '100%',
+                            src: '#000',
+                        },
+                    ],
+                },
+            ],
+        }
+    ])
+    // END: Content test
 
     
 

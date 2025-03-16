@@ -45,7 +45,7 @@
                 </template>
             </VDropdown>
 
-            <!-- <HeDivider vertical class="h-8 ml-2"/> -->
+            <HeDivider vertical class="h-8 ml-2"/>
 
             <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#06B6D4" icon="edit_square" v-tooltip="'Formulare'"/>
@@ -55,29 +55,29 @@
                         <ContextMenuItem to="/forms/submissions" show-chevron color="#06B6D4" icon="inbox">Einsendungen</ContextMenuItem>
                     </ContextMenu>
                 </template>
-            </VDropdown>
+            </VDropdown> -->
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
+            <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#10b981" icon="confirmation_number" v-tooltip="'Events'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
                         <ContextMenuItem to="/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
                     </ContextMenu>
                 </template>
-            </VDropdown>
+            </VDropdown> -->
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
+            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
                 <AppHeaderItem show-chevron color="#84cc16" icon="desktop_windows" v-tooltip="'Screens'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/screens/devices" show-chevron color="#84cc16" icon="desktop_windows">Geräte</ContextMenuItem>
-                        <ContextMenuItem to="/screens/playlists" show-chevron color="#84cc16" icon="playlist_play">Playlists</ContextMenuItem>
+                        <!-- <ContextMenuItem to="/screens/devices" show-chevron color="#84cc16" icon="desktop_windows">Geräte</ContextMenuItem>
+                        <ContextMenuItem to="/screens/playlists" show-chevron color="#84cc16" icon="playlist_play">Playlists</ContextMenuItem> -->
                         <ContextMenuItem to="/screens/screens" show-chevron color="#84cc16" icon="slideshow">Screens</ContextMenuItem>
                     </ContextMenu>
                 </template>
             </VDropdown>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
+            <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#F59E0B" icon="note_stack" v-tooltip="'Inhalte'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
@@ -87,9 +87,9 @@
                         <ContextMenuItem to="/content/categories" show-chevron color="#F59E0B" icon="label">Kategorien</ContextMenuItem>
                     </ContextMenu>
                 </template>
-            </VDropdown>
+            </VDropdown> -->
             
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
+            <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#FF6348" icon="package_2" v-tooltip="'Produkte'"/>
                 <template #popper>
                     <ContextMenu class="min-w-80">
