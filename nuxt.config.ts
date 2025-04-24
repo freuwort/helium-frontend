@@ -10,16 +10,6 @@ export default defineNuxtConfig({
         },
     },
 
-    vite: {
-        css: {
-            preprocessorOptions: {
-                sass: {
-                    api: 'modern',
-                },
-            },
-        },
-    },
-
     css: [
         '~/assets/css/app.sass'
     ],
@@ -32,12 +22,53 @@ export default defineNuxtConfig({
         "@nuxtjs/tailwindcss",
     ],
 
-    devtools: {
-        enabled: true,
-    },
-
     pinia: {
         storesDirs: ['./stores/**'],
+    },
+
+    tailwindcss: {
+        config: {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'heading': 'var(--font-heading)',
+                        'text': 'var(--font-text)',
+                        'mono': 'var(--font-mono)',
+                        'icon': 'var(--font-icon)',
+                        'brand': 'var(--font-brand)',
+                    },
+                    colors: {
+                        'primary': 'var(--color-primary)',
+                        'on-primary': 'var(--color-on-primary)',
+                        'secondary': 'var(--color-secondary)',
+                        'on-secondary': 'var(--color-on-secondary)',
+                        'tertiary': 'var(--color-tertiary)',
+                        'on-tertiary': 'var(--color-on-tertiary)',
+
+                        'text': 'var(--color-text)',
+                        'text-soft': 'var(--color-text-soft)',
+                        'text-soft-disabled': 'var(--color-text-soft-disabled)',
+
+                        'background': 'var(--color-background)',
+                        'background-soft': 'var(--color-background-soft)',
+                        'background-disabled': 'var(--color-background-soft-disabled)',
+
+                        'border': 'var(--color-border)',
+                        'border-focused': 'var(--color-border-focused)',
+                        'border-disabled': 'var(--color-border-disabled)',
+
+                        'info': 'var(--color-info)',
+                        'on-info': 'var(--color-on-info)',
+                        'success': 'var(--color-success)',
+                        'on-success': 'var(--color-on-success)',
+                        'warning': 'var(--color-warning)',
+                        'on-warning': 'var(--color-on-warning)',
+                        'error': 'var(--color-error)',
+                        'on-error': 'var(--color-on-error)',
+                    },
+                },
+            },
+        },
     },
 
     dayjs: {
@@ -58,4 +89,8 @@ export default defineNuxtConfig({
     },
     
     compatibilityDate: '2024-07-16',
+
+    devtools: {
+        enabled: true,
+    },
 })
