@@ -1,17 +1,112 @@
-// Variables
-@import url(./variables/colors.sass)
-@import url(./variables/shadows.sass)
-@import url(./variables/spacings.sass)
+/* Common imports */
+@import url('./common/reset.sass')
+@import url('./common/nuxt-reset.sass')
+@import url('./common/base.sass')
+@import url('./common/scrollbar.sass')
+@import url('./common/toastify.sass')
+@import url('./common/floating.sass')
+@import url('./common/tiptap.sass')
+@import url('./common/iodine.sass')
 
-// Common
-@import url(./common/scrollbar.sass)
-@import url(./common/toastify.sass)
-@import url(./common/floating.sass)
-@import url(./common/tiptap.sass)
-@import url(./common/helium.sass)
-@import url(./common/iodine.sass)
-@import url(./common/nuxt.sass)
+/* Font imports */
+@import url('~/public/fonts/poppins.sass')
+@import url('~/public/fonts/inter.sass')
+@import url('~/public/fonts/jetbrains-mono.sass')
+@import url('~/public/fonts/material-symbols-rounded-filled.sass')
+@import url('~/public/fonts/brand-symbols.sass')
 
-// Misc
-@import url(./reset.sass)
-@import url(./variables.sass)
+
+
+/* Shared variables */
+:root
+    --font-heading: 'Poppins', sans-serif
+    --font-text: 'Inter', sans-serif
+    --font-mono: 'JetBrains Mono', monospace
+    --font-icon: 'Material Symbols Rounded', monospace
+    --font-brand: 'Brand Symbols', monospace
+
+    --color-primary: #3737FA
+    --color-on-primary: #ffffff
+    --color-secondary: #5f76f7
+    --color-on-secondary: #ffffff
+    --color-tertiary: #f34f0f
+    --color-on-tertiary: #ffffff
+
+    --color-text: #1e293b
+    --color-text-soft: #475569
+    --color-text-soft-disabled: #8d9baf
+
+    --color-background: #ffffff
+    --color-background-soft: #eaeef3
+    --color-background-disabled: #f1f5f9
+
+    --color-border: #e3e5e6
+    --color-border-focused: #B2B6B8
+    --color-border-disabled: #DFE1E2
+
+    --color-shadow: 0deg 0% 0%
+    
+    --color-info: #3b82f6
+    --color-on-info: #eff6ff
+    --color-success: #16a34a
+    --color-on-success: #f0fdf4
+    --color-warning: #f59e0b
+    --color-on-warning: #78350f
+    --color-error: #dc2626
+    --color-on-error: #fef2f2
+
+    --radius-xs: 2px
+    --radius-s: 4px
+    --radius-m: 8px
+    --radius-l: 12px
+    --radius-xl: 16px
+    --radius-xxl: 24px
+    
+    --shadow-s: 0px 1px 1.5px hsl(var(--color-shadow) / 0), 0px 1.6px 2.4px hsl(var(--color-shadow) / 0.03), 0px 3px 4.5px hsl(var(--color-shadow) / 0.07)
+    --shadow-m: 0px 1px 1.5px hsl(var(--color-shadow) / 0), 0px 3.9px 5.9px hsl(var(--color-shadow) / 0.03), 0px 7.5px 11.3px hsl(var(--color-shadow) / 0.05), 0px 15px 22.5px hsl(var(--color-shadow) / 0.08)
+    --shadow-l: 0px 1px 1.5px hsl(var(--color-shadow) / 0), 0px 5.6px 8.4px hsl(var(--color-shadow) / 0.01), 0px 9.6px 14.4px hsl(var(--color-shadow) / 0.02), 0px 13.9px 20.9px hsl(var(--color-shadow) / 0.04), 0px 19.1px 28.7px hsl(var(--color-shadow) / 0.05), 0px 26.4px 39.6px hsl(var(--color-shadow) / 0.06), 0px 36.4px 54.6px hsl(var(--color-shadow) / 0.07), 0px 50px 75px hsl(var(--color-shadow) / 0.09)
+
+    /* Custom shared variables */
+    --color-app-pages-on-light: #376bfa
+    --color-app-pages-on-dark: #3c9fff
+    --color-app-blog-on-light: #8854d0
+    --color-app-blog-on-dark: #c07fff
+    --color-app-forms-on-light: #e84393
+    --color-app-forms-on-dark: #f368e0
+    --color-app-ecommerce-on-light: #ff4757
+    --color-app-ecommerce-on-dark: #ff6b81
+    --color-app-jobs-on-light: #ff6348
+    --color-app-jobs-on-dark: #ff8d64
+    --color-app-intranet-on-light: #ffa502
+    --color-app-intranet-on-dark: #fed330
+    --color-app-wiki-on-light: #20bf6b
+    --color-app-wiki-on-dark: #26de81
+    --color-app-marketing-on-light: #079992
+    --color-app-marketing-on-dark: #4cceca
+
+
+
+/* Theme specific variables */
+html[data-theme="dark"]
+    --color-primary: #3737FA
+    --color-on-primary: #ffffff
+    --color-secondary: #5f76f7
+    --color-on-secondary: #ffffff
+    --color-tertiary: #f34f0f
+    --color-on-tertiary: #ffffff
+
+    --color-text: #ffffff
+    --color-text-soft: #ced1d5
+    --color-text-soft-disabled: #858586
+
+    --color-background: #343638
+    --color-background-soft: #202123
+    --color-background-disabled: #2a2b2d
+
+    --color-border: #515255
+    --color-border-focused: #818185
+    --color-border-disabled: #2f3033
+
+
+
+/* Global styles */

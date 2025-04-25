@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Formular Editor" color="#06B6D4">
         <HeCard is="form" @submit.prevent="save">
-            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-20 bg-background">
+            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-10 bg-background">
                 <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/forms"/>
                 <HeSpacer />
                 <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />

@@ -136,7 +136,7 @@
             .menu-header
                 display: flex
                 align-items: center
-                height: var(--spacing-xxxl)
+                height: 64px
                 padding-inline: 1.5rem
                 border-bottom: 1px solid var(--color-background-soft)
 

@@ -2,7 +2,7 @@
     <HeFlex horizontal>
         <HeFlex class="flex-1">
             <slot name="description">
-                <span v-if="title" class="font-heading color-text font-medium">{{ title }}</span>
+                <span v-if="title" class="font-heading text-text font-medium">{{ title }}</span>
                 <small v-if="description">{{ description }}</small>
             </slot>
         </HeFlex>

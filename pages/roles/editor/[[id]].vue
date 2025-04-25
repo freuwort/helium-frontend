@@ -1,13 +1,13 @@
 <template>
     <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Rollen Editor">
         <HeCard is="form" @submit.prevent="save">
-            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-20 bg-background">
+            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-10 bg-background">
                 <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/roles"/>
                 <HeSpacer />
                 <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
             </div>
 
-            <div class="flex flex-col p-4 gap-12">
+            <div class="flex flex-col p-4 gap-6">
                 <ErrorAlert :errors="form.errors" />
     
                 <div class="flex gap-4">
@@ -22,7 +22,7 @@
                         <IodToggle v-for="permission in group" :key="permission.name" :modelValue="form.permissions.includes(permission.name)" @update:modelValue="togglePermission(permission.name)">
                             <template #label>
                                 <div class="flex flex-col gap-1 text-sm">
-                                    <span class="font-heading color-text font-medium">{{ permission.label }}</span>
+                                    <span class="font-heading text-text font-medium">{{ permission.label }}</span>
                                     <small>{{ permission.description }}</small>
                                 </div>
                             </template>

@@ -16,7 +16,7 @@
 
             <input class="hidden" ref="mediaInput" type="file" @change="uploadMedia(($event.target as any).files[0])" />
             
-            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-20 bg-background">
+            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-10 bg-background">
                 <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/users"/>
                 <HeSpacer />
                 <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />

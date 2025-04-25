@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Screen Playlist Editor" color="#84cc16">
         <HeCard is="form" @submit.prevent="save">
-            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-20 bg-background">
+            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-10 bg-background">
                 <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/screens/playlists"/>
                 <HeSpacer />
                 <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />

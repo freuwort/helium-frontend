@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout name="auth-default" limiter="medium" :scope pageTitle="Beitrags Editor" color="#F59E0B">
         <HeCard is="form" @submit.prevent="save">
-            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-20 bg-background">
+            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-10 bg-background">
                 <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/content/posts"/>
                 <HeSpacer />
                 <IodButton type="button" corner="pill" label="Zur Überprüfung freigeben" :loading="form.processing" variant="contained" @click="updateReviewStatus(true)"/>
