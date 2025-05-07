@@ -7,79 +7,17 @@
 
             <AppHeaderItem :is="NuxtLink" to="/users" route-group="/users" icon="identity_platform" v-tooltip="'Nutzer'" v-if="auth.can('system.view.users')"/>
             <AppHeaderItem :is="NuxtLink" to="/roles" route-group="/roles" icon="shield" v-tooltip="'Berechtigungen'" v-if="auth.can('system.view.roles')"/>
-            <AppHeaderItem :is="NuxtLink" to="/devices" route-group="/devices" icon="devices" v-tooltip="'Geräte'" v-if="auth.can('system.view.devices')"/>
+            <!-- <AppHeaderItem :is="NuxtLink" to="/devices" route-group="/devices" icon="devices" v-tooltip="'Geräte'" v-if="auth.can('system.view.devices')"/> -->
             <AppHeaderItem :is="NuxtLink" to="/media/domain" route-group="/media" icon="folder" v-tooltip="'Dateien'" v-if="auth.can('system.access.media')"/>
             
-            <HeDivider vertical class="self-center h-8 mx-4"/>
+            <!-- <HeDivider vertical class="self-center h-8 mx-4"/>
 
             <AppHeaderItem :is="NuxtLink" to="/forms" route-group="/forms" icon="send" v-tooltip="'Formulare'" v-if="auth.can('app.view.forms')"/>
+            <AppHeaderItem :is="NuxtLink" to="/content/posts" route-group="/content" icon="news" v-tooltip="'Beiträge'" v-if="auth.can('app.view.posts')"/>
             <AppHeaderItem :is="NuxtLink" to="/screens" route-group="/screens" icon="tv" v-tooltip="'Bildschirme'" v-if="auth.can('app.view.screens')"/>
-
-            <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
-                <AppHeaderItem show-chevron color="#06B6D4" icon="edit_square" v-tooltip="'Formulare'"/>
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/forms" show-chevron color="#06B6D4" icon="edit_square">Formulare</ContextMenuItem>
-                        <ContextMenuItem to="/forms/submissions" show-chevron color="#06B6D4" icon="inbox">Einsendungen</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown>
-
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
-                <AppHeaderItem show-chevron color="#10b981" icon="confirmation_number" v-tooltip="'Events'"/>
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/events" show-chevron color="#10b981" icon="confirmation_number">Events</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown>
-
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
-                <AppHeaderItem show-chevron color="#84cc16" icon="desktop_windows" v-tooltip="'Screens'"/>
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/screens/devices" show-chevron color="#84cc16" icon="desktop_windows">Geräte</ContextMenuItem>
-                        <ContextMenuItem to="/screens/playlists" show-chevron color="#84cc16" icon="playlist_play">Playlists</ContextMenuItem>
-                        <ContextMenuItem to="/screens/screens" show-chevron color="#84cc16" icon="slideshow">Screens</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown>
-
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
-                <AppHeaderItem show-chevron color="#F59E0B" icon="note_stack" v-tooltip="'Inhalte'"/>
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/content/posts" show-chevron color="#F59E0B" icon="news">Beträge</ContextMenuItem>
-                        <ContextMenuDivider />
-                        <ContextMenuItem to="/content/spaces" show-chevron color="#F59E0B" icon="data_array">Spaces</ContextMenuItem>
-                        <ContextMenuItem to="/content/categories" show-chevron color="#F59E0B" icon="label">Kategorien</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown>
-            
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
-                <AppHeaderItem show-chevron color="#FF6348" icon="package_2" v-tooltip="'Produkte'"/>
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem show-chevron color="#FF6348" icon="package_2">Produkte</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown> -->
-
-            <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1">
-                <AppHeaderItem show-chevron color="#FF4757" icon="receipt" v-tooltip="'Buchhaltung'"/>
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/accounting/contacts" show-chevron color="#FF4757" icon="domain">Kontakte</ContextMenuItem>
-                        <ContextMenuDivider />
-                        <ContextMenuItem show-chevron color="#FF4757" icon="article">Angebote</ContextMenuItem>
-                        <ContextMenuItem show-chevron color="#FF4757" icon="home_repair_service">Aufträge</ContextMenuItem>
-                        <ContextMenuItem show-chevron color="#FF4757" icon="receipt">Rechnungen</ContextMenuItem>
-                        <ContextMenuDivider />
-                        <ContextMenuItem show-chevron color="#FF4757" icon="credit_card_off">Rückerstattungen</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown> -->
+            <AppHeaderItem :is="NuxtLink" to="/events" route-group="/events" icon="local_activity" v-tooltip="'Events'" v-if="auth.can('app.view.events')"/>
+            <AppHeaderItem :is="NuxtLink" to="/products" route-group="/products" icon="package_2" v-tooltip="'Produkte'" v-if="auth.can('app.view.products')"/>
+            <AppHeaderItem :is="NuxtLink" to="/accounting" route-group="/accounting" icon="receipt_long" v-tooltip="'Buchhaltung'" v-if="auth.can('app.view.accounting')"/> -->
 
             <HeSpacer />
         </div>
@@ -114,7 +52,7 @@
 
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
                 <AppHeaderItem icon="settings" v-tooltip="'Ihr Profil'">
-                    <ProfileImage class="h-8 !rounded-full" :src="auth.user.avatar" />
+                    <ProfileImage class="h-8 !rounded-full" :src="auth?.user?.avatar" />
                 </AppHeaderItem>
                 <template #popper>
                     <ContextMenu class="min-w-80">
