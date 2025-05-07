@@ -28,7 +28,7 @@
             </IodTable>
         </HeCard>
 
-        <DialogCsvImport ref="importPopup" :fields="importFields" @import="importUsers" />
+        <DialogImportCsv ref="importPopup" :fields="importFields" @import="importUsers" />
     </NuxtLayout>
 </template>
 

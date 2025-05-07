@@ -73,7 +73,7 @@
         > .drag-indicator
             position: absolute
             z-index: 100
-            inset: -.75rem
+            inset: .75rem
             border-radius: inherit
             pointer-events: none
             opacity: 0

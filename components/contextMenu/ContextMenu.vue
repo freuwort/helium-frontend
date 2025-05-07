@@ -11,5 +11,5 @@
     .context-menu
         display: flex
         flex-direction: column
-        padding-block: 1rem
+        padding-block: .5rem
 </style>

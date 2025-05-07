@@ -1,14 +1,14 @@
 <template>
     <div class="flex items-center flex-wrap gap-4 min-h-10 mb-6">
-        <h2 class="flex-1 m-0 font-medium text-2xl">Nutzer Registrierungen</h2>
-        <IodButton corner="pill" color-preset="error" label="Deaktivieren" icon-right="unpublished" normal-case @click="setStatus(false)" v-if="form.policy_allow_registration"/>
+        <h2 class="m-0 text-xl font-medium flex-1">Nutzer Registrierungen</h2>
+        <IodButton corner="m" size="s" color-preset="error" label="Deaktivieren" @click="setStatus(false)" v-if="form.policy_allow_registration"/>
     </div>
 
     <ErrorAlert :errors="form.errors" class="mb-4" />
 
     <template v-if="form.policy_allow_registration">
         <div class="flex items-center min-h-10">
-            <h3 class="flex-1 m-0 font-medium text-xl">Verpflichtende Angaben</h3>
+            <h3 class="flex-1 m-0 font-medium text-lg">Verpflichtende Angaben</h3>
         </div>
     
         <div class="flex flex-col gap-4 mb-6" v-if="form.default_profile">
@@ -16,27 +16,27 @@
                 <div class="flex flex-col gap-4 py-5 px-4">
                     <h4 class="flex-1 m-0 font-medium !text-base/4">Pflichtfelder</h4>
                     <div class="flex flex-wrap gap-2">
-                        <VDropdown placement="left-start">
-                            <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
+                        <VDropdown placement="bottom">
+                            <IodIconButton class="!w-10" size="xs" corner="m" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
     
                             <template #popper>
                                 <ContextMenuBuilder :items="fieldOptions" default-icon="input" @click="addProfileArrayItem(form.default_profile, 'fields', $event)" class="min-w-64"/>
                             </template>
                         </VDropdown>
-                        <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="field in form.default_profile.fields" :label="field" @click="removeProfileArrayItem(form.default_profile, 'fields', field)" v-tooltip="'Entfernen'" />
+                        <IodButton size="xs" corner="m" variant="contained" color-preset="info" normal-case v-for="field in form.default_profile.fields" :label="field" @click="removeProfileArrayItem(form.default_profile, 'fields', field)" v-tooltip="'Entfernen'" />
                     </div>
                 </div>
                 <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
                     <h4 class="flex-1 m-0 font-medium !text-base/4">Auto-Rollen</h4>
                     <div class="flex flex-wrap gap-2">
-                        <VDropdown placement="left-start">
-                            <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
+                        <VDropdown placement="bottom">
+                            <IodIconButton class="!w-10" size="xs" corner="m" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
     
                             <template #popper>
                                 <DialogSearchRoles @select="addProfileArrayItem(form.default_profile, 'auto_assign_roles', $event[0].name)" />
                             </template>
                         </VDropdown>
-                        <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in form.default_profile.auto_assign_roles" :label="option" @click="removeProfileArrayItem(form.default_profile, 'auto_assign_roles', option)" v-tooltip="'Entfernen'" />
+                        <IodButton size="xs" corner="m" variant="contained" color-preset="info" normal-case v-for="option in form.default_profile.auto_assign_roles" :label="option" @click="removeProfileArrayItem(form.default_profile, 'auto_assign_roles', option)" v-tooltip="'Entfernen'" />
                     </div>
                 </div>
                 <div class="flex flex-col gap-4 p-4 border-t border-inherit">
@@ -46,8 +46,8 @@
         </div>
     
         <div class="flex items-center min-h-10">
-            <h3 class="flex-1 m-0 font-medium text-xl">Optionale Profile</h3>
-            <IodButton type="button" label="Neues Profil" icon-right="add" corner="pill" variant="contained" @click="addProfile()"/>
+            <h3 class="flex-1 m-0 font-medium text-lg">Optionale Profile</h3>
+            <IodButton type="button" label="Neues Profil" icon-right="add" corner="m" size="s" variant="contained" @click="addProfile()"/>
         </div>
     
         <div class="flex flex-col gap-4 mb-6">
@@ -70,7 +70,7 @@
                                     </div>
                                 </template>
                                 <HeDivider class="h-10" vertical />
-                                <IodIconButton type="button" corner="pill" size="s" variant="text" v-tooltip="'Bearbeiten'" :icon="edit == profile.id ? 'expand_less' : 'expand_more'" @click="edit = edit == profile.id ? '' : profile.id"/>
+                                <IodIconButton type="button" corner="m" size="s" variant="text" v-tooltip="'Bearbeiten'" :icon="edit == profile.id ? 'expand_less' : 'expand_more'" @click="edit = edit == profile.id ? '' : profile.id"/>
                             </div>
                             
                             <template v-if="edit === profile.id">
@@ -83,34 +83,34 @@
                                 <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
                                     <h3 class="flex-1 m-0 font-medium !text-base/4">Pflichtfelder</h3>
                                     <div class="flex flex-wrap gap-2">
-                                        <VDropdown placement="left-start">
-                                            <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
+                                        <VDropdown placement="bottom">
+                                            <IodIconButton class="!w-10" size="xs" corner="m" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
                                             
                                             <template #popper>
                                                 <ContextMenuBuilder :items="fieldOptions" default-icon="input" @click="addProfileArrayItem(profile, 'fields', $event)" class="min-w-64"/>
                                             </template>
                                         </VDropdown>
-                                        <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="field in profile.fields" :label="field" @click="removeProfileArrayItem(profile, 'fields', field)" v-tooltip="'Entfernen'" />
+                                        <IodButton size="xs" corner="m" variant="contained" color-preset="info" normal-case v-for="field in profile.fields" :label="field" @click="removeProfileArrayItem(profile, 'fields', field)" v-tooltip="'Entfernen'" />
                                     </div>
                                 </div>
                                 <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
                                     <h3 class="flex-1 m-0 font-medium !text-base/4">Auto-Rollen</h3>
                                     <div class="flex flex-wrap gap-2">
-                                        <VDropdown placement="left-start">
-                                            <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
+                                        <VDropdown placement="bottom">
+                                            <IodIconButton class="!w-10" size="xs" corner="m" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
     
                                             <template #popper>
                                                 <DialogSearchRoles @select="addProfileArrayItem(profile, 'auto_assign_roles', $event[0].name)" />
                                             </template>
                                         </VDropdown>
-                                        <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in profile.auto_assign_roles" :label="option" @click="removeProfileArrayItem(profile, 'auto_assign_roles', option)" v-tooltip="'Entfernen'" />
+                                        <IodButton size="xs" corner="m" variant="contained" color-preset="info" normal-case v-for="option in profile.auto_assign_roles" :label="option" @click="removeProfileArrayItem(profile, 'auto_assign_roles', option)" v-tooltip="'Entfernen'" />
                                     </div>
                                 </div>
                                 <div class="flex flex-col gap-4 py-5 px-4 border-t border-inherit">
                                     <h3 class="flex-1 m-0 font-medium !text-base/4">Gruppen</h3>
                                     <div class="flex flex-wrap gap-2">
-                                        <VDropdown placement="left-start">
-                                            <IodIconButton class="!w-12" size="s" corner="pill" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
+                                        <VDropdown placement="bottom">
+                                            <IodIconButton class="!w-10" size="xs" corner="m" icon="add" color-preset="info" v-tooltip="'Hinzufügen'" />
     
                                             <template #popper>
                                                 <ContextMenu class="min-w-80">
@@ -124,14 +124,14 @@
                                                 </ContextMenu>
                                             </template>
                                         </VDropdown>
-                                        <IodButton size="s" corner="pill" variant="contained" color-preset="info" v-for="option in profile.groups" :label="option" @click="removeProfileArrayItem(profile, 'groups', option)" v-tooltip="'Entfernen'" />
+                                        <IodButton size="xs" corner="m" variant="contained" color-preset="info" normal-case v-for="option in profile.groups" :label="option" @click="removeProfileArrayItem(profile, 'groups', option)" v-tooltip="'Entfernen'" />
                                     </div>
                                 </div>
                                 <div class="flex flex-col gap-2 p-4 border-t border-inherit">
                                     <IodToggle type="switch" class="!px-0 !py-1 !min-h-0" label="Nutzer nach der Registrierung automatisch freischalten" v-model="profile.auto_enable" style="--local-color-off: var(--color-text-soft-disabled); --local-color-on: var(--color-info);"/>
                                 </div>
                                 <div class="flex gap-2 p-4 border-t border-inherit">
-                                    <IodButton type="button" corner="pill" size="s" color-preset="error" variant="contained" label="Profil löschen" icon-left="delete" @click="removeProfile(profile)"/>
+                                    <IodButton type="button" corner="m" size="s" color-preset="error" variant="contained" label="Profil löschen" @click="removeProfile(profile)"/>
                                 </div>
                             </template>
                         </div>
@@ -144,12 +144,12 @@
 
         <div class="flex items-center flex-wrap gap-4 min-h-10 mb-6">
             <h2 class="flex-1 m-0 font-medium text-2xl"></h2>
-            <IodButton corner="pill" label="Speichern" icon-right="save" :disabled="!isValid" :loading="form.processing" @click="save" />
+            <IodButton corner="m" size="s" label="Speichern" :disabled="!isValid" :loading="form.processing" @click="save" />
         </div>
     </template>
     <IodAlert type="placeholder" class="h-40 border-2" v-else>
         <span>Nutzer können sich derzeit nicht selber registrieren</span><br>
-        <IodButton class="mt-6" corner="pill" color-preset="success" icon-left="check" label="Registrierungen erlauben" normal-case @click="setStatus(true)" />
+        <IodButton class="mt-6" corner="m" size="s" color-preset="success" icon-left="check" label="Registrierungen erlauben" normal-case @click="setStatus(true)" />
     </IodAlert>
 </template>
 

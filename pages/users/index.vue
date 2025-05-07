@@ -1,28 +1,27 @@
 <template>
     <NuxtLayout name="auth-default" :scope :pageTitle="IPM.options.pageTitle">
-        <HeCard>
-            <IodTable
-                class="top-16"
-                :scope
-                :columns="tableColumns"
-                :actions="tableActions"
-                :filterSettings="tableFilters"
-                :items="IPM.items"
-                :loading="IPM.processing"
-                v-model:selection="IPM.selection"
-                v-model:filter="IPM.modelFilter"
-                v-model:sort="IPM.modelSort"
-                v-model:pagination="IPM.modelPagination"
-                v-model:columnSettings="IPM.modelColumnSettings"
-                @request:refresh="IPM.fetch()"
-            >
-                <template #right>
-                    <IodButton :is="NuxtLink" corner="pill" variant="filled" label="Neuer Nutzer" icon-right="add" to="/users/editor"/>
-                </template>
-            </IodTable>
-        </HeCard>
+        <IodTable
+            class="p-4 h-full w-full"
+            :scope
+            :columns="tableColumns"
+            :actions="tableActions"
+            :filterSettings="tableFilters"
+            :items="IPM.items"
+            :loading="IPM.processing"
+            v-model:selection="IPM.selection"
+            v-model:filter="IPM.modelFilter"
+            v-model:sort="IPM.modelSort"
+            v-model:pagination="IPM.modelPagination"
+            v-model:columnSettings="IPM.modelColumnSettings"
+            @request:refresh="IPM.fetch()"
+        >
+            <template #right>
+                <IodButton type="button" label="Neuer Nutzer" corner="m" size="s" icon-right="add" @click="userEditor.open()"/>
+            </template>
+        </IodTable>
 
-        <DialogCsvImport ref="importPopup" :fields="importFields" @import="importUsers" />
+        <DialogImportCsv ref="importPopup" :fields="importFields" @import="importUsers" />
+        <DialogUserEditor ref="userEditor" @change="IPM.fetch()"/>
     </NuxtLayout>
 </template>
 
@@ -33,11 +32,11 @@
     import { toast } from 'vue3-toastify'
     
     const dayjs = useDayjs()
-    const NuxtLink = defineNuxtLink({})
     const scope = 'view_admin_users_index'
 
 
 
+    const userEditor = ref()
     const IPM = useItemPageManager({
         scope,
         pageTitle: 'Nutzer Verwaltung',
@@ -94,8 +93,8 @@
             color: value ? 'var(--color-success)' : 'var(--color-error)',
         })).build(),
         tableColumnBuilder.new().name('blocked_at').label('Gesperrt').transform((value: string | null, item: any) => ({
-            text: value ? dayjs(value).fromNow() : 'Aktiv',
-            tooltip: value ? `${dayjs(value).format('DD.MM.YYYY HH:mm')} - Grund: ${item.block_reason || 'Nicht angegeben'}` : 'Nein',
+            text: value ? dayjs(value).fromNow() : '-',
+            tooltip: value ? `${dayjs(value).format('DD.MM.YYYY HH:mm')} - Grund: ${item.block_reason || 'Nicht angegeben'}` : '-',
             icon: value ? 'do_not_disturb_on' : '',
             color: value ? 'var(--color-error)' : 'var(--color-info)',
         })).build(),
@@ -144,7 +143,7 @@
             icon: 'edit',
             text: 'Bearbeiten',
             scope: ['individual', 'row'],
-            run: (context: string, items: any) => navigateTo(`/users/editor/${items[0]}`),
+            run: (context: string, items: any) => userEditor.value.open(items[0]),
         },
         // {
         //     icon: 'content_copy',
@@ -161,7 +160,7 @@
         {
             icon: 'delete',
             text: 'Löschen',
-            color: 'var(--color-error)',
+            color: 'error',
             scope: ['selection', 'individual'],
             run: (context: string, items: any) => IPM.delete(items),
         },
@@ -174,7 +173,7 @@
         {
             icon: 'delete_forever',
             text: 'Endgültig löschen',
-            color: 'var(--color-error)',
+            color: 'error',
             scope: ['selection'],
             run: (context: string, items: any) => IPM.forceDelete(items),
         },

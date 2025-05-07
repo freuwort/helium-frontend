@@ -14,7 +14,7 @@
 
         <main class="sm:flex-1">
             <HeLimiter size="form" class="!max-w-full !px-0 sm:!max-w-[550px] sm:!px-4">
-                <HeCard class="flex flex-col px-6 py-6 gap-6 !rounded-none sm:gap-8 sm:py-8 sm:!rounded-2xl" :class="props.pageClass">
+                <HeCard class="flex flex-col px-6 py-6 gap-6 !rounded-none sm:gap-8 sm:py-8 sm:!rounded-2xl border" :class="props.pageClass">
                     <slot />
                 </HeCard>
             </HeLimiter>
@@ -43,7 +43,7 @@
         title: props.pageTitle as string,
         titleTemplate: `%s – ${domain.settings?.company_name || 'Helium'} Verwaltung`,
         bodyAttrs: {
-            style: 'background: var(--color-background-soft)',
+            style: 'background: var(--color-background-disabled)',
         }
     })
 
@@ -66,12 +66,11 @@
         flex-direction: column
 
     header
-        background-color: #1e293b
-        background-image: url('/images/app/banner_pattern_light.png')
+        background-color: var(--color-background-soft)
+        background-image: url('/images/app/banner_pattern_dark.png')
         background-size: auto 100%
         background-position: top center
-        color: #ffffff
-        border-bottom: 1px solid var(--color-border)
+        color: var(--color-text)
         padding-bottom: 4.5rem
         margin-bottom: -4.5rem
         display: flex

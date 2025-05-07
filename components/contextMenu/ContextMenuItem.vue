@@ -1,5 +1,5 @@
 <template>
-    <HeFlex :is="is ?? NuxtLink" type="button" horizontal class="context-menu-item" :class="{'active': active}" :style="{ color }">
+    <HeFlex :is="is ?? NuxtLink" type="button" horizontal class="context-menu-item" :class="{'active': active}" :style>
         <IodIcon class="main-icon"><slot name="icon">{{ icon }}</slot></IodIcon>
         <HeFlex class="flex-1">
             <span class="label"><slot>{{ label }}</slot></span>
@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-    defineProps({
+    const props = defineProps({
         is: {
             type: [String, Object, Function, Array],
         },
@@ -28,15 +28,22 @@
     })
 
     const NuxtLink = defineNuxtLink({})
+
+    const style = computed(() => ({
+        '--local-color': props.color || 'var(--color-text-soft)',
+        '--local-color-active': props.color || 'var(--color-info)',
+    }))
 </script>
 
 <style lang="sass" scoped>
     .context-menu-item
+        --local-color: var(--color-text-soft)
+        --local-color-active: var(--color-info)
         display: flex
         align-items: stretch
-        min-height: 3rem
+        min-height: 2.5rem
         user-select: none
-        color: var(--color-text-soft)
+        color: var(--local-color)
         position: relative
         overflow-x: hidden
         text-decoration: none
@@ -56,6 +63,8 @@
 
         &:hover:not(:disabled),
         &.active:not(:disabled)
+            color: var(--local-color-active)
+
             &:after
                 opacity: .1
 
@@ -67,7 +76,9 @@
                 transform: translateX(5px)
 
         &:focus
+            border-radius: 3px
             outline: 3px solid var(--color-info)
+            outline-offset: -3px
 
         &:disabled
             cursor: default
@@ -82,8 +93,8 @@
 
     .main-icon
         color: inherit
-        font-size: 1.5rem
-        width: 4rem
+        font-size: 1.25rem !important
+        width: 3rem
         position: relative
         z-index: 1
         aspect-ratio: unset !important
@@ -100,7 +111,7 @@
 
     .chevron-icon
         color: var(--color-text-soft)
-        font-size: 1.25rem
+        font-size: 1.25rem !important
         width: 4rem
         position: relative
         z-index: 1

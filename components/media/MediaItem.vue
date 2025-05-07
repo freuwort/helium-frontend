@@ -5,15 +5,14 @@
             <div class="media-icon-wrapper" v-else>
                 <MediaIcon :mime="(item.mime_type as string)"/>
             </div>
-            <div class="media-tags" v-if="metaTags.length">
-                <div class="tag" v-for="tag in metaTags" v-tooltip="tag">{{ tag }}</div>
-            </div>
         </div>
+
         <div class="media-info">
             <NuxtLink v-if="isDirectory" class="title" tabindex="-1" v-tooltip="item.name" :to="`/media/${item.src_path}`">{{ item.name }}</NuxtLink>
             <a v-if="!isDirectory" class="title" tabindex="-1" v-tooltip="item.name" href="#" @click.prevent="emits('edit', item)" >{{ item.name }}</a>
             <IodProfileArray class="profiles" :data="profiles" @dblclick.stop="emits('share', item)"/>
         </div>
+
         <div class="overlay" v-show="showContextMenu">
             <VDropdown placement="bottom">
                 <IodIconButton class="more-button" tabindex="-1" type="button" variant="filled" corner="pill" icon="more_vert" size="s" background="#00000099" color="#ffffff" v-tooltip="'Mehr'"/>
@@ -84,7 +83,7 @@
         let items = []
 
         if (props.item.meta.extension) items.push(props.item.meta.extension)
-        if (props.item.meta.size) items.push(humanFileSize(props.item.meta.size as number))
+        // if (props.item.meta.size) items.push(humanFileSize(props.item.meta.size as number))
         
         return items
     })
@@ -135,7 +134,7 @@
 
 <style lang="sass" scoped>
     .media-item
-        --local-border-color: var(--color-background-soft)
+        --local-border-color: var(--color-border)
 
         position: relative
         display: flex
@@ -171,6 +170,7 @@
 
         &:focus
             outline: 3px solid var(--color-info)
+            outline-offset: -3px
 
         &:not(.disabled)
             &:hover
@@ -182,7 +182,8 @@
         .media-preview
             position: relative
             z-index: 1
-            padding: .5rem
+            padding: .25rem
+            padding-bottom: 0
             
             .media-thumbnail
                 width: 100%
@@ -228,7 +229,6 @@
             align-items: center
             gap: 0 .5rem
             padding: 1rem
-            border-top: 1px solid var(--local-border-color)
             transition: all 50ms ease
 
             .title
@@ -251,7 +251,7 @@
             position: absolute
             top: 0
             right: 0
-            padding: 1rem
+            padding: .5rem
             z-index: 10
             pointer-events: none
             

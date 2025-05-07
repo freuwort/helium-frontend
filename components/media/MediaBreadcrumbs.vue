@@ -3,8 +3,8 @@
         <slot name="left" />
         <template v-for="(item, i) in items">
             <span v-show="i !== 0">/</span>
-            <MediaDropzone class="rounded-full" :enabled="i !== items.length - 1" @drop.stop="onDrop($event, item.src_path)">
-                <IodButton type="button" :class="{ 'first': i === 0 }" :icon-left="i === 0 ? 'home_storage' : ''" :label="item.text" size="s" variant="text" corner="pill" @click="emits('navigate', item.navigate_path)" />
+            <MediaDropzone class="rounded-lg" :enabled="i !== items.length - 1" @drop.stop="onDrop($event, item.src_path)">
+                <IodButton type="button" :class="{ 'first': i === 0 }" :icon-left="i === 0 ? 'home_storage' : ''" :label="item.text" size="s" variant="text" corner="m" @click="emits('navigate', item.navigate_path)" />
             </MediaDropzone>
         </template>
         <HeSpacer />
@@ -60,13 +60,9 @@
     .iod-container.iod-breadcrumbs
         display: flex
         align-items: center
-        height: 2.5rem
-        border-radius: 2.5rem
-        background: var(--color-background-soft)
+        height: 2rem
+        border-bottom: 1px solid var(--color-border)
         user-select: none
-        padding-inline: .25rem
-        overflow-x: auto
-        overflow-y: hidden
         white-space: nowrap
 
         &.slot-left

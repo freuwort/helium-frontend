@@ -1,42 +1,19 @@
 <template>
     <header>
-        <HeFlex horizontal class="main-bar border-b">
-            <AppHeaderItem :is="NuxtLink" to="/" v-tooltip="'Übersicht'">
-                <AppLogo class="!w-8 !h-8" style="color: var(--color-text)"/>
-            </AppHeaderItem>
+        <div class="aria-left flex items-stretch pl-4 h-full">
+            <AppHeaderItem :is="NuxtLink" to="/" icon="home" v-tooltip="'Übersicht'" />
 
-            <HeDivider vertical class="h-8"/>
+            <HeDivider vertical class="self-center h-8 mx-4"/>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="auth.can('system.view.roles')">
-                <AppHeaderItem show-chevron icon="encrypted" v-tooltip="'Berechtigungen'"/>
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/roles" show-chevron icon="encrypted">Berechtigungen</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown>
+            <AppHeaderItem :is="NuxtLink" to="/users" route-group="/users" icon="identity_platform" v-tooltip="'Nutzer'" v-if="auth.can('system.view.users')"/>
+            <AppHeaderItem :is="NuxtLink" to="/roles" route-group="/roles" icon="shield" v-tooltip="'Berechtigungen'" v-if="auth.can('system.view.roles')"/>
+            <AppHeaderItem :is="NuxtLink" to="/devices" route-group="/devices" icon="devices" v-tooltip="'Geräte'" v-if="auth.can('system.view.devices')"/>
+            <AppHeaderItem :is="NuxtLink" to="/media/domain" route-group="/media" icon="folder" v-tooltip="'Dateien'" v-if="auth.can('system.access.media')"/>
+            
+            <HeDivider vertical class="self-center h-8 mx-4"/>
 
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="auth.can('system.view.users')">
-                <AppHeaderItem show-chevron icon="group" v-tooltip="'Nutzer'"/>
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/users" show-chevron icon="group">Nutzer</ContextMenuItem>
-                    </ContextMenu>
-                </template>
-            </VDropdown>
-
-            <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="auth.can('system.access.media')">
-                <AppHeaderItem show-chevron icon="folder" v-tooltip="'Dateien'"/>
-                <template #popper>
-                    <ContextMenu class="min-w-80">
-                        <ContextMenuItem to="/media/domain" show-chevron icon="home_storage">Hauptspeicher</ContextMenuItem>
-                        <!-- <ContextMenuDivider />
-                        <ContextMenuItem to="/media/forms" show-chevron icon="edit_square">Formular Dateien</ContextMenuItem> -->
-                    </ContextMenu>
-                </template>
-            </VDropdown>
-
-            <!-- <HeDivider vertical class="h-8 ml-2"/> -->
+            <AppHeaderItem :is="NuxtLink" to="/forms" route-group="/forms" icon="send" v-tooltip="'Formulare'" v-if="auth.can('app.view.forms')"/>
+            <AppHeaderItem :is="NuxtLink" to="/screens" route-group="/screens" icon="tv" v-tooltip="'Bildschirme'" v-if="auth.can('app.view.screens')"/>
 
             <!-- <VDropdown placement="bottom-start" :skidding="-8" :distance="-1" v-if="devMode">
                 <AppHeaderItem show-chevron color="#06B6D4" icon="edit_square" v-tooltip="'Formulare'"/>
@@ -103,11 +80,22 @@
                     </ContextMenu>
                 </template>
             </VDropdown> -->
-            
+
+            <HeSpacer />
+        </div>
+
+        <div class="aria-center flex items-stretch px-4 h-full">
+            <div class="branding">
+                <AppLogo />
+                <h2 aria-label="Branding: Helium">HELIUM</h2>
+            </div>
+        </div>
+
+        <div class="aria-right flex items-stretch pr-4 h-full">
             <HeSpacer />
 
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
-                <AppHeaderItem icon="cloud_upload" :badge="uploadManager.status.uploading || null" v-tooltip="`Uploads – ${uploadManager.statusText || 'Keine Uploads'}`"/>
+                <AppHeaderItem icon="upload" :badge="uploadManager.status.uploading || null" v-tooltip="`Uploads – ${uploadManager.statusText || 'Keine Uploads'}`"/>
                 <template #popper>
                     <MediaUploadCard class="min-w-[26rem]"/>
                 </template>
@@ -120,28 +108,55 @@
                 </template>
             </VDropdown>
 
-            <HeDivider vertical class="h-8"/>
+            <AppHeaderItem :is="NuxtLink" to="/settings" route-group="/settings" icon="settings" v-tooltip="'Domain Einstellungen'" v-if="auth.can('system.admin')"/>
+
+            <HeDivider vertical class="self-center h-8 mx-4"/>
 
             <VDropdown placement="bottom-end" :skidding="-8" :distance="-1">
-                <ProfileChip v-if="auth.user" :title="auth.user.name || ''" :subtitle="auth.user.username || ''" :image="auth.user.avatar" align="right" v-tooltip="'Profil'"/>
+                <AppHeaderItem icon="settings" v-tooltip="'Ihr Profil'">
+                    <ProfileImage class="h-8 !rounded-full" :src="auth.user.avatar" />
+                </AppHeaderItem>
                 <template #popper>
                     <ContextMenu class="min-w-80">
-                        <div class="flex gap-1 px-1">
-                            <IodIconButton class="flex-1" corner="pill" :variant="theme === 'light'? 'contained' : 'text'" icon="light_mode" v-tooltip="'Theme: Hell'" @click="auth.setSettings('ui_theme', 'light', 'db')"/>
-                            <IodIconButton class="flex-1" corner="pill" :variant="theme === 'dark'? 'contained' : 'text'" icon="dark_mode" v-tooltip="'Theme: Dunkel'" @click="auth.setSettings('ui_theme', 'dark', 'db')"/>
-                            <IodIconButton class="flex-1" corner="pill" :variant="theme === 'system'? 'contained' : 'text'" icon="brightness_auto" v-tooltip="'Theme: System'" @click="auth.setSettings('ui_theme', 'system', 'db')"/>
+                        <div class="flex gap-2 px-2">
+                            <IodIconButton
+                                class="flex-1"
+                                corner="m"
+                                size="s"
+                                :variant="theme === 'light'? 'contained' : 'text'"
+                                :color-preset="theme === 'light' ? 'info' : 'text'"
+                                icon="light_mode"
+                                v-tooltip="'Theme: Hell'"
+                                @click="auth.setSettings('ui_theme', 'light', 'db')"
+                            />
+                            <IodIconButton
+                                class="flex-1"
+                                corner="m"
+                                size="s"
+                                :variant="theme === 'dark'? 'contained' : 'text'"
+                                :color-preset="theme === 'dark' ? 'info' : 'text'"
+                                icon="dark_mode"
+                                v-tooltip="'Theme: Dunkel'"
+                                @click="auth.setSettings('ui_theme', 'dark', 'db')"
+                            />
+                            <IodIconButton
+                                class="flex-1"
+                                corner="m"
+                                size="s"
+                                :variant="theme === 'system'? 'contained' : 'text'"
+                                :color-preset="theme === 'system' ? 'info' : 'text'"
+                                icon="contrast"
+                                v-tooltip="'Theme: System'"
+                                @click="auth.setSettings('ui_theme', 'system', 'db')"
+                            />
                         </div>
                         <ContextMenuDivider />
                         <ContextMenuItem to="/auth/profile" show-chevron icon="person">Profil</ContextMenuItem>
                         <ContextMenuItem is="button" show-chevron color="var(--color-error)" icon="logout" @click="auth.logout()">Abmelden</ContextMenuItem>
-                        <template v-if="auth.can('system.admin')">
-                            <ContextMenuDivider />
-                            <ContextMenuItem to="/settings" show-chevron icon="settings">Domain Einstellungen</ContextMenuItem>
-                        </template>
                     </ContextMenu>
                 </template>
             </VDropdown>
-        </HeFlex>
+        </div>
     </header>
 </template>
 
@@ -159,15 +174,42 @@
 
 <style lang="sass" scoped>
     header
-        width: 100%
+        display: grid
+        grid-template-columns: 1fr auto 1fr
+        grid-template-areas: "left center right"
+        height: 100%
 
-    .main-bar
-        background-color: var(--color-background)
-        box-shadow: var(--shadow-s)
-        padding: .5rem !important
-        gap: .5rem !important
+        .aria-left
+            grid-area: left
+            justify-content: start
 
-        .profile-chip
-            height: 3rem
-            padding-block: .5rem
+        .aria-center
+            grid-area: center
+            justify-content: center
+
+        .aria-right
+            grid-area: right
+            justify-content: end
+
+        .branding
+            align-self: center
+            display: flex
+            align-items: center
+            height: 1rem
+            gap: .5rem
+            user-select: none
+            pointer-events: none
+            color: var(--color-text-soft)
+            opacity: .5
+
+            svg
+                height: 1.25rem
+                width: 1.25rem
+
+            h2
+                margin: 0
+                font-weight: 700
+                font-size: .875rem
+                letter-spacing: .05rem
+                color: inherit
 </style>

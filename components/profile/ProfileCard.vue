@@ -1,7 +1,7 @@
 <template>
     <div class="profile-card">
         <div class="profile-banner" :style="{ backgroundImage: `url(${banner})` }">
-            <IodIconButton v-if="allowBannerUpload" class="overlay-button" type="button" size="xl" corner="l" icon="upload" v-tooltip="bannerTooltip" @click="$emit('upload:banner')" />
+            <IodIconButton v-if="allowBannerUpload" class="overlay-button" type="button" size="xl" corner="l" icon="upload" :aria-label="bannerTooltip" @click="$emit('upload:banner')" />
             
             <VDropdown v-if="showActions" placement="bottom-end">
                 <IodButton type="button" size="s" label="Bearbeiten" corner="pill" variant="contained" background="var(--color-background)" />
@@ -14,7 +14,7 @@
 
         <div class="profile-image">
             <img :src="avatar" :alt="title" v-if="avatar">
-            <IodIconButton v-if="allowAvatarUpload" class="overlay-button" type="button" size="xl" corner="pill" icon="upload" v-tooltip="avatarTooltip" @click="$emit('upload:avatar')" />
+            <IodIconButton v-if="allowAvatarUpload" class="overlay-button" type="button" size="xl" corner="pill" icon="upload" :aria-label="avatarTooltip" @click="$emit('upload:avatar')" />
         </div>
 
         <div class="profile-info">
@@ -70,7 +70,7 @@
         width: 100%
         display: flex
         flex-direction: column
-        align-items: center
+        align-items: start
         text-align: center
         overflow: hidden
 
@@ -93,7 +93,7 @@
 
         .profile-banner
             width: 100%
-            height: 12rem
+            height: 7rem
             position: relative
             z-index: 1
             display: flex
@@ -106,9 +106,10 @@
             background-color: var(--color-background-soft)
 
         .profile-image
-            width: 10rem
-            height: 10rem
-            margin-top: -5rem
+            width: 6rem
+            height: 6rem
+            margin-inline: .5rem
+            margin-top: -3rem
             border-radius: 50%
             background: var(--color-background)
             position: relative
@@ -126,12 +127,12 @@
 
             &::before
                 right: calc(100% - 1px)
-                border-radius: 0 0 var(--radius-xl) 0
+                border-radius: 0 0 var(--radius-l) 0
                 box-shadow: .75rem .75rem 0 var(--color-background)
 
             &::after
                 left: calc(100% - 1px)
-                border-radius: 0 0 0 var(--radius-xl)
+                border-radius: 0 0 0 var(--radius-l)
                 box-shadow: -.75rem .75rem 0 var(--color-background)
 
             img
@@ -139,7 +140,7 @@
                 height: 100%
                 object-fit: cover
                 border-radius: 50%
-                border: 5px solid var(--color-background)
+                border: 3px solid var(--color-background)
                 position: relative
                 z-index: 1
 
@@ -147,14 +148,16 @@
             width: 100%
             display: flex
             flex-direction: column
-            align-items: center
-            padding-block: 1rem 2rem
+            align-items: start
+            padding-inline: 1rem
+            padding-block: .5rem 1rem
 
             h2
                 margin: 0
-                font-size: 1.5rem
+                font-size: 1rem
                 font-weight: 600
 
             p
                 margin: 0
+                font-size: .875rem
 </style>

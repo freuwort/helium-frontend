@@ -1,32 +1,39 @@
 <template>
-    <div class="flex flex-col py-2 w-80 max-h-96 small-scrollbar" v-if="filterSettings && filterSettings.length">
-        <template v-for="row in filterSettings">
-            <VDropdown placement="right-start" v-if="row.type == 'select'">
-                <button type="button" class="row-button">
-                    <span class="text flex-1">
-                        {{ row.label }}:
-                        <b v-tooltip="displayValues(row, filter)">{{ displayValues(row, filter) || '---' }}</b>
-                    </span>
-                    <IodIcon icon="chevron_right"/>
-                </button>
-
-                <template #popper>
-                    <div class="flex flex-col py-2 w-80 max-h-96 small-scrollbar">
-                        <IodToggle
-                            class="w-full h-10"
-                            v-for="option in row.values"
-                            :label="option.text"
-                            :modelValue="isFilterSet(row, filter, option.value)"
-                            @update:modelValue="setFilter(row, filter, option.value, $event)"
-                        />
-                    </div>
-                </template>
-            </VDropdown>
-        </template>
-    </div>
+    <IodPopup ref="popup" title="Filter" placement="right">
+        <div class="flex flex-col p-4 pt-0 gap-4">
+            <ContextMenu class="bg-background rounded-lg" v-for="row in filterSettings" :key="row.name">
+                <div class="flex items-center pr-2">
+                    <ContextMenuLabel class="flex-1" :label="row.label" />
+                    <IodButton
+                        type="button"
+                        variant="text"
+                        size="xs"
+                        corner="s"
+                        label="zurücksetzen"
+                        color-preset="info"
+                        normal-case
+                        @click="resetFilter(row, filter)"
+                        v-if="isFilterSet(row, filter)"
+                    />
+                </div>
+                <ContextMenuItem
+                    v-for="option in row.values"
+                    is="button"
+                    type="button"
+                    :key="option.value"
+                    :label="option.text"
+                    :icon="isFilterValueSet(row, filter, option.value) ? 'radio_button_checked' : 'radio_button_unchecked'"
+                    :active="isFilterValueSet(row, filter, option.value)"
+                    @click="setFilter(row, filter, option.value, !isFilterValueSet(row, filter, option.value))"
+                    :tooltip="option.text"
+                />
+            </ContextMenu>
+        </div>
+    </IodPopup>
 </template>
 
 <script lang="ts" setup>
+    const popup = ref()
     const props = defineProps({
         filterSettings: {
             type: Array,
@@ -38,14 +45,9 @@
         },
     })
 
-    function displayValues(row, filter) {
-        if (row.multiple) {
-            return row.values?.filter(option => filter[row.name]?.includes(option.value))?.map(option => option.text)?.join(', ')
-        }
 
-        return row.values?.find(option => option.value == filter[row.name])?.text
-    }
 
+    // Set filters
     function setFilter(row, filter, value, toggleState) {
         if (row.multiple) {
             if (toggleState) {
@@ -62,56 +64,57 @@
             if (toggleState) {
                 filter[row.name] = value
             }
-            else
-            {
+            else {
                 filter[row.name] = undefined
             }
         }
     }
 
-    function isFilterSet(row, filter, value)
-    {
-        if (row.multiple)
-        {
+    function resetFilter(row, filter) {
+        delete filter[row.name]
+    }
+
+    function resetAllFilters() {
+        for (const row of props.filterSettings) {
+            delete filter[row.name]
+        }
+    }
+
+
+
+    // Check for filter state
+    function isFilterSet(row, filter) {
+        if (row.multiple) {
+            return filter[row.name]?.length > 0
+        }
+
+        return filter[row.name] !== undefined
+    }
+
+    function isFilterValueSet(row, filter, value){
+        if (row.multiple) {
             return filter[row.name]?.includes(value)
         }
 
         return filter[row.name] == value
     }
+
+
+
+    // Misc
+    function open() {
+        popup.value.open()
+    }
+
+    defineExpose({
+        open,
+        setFilter,
+        resetFilter,
+        resetAllFilters,
+        isFilterSet,
+        isFilterValueSet,
+    })
 </script>
 
 <style lang="sass" scoped>
-    .iod-button
-        --local-color-background: var(--color-text) !important
-
-    .row-button
-        text-align: left
-        display: flex
-        align-items: center
-        padding: 0 1rem
-        gap: .5rem
-        height: 3rem
-        background: none
-        border: none
-        cursor: pointer
-        user-select: none
-        color: var(--color-text-soft)
-        font-family: var(--font-interface)
-        font-size: .9rem
-        width: 20rem
-        transition: all 100ms
-
-        &:hover
-            background: var(--color-background-soft)
-
-            .iod-icon
-                transform: translateX(4px)
-
-        .text
-            white-space: nowrap
-            overflow: hidden
-            text-overflow: ellipsis
-
-        .iod-icon
-            transition: all 100ms
 </style>

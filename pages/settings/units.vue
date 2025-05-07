@@ -1,9 +1,4 @@
 <template>
-    <div class="flex items-center min-h-10">
-        <h3 class="flex-1 m-0 font-medium">Einheiten</h3>
-        <IodButton type="button" @click="domain.fetchSettings()" icon-right="refresh" corner="pill" label="Aktualisieren"/>
-    </div>
-    
     <div class="table small-scrollbar">
         <div class="row header">
             <span class="w-8"><IodIcon icon="square_foot"/></span>

@@ -1,43 +1,42 @@
 <template>
     <NuxtLayout name="auth-default" :scope pageTitle="Dateien">
-        <HeCard>
-            <div class="header">
-                <IodInput class="search-input" icon-left="search" placeholder="Suchen" v-model="search"/>
-
-                <MediaBreadcrumbs class="flex-1" :path="path" root-path="/media" @navigate="navigateTo($event)" @drop="onDrop($event.event, $event.path)" />
-                
-                <div class="flex items-center p-1 gap-1 bg-background-soft rounded-full">
-                    <VDropdown placement="bottom">
-                        <IodButton type="button" class="!gap-2 !px-4" size="s" corner="pill" variant="text" label="Aktionen" icon-right="arrow_drop_down" normal-case/>
-    
+        <div class="p-4 w-full h-full flex flex-col">
+            <div class="flex flex-col pb-4">
+                <div class="flex items-center gap-2">
+                    <IodInput class="search-input" icon-left="search" placeholder="Suchen" v-model="search"/>
+                    
+                    <IodIconButton type="button" size="s" corner="m" variant="contained" icon="refresh" v-tooltip="'Ordner Aktualisieren'" @click="fetch" />
+                    <IodIconButton type="button" size="s" corner="m" variant="contained" icon="scan" v-tooltip="'Ordner Scannen'" @click="discover" />
+        
+                    <HeDivider vertical class="h-6" />
+        
+                    <IodIconButton type="button" size="s" corner="m" variant="contained" icon="deselect" v-tooltip="'Auswahl Abwählen'" @click="deselectAll" :disabled="!selection.length" />
+                    <IodIconButton type="button" size="s" corner="m" variant="contained" icon="delete" v-tooltip="'Auswahl Löschen'" @click="deleteItems(selection)" :disabled="!selection.length" color-preset="error" />
+        
+                    <HeSpacer />
+                    
+                    <VDropdown placement="bottom-end">
+                        <IodButton type="button" icon-right="add" label="Neu" corner="m" size="s"/>
                         <template #popper>
-                            <ContextMenu class="min-w-72">
-                                <ContextMenuItem is="button" icon="refresh" v-close-popper @click="fetch">Ordner Aktualisieren</ContextMenuItem>
-                                <ContextMenuItem is="button" icon="scan" v-close-popper @click="discover">Ordner Scannen</ContextMenuItem>
-                                <ContextMenuDivider />
-                                <ContextMenuLabel :label="`Auswahl – ${ selection.length }`"/>
-                                <ContextMenuItem is="button" icon="deselect" v-close-popper @click="deselectAll" :disabled="!selection.length">Auswahl abwählen</ContextMenuItem>
-                                <ContextMenuItem is="button" icon="delete" v-close-popper color="var(--color-error)" :disabled="!selection.length" @click="deleteItems(selection)">Auswahl löschen</ContextMenuItem>
+                            <ContextMenu class="min-w-80">
+                                <ContextMenuItem is="button" v-close-popper icon="upload" @click="uploadInput.click()">Hochladen</ContextMenuItem>
+                                <ContextMenuItem is="button" v-close-popper icon="create_new_folder" @click="createDirectoryPopup.open(path)">Ordner erstellen</ContextMenuItem>
                             </ContextMenu>
                         </template>
                     </VDropdown>
+        
+                    <IodIconButton type="button" icon="tune" v-tooltip="'Anzeige Optionen'" size="s" variant="contained" @click="displayOptions.open()"/>
+        
+                    <IodLoader type="bar" v-show="loading"/>
                 </div>
 
-                <VDropdown placement="bottom-end">
-                    <IodButton type="button" icon-right="add" label="Neu" corner="pill" size="m"/>
-                    <template #popper>
-                        <ContextMenu class="min-w-80">
-                            <ContextMenuItem is="button" v-close-popper icon="upload" @click="uploadInput.click()">Hochladen</ContextMenuItem>
-                            <ContextMenuItem is="button" v-close-popper icon="create_new_folder" @click="createDirectoryPopup.open(path)">Ordner erstellen</ContextMenuItem>
-                        </ContextMenu>
-                    </template>
-                </VDropdown>
-
-                <IodLoader type="bar" v-show="loading"/>
+                <div class="flex items-center gap-2 mt-4">
+                    <MediaBreadcrumbs class="flex-1" :path="path" root-path="/media" @navigate="navigateTo($event)" @drop="onDrop($event.event, $event.path)" />
+                </div>
             </div>
 
             
-            <MediaDropzone @drop.stop="onDrop($event, path)" :accept="['Files']">
+            <MediaDropzone class="flex-1 overflow-y-auto small-scrollbar" @drop.stop="onDrop($event, path)" :accept="['Files']">
                 <div class="entity-grid" v-if="items.length">
                     <MediaDropzone class="rounded-lg" v-for="item in items" :key="item.id" :enabled="!(dragging && selection.includes(item.src_path)) && item.mime_type === 'directory'" @dragover.stop @drop.stop="onDrop($event, item.src_path)">
                         <MediaItem
@@ -60,42 +59,53 @@
                     </MediaDropzone>
                 </div>
     
-                <IodAlert type="placeholder" class="h-72 pointer-events-none" v-if="!items.length && !loading">
-                    <div class="flex item-center justify-center h-16 w-16 mx-auto">
+                <IodAlert type="placeholder" class="h-48 pointer-events-none" v-if="!items.length && !loading">
+                    <div class="flex items-center justify-center h-16 w-16 mx-auto">
                         <IodIcon icon="home_storage" class="!text-5xl"/>
                     </div>
                     Keine Dateien gefunden
                 </IodAlert>
                 
-                <IodAlert type="placeholder" class="h-72 pointer-events-none" v-if="!items.length &&loading">
-                    <div class="flex item-center justify-center h-16 w-16 mx-auto">
+                <IodAlert type="placeholder" class="h-48 pointer-events-none" v-if="!items.length && loading">
+                    <div class="flex items-center justify-center h-16 w-16 mx-auto">
                         <IodLoader class="m-auto"/>
                     </div>
                     Lade Dateien
                 </IodAlert>
             </MediaDropzone>
 
-            <div class="footer">
+            <div class="flex items-center pt-4">
                 <IodPagination v-model="pagination"/>
                 <HeSpacer />
-                <div class="flex items-center p-1 gap-1 bg-background-soft rounded-full">
-                    <IodButton type="button" normal-case class="!px-0 !w-11" size="s" corner="pill" v-tooltip="'10 Einträge pro Seite'" :variant="pagination.size === 10 ? 'contained' : 'text'" label="10" @click="setPagination({ size: 10 })"/>
-                    <IodButton type="button" normal-case class="!px-0 !w-11" size="s" corner="pill" v-tooltip="'20 Einträge pro Seite'" :variant="pagination.size === 20 ? 'contained' : 'text'" label="20" @click="setPagination({ size: 20 })"/>
-                    <IodButton type="button" normal-case class="!px-0 !w-11" size="s" corner="pill" v-tooltip="'50 Einträge pro Seite'" :variant="pagination.size === 50 ? 'contained' : 'text'" label="50" @click="setPagination({ size: 50 })"/>
-                    <IodButton type="button" normal-case class="!px-0 !w-11" size="s" corner="pill" v-tooltip="'100 Einträge pro Seite'" :variant="pagination.size === 100 ? 'contained' : 'text'" label="100" @click="setPagination({ size: 100 })"/>
-                    <IodButton type="button" normal-case class="!px-0 !w-11" size="s" corner="pill" v-tooltip="'250 Einträge pro Seite'" :variant="pagination.size === 250 ? 'contained' : 'text'" label="250" @click="setPagination({ size: 250 })"/>
-                </div>
             </div>
-        </HeCard>
+        </div>
 
         
         
         <input class="hidden" type="file" ref="uploadInput" multiple @change="upload(($event.target as HTMLInputElement)?.files || [])">
         
-        <DialogMediaCreateDirectory ref="createDirectoryPopup" placement="center" max-width="500px" blur="0" @saved="fetch()"/>
-        <DialogMediaRename ref="renamePopup" placement="center" max-width="500px" blur="0" @saved="fetch(); deselectAll()" />
-        <DialogMediaShare ref="sharePopup" placement="center" max-width="500px" blur="0" @saved="fetch()"/>
-        <DialogMediaProperties ref="propertyPopup" placement="right" max-width="500px" blur="0" />
+        <DialogMediaCreateDirectory ref="createDirectoryPopup" placement="center" @saved="fetch()"/>
+        <DialogMediaRename ref="renamePopup" placement="center" @saved="fetch(); deselectAll()" />
+        <DialogMediaShare ref="sharePopup" placement="center" @saved="fetch()"/>
+        <DialogMediaProperties ref="propertyPopup" placement="right" />
+
+        <IodPopup ref="displayOptions" title="Anzeige Optionen" placement="right">
+            <div class="flex flex-col p-4 pt-0 gap-4">
+                <ContextMenu class="bg-background rounded-lg">
+                    <ContextMenuLabel label="Einträge pro Seite" />
+                    <ContextMenuItem
+                        v-for="size in paginationSizes"
+                        :key="size"
+                        is="button"
+                        type="button"
+                        :label="`${size} Einträge pro Seite`"
+                        :icon="pagination.size === size ? 'radio_button_checked' : 'radio_button_unchecked'"
+                        :active="pagination.size === size"
+                        @click="setPagination({ size })"
+                    />
+                </ContextMenu>
+            </div>
+        </IodPopup>
     </NuxtLayout>
 </template>
 
@@ -115,6 +125,7 @@
     const renamePopup = ref()
     const propertyPopup = ref()
     const sharePopup = ref()
+    const displayOptions = ref()
     // END: Dialogs
 
 
@@ -126,6 +137,7 @@
 
     const layout = ref('grid')
     const search = ref('')
+    const paginationSizes = [10, 20, 50, 100, 250]
     const pagination = ref({
         size: 20,
         from: 0,
@@ -186,7 +198,7 @@
 
     function select(event: MouseEvent, path: string)
     {
-        if (event.ctrlKey) {
+        if (event.ctrlKey || event.metaKey) {
             if (selection.value.includes(path)) {
                 selection.value = selection.value.filter(p => p !== path)
             }
@@ -356,53 +368,20 @@
 </script>
 
 <style lang="sass" scoped>
-    .header
-        position: sticky
-        top: 4rem
-        padding: 1rem
-        z-index: 100
-        display: flex
-        align-items: center
-        gap: 1rem
-        border-bottom: 1px solid var(--color-border)
-        background: var(--color-background)
-        border-top-left-radius: var(--radius-l)
-        border-top-right-radius: var(--radius-l)
+    .iod-loader
+        position: absolute
+        left: 0
+        right: 0
+        bottom: -1px
+        height: 2px !important
 
-        .iod-loader
-            position: absolute
-            left: 0
-            right: 0
-            bottom: -1px
-            height: 2px !important
-
-        .search-input
-            width: 16rem
-            height: 2.5rem !important
-            border-radius: 5rem !important
-            --local-padding: .25rem
+    .search-input
+        width: 16rem
+        height: 2rem !important
+        --local-padding: .25rem
 
     .entity-grid
         display: grid
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr))
-        gap: 1rem
-        padding: 1rem
-
-    .footer
-        position: relative
-        padding: 1rem
-        z-index: 100
-        display: flex
-        align-items: center
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr))
         gap: .5rem
-        border-top: 1px solid var(--color-border)
-
-        .size-fixture
-            display: flex
-            align-items: center
-            gap: .25rem
-            padding: .25rem
-            height: 2.5rem
-            border-radius: 2.5rem
-            background: var(--color-background-soft)
 </style>
