@@ -9,9 +9,41 @@
             </IodAlert>
 
             <div class="flex items-center gap-1 p-1 bg-background rounded-lg">
-                <IodButton type="button" class="flex-1" variant="text" size="s" corner="m" normal-case label="Übersicht" @click="tab = 'overview'"/>
-                <IodButton type="button" class="flex-1" variant="text" size="s" corner="m" normal-case label="Sicherheit" @click="tab = 'security'" :disabled="isNew"/>
-                <IodButton type="button" class="flex-1" variant="text" size="s" corner="m" normal-case label="Aktionen" @click="tab = 'actions'" :disabled="isNew"/>
+                <IodButton
+                    type="button"
+                    class="flex-1"
+                    size="s"
+                    corner="m"
+                    normal-case
+                    label="Übersicht"
+                    :variant="tab === 'overview' ? 'contained' : 'text'"
+                    :color-preset="tab === 'overview' ? 'info' : 'text'"
+                    @click="tab = 'overview'"
+                />
+                <IodButton
+                    type="button"
+                    class="flex-1"
+                    size="s"
+                    corner="m"
+                    normal-case
+                    label="Sicherheit"
+                    :variant="tab === 'security' ? 'contained' : 'text'"
+                    :color-preset="tab === 'security' ? 'info' : 'text'"
+                    @click="tab = 'security'"
+                    :disabled="isNew"
+                />
+                <IodButton
+                    type="button"
+                    class="flex-1"
+                    size="s"
+                    corner="m"
+                    normal-case
+                    label="Aktionen"
+                    :variant="tab === 'actions' ? 'contained' : 'text'"
+                    :color-preset="tab === 'actions' ? 'info' : 'text'"
+                    @click="tab = 'actions'"
+                    :disabled="isNew"
+                />
             </div>
 
 
@@ -32,6 +64,7 @@
                 <input class="hidden" ref="mediaInput" type="file" @change="uploadMedia(($event.target as any).files[0])" />
 
                 <div class="flex flex-col p-4 gap-4 bg-background rounded-lg">
+                    <h5 class="m-0 font-medium text-sm">Allgemein</h5>
                     <label class="flex flex-col gap-1">
                         <span class="px-1">Benutzername</span>
                         <IodInput class="input-s" v-model="form.username"/>
@@ -48,25 +81,109 @@
                         <span class="px-1">Nachname</span>
                         <IodInput class="input-s" v-model="form.lastname"/>
                     </label>
-                    <label class="flex flex-col gap-1">
-                        <span class="px-1">Organisation</span>
-                        <IodInput class="input-s" v-model="form.organisation"/>
-                    </label>
-                    <HeDivider class="my-4"/>
+                </div>
+
+                <div class="flex flex-col p-4 gap-4 bg-background rounded-lg">
+                    <h5 class="m-0 font-medium text-sm">Kontaktdaten</h5>
                     <label class="flex flex-col gap-1">
                         <span class="px-1">Telefon</span>
                         <IodInput class="input-s" v-model="form.phone"/>
                     </label>
                 </div>
 
-                <IodButton class="!sticky bottom-4" type="submit" label="Speichern" :loading="form.processing"/>
+                <div class="flex flex-col p-4 gap-4 bg-background rounded-lg" v-if="!isNew">
+                    <h5 class="m-0 font-medium text-sm">Adressen</h5>
+                    <label class="flex flex-col gap-1" id="main-address">
+                        <span class="px-1">Hauptadresse</span>
+                        <VDropdown container="#main-address">
+                            <IodInput class="input-s" icon-right="location_on" :modelValue="stringFromAddress(form.main_address)" readonly/>
+                            <template #popper><IodAddressPicker v-model="form.main_address"/></template>
+                        </VDropdown>
+                    </label>
+                    <label class="flex flex-col gap-1" id="billing-address">
+                        <span class="px-1">Rechnungsadresse</span>
+                        <VDropdown container="#billing-address">
+                            <IodInput class="input-s" icon-right="location_on" :modelValue="stringFromAddress(form.billing_address)" readonly/>
+                            <template #popper><IodAddressPicker v-model="form.billing_address"/></template>
+                        </VDropdown>
+                    </label>
+                    <label class="flex flex-col gap-1" id="shipping-address">
+                        <span class="px-1">Lieferadresse</span>
+                        <VDropdown container="#shipping-address">
+                            <IodInput class="input-s" icon-right="location_on" :modelValue="stringFromAddress(form.shipping_address)" readonly/>
+                            <template #popper><IodAddressPicker v-model="form.shipping_address"/></template>
+                        </VDropdown>
+                    </label>
+                </div>
+
+                <div class="flex flex-col p-4 gap-4 bg-background rounded-lg">
+                    <h5 class="m-0 font-medium text-sm">Arbeit</h5>
+                    <label class="flex flex-col gap-1">
+                        <span class="px-1">Organisation</span>
+                        <IodInput class="input-s" v-model="form.organisation"/>
+                    </label>
+                    <label class="flex flex-col gap-1">
+                        <span class="px-1">Abteilung</span>
+                        <IodInput class="input-s" v-model="form.department"/>
+                    </label>
+                    <label class="flex flex-col gap-1">
+                        <span class="px-1">Titel</span>
+                        <IodInput class="input-s" v-model="form.job_title"/>
+                    </label>
+                </div>
+                
+                <div class="flex flex-col p-4 gap-4 bg-background rounded-lg">
+                    <h5 class="m-0 font-medium text-sm">Name</h5>
+                    <label class="flex flex-col gap-1">
+                        <span class="px-1">Anrede</span>
+                        <IodInput class="input-s" v-model="form.salutation"/>
+                    </label>
+                    <label class="flex flex-col gap-1">
+                        <span class="px-1">Präfix</span>
+                        <IodInput class="input-s" v-model="form.prefix"/>
+                    </label>
+                    <label class="flex flex-col gap-1">
+                        <span class="px-1">Zweiter Vorname</span>
+                        <IodInput class="input-s" v-model="form.middlename"/>
+                    </label>
+                    <label class="flex flex-col gap-1">
+                        <span class="px-1">Suffix</span>
+                        <IodInput class="input-s" v-model="form.suffix"/>
+                    </label>
+                    <label class="flex flex-col gap-1">
+                        <span class="px-1">Rechtlicher Name</span>
+                        <IodInput class="input-s" v-model="form.legalname"/>
+                    </label>
+                    <label class="flex flex-col gap-1">
+                        <span class="px-1">Spitzname</span>
+                        <IodInput class="input-s" v-model="form.nickname"/>
+                    </label>
+                </div>
+
+                <div class="flex flex-col p-4 gap-4 bg-background rounded-lg">
+                    <h5 class="m-0 font-medium text-sm">Identifikation</h5>
+                    <label class="flex flex-col gap-1">
+                        <span class="px-1">Kunden-Nr.</span>
+                        <IodInput class="input-s" v-model="form.customer_id"/>
+                    </label>
+                    <label class="flex flex-col gap-1">
+                        <span class="px-1">Personal-Nr.</span>
+                        <IodInput class="input-s" v-model="form.employee_id"/>
+                    </label>
+                    <label class="flex flex-col gap-1">
+                        <span class="px-1">Mitglieds-Nr.</span>
+                        <IodInput class="input-s" v-model="form.member_id"/>
+                    </label>
+                </div>
+
+                <IodButton class="!sticky bottom-4 z-10" type="submit" label="Speichern" :loading="form.processing"/>
             </template>
 
 
 
             <template v-if="tab === 'security'">
                 <div class="flex flex-col p-4 gap-4 bg-background rounded-lg">
-                    <ContextMenuLabel label="Berechtigungen"/>
+                    <h5 class="m-0 font-medium text-sm">Gruppen</h5>
                     <div class="flex flex-wrap gap-2">
                         <VDropdown placement="left">
                             <IodIconButton type="button" class="!w-10" size="xs" corner="m" icon="add" v-tooltip="'Rollen hinzufügen'" />
@@ -92,7 +209,10 @@
                 </div>
 
                 <div class="flex flex-col p-4 gap-4 bg-background rounded-lg">
-                    <h5 class="m-0 font-medium">API Zugriff</h5>
+                    <div class="flex items-center">
+                        <h5 class="flex-1 m-0 font-medium text-sm">API Zugriff</h5>
+                        <IodButton type="button" class="mr-auto" label="Token hinzufügen" color-preset="info" size="xs" corner="m" variant="text" normal-case @click="createTokenPopup.open()"/>
+                    </div>
 
                     <div class="flex flex-col select-none" v-if="form.tokens.length">
                         <div class="flex items-center gap-4 px-3 h-12 bg-background-soft rounded-lg">
@@ -109,9 +229,7 @@
                         </div>
                     </div>
 
-                    <IodAlert type="placeholder" class="h-40 border-2" text="Es wurden noch keine API-Tokens angelegt" v-else />
-
-                    <IodButton type="button" class="mr-auto" label="Token hinzufügen" color-preset="info" size="xs" corner="m" variant="text" normal-case @click="createTokenPopup.open()"/>
+                    <IodAlert type="placeholder" class="h-24 border" text="Es wurden noch keine API-Tokens angelegt" v-else />
                 </div>
 
                 <ContextMenu class="bg-background rounded-lg">
@@ -159,41 +277,35 @@
 
 
         <IodPopup ref="changePasswordPopup" title="Passwort ändern" max-width="500px" @open="changePasswordForm.reset">
-            <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="changePassword">
+            <HeFlex is="form" gap="1rem" padding="1rem" @submit.prevent="changePassword">
                 <ErrorAlert :errors="changePasswordForm.errors"/>
-                <HeFlex gap="1rem">
-                    <IodInput v-model="changePasswordForm.password" show-score :score-function="useZxcvbn()" label="Neues Passwort" type="password"/>
-                </HeFlex>
-                <IodButton label="Passwort ändern" corner="pill" size="l" :loading="changePasswordForm.processing"/>
+                <IodInput v-model="changePasswordForm.password" show-score :score-function="useZxcvbn()" label="Neues Passwort" type="password"/>
+                <IodButton label="Passwort ändern" corner="m" size="m" :loading="changePasswordForm.processing"/>
             </HeFlex>
         </IodPopup>
 
         <IodPopup ref="blockUserPopup" title="Nutzer sperren" max-width="500px" @open="blockUserForm.reset">
-            <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="blockUser">
+            <HeFlex is="form" gap="1rem" padding="1rem" @submit.prevent="blockUser">
                 <ErrorAlert :errors="blockUserForm.errors"/>
-                <HeFlex gap="1rem">
-                    <IodInput v-model="blockUserForm.block_reason" label="Grund" type="text"/>
-                </HeFlex>
-                <IodButton label="Nutzer sperren" corner="pill" size="l" color-preset="error" :loading="blockUserForm.processing"/>
+                <IodInput v-model="blockUserForm.block_reason" label="Grund" type="text"/>
+                <IodButton label="Nutzer sperren" corner="m" size="m" color-preset="error" :loading="blockUserForm.processing"/>
             </HeFlex>
         </IodPopup>
 
         <IodPopup ref="createTokenPopup" title="API-Token erstellen" max-width="500px" @open="createTokenForm.reset">
-            <HeFlex is="form" gap="2.5rem" padding="1.5rem" @submit.prevent="createToken" v-if="!createTokenForm.token">
+            <HeFlex is="form" gap="1rem" padding="1rem" @submit.prevent="createToken" v-if="!createTokenForm.token">
                 <ErrorAlert :errors="createTokenForm.errors"/>
-                <HeFlex gap="1rem">
-                    <IodInput v-model="createTokenForm.name" label="Anzeigename"/>
-                </HeFlex>
-                <IodButton label="API-Token erstellen" corner="pill" size="l" :loading="createTokenForm.processing"/>
+                <IodInput v-model="createTokenForm.name" label="Anzeigename"/>
+                <IodButton label="API-Token erstellen" corner="m" size="m" :loading="createTokenForm.processing"/>
             </HeFlex>
 
-            <HeFlex gap="2.5rem" padding="1.5rem" v-else>
+            <HeFlex gap="1rem" padding="1rem" v-else>
                 <IodInput v-model="createTokenForm.token" label="API-Token" readonly>
                     <template #right>
-                        <IodIconButton type="button" corner="pill" size="s" variant="text" icon="content_copy" v-tooltip="'Token in die Zwischenablage kopieren'" @click="copyToClipboard(createTokenForm.token)"/>
+                        <IodIconButton type="button" corner="m" size="s" variant="text" icon="content_copy" v-tooltip="'Token in die Zwischenablage kopieren'" @click="useClipboard.copy(createTokenForm.token)"/>
                     </template>
                 </IodInput>
-                <IodButton type="button" label="Schließen" corner="pill" size="l" variant="contained" @click="createTokenPopup.close()"/>
+                <IodButton type="button" label="Schließen" corner="m" size="m" variant="contained" @click="createTokenPopup.close()"/>
             </HeFlex>
         </IodPopup>
     </IodPopup>
@@ -219,7 +331,7 @@
     const isNew = computed(() => !form.id)
     const title = computed(() => isNew.value ? 'Nutzer erstellen' : 'Nutzer bearbeiten')
     const fullname = computed(() => [form.prefix, form.firstname, form.middlename, form.lastname, form.suffix].filter(i => i).join(' ') || 'Unbenannt')
-    const save = isNew.value ? store : update
+    const save = computed(() => isNew.value ? store : update)
 
     // EXPOSE
     defineExpose({ open })
@@ -266,6 +378,10 @@
             employee_id: '',
             member_id: '',
 
+            main_address: {},
+            billing_address: {},
+            shipping_address: {},
+
             notes: '',
             
             roles: [],
@@ -277,6 +393,7 @@
     function open(id?: string) {
         reset()
         if (id) fetch(id)
+        if (!id && tab.value !== 'overview') tab.value = 'overview'
         popup.value.open()
     }
 
@@ -311,7 +428,7 @@
     }
 
     function destroy() {
-        form.delete(apiRoute('/api/users/:id', { id: form.id }), {
+        form.delete(apiRoute('/api/users', { ids: [form.id] }), {
             onSuccess(response: any) {
                 popup.value.close()
                 toast.info('Nutzer wurde gelöscht')
@@ -323,37 +440,37 @@
     async function sendVerificationEmail() {
         await useAxios().post(apiRoute('/api/users/:id/send-verification-email', { id: form.id }))
         toast.success('E-Mail wurde verschickt')
-        fetch()
+        fetch(form.id)
     }
 
     async function verifyEmail(status: boolean) {
         form.email_verified_at = status
         await useAxios().patch(apiRoute('/api/users/:id/verify-email', { id: form.id }), { email_verified: status })
-        fetch()
+        fetch(form.id)
     }
 
     async function verifyPhone(status: boolean) {
         form.phone_verified_at = status
         await useAxios().patch(apiRoute('/api/users/:id/verify-phone', { id: form.id }), { phone_verified: status })
-        fetch()
+        fetch(form.id)
     }
 
     async function enableUser(status: boolean) {
         form.enabled_at = status
         await useAxios().patch(apiRoute('/api/users/:id/enable', { id: form.id }), { enabled: status })
-        fetch()
+        fetch(form.id)
     }
 
     async function requirePasswordChange(status: boolean) {
         form.requires_password_change = status
         await useAxios().patch(apiRoute('/api/users/:id/require-password-change', { id: form.id }), { requires_password_change: status })
-        fetch()
+        fetch(form.id)
     }
 
     async function requireTwoFactor(status: boolean) {
         form.requires_two_factor = status
         await useAxios().patch(apiRoute('/api/users/:id/require-two-factor', { id: form.id }), { requires_two_factor: status })
-        fetch()
+        fetch(form.id)
     }
 
 
@@ -400,6 +517,7 @@
 
 
     // Media
+    const mediaInput = ref()
     const mediaType = ref('avatar')
 
     function selectMedia(type: 'avatar' | 'banner'){
@@ -411,7 +529,7 @@
         if (!file) return
         await useAxios().postForm(apiRoute('/api/users/:id/:media', { id: form.id, media: mediaType.value }), {file})
         mediaInput.value.value = null
-        fetch()
+        fetch(form.id)
     }
 
 
@@ -444,7 +562,7 @@
         blockUserForm.patch(apiRoute('/api/users/:id/block', { id: form.id }), {
             onSuccess() {
                 blockUserPopup.value?.close()
-                fetch()
+                fetch(form.id)
             },
         })
     }
@@ -468,7 +586,7 @@
             onSuccess(data: any) {
                 createTokenForm.reset()
                 createTokenForm.token = data.token
-                fetch()
+                fetch(form.id)
                 toast.success('Token erstellt')
             },
         })
@@ -477,7 +595,7 @@
     function deleteToken(token: any) {
         useForm({}).delete(apiRoute('/api/users/:id/token/:token', { id: form.id, token: token.id }), {
             onSuccess() {
-                fetch()
+                fetch(form.id)
                 toast.success('Token gelöscht')
             },
         })

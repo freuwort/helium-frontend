@@ -20,8 +20,8 @@
             </div> -->
         </div>
         <div class="footer">
-            <IodButton class="flex-1" corner="pill" variant="contained" label="löschen" @click="setAddress('reset')"/>
-            <IodButton class="flex-1" corner="pill" variant="filled" label="Übernehmen" @click="setAddress()"/>
+            <IodButton type="button" class="flex-1" corner="m" size="s" variant="contained" label="löschen" @click="setAddress('reset')"/>
+            <IodButton type="button" class="flex-1" corner="m" size="s" variant="filled" label="Übernehmen" @click="setAddress()"/>
         </div>
     </div>
 </template>
