@@ -51,7 +51,7 @@ export default defineNuxtConfig({
 
                         'background': 'var(--color-background)',
                         'background-soft': 'var(--color-background-soft)',
-                        'background-disabled': 'var(--color-background-soft-disabled)',
+                        'background-disabled': 'var(--color-background-disabled)',
 
                         'border': 'var(--color-border)',
                         'border-focused': 'var(--color-border-focused)',

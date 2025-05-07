@@ -1,14 +1,14 @@
 <template>
     <div class="iod-container iod-pagination">
-        <IodIconButton type="button" corner="pill" size="s" variant="text" icon="first_page" :disabled="modelValue.page <= 1" @click="setPage(1)" />
-        <IodIconButton type="button" corner="pill" size="s" variant="text" icon="chevron_left" :disabled="modelValue.page <= 1" @click="setPage(modelValue.page - 1)" />
+        <IodIconButton type="button" corner="m" size="s" variant="text" icon="first_page" :disabled="modelValue.page <= 1" @click="setPage(1)" />
+        <IodIconButton type="button" corner="m" size="s" variant="text" icon="chevron_left" :disabled="modelValue.page <= 1" @click="setPage(modelValue.page - 1)" />
         
         <div class="range">
             <span><b>{{ modelValue.from }} - {{ modelValue.to }}</b> / {{ modelValue.total }}</span>
         </div>
         
-        <IodIconButton type="button" corner="pill" size="s" variant="text" icon="chevron_right" :disabled="modelValue.page >= modelValue.lastPage" @click="setPage(modelValue.page + 1)" />
-        <IodIconButton type="button" corner="pill" size="s" variant="text" icon="last_page" :disabled="modelValue.page >= modelValue.lastPage" @click="setPage(modelValue.lastPage)" />
+        <IodIconButton type="button" corner="m" size="s" variant="text" icon="chevron_right" :disabled="modelValue.page >= modelValue.lastPage" @click="setPage(modelValue.page + 1)" />
+        <IodIconButton type="button" corner="m" size="s" variant="text" icon="last_page" :disabled="modelValue.page >= modelValue.lastPage" @click="setPage(modelValue.lastPage)" />
     </div>
 </template>
 
@@ -36,11 +36,8 @@
         display: inline-flex
         align-items: center
         justify-content: center
-        gap: .25rem
-        padding: .25rem .5rem
-        height: 2.5rem
-        border-radius: 2.5rem
-        background: var(--color-background-soft)
+        border-radius: var(--radius-m)
+        border: 1px solid var(--color-border)
         overflow: hidden
         user-select: none
 

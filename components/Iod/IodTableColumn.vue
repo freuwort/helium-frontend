@@ -2,7 +2,6 @@
     <div class="iod-container iod-table-column" :class="{'monospace': monospace}" v-tooltip="data.tooltip || data.text">
         <IodIcon
             class="pictogram"
-            use-backdrop
             lazy
             v-show="!!data.image || !!data.icon"
             :image="data.image"
@@ -38,8 +37,8 @@
         display: flex
         align-items: center
         overflow: hidden
-        padding-inline: 1rem
-        gap: .75rem
+        padding-inline: .5rem
+        gap: .5rem
 
         &.monospace
             font-family: var(--font-mono)
@@ -53,8 +52,8 @@
             padding-block: .25rem
 
         > .pictogram
-            height: 1.75rem
-            font-size: 1.125rem
+            height: 1.25rem
+            font-size: 1rem
             border-radius: 50%
             flex-shrink: 0
 </style>

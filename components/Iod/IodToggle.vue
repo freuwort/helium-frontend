@@ -36,7 +36,7 @@
             <div class="focus-indicator"></div>
             <div class="checkbox">
                 <transition name="checked">
-                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" v-show="internalValue" :style="`--mui-stroke-offset__: ${checkmarkPathLength}`">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" v-show="internalValue" :style="`--iod-stroke-offset: ${checkmarkPathLength}`">
                         <path ref="checkmarkPath" d="M3,12l6,6l12,-12"/>
                     </svg>
                 </transition>
@@ -229,10 +229,10 @@
 
 <style lang="sass" scoped>
     .iod-container.iod-toggle
-        --local-color-off: var(--color-border)
+        --local-color-off: var(--color-border-focused)
         --local-color-off-text: var(--color-background)
-        --local-color-on: var(--color-text)
-        --local-color-on-text: var(--color-background)
+        --local-color-on: var(--color-info)
+        --local-color-on-text: var(--color-on-info)
 
         font-size: 1rem
         position: relative
@@ -241,8 +241,8 @@
         align-items: center
         justify-content: flex-start
         gap: 1em
-        padding-inline: 0.625em
-        padding-block: .5em
+        // padding-inline: 0.625em
+        // padding-block: .5em
         min-height: 2.5em
         cursor: pointer
         user-select: none
@@ -264,7 +264,7 @@
                 color: var(--local-color-on-text)
 
                 .switchdot-wrapper
-                    left: calc(100% - 1.25em + 4px)
+                    left: calc(100% - 1.25em + 2px)
 
 
 
@@ -320,7 +320,7 @@
             position: relative
             z-index: 1
             user-select: none
-            border: 2px solid transparent
+            border: 1px solid transparent
             transition: all 50ms ease-in-out
 
             border-color: var(--local-color-off)
@@ -336,7 +336,7 @@
                 text-align: center
                 color: inherit
                 transition: stroke-dashoffset 80ms linear
-                stroke-dasharray: var(--mui-stroke-offset__)
+                stroke-dasharray: var(--iod-stroke-offset)
                 stroke-dashoffset: 0
                 fill: none
                 stroke-width: 2.4
@@ -345,16 +345,16 @@
                 stroke-linejoin: round
 
                 &.checked-enter-active
-                    stroke-dashoffset: var(--mui-stroke-offset__)
+                    stroke-dashoffset: var(--iod-stroke-offset)
 
                 &.checked-leave-to
-                    stroke-dashoffset: calc(-1 * var(--mui-stroke-offset__))
+                    stroke-dashoffset: calc(-1 * var(--iod-stroke-offset))
 
         .switchbox
             height: 1.25em
             width: 2.25em
             border-radius: 1em
-            border: 2px solid transparent
+            border: 1px solid transparent
             transition: all 50ms ease-in-out
             position: relative !important
 
@@ -363,7 +363,7 @@
             color: var(--local-color-off-text)
 
             .switchdot-wrapper
-                height: calc(1.25em - 4px)
+                height: calc(1.25em - 2px)
                 aspect-ratio: 1
                 transition: all 80ms cubic-bezier(0.80, 0, 0.2, 1)
                 position: absolute

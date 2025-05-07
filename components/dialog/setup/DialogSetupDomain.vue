@@ -109,7 +109,7 @@
 
                         <div class="main small-scrollbar">
                             <div class="w-full h-full flex items-center justify-center">
-                                <DialogCsvImport ref="importPopup" :fields="importFields" @import="submitUserImport" />
+                                <DialogImportCsv ref="importPopup" :fields="importFields" @import="submitUserImport" />
                                 <IodButton type="button" label="Benutzer importieren" variant="filled" corner="pill" size="l" :loading="importForm.processing" @click="importPopup.select()" />
                             </div>
                         </div>

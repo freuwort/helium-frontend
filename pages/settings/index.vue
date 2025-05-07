@@ -1,68 +1,68 @@
 <template>
     <form class="contents" @submit.prevent="saveCompany()">
-        <div class="flex items-center min-h-10">
-            <h3 class="flex-1 m-0 font-medium">Organisation</h3>
-            <IodButton corner="pill" label="Speichern" icon-right="save" :loading="companyForm.processing"/>
-        </div>
+        <h3 class="m-0 text-base font-medium">Organisation</h3>
         <SettingsRow title="Anzeigename">
-            <IodInput class="flex-1" label="Anzeigename" v-model="companyForm.company_name" />
+            <IodInput class="flex-1 !h-8" placeholder="Unternehmen" v-model="companyForm.company_name" />
         </SettingsRow>
         <SettingsRow title="Eingetragener Name">
-            <IodInput class="flex-1" label="Name" v-model="companyForm.company_legalname" placeholder="Unternehmen GmbH"/>
+            <IodInput class="flex-1 !h-8" placeholder="Unternehmen GmbH" v-model="companyForm.company_legalname"/>
         </SettingsRow>
         <SettingsRow title="Slogan">
-            <IodInput class="flex-1" label="Slogan" v-model="companyForm.company_slogan" />
+            <IodInput class="flex-1 !h-8" placeholder="Immer für Sie da" v-model="companyForm.company_slogan" />
         </SettingsRow>
         <SettingsRow title="Logo">
             <ProfileImage class="flex-1 bg-background-soft" aspect="2" alt="Firmen Logo" tooltip="Logo hochladen" allow-upload :src="domain.settings.company_logo" :loading="logoProcessing" @upload="logoInput.click()"/>
             <input type="file" class="hidden" ref="logoInput" pattern="image/*" @change="saveLogo(($event.target as any).files[0])" />
         </SettingsRow>
+        <SettingsRow>
+            <IodButton class="flex-1" corner="m" size="s" label="Speichern" :loading="companyForm.processing"/>
+        </SettingsRow>
         <HeSpacer class="pb-4"/>
     </form>
     
     <form class="contents" @submit.prevent="saveLegal()">
-        <div class="flex items-center min-h-10">
-            <h3 class="flex-1 m-0 font-medium">Rechtstexte</h3>
-            <IodButton corner="pill" label="Speichern" icon-right="save" :loading="legalForm.processing"/>
-        </div>
+        <h3 class="m-0 text-base font-medium">Rechtstexte</h3>
         <SettingsRow title="Link zur Impressum Seite">
-            <IodInput class="flex-1" v-model="legalForm.legal_notice" placeholder="beispiel.de/impressum"/>
+            <IodInput class="flex-1 !h-8" v-model="legalForm.legal_notice" placeholder="beispiel.de/impressum"/>
         </SettingsRow>
         <SettingsRow title="Link zur Datenschutz Seite">
-            <IodInput class="flex-1" v-model="legalForm.legal_privacy" placeholder="beispiel.de/datenschutz"/>
+            <IodInput class="flex-1 !h-8" v-model="legalForm.legal_privacy" placeholder="beispiel.de/datenschutz"/>
         </SettingsRow>
         <SettingsRow title="Link zur AGBs Seite">
-            <IodInput class="flex-1" v-model="legalForm.legal_terms" placeholder="beispiel.de/agbs"/>
+            <IodInput class="flex-1 !h-8" v-model="legalForm.legal_terms" placeholder="beispiel.de/agbs"/>
+        </SettingsRow>
+        <SettingsRow>
+            <IodButton class="flex-1" corner="m" size="s" label="Speichern" :loading="legalForm.processing"/>
         </SettingsRow>
         <HeSpacer class="pb-4"/>
     </form>
     
     
     <form class="contents" @submit.prevent="saveUnit()">
-        <div class="flex items-center min-h-10">
-            <h3 class="flex-1 m-0 font-medium">Standard Einheiten</h3>
-            <IodButton corner="pill" label="Speichern" icon-right="save" :loading="unitForm.processing"/>
-        </div>
-        <SettingsRow title="Standard Währung">
-            <IodSelect class="flex-1" icon-left="attach_money" label="Währung" v-model="unitForm.default_currency" :options="options_currency"/>
+        <h3 class="m-0 text-base font-medium">Standard Einheiten</h3>
+        <SettingsRow title="Währung">
+            <IodSelect class="flex-1 !h-8" placeholder="Währung" v-model="unitForm.default_currency" :options="options_currency"/>
         </SettingsRow>
-        <SettingsRow title="Standard Längeneinheit">
-            <IodSelect class="flex-1" icon-left="straighten" label="Länge in" v-model="unitForm.default_unit_length" :options="options_unit_length"/>
+        <SettingsRow title="Längeneinheit">
+            <IodSelect class="flex-1 !h-8" placeholder="Länge in" v-model="unitForm.default_unit_length" :options="options_unit_length"/>
         </SettingsRow>
-        <SettingsRow title="Standard Flächeeinheit">
-            <IodSelect class="flex-1" icon-left="square_foot" label="Fläche in" v-model="unitForm.default_unit_area" :options="options_unit_area"/>
+        <SettingsRow title="Flächeeinheit">
+            <IodSelect class="flex-1 !h-8" placeholder="Fläche in" v-model="unitForm.default_unit_area" :options="options_unit_area"/>
         </SettingsRow>
-        <SettingsRow title="Standard Volumeneinheit">
-            <IodSelect class="flex-1" icon-left="deployed_code" label="Volumen in" v-model="unitForm.default_unit_volume" :options="options_unit_volume"/>
+        <SettingsRow title="Volumeneinheit">
+            <IodSelect class="flex-1 !h-8" placeholder="Volumen in" v-model="unitForm.default_unit_volume" :options="options_unit_volume"/>
         </SettingsRow>
-        <SettingsRow title="Standard Gewichtseinheit">
-            <IodSelect class="flex-1" icon-left="weight" label="Gewicht in" v-model="unitForm.default_unit_weight" :options="options_unit_weight"/>
+        <SettingsRow title="Gewichtseinheit">
+            <IodSelect class="flex-1 !h-8" placeholder="Gewicht in" v-model="unitForm.default_unit_weight" :options="options_unit_weight"/>
         </SettingsRow>
-        <SettingsRow title="Standard Temperatureinheit">
-            <IodSelect class="flex-1" icon-left="thermometer" label="Temperatur in" v-model="unitForm.default_unit_temperature" :options="options_unit_temperature"/>
+        <SettingsRow title="Temperatureinheit">
+            <IodSelect class="flex-1 !h-8" placeholder="Temperatur in" v-model="unitForm.default_unit_temperature" :options="options_unit_temperature"/>
         </SettingsRow>
-        <SettingsRow title="Standard Geschwindigkeitseinheit">
-            <IodSelect class="flex-1" icon-left="speed" label="Geschwindigkeit in" v-model="unitForm.default_unit_speed" :options="options_unit_speed"/>
+        <SettingsRow title="Geschwindigkeitseinheit">
+            <IodSelect class="flex-1 !h-8" placeholder="Geschwindigkeit in" v-model="unitForm.default_unit_speed" :options="options_unit_speed"/>
+        </SettingsRow>
+        <SettingsRow>
+            <IodButton class="flex-1" corner="m" size="s" label="Speichern" :loading="unitForm.processing"/>
         </SettingsRow>
     </form>
 </template>

@@ -32,7 +32,7 @@
             </IodTable>
         </HeCard>
 
-        <DialogCsvImport ref="importPopup" :expected-values="expectedValues" @import="importInvites" />
+        <DialogImportCsv ref="importPopup" :expected-values="expectedValues" @import="importInvites" />
         <DialogSendTemplatedEmail ref="sendEmailPopup" :templates="templates" @send="sendEmail"/>
     </NuxtLayout>
 </template>

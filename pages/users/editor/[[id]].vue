@@ -5,7 +5,7 @@
                 v-show="!!form.id"
                 allow-avatar-upload
                 allow-banner-upload
-                class="rounded-t-2xl border-b"
+                class="border-b"
                 :title="fullname"
                 :avatar="form.avatar"
                 :banner="form.banner"
@@ -16,7 +16,7 @@
 
             <input class="hidden" ref="mediaInput" type="file" @change="uploadMedia(($event.target as any).files[0])" />
             
-            <div class="flex items-center p-4 rounded-t-2xl border-b sticky top-16 z-10 bg-background">
+            <div class="flex items-center p-4 border-b bg-background">
                 <IodButton :is="NuxtLink" corner="pill" label="Zur Übersicht" variant="contained" to="/users"/>
                 <HeSpacer />
                 <IodButton type="submit" corner="pill" label="Speichern" :loading="form.processing" variant="filled" />
@@ -26,7 +26,7 @@
                 <ErrorAlert :errors="form.errors" />
 
                 <IodAlert type="error" v-if="form.blocked_at">
-                    <div class="mb-3">
+                    <div class="mb-2">
                         Dieser Nutzer wurde gesperrt.<br>
                         Grund: <b>{{ form.block_reason || 'Nicht angegeben' }}</b>
                     </div>

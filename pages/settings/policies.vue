@@ -1,38 +1,33 @@
 <template>
-    <div class="flex items-center min-h-10">
-        <h3 class="flex-1 m-0 font-medium">Domänen Richtlinien</h3>
-    </div>
+    <h3 class="m-0 text-base font-medium">Domänen Richtlinien</h3>
 
     <ErrorAlert :errors="form.errors" class="mb-8" />
 
     <form class="contents" @submit.prevent="save()">
         <SettingsRow title="Nutzer können ihren Namen selber ändern">
-            <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_name_change" />
+            <IodToggle v-model="form.policy_allow_name_change" />
         </SettingsRow>
         <SettingsRow title="Nutzer können ihren Benutzernamen selber ändern">
-            <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_username_change" />
+            <IodToggle v-model="form.policy_allow_username_change" />
         </SettingsRow>
         <SettingsRow title="Nutzer können ihr Profilbild selber ändern">
-            <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_avatar_upload" />
+            <IodToggle v-model="form.policy_allow_avatar_upload" />
         </SettingsRow>
         <SettingsRow title="Nutzer können ihr Profilbanner selber ändern">
-            <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_banner_upload" />
+            <IodToggle v-model="form.policy_allow_banner_upload" />
         </SettingsRow>
-        <HeDivider />
         <SettingsRow title="Nutzer können ihr Passwort zurücksetzen">
-            <IodToggle type="switch" class="ml-auto" v-model="form.policy_allow_password_reset" />
+            <IodToggle v-model="form.policy_allow_password_reset" />
         </SettingsRow>
-        <HeDivider />
         <SettingsRow title="Debug Modus">
-            <IodToggle type="switch" class="ml-auto" v-model="form.policy_debug_mode" />
+            <IodToggle v-model="form.policy_debug_mode" />
         </SettingsRow>
         <SettingsRow title="Entwickler Modus">
-            <IodToggle type="switch" class="ml-auto" v-model="form.policy_developer_mode" />
+            <IodToggle v-model="form.policy_developer_mode" />
         </SettingsRow>
-        <div class="flex items-center min-h-10">
-            <HeSpacer />
-            <IodButton corner="pill" label="Speichern" icon-right="save" :loading="form.processing"/>
-        </div>
+        <SettingsRow>
+            <IodButton class="flex-1" corner="m" size="s" label="Speichern" :loading="form.processing"/>
+        </SettingsRow>
     </form>
 </template>
 

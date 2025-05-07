@@ -80,6 +80,7 @@
 
         &:focus
             outline: 3px solid var(--color-info)
+            outline-offset: -3px
 
         &.corner-none
             border-radius: 0

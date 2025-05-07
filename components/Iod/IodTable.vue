@@ -4,60 +4,33 @@
             <div class="fixture-row">
                 <slot name="left"/>
 
-                <div class="flex items-center px-1 gap-1 bg-background-soft rounded-full">
-                    <slot name="wrapped-left"/>
-                    <HeDivider vertical class="h-6 focused" v-if="$slots['wrapped-left']"/>
-                    <VDropdown placement="bottom-start">
-                        <IodButton type="button" class="!gap-2 !px-4" size="s" corner="pill" variant="text" label="Filter" icon-left="filter_alt" normal-case/>
-                        <template #popper><IodTableFilters :filter="filter" :filterSettings="filterSettings" /></template>
-                    </VDropdown>
-                    <HeDivider vertical class="h-6 focused" />
-                    <IodInput class="search-input " icon-left="search" placeholder="Suchen" v-model="filter.search"/>
-                </div>
+                <IodInput class="search-input " icon-left="search" placeholder="Suchen" v-model="filter.search" clearable/>
 
+                <IodIconButton v-for="action in globalActions" type="button" corner="m" size="s" variant="contained" v-tooltip="action.text" :icon="action.icon" :color-preset="action.color" @click="action.run('global')" />
+                
+                <HeDivider vertical class="h-6" />
+
+                <IodIconButton v-for="action in selectionActions" type="button" corner="m" size="s" variant="contained" v-tooltip="action.text" :icon="action.icon" :color-preset="action.color" :disabled="!selection.length" @click="action.run('selection', selection)" />
+                
                 <div class="spacer"></div>
-                
-                <div class="flex items-center p-1 gap-1 bg-background-soft rounded-full">
-                    <slot name="wrapped-right"/>
-                    <HeDivider vertical class="h-6 focused" v-if="$slots['wrapped-right']"/>
-                    <VDropdown>
-                        <IodButton type="button" class="!gap-2 !px-4" size="s" corner="pill" variant="text" label="Aktionen" icon-right="arrow_drop_down" normal-case/>
-                        <template #popper>
-                            <ContextMenu class="min-w-72">
-                                <ContextMenuItem v-for="action in globalActions" is="button" v-close-popper :icon="action.icon" :color="action.color" @click="action.run('global')">{{ action.text }}</ContextMenuItem>
-                                <template v-if="selectionActions.length">
-                                    <ContextMenuDivider />
-                                    <ContextMenuLabel :label="`Auswahl – ${ selection.length }`"/>
-                                    <ContextMenuItem v-for="action in selectionActions" is="button" v-close-popper :icon="action.icon" :color="action.color" :disabled="!selection.length" @click="action.run('selection', selection)">{{ action.text }}</ContextMenuItem>
-                                </template>
-                            </ContextMenu>
-                        </template>
-                    </VDropdown>
-                </div>
-                
+
                 <slot name="right"/>
+                
+                <IodIconButton type="button" icon="filter_alt" v-tooltip="'Filter'" size="s" variant="contained" @click="filterOptions.open()"/>
+                <IodIconButton type="button" icon="tune" v-tooltip="'Anzeige Optionen'" size="s" variant="contained" @click="displayOptions.open()"/>
             </div>
-
-            <div class="fixture-row" v-if="pagination?.page > 1 || selection.length || filter.search || displayFilter.length">
-                <IodButton type="button" normal-case size="xs" corner="pill" color-preset="info" variant="contained" :label='`Seite ${pagination.page}`' v-if="pagination?.page > 1" @click="setPagination({ page: 0 })"/>
-                <IodButton type="button" normal-case size="xs" corner="pill" color-preset="info" variant="contained" :label='`Auswahl: ${selection.length}`' v-if="selection.length" @click="deselectAll()" v-tooltip="'Alles abwählen'"/>
-                <IodButton type="button" normal-case size="xs" corner="pill" color-preset="info" variant="contained" :label='`Suche nach "${filter.search}"`' v-if="filter.search" @click="filter.search = ''"/>
-                <IodButton type="button" normal-case size="xs" corner="pill" color-preset="info" variant="contained" :label="`${item.label}: ${item.value}`" @click="delete filter[item.key]" v-for="item in displayFilter"/>
-            </div>
-
-            <IodLoader type="bar" v-show="loading" />
         </div>
 
 
 
-        <IodAlert type="placeholder" class="h-72" v-if="!items.length && !loading">
+        <IodAlert type="placeholder" class="h-48 mb-auto" v-if="!items.length && !loading">
             <div class="flex item-center justify-center h-16 w-16 mx-auto">
                 <IodIcon icon="category" class="!text-5xl"/>
             </div>
             Keine Einträge gefunden
         </IodAlert>
         
-        <IodAlert type="placeholder" class="h-72" v-if="!items.length && loading">
+        <IodAlert type="placeholder" class="h-48 mb-auto" v-if="!items.length && loading">
             <div class="flex item-center justify-center h-16 w-16 mx-auto">
                 <IodLoader class="m-auto"/>
             </div>
@@ -70,21 +43,22 @@
             <div class="table-head">
                 <div class="table-row">
                     <div class="table-column centered w-12">
-                        <IodToggle :modelValue="items.length && items.every(item => selection.includes(item.id))" @update:modelValue="$event ? selectAll() : deselectAll()" v-tooltip="'Alle auswählen'" />
+                        <IodToggle class="!min-h-8 !p-0" :modelValue="items.length && items.every(item => selection.includes(item.id))" @update:modelValue="$event ? selectAll() : deselectAll()" v-tooltip="'Alle auswählen'" />
                     </div>
 
                     <div class="table-column" v-for="column in columns" :class="{ 'resizable': column.resizable, 'resizing': getColumnSettings(column).resizing, 'sortable': column.sortable, 'sorted-field': sort.field === column.name, }" :style="`width: ${getColumnSettings(column).width}px;`" @mousedown.exact="toggleColumnSorting(column.name)">
                         <div class="column-sort-indicator">{{ sort.order === 'asc' ? 'arrow_drop_down' : 'arrow_drop_up' }}</div>
-                        <div class="column-label" v-tooltip="column.label">{{ column.label }}</div>
+                        <div class="column-label" :aria-label="column.label">{{ column.label }}</div>
                         <div class="column-resize-handle" @mousedown.stop="resizeColumn($event, column)"></div>
                     </div>
                 </div>
+                <IodLoader type="bar" v-show="loading" />
             </div>
 
             <div class="table-body">
                 <div class="table-row" v-for="item in items" @click="rowClick(item)">
                     <div class="table-column centered w-12">
-                        <IodToggle :modelValue="getSelection.includes(item.id)" @click.stop @update:modelValue="setSelection(item, $event)"/>
+                        <IodToggle class="!min-h-8 !p-0" :modelValue="getSelection.includes(item.id)" @click.stop @update:modelValue="setSelection(item, $event)"/>
                     </div>
 
                     <div class="table-column" v-for="column in columns" :style="`width: ${getColumnSettings(column).width}px;`">
@@ -95,14 +69,13 @@
                         <div class="button-container" @click.stop>
                             <IodIconButton
                                 v-for="action in individualActions"
-                                class="!w-10"
                                 type="button"
                                 size="s"
-                                corner="pill"
-                                variant="contained"
+                                corner="s"
+                                variant="text"
                                 :icon="action.icon"
-                                :background="action.color"
-                                v-tooltip="action.text"
+                                :color-preset="action.color"
+                                v-tooltip.end="action.text"
                                 @click="action.run('individual', [item.id])"
                             />
                         </div>
@@ -115,43 +88,23 @@
 
         <div class="table-pagination-wrapper">
             <IodPagination :modelValue="pagination" @update:modelValue="setPagination($event)"/>
-            
-            <div class="spacer"></div>
-
-            <div class="size-fixture">
-                <IodButton type="button" normal-case class="!px-0 !w-11" size="s" corner="pill" v-tooltip="'10 Einträge pro Seite'" :variant="pagination.size === 10 ? 'contained' : 'text'" label="10" @click="setPagination({ size: 10 })"/>
-                <IodButton type="button" normal-case class="!px-0 !w-11" size="s" corner="pill" v-tooltip="'20 Einträge pro Seite'" :variant="pagination.size === 20 ? 'contained' : 'text'" label="20" @click="setPagination({ size: 20 })"/>
-                <IodButton type="button" normal-case class="!px-0 !w-11" size="s" corner="pill" v-tooltip="'50 Einträge pro Seite'" :variant="pagination.size === 50 ? 'contained' : 'text'" label="50" @click="setPagination({ size: 50 })"/>
-                <IodButton type="button" normal-case class="!px-0 !w-11" size="s" corner="pill" v-tooltip="'100 Einträge pro Seite'" :variant="pagination.size === 100 ? 'contained' : 'text'" label="100" @click="setPagination({ size: 100 })"/>
-                <IodButton type="button" normal-case class="!px-0 !w-11" size="s" corner="pill" v-tooltip="'250 Einträge pro Seite'" :variant="pagination.size === 250 ? 'contained' : 'text'" label="250" @click="setPagination({ size: 250 })"/>
-                <HeDivider vertical class="h-6 focused" />
-                <IodIconButton type="button" size="s" class="!px-0 !w-11" corner="pill" variant="text" icon="table_edit" v-tooltip="'Ansicht anpassen'" @click="columnPopup.open()"/>
-            </div>
         </div>
         
 
 
-        <IodPopup ref="columnPopup" title="Spalten anpassen" blur="0" backdrop-color="#00000040" max-width="400px" placement="right">
-            <div class="customization-wrapper">
-                <Container orientation="vertical" lock-axis="y" @drop="applyColumnOrder">
-                    <Draggable v-for="columnSetting in columnSettings" :key="columnSetting.name">
-                        <div class="customization-row" :class="{'shown': columnSetting.show}">
-                            <IodIcon icon="drag_handle" />
-                            <span class="label">{{ columnSetting.label }}</span>
-                            <IodIconButton
-                                type="button"
-                                size="s"
-                                variant="text"
-                                background="inherit"
-                                :icon="columnSetting.show ? 'visibility' : 'visibility_off'"
-                                v-tooltip="columnSetting.show ? 'Spalte ausblenden' : 'Spalten einblenden'"
-                                @click="toggleColumnVisibility(columnSetting.name)"
-                            />
-                        </div>
-                    </Draggable>
-                </Container>
-            </div>
-        </IodPopup>
+        <IodTableDisplayOptions
+            ref="displayOptions"
+            :pagination="pagination"
+            :columnSettings="columnSettings"
+            @apply:order="applyColumnOrder"
+            @update:pagination="setPagination($event)"
+            @update:columnSettings="saveColumnSettings()"
+        />
+        <IodTableFilters
+            ref="filterOptions"
+            :filter="filter"
+            :filterSettings="filterSettings"
+        />
     </div>
 </template>
 
@@ -282,7 +235,7 @@
 
 
     // START: Columns
-    const columnPopup = ref()
+    const displayOptions = ref()
     const columnSettings = ref<ColumnSetting[]>([])
 
     const shownColumns = computed<ColumnSetting[]>(() => {
@@ -451,56 +404,8 @@
 
 
     // START: Filter
+    const filterOptions = ref()
     const filter = ref({...props.filter})
-
-    const displayFilter = computed(() => {
-        // Get the filter settings;
-        let filterSettings = props.filterSettings ?? []
-
-        // Get the filter values
-        let filter_ = {...filter.value}
-
-        // Remove empty values
-        for (const key in filter_)
-        {
-            if (!filter_[key]) delete filter_[key]
-        }
-
-        // Get the display filter
-        let displayFilter = []
-
-        // Loop through the filter
-        for (const key in filter_)
-        {
-            // Get the filter setting
-            let setting = filterSettings.find(setting => setting.name === key)
-
-            // If the setting is not found, skip it
-            if (!setting) continue
-
-            // Get the value
-            let value = filter_[key]
-
-            // If the value is an array, join it
-            if (Array.isArray(value)) value = value.join(', ')
-
-            // If the value is a boolean, convert it to a string
-            if (typeof value === 'boolean') value = value ? 'An' : 'Aus'
-
-            // If the value is a string, capitalize it
-            if (typeof value === 'string') value = capitalizeWords(value)
-
-            // Add the filter to the display filter
-            displayFilter.push({
-                key,
-                label: setting.label,
-                value,
-            })
-        }
-
-        // Return the display filter
-        return displayFilter
-    })
 
     watch(filter, () => { emits('update:filter', filter.value) }, { deep: true })
     // END: Filter
@@ -543,8 +448,7 @@
 
 
     // START: Pagination
-    function setPagination(value: Partial<Pagination>)
-    {
+    function setPagination(value: Partial<Pagination>) {
         emits('update:pagination', { ...props.pagination, ...value })
     }
     // END: Pagination
@@ -600,96 +504,45 @@
 </script>
 
 <style lang="sass" scoped>
-    .customization-wrapper
-        .customization-row
-            display: flex
-            align-items: center
-            height: 3rem
-            padding-inline: .5rem
-            padding-block: .25rem
-            gap: .5rem
-            user-select: none
-            color: var(--color-text-soft-disabled)
-
-            &.shown
-                color: var(--color-text-soft)
-
-            .iod-icon
-                height: 2rem
-                width: 2rem
-                color: var(--color-text-soft-disabled)
-                font-size: 1.25rem
-
-            .label
-                flex: 1
-                color: inherit
-                font-weight: 600
-
-        .smooth-dnd-ghost
-            left: 0 !important
-            background: var(--color-background-soft)
-            border-radius: var(--radius-m)
-
     .iod-container.iod-table
-        display: grid
-        grid-template-rows: auto auto
+        display: flex
+        flex-direction: column
         border-radius: var(--radius-l)
 
         .table-fixture-wrapper
-            position: sticky
-            z-index: 200
-            top: inherit
+            flex: none
+            display: flex
+            flex-direction: column
+            gap: 1rem
             border-radius: inherit
             border-bottom-right-radius: 0
             border-bottom-left-radius: 0
             background: var(--color-background)
             z-index: 2
-            padding-block: 1rem
-            display: flex
-            flex-direction: column
-            gap: 1rem
-            border-bottom: 1px solid var(--color-border)
+            padding-bottom: 1rem
 
             .fixture-row
-                padding-inline: 1rem
                 display: flex
                 align-items: center
                 flex-wrap: wrap
-                gap: 1rem
+                gap: .5rem
                 position: relative
 
             .search-input
                 width: 16rem
-                height: 2.5rem !important
-                background: transparent !important
+                height: 2rem !important
                 border-radius: none !important
                 --local-padding: .25rem
-
-            .iod-loader
-                position: absolute !important
-                height: 2px
-                left: 0
-                right: 0
-                bottom: 0
 
             .spacer
                 flex: 1
 
-        .table-empty-wrapper
-            display: flex
-            justify-content: center
-            align-items: center
-            height: 15rem
-            padding: 1rem
-
-            .table-empty-text
-                font-size: 1rem
-
         .table-inner-wrapper
+            flex: 1
             display: grid
-            grid-template-rows: auto auto
-            overflow: hidden
-            overflow-x: auto
+            grid-template-rows: auto 1fr
+            overflow: auto
+            border-bottom: 1px solid var(--color-border)
 
             &::-webkit-scrollbar
                 width: 3px
@@ -712,9 +565,9 @@
             .table-row
                 display: flex
                 align-items: center
-                min-height: 3rem
+                height: 2rem
                 position: relative
-                border-bottom: 1px solid var(--color-background-soft)
+                border-bottom: 1px solid var(--color-border)
 
                 &:last-child
                     border-bottom: none
@@ -755,25 +608,27 @@
                     .button-container
                         display: flex
                         align-items: center
-                        padding: .25rem 1rem
-                        gap: .25rem
-                        background: var(--color-background-soft)
+                        // background: var(--color-background-soft)
+                        backdrop-filter: blur(7px)
                         transform-origin: right
                         transform: translateX(1rem)
                         transition: all 100ms
 
                 &.sortable:hover
+                    .column-label
+                        padding-left: 1rem
+
                     .column-sort-indicator
                         color: var(--color-text-soft-disabled)
                         opacity: 1
 
                 &.sortable.sorted-field
                     .column-label
-                        padding-left: 2rem
+                        padding-left: 1.5rem
 
                     .column-sort-indicator
                         color: var(--color-text)
-                        transform: translateX(.5rem)
+                        transform: translateX(.25rem)
                         opacity: 1
 
                 .column-sort-indicator
@@ -820,8 +675,8 @@
                         opacity: 1
 
                 .column-label
-                    padding-inline: 1rem
-                    font-weight: bold
+                    padding-inline: .5rem
+                    font-weight: 600
                     overflow: hidden
                     text-overflow: ellipsis
                     white-space: nowrap
@@ -830,10 +685,21 @@
                     will-change: padding
 
             .table-head
-                .table-row
-                    height: 3rem
-                    border-bottom: 1px solid var(--color-border)
+                position: sticky
+                z-index: 100
+                top: 0
+                background: var(--color-background)
 
+                .iod-loader
+                    position: absolute !important
+                    height: 2px
+                    left: 0
+                    right: 0
+                    bottom: 0
+
+                .table-row
+                    height: 2rem
+                    
                     .table-column
                         height: 100%
 
@@ -857,20 +723,9 @@
 
 
         .table-pagination-wrapper
-            padding: 1rem
+            flex: none
             display: flex
             align-items: center
-            border-top: 1px solid var(--color-border)
-
-            .spacer
-                flex: 1
-
-            .size-fixture
-                display: flex
-                align-items: center
-                gap: .25rem
-                padding: .25rem
-                height: 2.5rem
-                border-radius: 2.5rem
-                background: var(--color-background-soft)
+            justify-content: start
+            padding-top: 1rem
 </style>

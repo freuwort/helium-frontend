@@ -3,13 +3,13 @@
         <FocusTrap :active="isOpen" @deactivate="close()" :inert="!isOpen" initial-focus=".first-focus">
             <div class="iod-container iod-popup popup-outer-wrapper scrollbar" :class="classes" :style="styles" @click.self.exact="closeOnBackdropClick()">
                 <div class="popup-inner-wrapper">
-                    <div class="popup-content small-scrollbar">
+                    <div class="popup-content">
                         <slot></slot>
                     </div>
     
                     <div class="popup-header" v-if="!noHeader">
                         <h3>{{ title }}</h3>
-                        <IodButton label="esc" icon-right="close" corner="pill" variant="contained" @click="close()"/>
+                        <IodIconButton icon="close" size="s" corner="m" variant="text" @click="close()"/>
                     </div>
                 </div>
             </div>
@@ -46,19 +46,19 @@
         },
         blur: {
             type: String,
-            default: '20px',
+            default: '0',
         },
         maxWidth: {
             type: String,
-            default: '700px',
+            default: '450px',
         },
         backdropColor: {
             type: String,
-            default: 'rgb(33 34 36 / 80%)',
+            default: 'rgb(33 34 36 / 50%)',
         },
         modalColor: {
             type: String,
-            default: 'var(--color-background)',
+            default: 'var(--color-background-disabled)',
         },
     })
 
@@ -117,7 +117,7 @@
         --local-blur: 20px
         --local-max-width: 700px
         --local-color-backdrop: rgb(61 65 69 / 80%)
-        --local-color-modal: var(--color-background)
+        --local-color-modal: var(--color-background-disabled)
 
         position: fixed
         z-index: 10000
@@ -152,7 +152,7 @@
                 h3
                     flex: 1
                     margin: 0
-                    font-size: 1.25rem
+                    font-size: .9rem
                     font-weight: 500
                     color: inherit
                     white-space: nowrap
@@ -177,7 +177,6 @@
 
                 .popup-header
                     color: var(--color-text)
-                    border-bottom: 1px solid var(--color-border)
 
                 .popup-content
                     overflow: auto
