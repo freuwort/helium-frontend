@@ -20,6 +20,7 @@
         <div class="profile-info">
             <h2>{{ title }}</h2>
             <p v-if="subtitle">{{ subtitle }}</p>
+            <slot name="info"></slot>
         </div>
     </div>
 </template>
@@ -71,7 +72,6 @@
         display: flex
         flex-direction: column
         align-items: start
-        text-align: center
         overflow: hidden
 
         .overlay-button.iod-button

@@ -3,11 +3,6 @@
         <form class="flex flex-col p-4 pt-0 gap-4" @submit.prevent="save">
             <ErrorAlert :errors="form.errors" />
 
-            <IodAlert type="error" v-if="form.blocked_at">
-                Dieser Nutzer wurde gesperrt.<br>
-                Grund: <b>{{ form.block_reason || 'Nicht angegeben' }}</b>
-            </IodAlert>
-
             <div class="flex items-center gap-1 p-1 bg-background rounded-lg">
                 <IodButton
                     type="button"
@@ -59,7 +54,17 @@
                     :banner="form.banner"
                     @upload:avatar="selectMedia('avatar')"
                     @upload:banner="selectMedia('banner')"
-                />
+                >
+                    <template #info>
+                        <p v-if="form.last_login_at">Letzte Anmeldung: {{ $dayjs(form.last_login_at).fromNow() }}</p>
+                        <p class="text-warning" v-if="!form.email_verified_at">Diese Email-Adresse wurde noch nicht bestätigt!</p>
+                        <p class="text-warning" v-if="!form.enabled_at">Dieser Nutzer ist noch nicht freigegeben!</p>
+                        <p class="text-error" v-if="form.deleted_at">Dieser Nutzer wurde gelöscht!</p>
+                        <p class="text-error" v-if="form.blocked_at">
+                            Dieser Nutzer wurde gesperrt – Grund: <b>{{ form.block_reason || 'Nicht angegeben' }}</b>
+                        </p>
+                    </template>
+                </ProfileCard>
 
                 <input class="hidden" ref="mediaInput" type="file" @change="uploadMedia(($event.target as any).files[0])" />
 
@@ -233,16 +238,14 @@
                 </div>
 
                 <ContextMenu class="bg-background rounded-lg">
+                    <h5 class="px-4 py-2 m-0 font-medium text-sm">Sicherheit</h5>
                     <ContextMenuItem is="button" type="button" icon="lock" label="Passwort ändern" @click="changePasswordPopup.open()"/>
                     <ContextMenuItem is="button" type="button" icon="lock_reset" label="Passwort-Änderung anfordern" @click="requirePasswordChange(!form.requires_password_change)">
-                        <template #right>
-                            <IodToggle type="switch" class="!p-0 !pr-4" :modelValue="!!form.requires_password_change"/>
-                        </template>
+                        <template #right><IodToggle type="switch" class="mr-4" tabindex="-1" :modelValue="!!form.requires_password_change"/></template>
                     </ContextMenuItem>
+                    <ContextMenuDivider />
                     <ContextMenuItem is="button" type="button" icon="shield_lock" label="2FA-Einrichtung anfordern" @click="requireTwoFactor(!form.requires_two_factor)">
-                        <template #right>
-                            <IodToggle type="switch" class="!p-0 !pr-4" :modelValue="!!form.requires_two_factor"/>
-                        </template>
+                        <template #right><IodToggle type="switch" class="mr-4" tabindex="-1" :modelValue="!!form.requires_two_factor"/></template>
                     </ContextMenuItem>
                 </ContextMenu>
             </template>
@@ -251,24 +254,29 @@
 
             <template v-if="tab === 'actions'">
                 <ContextMenu class="bg-background rounded-lg">
-                    <ContextMenuLabel label="Email"/>
-                    <ContextMenuItem is="button" type="button" icon="mail" label="Bestätigen" @click="verifyEmail(true)" v-show="!form.email_verified_at"/>
-                    <ContextMenuItem is="button" type="button" icon="mail" color="var(--color-error)" label="Bestätigung zurücksetzen" @click="verifyEmail(false)" v-show="form.email_verified_at"/>
+                    <h5 class="px-4 py-2 m-0 font-medium text-sm">Email</h5>
+                    <ContextMenuItem is="button" type="button" icon="mail" label="Email bestätigen" @click="verifyEmail(!form.email_verified_at)">
+                        <template #right><IodToggle class="mr-4" type="switch" tabindex="-1" :modelValue="!!form.email_verified_at"/></template>
+                    </ContextMenuItem>
                     <ContextMenuItem is="button" type="button" icon="send" label="Bestätigungsmail versenden" @click="sendVerificationEmail()" :disabled="!!form.email_verified_at"/>
-                    
+                </ContextMenu>
+
+                <ContextMenu class="bg-background rounded-lg">
+                    <h5 class="px-4 py-2 m-0 font-medium text-sm">Telefon</h5>
+                    <ContextMenuItem is="button" type="button" icon="phone" label="Telefonnummer bestätigen" @click="verifyPhone(!form.phone_verified_at)">
+                        <template #right><IodToggle class="mr-4" type="switch" tabindex="-1" :modelValue="!!form.phone_verified_at"/></template>
+                    </ContextMenuItem>
+                </ContextMenu>
+                
+                <ContextMenu class="bg-background rounded-lg">
+                    <h5 class="px-4 py-2 m-0 font-medium text-sm">Nutzer</h5>
+                    <ContextMenuItem is="button" type="button" icon="verified" label="Freigeben" @click="enableUser(!form.enabled_at)">
+                        <template #right><IodToggle class="mr-4" type="switch" tabindex="-1" :modelValue="!!form.enabled_at"/></template>
+                    </ContextMenuItem>
+                    <ContextMenuItem is="button" type="button" icon="do_not_disturb_on" label="Sperren" color="var(--color-error)" @click="form.blocked_at ? unblockUser() : blockUserPopup.open()">
+                        <template #right><IodToggle class="mr-4" style="--local-color-on: var(--color-error); --local-color-on-text: var(--color-on-error);" type="switch" tabindex="-1" :modelValue="!!form.blocked_at"/></template>
+                    </ContextMenuItem>
                     <ContextMenuDivider />
-                    
-                    <ContextMenuLabel label="Telefon"/>
-                    <ContextMenuItem is="button" type="button" icon="phone" label="Bestätigen" @click="verifyPhone(true)" v-show="!form.phone_verified_at"/>
-                    <ContextMenuItem is="button" type="button" icon="phone" color="var(--color-error)" label="Bestätigung zurücksetzen" @click="verifyPhone(false)" v-show="form.phone_verified_at"/>
-                    
-                    <ContextMenuDivider />
-                    
-                    <ContextMenuLabel label="Nutzer"/>
-                    <ContextMenuItem is="button" type="button" icon="verified" label="Freigeben" @click="enableUser(true)" v-show="!form.enabled_at"/>
-                    <ContextMenuItem is="button" type="button" icon="verified" color="var(--color-error)" label="Freigabe zurücksetzen" @click="enableUser(false)" v-show="form.enabled_at"/>
-                    <ContextMenuItem is="button" type="button" icon="do_not_disturb_on" color="var(--color-error)" label="Sperren" @click="blockUserPopup.open()" v-show="!form.blocked_at"/>
-                    <ContextMenuItem is="button" type="button" icon="do_not_disturb_on" label="Entsperren" @click="unblockUser()" v-show="form.blocked_at"/>
                     <ContextMenuItem is="button" type="button" icon="delete" label="Löschen" color="var(--color-error)" @click="destroy()" />
                 </ContextMenu>
             </template>
