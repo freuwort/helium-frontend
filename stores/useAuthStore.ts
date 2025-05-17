@@ -77,14 +77,14 @@ export const useAuthStore = defineStore('auth', () => {
         },
         apiRoutes: {
             session: '/api/session',
-            register: '/register',
-            login: '/login',
+            register: '/api/register',
+            login: '/api/login',
             changePassword: '/api/user/password',
-            forgotPassword: '/forgot-password',
-            resetPassword: '/reset-password',
-            verifyTfaTotp: '/verify-tfa-totp',
-            verifyTfaBackup: '/verify-tfa-backup',
-            logout: '/logout',
+            forgotPassword: '/api/forgot-password',
+            resetPassword: '/api/reset-password',
+            verifyTfaTotp: '/api/verify-tfa-totp',
+            verifyTfaBackup: '/api/verify-tfa-backup',
+            logout: '/api/logout',
         }
     })
     const routes = computed(() => options.value.routes)
