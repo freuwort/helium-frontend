@@ -103,7 +103,7 @@
 
     async function fetchItems() {
         loading.value = true
-        const { data } = await useAxios().get(apiRoute('/media/:path', {
+        const { data } = await useAxios().get(apiRoute('/api/media/:path', {
             path: path.value,
         }))
         loading.value = false
