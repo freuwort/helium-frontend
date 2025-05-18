@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     },
 
     app: {
-        baseURL: process.env.FRONTEND_PREFIX ? `/${process.env.FRONTEND_PREFIX}/` : '/',
+        baseURL: process.env.FRONTEND_PREFIX ?? '/helium',
     },
 
     css: [
@@ -84,11 +84,11 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             backendUrl: process.env.BACKEND_URL ?? 'http://localhost:8000',
-            backendPrefix: process.env.BACKEND_PREFIX ? `/${process.env.BACKEND_PREFIX}/` : '/',
+            backendPrefix: process.env.BACKEND_PREFIX ?? '/api',
             frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:3000',
-            frontendPrefix: process.env.FRONTEND_PREFIX ? `/${process.env.FRONTEND_PREFIX}/` : '/',
+            frontendPrefix: process.env.FRONTEND_PREFIX ?? '/helium',
             websiteUrl: process.env.WEBSITE_URL ?? 'http://localhost:3001',
-            websitePrefix: process.env.WEBSITE_PREFIX ? `/${process.env.WEBSITE_PREFIX}/` : '/',
+            websitePrefix: process.env.WEBSITE_PREFIX ?? '/',
             adminPermissions: ['system.super-admin', 'system.admin'],
             superAdminPermissions: ['system.super-admin'],
         },
