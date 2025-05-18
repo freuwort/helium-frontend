@@ -10,6 +10,10 @@ export default defineNuxtConfig({
         },
     },
 
+    app: {
+        baseURL: process.env.FRONTEND_PREFIX ? `/${process.env.FRONTEND_PREFIX}/` : '/',
+    },
+
     css: [
         '~/assets/css/app.sass'
     ],
