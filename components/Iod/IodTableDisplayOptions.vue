@@ -1,7 +1,7 @@
 <template>
     <IodPopup ref="popup" title="Anzeige Optionen" placement="right">
         <div class="flex flex-col p-4 pt-0 gap-4">
-            <ContextMenu class="bg-background rounded-lg">
+            <ContextMenu class="bg-background rounded-lg" v-if="shouldPaginate">
                 <ContextMenuLabel label="Einträge pro Seite" />
                 <ContextMenuItem
                     v-for="size in paginationSizes"
@@ -49,6 +49,10 @@
     const paginationSizes = [10, 20, 50, 100, 250]
 
     const props = defineProps({
+        shouldPaginate: {
+            type: Boolean,
+            default: true,
+        },
         pagination: {
             type: Object,
             default: () => ({}),

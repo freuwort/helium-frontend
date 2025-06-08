@@ -6,6 +6,7 @@
                 <ContextMenuItem to="/settings/policies" icon="policy" label="Richtlinien" :active="routeIsCurrent('settings-policies')" />
                 <!-- <ContextMenuItem to="/settings/units" icon="square_foot" label="Einheiten" :active="routeIsCurrent('settings-units')" /> -->
                 <ContextMenuItem to="/settings/register" icon="patient_list" label="Registrierung" :active="routeIsCurrent('settings-register')" />
+                <ContextMenuItem to="/settings/backups" icon="hard_drive" label="Backups" :active="routeIsCurrent('settings-backups')" />
             </div>
 
             <div class="flex flex-col flex-1 p-4 gap-2 overflow-y-auto small-scrollbar">
