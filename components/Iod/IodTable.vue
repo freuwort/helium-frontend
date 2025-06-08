@@ -4,11 +4,11 @@
             <div class="fixture-row">
                 <slot name="left"/>
 
-                <IodInput class="search-input " icon-left="search" placeholder="Suchen" v-model="filter.search" clearable/>
+                <IodInput class="search-input " icon-left="search" placeholder="Suchen" v-model="filter.search" clearable v-if="hasSearch"/>
 
                 <IodIconButton v-for="action in globalActions" type="button" corner="m" size="s" variant="contained" v-tooltip="action.text" :icon="action.icon" :color-preset="action.color" @click="action.run('global')" />
                 
-                <HeDivider vertical class="h-6" />
+                <HeDivider vertical class="h-6" v-if="globalActions.length && selectionActions.length"/>
 
                 <IodIconButton v-for="action in selectionActions" type="button" corner="m" size="s" variant="contained" v-tooltip="action.text" :icon="action.icon" :color-preset="action.color" :disabled="!selection.length" @click="action.run('selection', selection)" />
                 
@@ -16,7 +16,7 @@
 
                 <slot name="right"/>
                 
-                <IodIconButton type="button" icon="filter_alt" v-tooltip="'Filter'" size="s" variant="contained" @click="filterOptions.open()"/>
+                <IodIconButton type="button" icon="filter_alt" v-tooltip="'Filter'" size="s" variant="contained" @click="filterOptions.open()" v-if="filterSettings?.length"/>
                 <IodIconButton type="button" icon="tune" v-tooltip="'Anzeige Optionen'" size="s" variant="contained" @click="displayOptions.open()"/>
             </div>
         </div>
@@ -42,7 +42,7 @@
         <div class="table-inner-wrapper" v-show="items.length">
             <div class="table-head">
                 <div class="table-row">
-                    <div class="table-column centered w-12">
+                    <div class="table-column centered w-12" v-if="hasSelection">
                         <IodToggle class="!min-h-8 !p-0" :modelValue="items.length && items.every(item => selection.includes(item.id))" @update:modelValue="$event ? selectAll() : deselectAll()" v-tooltip="'Alle auswählen'" />
                     </div>
 
@@ -57,7 +57,7 @@
 
             <div class="table-body">
                 <div class="table-row" v-for="item in items" @click="rowClick(item)">
-                    <div class="table-column centered w-12">
+                    <div class="table-column centered w-12" v-if="hasSelection">
                         <IodToggle class="!min-h-8 !p-0" :modelValue="getSelection.includes(item.id)" @click.stop @update:modelValue="setSelection(item, $event)"/>
                     </div>
 
@@ -86,7 +86,7 @@
 
 
 
-        <div class="table-pagination-wrapper">
+        <div class="table-pagination-wrapper" v-if="shouldPaginate">
             <IodPagination :modelValue="pagination" @update:modelValue="setPagination($event)"/>
         </div>
         
@@ -194,6 +194,18 @@
         items: {
             type: Array as PropType<Item[]>,
             default: () => [],
+        },
+        hasSelection: {
+            type: Boolean,
+            default: true,
+        },
+        hasSearch: {
+            type: Boolean,
+            default: true,
+        },
+        shouldPaginate: {
+            type: Boolean,
+            default: true,
         },
         pagination: {
             type: Object as PropType<Pagination>,

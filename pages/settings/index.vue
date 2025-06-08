@@ -65,6 +65,20 @@
             <IodButton class="flex-1" corner="m" size="s" label="Speichern" :loading="unitForm.processing"/>
         </SettingsRow>
     </form>
+
+
+
+    <form class="contents" @submit.prevent="saveBackup()">
+        <h3 class="m-0 text-base font-medium">Backup</h3>
+        <SettingsRow title="Backup erstellen">
+            <IodButton class="flex-1" corner="m" size="s" label="Backup erstellen" :loading="backupForm.processing"/>
+        </SettingsRow>
+
+        <SettingsRow title="Backup importieren">
+            <input class="hidden" type="file" ref="importInput" @change="importBackup()" accept=".zip" />
+            <IodButton type="button" class="flex-1" corner="m" size="s" label="Importieren" :loading="importProcessing" @click="importInput.click()"/>
+        </SettingsRow>
+    </form>
 </template>
 
 <script lang="ts" setup>
@@ -185,6 +199,41 @@
         })
     }
     // END: Unit settings
+
+
+
+    // START: Backup settings
+    const backupForm = useForm({})
+    function saveBackup() {
+        backupForm.post('/api/backups/store', {
+            onSuccess() {
+                toast.success('Backup erfolgreich erstellt')
+            },
+            onError() {
+                toast.error('Backup konnte nicht erstellt werden')
+            }
+        })
+    }
+    // END: Backup settings
+
+
+
+    // START: Import
+    const importInput = ref()
+    const importProcessing = ref(false)
+    async function importBackup() {
+        const file = importInput.value.files[0]
+        if (!file) return
+
+        importProcessing.value = true
+        const formData = new FormData()
+        formData.append('file', file)
+
+        await useAxios().postForm('/api/backups/restore', formData)
+
+        importInput.value.value = null
+        importProcessing.value = false
+    }
 </script>
 
 <style lang="sass" scoped>
