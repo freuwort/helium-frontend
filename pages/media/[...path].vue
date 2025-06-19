@@ -26,12 +26,11 @@
                     </VDropdown>
         
                     <IodIconButton type="button" icon="tune" v-tooltip="'Anzeige Optionen'" size="s" variant="contained" @click="displayOptions.open()"/>
-        
-                    <IodLoader type="bar" v-show="loading"/>
                 </div>
-
-                <div class="flex items-center gap-2 mt-4">
+                
+                <div class="flex items-center gap-2 mt-4 relative">
                     <MediaBreadcrumbs class="flex-1" :path="path" root-path="/media" @navigate="navigateTo($event)" @drop="onDrop($event.event, $event.path)" />
+                    <IodLoader type="bar" v-show="loading"/>
                 </div>
             </div>
 
