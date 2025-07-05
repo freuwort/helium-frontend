@@ -31,65 +31,35 @@
 
 
     <h3 class="m-0 text-base font-medium">Backups</h3>
-    <IodTable
-        class="p-4 w-full border"
-        :scope
-        :columns="tableColumns"
-        :actions="tableActions"
-        :items="backups"
-        :loading="false"
-        :has-selection="false"
-        :has-search="false"
-        :should-paginate="false"
-        @request:refresh="fetchBackups()"
-    >
-        <template #left>
-            <IodButton type="button" corner="m" size="s" icon-left="add" label="Backup erstellen" :loading="backupForm.processing" @click="saveBackup()"/>
+    <SettingsRow title="Backup erstellen">
+        <IodButton type="button" class="flex-1 mr-4" corner="m" size="s" label="Backup erstellen" :loading="backupForm.processing" @click="saveBackup()"/>
+        <IodIconButton type="button" corner="m" size="s" variant="contained" icon="refresh" v-tooltip="'Backups neu laden'" @click="fetchBackups()"/>
+    </SettingsRow>
+
+    <HeDivider class="my-2"/>
+
+    <SettingsRow v-for="backup in backups" :key="backup.id" class="items-center h-12">
+        <template #description>
+            <div class="flex items-center gap-3">
+                <IodIcon icon="database"/>
+                <div class="flex flex-col">
+                    <span>Backup vom {{ dayjs(backup.created_at).format('DD.MM.YYYY') }}</span>
+                    <small class="font-mono leading-none">{{ dayjs(backup.created_at).format('HH:mm') }} Uhr | {{ humanFileSize(backup.size) }}</small>
+                </div>
+            </div>
         </template>
-    </IodTable>
+        <IodButton type="button" class="flex-1 mr-4" corner="m" size="s" variant="contained" label="Herunterladen" @click="downloadBackup(backup.id)"/>
+        <IodIconButton type="button" corner="m" size="s" variant="contained" icon="delete" v-tooltip="'Löschen'" color-preset="error" @click="deleteBackup(backup.id)"/>
+    </SettingsRow>
 </template>
 
 <script lang="ts" setup>
     import type { Backup } from '~/types/backup'
     import { toast } from 'vue3-toastify'
-    import TableColumnBuilder from '~/classes/Builder/TableColumnBuilder'
     
     const domain = useDomainStore()
     const dayjs = useDayjs()
     const runtimeConfig = useRuntimeConfig()
-    const scope = 'view_admin_settings_backup'
-
-    const tableColumnBuilder = new TableColumnBuilder()
-    const tableColumns = [
-        tableColumnBuilder.new().name('name').label('Name').sortable(false).resizable(false).width(280).build(),
-        tableColumnBuilder.new().name('size').label('Größe').sortable(false).resizable(false).transform((value: any) => humanFileSize(value) || null).build(),
-        tableColumnBuilder.new().name('created_at').label('Erstellt').sortable(false).resizable(false).transform((value: string | null) => ({
-            text: value ? dayjs(value).fromNow() : '-',
-            tooltip: value ? dayjs(value).format('DD.MM.YYYY HH:mm') : '-',
-        })).build(),
-    ]
-
-    const tableActions = [
-        {
-            icon: 'refresh',
-            text: 'Aktualisieren',
-            scope: ['global'],
-            run: () => fetchBackups(),
-        },
-        {
-            icon: 'download',
-            text: 'Herunterladen',
-            scope: ['individual', 'row'],
-            run: (context: string, items: any) => downloadBackup(items[0]),
-        },
-        {
-            icon: 'delete',
-            text: 'Löschen',
-            color: 'error',
-            scope: ['individual'],
-            run: (context: string, items: any) => deleteBackup(items[0]),
-        },
-    ]
 
     const options_interval = ref([
         { value: 'daily', text: 'Täglich', },
