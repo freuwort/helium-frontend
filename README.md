@@ -20,7 +20,7 @@ npm run dev
 
 To build the Helium Frontend image
 ```bash
-docker build -t helium-frontend .
+docker build -t helium-frontend -f containerfile .
 ```
 
 ## Security Vulnerabilities
