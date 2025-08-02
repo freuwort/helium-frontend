@@ -1,5 +1,5 @@
-import { MiddlewareManager } from "./classes/router/MiddlewareManager"
-import middlewareConfig from './middleware.config'
+import { MiddlewareManager } from './classes/router/MiddlewareManager'
+import middlewareConfig from './config/middleware'
 
 export default defineNuxtConfig({
     hooks: {
