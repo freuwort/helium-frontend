@@ -1,7 +1,7 @@
 # Helium Frontend
 
 **Helium Frontend is the frontend admin-panel for the Helium CMS.**  
-[Helium Compose](https://github.com/freuwort/helium-compose) | [Helium Backend](https://github.com/freuwort/helium-backend) | Helium Frontend | [Helium Screens](https://github.com/freuwort/helium-screens)
+[Helium Compose](https://github.com/freuwort/helium-compose) | [Helium Backend](https://github.com/freuwort/helium-backend) | Helium Frontend
 
 ## Setup
 

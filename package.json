@@ -16,7 +16,7 @@
     "@vue/test-utils": "^2.4.6",
     "dayjs-nuxt": "^2.1.11",
     "happy-dom": "^16.8.1",
-    "nuxt": "^3.17.5",
+    "nuxt": "^4.0.2",
     "playwright-core": "^1.53.1",
     "sass": "^1.89.2",
     "vitest": "^3.2.4",
