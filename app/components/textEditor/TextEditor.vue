@@ -153,11 +153,8 @@
     import CharacterCount from '@tiptap/extension-character-count'
     import Placeholder from '@tiptap/extension-placeholder'
     import TextAlign from '@tiptap/extension-text-align'
-    import TextStyle from '@tiptap/extension-text-style'
-    import Table from '@tiptap/extension-table'
-    import TableCell from '@tiptap/extension-table-cell'
-    import TableHeader from '@tiptap/extension-table-header'
-    import TableRow from '@tiptap/extension-table-row'
+    import { TextStyleKit } from '@tiptap/extension-text-style'
+    import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
     import Color from '@tiptap/extension-color'
     import StarterKit from '@tiptap/starter-kit'
 
@@ -264,7 +261,7 @@
                         types: ['heading', 'paragraph'],
                         alignments: ['left', 'center', 'right'],
                     }),
-                    TextStyle,
+                    TextStyleKit,
                     Color,
                     CharacterCount,
                     Table.extend({
