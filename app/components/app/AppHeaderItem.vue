@@ -95,6 +95,8 @@
             font-size: 1.5rem
             color: inherit
             height: 100%
+            max-width: 3.5rem
+            overflow: hidden
 
         .badge
             position: absolute
