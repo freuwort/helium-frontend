@@ -22,7 +22,6 @@ export default defineNuxtConfig({
         'dayjs-nuxt',
         'floating-vue/nuxt',
         '@pinia/nuxt',
-        '@nuxt/test-utils/module',
         "@nuxtjs/tailwindcss",
     ],
 
