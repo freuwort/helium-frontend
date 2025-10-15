@@ -52,8 +52,8 @@
     
     async function onSuccess() {
         splashscreen.start()
-        await auth.fetchSession()
-        await domain.fetchSettings()
+        // await auth.fetchSession()
+        // await domain.fetchSettings()
         return navigateTo(auth.routes.authHome+intendedQuery, { replace: true })
     }
 </script>
